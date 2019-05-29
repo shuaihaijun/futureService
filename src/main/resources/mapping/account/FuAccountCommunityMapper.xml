@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.future.mapper.account.FuAccountCommunityMapper">
+  <resultMap id="BaseResultMap" type="com.future.entity.account.FuAccountCommunity">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="modify_date" jdbcType="TIMESTAMP" property="modifyDate" />
+    <result column="com_commodity" jdbcType="VARCHAR" property="comCommodity" />
+    <result column="com_money" jdbcType="DECIMAL" property="comMoney" />
+    <result column="com_investment" jdbcType="DECIMAL" property="comInvestment" />
+    <result column="com_coin_investment" jdbcType="DECIMAL" property="comCoinInvestment" />
+    <result column="com_coin_amt" jdbcType="DECIMAL" property="comCoinAmt" />
+    <result column="com_debt_investment" jdbcType="DECIMAL" property="comDebtInvestment" />
+    <result column="com_debt_amt" jdbcType="DECIMAL" property="comDebtAmt" />
+    <result column="com_bank_name" jdbcType="VARCHAR" property="comBankName" />
+    <result column="com_bank_code" jdbcType="VARCHAR" property="comBankCode" />
+    <result column="last_amt" jdbcType="DECIMAL" property="lastAmt" />
+    <result column="last_withdraw_amt" jdbcType="DECIMAL" property="lastWithdrawAmt" />
+    <result column="last_withdraw_tiime" jdbcType="TIMESTAMP" property="lastWithdrawTiime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, create_date, modify_date, com_commodity, com_money, com_investment, com_coin_investment, 
+    com_coin_amt, com_debt_investment, com_debt_amt, com_bank_name, com_bank_code, last_amt, 
+    last_withdraw_amt, last_withdraw_tiime
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from fu_account_community
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from fu_account_community
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.future.entity.account.FuAccountCommunity">
+    insert into fu_account_community (id, create_date, modify_date, 
+      com_commodity, com_money, com_investment, 
+      com_coin_investment, com_coin_amt, com_debt_investment, 
+      com_debt_amt, com_bank_name, com_bank_code, 
+      last_amt, last_withdraw_amt, last_withdraw_tiime
+      )
+    values (#{id,jdbcType=INTEGER}, #{createDate,jdbcType=TIMESTAMP}, #{modifyDate,jdbcType=TIMESTAMP}, 
+      #{comCommodity,jdbcType=VARCHAR}, #{comMoney,jdbcType=DECIMAL}, #{comInvestment,jdbcType=DECIMAL}, 
+      #{comCoinInvestment,jdbcType=DECIMAL}, #{comCoinAmt,jdbcType=DECIMAL}, #{comDebtInvestment,jdbcType=DECIMAL}, 
+      #{comDebtAmt,jdbcType=DECIMAL}, #{comBankName,jdbcType=VARCHAR}, #{comBankCode,jdbcType=VARCHAR}, 
+      #{lastAmt,jdbcType=DECIMAL}, #{lastWithdrawAmt,jdbcType=DECIMAL}, #{lastWithdrawTiime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.future.entity.account.FuAccountCommunity">
+    insert into fu_account_community
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="createDate != null">
+        create_date,
+      </if>
+      <if test="modifyDate != null">
+        modify_date,
+      </if>
+      <if test="comCommodity != null">
+        com_commodity,
+      </if>
+      <if test="comMoney != null">
+        com_money,
+      </if>
+      <if test="comInvestment != null">
+        com_investment,
+      </if>
+      <if test="comCoinInvestment != null">
+        com_coin_investment,
+      </if>
+      <if test="comCoinAmt != null">
+        com_coin_amt,
+      </if>
+      <if test="comDebtInvestment != null">
+        com_debt_investment,
+      </if>
+      <if test="comDebtAmt != null">
+        com_debt_amt,
+      </if>
+      <if test="comBankName != null">
+        com_bank_name,
+      </if>
+      <if test="comBankCode != null">
+        com_bank_code,
+      </if>
+      <if test="lastAmt != null">
+        last_amt,
+      </if>
+      <if test="lastWithdrawAmt != null">
+        last_withdraw_amt,
+      </if>
+      <if test="lastWithdrawTiime != null">
+        last_withdraw_tiime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null">
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyDate != null">
+        #{modifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="comCommodity != null">
+        #{comCommodity,jdbcType=VARCHAR},
+      </if>
+      <if test="comMoney != null">
+        #{comMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="comInvestment != null">
+        #{comInvestment,jdbcType=DECIMAL},
+      </if>
+      <if test="comCoinInvestment != null">
+        #{comCoinInvestment,jdbcType=DECIMAL},
+      </if>
+      <if test="comCoinAmt != null">
+        #{comCoinAmt,jdbcType=DECIMAL},
+      </if>
+      <if test="comDebtInvestment != null">
+        #{comDebtInvestment,jdbcType=DECIMAL},
+      </if>
+      <if test="comDebtAmt != null">
+        #{comDebtAmt,jdbcType=DECIMAL},
+      </if>
+      <if test="comBankName != null">
+        #{comBankName,jdbcType=VARCHAR},
+      </if>
+      <if test="comBankCode != null">
+        #{comBankCode,jdbcType=VARCHAR},
+      </if>
+      <if test="lastAmt != null">
+        #{lastAmt,jdbcType=DECIMAL},
+      </if>
+      <if test="lastWithdrawAmt != null">
+        #{lastWithdrawAmt,jdbcType=DECIMAL},
+      </if>
+      <if test="lastWithdrawTiime != null">
+        #{lastWithdrawTiime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.future.entity.account.FuAccountCommunity">
+    update fu_account_community
+    <set>
+      <if test="createDate != null">
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyDate != null">
+        modify_date = #{modifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="comCommodity != null">
+        com_commodity = #{comCommodity,jdbcType=VARCHAR},
+      </if>
+      <if test="comMoney != null">
+        com_money = #{comMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="comInvestment != null">
+        com_investment = #{comInvestment,jdbcType=DECIMAL},
+      </if>
+      <if test="comCoinInvestment != null">
+        com_coin_investment = #{comCoinInvestment,jdbcType=DECIMAL},
+      </if>
+      <if test="comCoinAmt != null">
+        com_coin_amt = #{comCoinAmt,jdbcType=DECIMAL},
+      </if>
+      <if test="comDebtInvestment != null">
+        com_debt_investment = #{comDebtInvestment,jdbcType=DECIMAL},
+      </if>
+      <if test="comDebtAmt != null">
+        com_debt_amt = #{comDebtAmt,jdbcType=DECIMAL},
+      </if>
+      <if test="comBankName != null">
+        com_bank_name = #{comBankName,jdbcType=VARCHAR},
+      </if>
+      <if test="comBankCode != null">
+        com_bank_code = #{comBankCode,jdbcType=VARCHAR},
+      </if>
+      <if test="lastAmt != null">
+        last_amt = #{lastAmt,jdbcType=DECIMAL},
+      </if>
+      <if test="lastWithdrawAmt != null">
+        last_withdraw_amt = #{lastWithdrawAmt,jdbcType=DECIMAL},
+      </if>
+      <if test="lastWithdrawTiime != null">
+        last_withdraw_tiime = #{lastWithdrawTiime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.future.entity.account.FuAccountCommunity">
+    update fu_account_community
+    set create_date = #{createDate,jdbcType=TIMESTAMP},
+      modify_date = #{modifyDate,jdbcType=TIMESTAMP},
+      com_commodity = #{comCommodity,jdbcType=VARCHAR},
+      com_money = #{comMoney,jdbcType=DECIMAL},
+      com_investment = #{comInvestment,jdbcType=DECIMAL},
+      com_coin_investment = #{comCoinInvestment,jdbcType=DECIMAL},
+      com_coin_amt = #{comCoinAmt,jdbcType=DECIMAL},
+      com_debt_investment = #{comDebtInvestment,jdbcType=DECIMAL},
+      com_debt_amt = #{comDebtAmt,jdbcType=DECIMAL},
+      com_bank_name = #{comBankName,jdbcType=VARCHAR},
+      com_bank_code = #{comBankCode,jdbcType=VARCHAR},
+      last_amt = #{lastAmt,jdbcType=DECIMAL},
+      last_withdraw_amt = #{lastWithdrawAmt,jdbcType=DECIMAL},
+      last_withdraw_tiime = #{lastWithdrawTiime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

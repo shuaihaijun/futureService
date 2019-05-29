@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.future.mapper.com.FuComBankMapper">
+  <resultMap id="BaseResultMap" type="com.future.entity.com.FuComBank">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="bank_name" jdbcType="VARCHAR" property="bankName" />
+    <result column="bank_sub" jdbcType="VARCHAR" property="bankSub" />
+    <result column="bank_code" jdbcType="VARCHAR" property="bankCode" />
+    <result column="bank_address" jdbcType="VARCHAR" property="bankAddress" />
+    <result column="country" jdbcType="SMALLINT" property="country" />
+    <result column="province" jdbcType="SMALLINT" property="province" />
+    <result column="city" jdbcType="SMALLINT" property="city" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, bank_name, bank_sub, bank_code, bank_address, country, province, city
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from fu_com_bank
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from fu_com_bank
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.future.entity.com.FuComBank">
+    insert into fu_com_bank (id, bank_name, bank_sub, 
+      bank_code, bank_address, country, 
+      province, city)
+    values (#{id,jdbcType=INTEGER}, #{bankName,jdbcType=VARCHAR}, #{bankSub,jdbcType=VARCHAR}, 
+      #{bankCode,jdbcType=VARCHAR}, #{bankAddress,jdbcType=VARCHAR}, #{country,jdbcType=SMALLINT}, 
+      #{province,jdbcType=SMALLINT}, #{city,jdbcType=SMALLINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.future.entity.com.FuComBank">
+    insert into fu_com_bank
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="bankName != null">
+        bank_name,
+      </if>
+      <if test="bankSub != null">
+        bank_sub,
+      </if>
+      <if test="bankCode != null">
+        bank_code,
+      </if>
+      <if test="bankAddress != null">
+        bank_address,
+      </if>
+      <if test="country != null">
+        country,
+      </if>
+      <if test="province != null">
+        province,
+      </if>
+      <if test="city != null">
+        city,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="bankName != null">
+        #{bankName,jdbcType=VARCHAR},
+      </if>
+      <if test="bankSub != null">
+        #{bankSub,jdbcType=VARCHAR},
+      </if>
+      <if test="bankCode != null">
+        #{bankCode,jdbcType=VARCHAR},
+      </if>
+      <if test="bankAddress != null">
+        #{bankAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="country != null">
+        #{country,jdbcType=SMALLINT},
+      </if>
+      <if test="province != null">
+        #{province,jdbcType=SMALLINT},
+      </if>
+      <if test="city != null">
+        #{city,jdbcType=SMALLINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.future.entity.com.FuComBank">
+    update fu_com_bank
+    <set>
+      <if test="bankName != null">
+        bank_name = #{bankName,jdbcType=VARCHAR},
+      </if>
+      <if test="bankSub != null">
+        bank_sub = #{bankSub,jdbcType=VARCHAR},
+      </if>
+      <if test="bankCode != null">
+        bank_code = #{bankCode,jdbcType=VARCHAR},
+      </if>
+      <if test="bankAddress != null">
+        bank_address = #{bankAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="country != null">
+        country = #{country,jdbcType=SMALLINT},
+      </if>
+      <if test="province != null">
+        province = #{province,jdbcType=SMALLINT},
+      </if>
+      <if test="city != null">
+        city = #{city,jdbcType=SMALLINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.future.entity.com.FuComBank">
+    update fu_com_bank
+    set bank_name = #{bankName,jdbcType=VARCHAR},
+      bank_sub = #{bankSub,jdbcType=VARCHAR},
+      bank_code = #{bankCode,jdbcType=VARCHAR},
+      bank_address = #{bankAddress,jdbcType=VARCHAR},
+      country = #{country,jdbcType=SMALLINT},
+      province = #{province,jdbcType=SMALLINT},
+      city = #{city,jdbcType=SMALLINT}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

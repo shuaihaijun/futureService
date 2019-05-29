@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.future.mapper.commission.FuCommissionLevelMapper">
+  <resultMap id="BaseResultMap" type="com.future.entity.commission.FuCommissionLevel">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="modify_date" jdbcType="TIMESTAMP" property="modifyDate" />
+    <result column="commission_type" jdbcType="TINYINT" property="commissionType" />
+    <result column="order_type" jdbcType="TINYINT" property="orderType" />
+    <result column="commission_user_type" jdbcType="TINYINT" property="commissionUserType" />
+    <result column="commission_user_level" jdbcType="TINYINT" property="commissionUserLevel" />
+    <result column="rate_type" jdbcType="TINYINT" property="rateType" />
+    <result column="rate" jdbcType="DECIMAL" property="rate" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, create_date, modify_date, commission_type, order_type, commission_user_type, 
+    commission_user_level, rate_type, rate
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from fu_commission_level
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from fu_commission_level
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.future.entity.commission.FuCommissionLevel">
+    insert into fu_commission_level (id, create_date, modify_date, 
+      commission_type, order_type, commission_user_type, 
+      commission_user_level, rate_type, rate
+      )
+    values (#{id,jdbcType=INTEGER}, #{createDate,jdbcType=TIMESTAMP}, #{modifyDate,jdbcType=TIMESTAMP}, 
+      #{commissionType,jdbcType=TINYINT}, #{orderType,jdbcType=TINYINT}, #{commissionUserType,jdbcType=TINYINT}, 
+      #{commissionUserLevel,jdbcType=TINYINT}, #{rateType,jdbcType=TINYINT}, #{rate,jdbcType=DECIMAL}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.future.entity.commission.FuCommissionLevel">
+    insert into fu_commission_level
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="createDate != null">
+        create_date,
+      </if>
+      <if test="modifyDate != null">
+        modify_date,
+      </if>
+      <if test="commissionType != null">
+        commission_type,
+      </if>
+      <if test="orderType != null">
+        order_type,
+      </if>
+      <if test="commissionUserType != null">
+        commission_user_type,
+      </if>
+      <if test="commissionUserLevel != null">
+        commission_user_level,
+      </if>
+      <if test="rateType != null">
+        rate_type,
+      </if>
+      <if test="rate != null">
+        rate,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null">
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyDate != null">
+        #{modifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="commissionType != null">
+        #{commissionType,jdbcType=TINYINT},
+      </if>
+      <if test="orderType != null">
+        #{orderType,jdbcType=TINYINT},
+      </if>
+      <if test="commissionUserType != null">
+        #{commissionUserType,jdbcType=TINYINT},
+      </if>
+      <if test="commissionUserLevel != null">
+        #{commissionUserLevel,jdbcType=TINYINT},
+      </if>
+      <if test="rateType != null">
+        #{rateType,jdbcType=TINYINT},
+      </if>
+      <if test="rate != null">
+        #{rate,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.future.entity.commission.FuCommissionLevel">
+    update fu_commission_level
+    <set>
+      <if test="createDate != null">
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyDate != null">
+        modify_date = #{modifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="commissionType != null">
+        commission_type = #{commissionType,jdbcType=TINYINT},
+      </if>
+      <if test="orderType != null">
+        order_type = #{orderType,jdbcType=TINYINT},
+      </if>
+      <if test="commissionUserType != null">
+        commission_user_type = #{commissionUserType,jdbcType=TINYINT},
+      </if>
+      <if test="commissionUserLevel != null">
+        commission_user_level = #{commissionUserLevel,jdbcType=TINYINT},
+      </if>
+      <if test="rateType != null">
+        rate_type = #{rateType,jdbcType=TINYINT},
+      </if>
+      <if test="rate != null">
+        rate = #{rate,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.future.entity.commission.FuCommissionLevel">
+    update fu_commission_level
+    set create_date = #{createDate,jdbcType=TIMESTAMP},
+      modify_date = #{modifyDate,jdbcType=TIMESTAMP},
+      commission_type = #{commissionType,jdbcType=TINYINT},
+      order_type = #{orderType,jdbcType=TINYINT},
+      commission_user_type = #{commissionUserType,jdbcType=TINYINT},
+      commission_user_level = #{commissionUserLevel,jdbcType=TINYINT},
+      rate_type = #{rateType,jdbcType=TINYINT},
+      rate = #{rate,jdbcType=DECIMAL}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

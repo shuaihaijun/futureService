@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.future.mapper.com.FuComMaterialAreaMapper">
+  <resultMap id="BaseResultMap" type="com.future.entity.com.FuComMaterialArea">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="area_name" jdbcType="VARCHAR" property="areaName" />
+    <result column="area_introduce" jdbcType="VARCHAR" property="areaIntroduce" />
+    <result column="area_state" jdbcType="TINYINT" property="areaState" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="modify_date" jdbcType="TIMESTAMP" property="modifyDate" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, area_name, area_introduce, area_state, create_date, modify_date
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from fu_com_material_area
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from fu_com_material_area
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.future.entity.com.FuComMaterialArea">
+    insert into fu_com_material_area (id, area_name, area_introduce, 
+      area_state, create_date, modify_date
+      )
+    values (#{id,jdbcType=INTEGER}, #{areaName,jdbcType=VARCHAR}, #{areaIntroduce,jdbcType=VARCHAR}, 
+      #{areaState,jdbcType=TINYINT}, #{createDate,jdbcType=TIMESTAMP}, #{modifyDate,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.future.entity.com.FuComMaterialArea">
+    insert into fu_com_material_area
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="areaName != null">
+        area_name,
+      </if>
+      <if test="areaIntroduce != null">
+        area_introduce,
+      </if>
+      <if test="areaState != null">
+        area_state,
+      </if>
+      <if test="createDate != null">
+        create_date,
+      </if>
+      <if test="modifyDate != null">
+        modify_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="areaName != null">
+        #{areaName,jdbcType=VARCHAR},
+      </if>
+      <if test="areaIntroduce != null">
+        #{areaIntroduce,jdbcType=VARCHAR},
+      </if>
+      <if test="areaState != null">
+        #{areaState,jdbcType=TINYINT},
+      </if>
+      <if test="createDate != null">
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyDate != null">
+        #{modifyDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.future.entity.com.FuComMaterialArea">
+    update fu_com_material_area
+    <set>
+      <if test="areaName != null">
+        area_name = #{areaName,jdbcType=VARCHAR},
+      </if>
+      <if test="areaIntroduce != null">
+        area_introduce = #{areaIntroduce,jdbcType=VARCHAR},
+      </if>
+      <if test="areaState != null">
+        area_state = #{areaState,jdbcType=TINYINT},
+      </if>
+      <if test="createDate != null">
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyDate != null">
+        modify_date = #{modifyDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.future.entity.com.FuComMaterialArea">
+    update fu_com_material_area
+    set area_name = #{areaName,jdbcType=VARCHAR},
+      area_introduce = #{areaIntroduce,jdbcType=VARCHAR},
+      area_state = #{areaState,jdbcType=TINYINT},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      modify_date = #{modifyDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

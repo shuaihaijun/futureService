@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.future.mapper.com.FuComAgentApplyMapper">
+  <resultMap id="BaseResultMap" type="com.future.entity.com.FuComAgentApply">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="apply_type" jdbcType="TINYINT" property="applyType" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="agent_id" jdbcType="INTEGER" property="agentId" />
+    <result column="agent_level" jdbcType="TINYINT" property="agentLevel" />
+    <result column="apply_level" jdbcType="TINYINT" property="applyLevel" />
+    <result column="apply_reason" jdbcType="VARCHAR" property="applyReason" />
+    <result column="apply_desc" jdbcType="VARCHAR" property="applyDesc" />
+    <result column="apply_state" jdbcType="TINYINT" property="applyState" />
+    <result column="check_desc" jdbcType="VARCHAR" property="checkDesc" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="apply_date" jdbcType="TIMESTAMP" property="applyDate" />
+    <result column="check_date" jdbcType="TIMESTAMP" property="checkDate" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, apply_type, user_id, agent_id, agent_level, apply_level, apply_reason, apply_desc, 
+    apply_state, check_desc, create_date, apply_date, check_date
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from fu_com_agent_apply
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from fu_com_agent_apply
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.future.entity.com.FuComAgentApply">
+    insert into fu_com_agent_apply (id, apply_type, user_id, 
+      agent_id, agent_level, apply_level, 
+      apply_reason, apply_desc, apply_state, 
+      check_desc, create_date, apply_date, 
+      check_date)
+    values (#{id,jdbcType=INTEGER}, #{applyType,jdbcType=TINYINT}, #{userId,jdbcType=INTEGER}, 
+      #{agentId,jdbcType=INTEGER}, #{agentLevel,jdbcType=TINYINT}, #{applyLevel,jdbcType=TINYINT}, 
+      #{applyReason,jdbcType=VARCHAR}, #{applyDesc,jdbcType=VARCHAR}, #{applyState,jdbcType=TINYINT}, 
+      #{checkDesc,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, #{applyDate,jdbcType=TIMESTAMP}, 
+      #{checkDate,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.future.entity.com.FuComAgentApply">
+    insert into fu_com_agent_apply
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="applyType != null">
+        apply_type,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="agentId != null">
+        agent_id,
+      </if>
+      <if test="agentLevel != null">
+        agent_level,
+      </if>
+      <if test="applyLevel != null">
+        apply_level,
+      </if>
+      <if test="applyReason != null">
+        apply_reason,
+      </if>
+      <if test="applyDesc != null">
+        apply_desc,
+      </if>
+      <if test="applyState != null">
+        apply_state,
+      </if>
+      <if test="checkDesc != null">
+        check_desc,
+      </if>
+      <if test="createDate != null">
+        create_date,
+      </if>
+      <if test="applyDate != null">
+        apply_date,
+      </if>
+      <if test="checkDate != null">
+        check_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="applyType != null">
+        #{applyType,jdbcType=TINYINT},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="agentId != null">
+        #{agentId,jdbcType=INTEGER},
+      </if>
+      <if test="agentLevel != null">
+        #{agentLevel,jdbcType=TINYINT},
+      </if>
+      <if test="applyLevel != null">
+        #{applyLevel,jdbcType=TINYINT},
+      </if>
+      <if test="applyReason != null">
+        #{applyReason,jdbcType=VARCHAR},
+      </if>
+      <if test="applyDesc != null">
+        #{applyDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="applyState != null">
+        #{applyState,jdbcType=TINYINT},
+      </if>
+      <if test="checkDesc != null">
+        #{checkDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null">
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="applyDate != null">
+        #{applyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="checkDate != null">
+        #{checkDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.future.entity.com.FuComAgentApply">
+    update fu_com_agent_apply
+    <set>
+      <if test="applyType != null">
+        apply_type = #{applyType,jdbcType=TINYINT},
+      </if>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="agentId != null">
+        agent_id = #{agentId,jdbcType=INTEGER},
+      </if>
+      <if test="agentLevel != null">
+        agent_level = #{agentLevel,jdbcType=TINYINT},
+      </if>
+      <if test="applyLevel != null">
+        apply_level = #{applyLevel,jdbcType=TINYINT},
+      </if>
+      <if test="applyReason != null">
+        apply_reason = #{applyReason,jdbcType=VARCHAR},
+      </if>
+      <if test="applyDesc != null">
+        apply_desc = #{applyDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="applyState != null">
+        apply_state = #{applyState,jdbcType=TINYINT},
+      </if>
+      <if test="checkDesc != null">
+        check_desc = #{checkDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null">
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="applyDate != null">
+        apply_date = #{applyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="checkDate != null">
+        check_date = #{checkDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.future.entity.com.FuComAgentApply">
+    update fu_com_agent_apply
+    set apply_type = #{applyType,jdbcType=TINYINT},
+      user_id = #{userId,jdbcType=INTEGER},
+      agent_id = #{agentId,jdbcType=INTEGER},
+      agent_level = #{agentLevel,jdbcType=TINYINT},
+      apply_level = #{applyLevel,jdbcType=TINYINT},
+      apply_reason = #{applyReason,jdbcType=VARCHAR},
+      apply_desc = #{applyDesc,jdbcType=VARCHAR},
+      apply_state = #{applyState,jdbcType=TINYINT},
+      check_desc = #{checkDesc,jdbcType=VARCHAR},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      apply_date = #{applyDate,jdbcType=TIMESTAMP},
+      check_date = #{checkDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

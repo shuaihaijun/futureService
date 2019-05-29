@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.future.mapper.com.FuComMaterialMapper">
+  <resultMap id="BaseResultMap" type="com.future.entity.com.FuComMaterial">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="material_type" jdbcType="TINYINT" property="materialType" />
+    <result column="material_title" jdbcType="VARCHAR" property="materialTitle" />
+    <result column="material_state" jdbcType="TINYINT" property="materialState" />
+    <result column="material_area" jdbcType="INTEGER" property="materialArea" />
+    <result column="create_user" jdbcType="INTEGER" property="createUser" />
+    <result column="check_user" jdbcType="INTEGER" property="checkUser" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="modify_date" jdbcType="TIMESTAMP" property="modifyDate" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.future.entity.com.FuComMaterial">
+    <result column="material_data" jdbcType="LONGVARCHAR" property="materialData" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, material_type, material_title, material_state, material_area, create_user, check_user, 
+    create_date, modify_date
+  </sql>
+  <sql id="Blob_Column_List">
+    material_data
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from fu_com_material
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from fu_com_material
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.future.entity.com.FuComMaterial">
+    insert into fu_com_material (id, material_type, material_title, 
+      material_state, material_area, create_user, 
+      check_user, create_date, modify_date, 
+      material_data)
+    values (#{id,jdbcType=INTEGER}, #{materialType,jdbcType=TINYINT}, #{materialTitle,jdbcType=VARCHAR}, 
+      #{materialState,jdbcType=TINYINT}, #{materialArea,jdbcType=INTEGER}, #{createUser,jdbcType=INTEGER}, 
+      #{checkUser,jdbcType=INTEGER}, #{createDate,jdbcType=TIMESTAMP}, #{modifyDate,jdbcType=TIMESTAMP}, 
+      #{materialData,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.future.entity.com.FuComMaterial">
+    insert into fu_com_material
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="materialType != null">
+        material_type,
+      </if>
+      <if test="materialTitle != null">
+        material_title,
+      </if>
+      <if test="materialState != null">
+        material_state,
+      </if>
+      <if test="materialArea != null">
+        material_area,
+      </if>
+      <if test="createUser != null">
+        create_user,
+      </if>
+      <if test="checkUser != null">
+        check_user,
+      </if>
+      <if test="createDate != null">
+        create_date,
+      </if>
+      <if test="modifyDate != null">
+        modify_date,
+      </if>
+      <if test="materialData != null">
+        material_data,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="materialType != null">
+        #{materialType,jdbcType=TINYINT},
+      </if>
+      <if test="materialTitle != null">
+        #{materialTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="materialState != null">
+        #{materialState,jdbcType=TINYINT},
+      </if>
+      <if test="materialArea != null">
+        #{materialArea,jdbcType=INTEGER},
+      </if>
+      <if test="createUser != null">
+        #{createUser,jdbcType=INTEGER},
+      </if>
+      <if test="checkUser != null">
+        #{checkUser,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null">
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyDate != null">
+        #{modifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="materialData != null">
+        #{materialData,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.future.entity.com.FuComMaterial">
+    update fu_com_material
+    <set>
+      <if test="materialType != null">
+        material_type = #{materialType,jdbcType=TINYINT},
+      </if>
+      <if test="materialTitle != null">
+        material_title = #{materialTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="materialState != null">
+        material_state = #{materialState,jdbcType=TINYINT},
+      </if>
+      <if test="materialArea != null">
+        material_area = #{materialArea,jdbcType=INTEGER},
+      </if>
+      <if test="createUser != null">
+        create_user = #{createUser,jdbcType=INTEGER},
+      </if>
+      <if test="checkUser != null">
+        check_user = #{checkUser,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null">
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyDate != null">
+        modify_date = #{modifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="materialData != null">
+        material_data = #{materialData,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.future.entity.com.FuComMaterial">
+    update fu_com_material
+    set material_type = #{materialType,jdbcType=TINYINT},
+      material_title = #{materialTitle,jdbcType=VARCHAR},
+      material_state = #{materialState,jdbcType=TINYINT},
+      material_area = #{materialArea,jdbcType=INTEGER},
+      create_user = #{createUser,jdbcType=INTEGER},
+      check_user = #{checkUser,jdbcType=INTEGER},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      modify_date = #{modifyDate,jdbcType=TIMESTAMP},
+      material_data = #{materialData,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.future.entity.com.FuComMaterial">
+    update fu_com_material
+    set material_type = #{materialType,jdbcType=TINYINT},
+      material_title = #{materialTitle,jdbcType=VARCHAR},
+      material_state = #{materialState,jdbcType=TINYINT},
+      material_area = #{materialArea,jdbcType=INTEGER},
+      create_user = #{createUser,jdbcType=INTEGER},
+      check_user = #{checkUser,jdbcType=INTEGER},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      modify_date = #{modifyDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.future.mapper.account.FuAccountInfoMapper">
+  <resultMap id="BaseResultMap" type="com.future.entity.account.FuAccountInfo">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="modify_date" jdbcType="TIMESTAMP" property="modifyDate" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="account_level" jdbcType="VARCHAR" property="accountLevel" />
+    <result column="account_securities" jdbcType="VARCHAR" property="accountSecurities" />
+    <result column="account_options" jdbcType="VARCHAR" property="accountOptions" />
+    <result column="account_commodity" jdbcType="VARCHAR" property="accountCommodity" />
+    <result column="account_money" jdbcType="DECIMAL" property="accountMoney" />
+    <result column="account_coin" jdbcType="DECIMAL" property="accountCoin" />
+    <result column="account_debt" jdbcType="DECIMAL" property="accountDebt" />
+    <result column="account_last_amt" jdbcType="DECIMAL" property="accountLastAmt" />
+    <result column="account_investment" jdbcType="DECIMAL" property="accountInvestment" />
+    <result column="account_state" jdbcType="TINYINT" property="accountState" />
+    <result column="isrelative_content" jdbcType="VARCHAR" property="isrelativeContent" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, create_date, modify_date, user_id, account_level, account_securities, account_options, 
+    account_commodity, account_money, account_coin, account_debt, account_last_amt, account_investment, 
+    account_state, isrelative_content
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from fu_account_info
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from fu_account_info
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.future.entity.account.FuAccountInfo">
+    insert into fu_account_info (id, create_date, modify_date, 
+      user_id, account_level, account_securities, 
+      account_options, account_commodity, account_money, 
+      account_coin, account_debt, account_last_amt, 
+      account_investment, account_state, isrelative_content
+      )
+    values (#{id,jdbcType=INTEGER}, #{createDate,jdbcType=TIMESTAMP}, #{modifyDate,jdbcType=TIMESTAMP}, 
+      #{userId,jdbcType=INTEGER}, #{accountLevel,jdbcType=VARCHAR}, #{accountSecurities,jdbcType=VARCHAR}, 
+      #{accountOptions,jdbcType=VARCHAR}, #{accountCommodity,jdbcType=VARCHAR}, #{accountMoney,jdbcType=DECIMAL}, 
+      #{accountCoin,jdbcType=DECIMAL}, #{accountDebt,jdbcType=DECIMAL}, #{accountLastAmt,jdbcType=DECIMAL}, 
+      #{accountInvestment,jdbcType=DECIMAL}, #{accountState,jdbcType=TINYINT}, #{isrelativeContent,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.future.entity.account.FuAccountInfo">
+    insert into fu_account_info
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="createDate != null">
+        create_date,
+      </if>
+      <if test="modifyDate != null">
+        modify_date,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="accountLevel != null">
+        account_level,
+      </if>
+      <if test="accountSecurities != null">
+        account_securities,
+      </if>
+      <if test="accountOptions != null">
+        account_options,
+      </if>
+      <if test="accountCommodity != null">
+        account_commodity,
+      </if>
+      <if test="accountMoney != null">
+        account_money,
+      </if>
+      <if test="accountCoin != null">
+        account_coin,
+      </if>
+      <if test="accountDebt != null">
+        account_debt,
+      </if>
+      <if test="accountLastAmt != null">
+        account_last_amt,
+      </if>
+      <if test="accountInvestment != null">
+        account_investment,
+      </if>
+      <if test="accountState != null">
+        account_state,
+      </if>
+      <if test="isrelativeContent != null">
+        isrelative_content,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null">
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyDate != null">
+        #{modifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="accountLevel != null">
+        #{accountLevel,jdbcType=VARCHAR},
+      </if>
+      <if test="accountSecurities != null">
+        #{accountSecurities,jdbcType=VARCHAR},
+      </if>
+      <if test="accountOptions != null">
+        #{accountOptions,jdbcType=VARCHAR},
+      </if>
+      <if test="accountCommodity != null">
+        #{accountCommodity,jdbcType=VARCHAR},
+      </if>
+      <if test="accountMoney != null">
+        #{accountMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="accountCoin != null">
+        #{accountCoin,jdbcType=DECIMAL},
+      </if>
+      <if test="accountDebt != null">
+        #{accountDebt,jdbcType=DECIMAL},
+      </if>
+      <if test="accountLastAmt != null">
+        #{accountLastAmt,jdbcType=DECIMAL},
+      </if>
+      <if test="accountInvestment != null">
+        #{accountInvestment,jdbcType=DECIMAL},
+      </if>
+      <if test="accountState != null">
+        #{accountState,jdbcType=TINYINT},
+      </if>
+      <if test="isrelativeContent != null">
+        #{isrelativeContent,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.future.entity.account.FuAccountInfo">
+    update fu_account_info
+    <set>
+      <if test="createDate != null">
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyDate != null">
+        modify_date = #{modifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="accountLevel != null">
+        account_level = #{accountLevel,jdbcType=VARCHAR},
+      </if>
+      <if test="accountSecurities != null">
+        account_securities = #{accountSecurities,jdbcType=VARCHAR},
+      </if>
+      <if test="accountOptions != null">
+        account_options = #{accountOptions,jdbcType=VARCHAR},
+      </if>
+      <if test="accountCommodity != null">
+        account_commodity = #{accountCommodity,jdbcType=VARCHAR},
+      </if>
+      <if test="accountMoney != null">
+        account_money = #{accountMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="accountCoin != null">
+        account_coin = #{accountCoin,jdbcType=DECIMAL},
+      </if>
+      <if test="accountDebt != null">
+        account_debt = #{accountDebt,jdbcType=DECIMAL},
+      </if>
+      <if test="accountLastAmt != null">
+        account_last_amt = #{accountLastAmt,jdbcType=DECIMAL},
+      </if>
+      <if test="accountInvestment != null">
+        account_investment = #{accountInvestment,jdbcType=DECIMAL},
+      </if>
+      <if test="accountState != null">
+        account_state = #{accountState,jdbcType=TINYINT},
+      </if>
+      <if test="isrelativeContent != null">
+        isrelative_content = #{isrelativeContent,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.future.entity.account.FuAccountInfo">
+    update fu_account_info
+    set create_date = #{createDate,jdbcType=TIMESTAMP},
+      modify_date = #{modifyDate,jdbcType=TIMESTAMP},
+      user_id = #{userId,jdbcType=INTEGER},
+      account_level = #{accountLevel,jdbcType=VARCHAR},
+      account_securities = #{accountSecurities,jdbcType=VARCHAR},
+      account_options = #{accountOptions,jdbcType=VARCHAR},
+      account_commodity = #{accountCommodity,jdbcType=VARCHAR},
+      account_money = #{accountMoney,jdbcType=DECIMAL},
+      account_coin = #{accountCoin,jdbcType=DECIMAL},
+      account_debt = #{accountDebt,jdbcType=DECIMAL},
+      account_last_amt = #{accountLastAmt,jdbcType=DECIMAL},
+      account_investment = #{accountInvestment,jdbcType=DECIMAL},
+      account_state = #{accountState,jdbcType=TINYINT},
+      isrelative_content = #{isrelativeContent,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

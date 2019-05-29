@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.future.mapper.com.FuComCaptchaMapper">
+  <resultMap id="BaseResultMap" type="com.future.entity.com.FuComCaptcha">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="captcha_time" jdbcType="INTEGER" property="captchaTime" />
+    <result column="ip_address" jdbcType="VARCHAR" property="ipAddress" />
+    <result column="word" jdbcType="VARCHAR" property="word" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, captcha_time, ip_address, word
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from fu_com_captcha
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from fu_com_captcha
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.future.entity.com.FuComCaptcha">
+    insert into fu_com_captcha (id, captcha_time, ip_address, 
+      word)
+    values (#{id,jdbcType=BIGINT}, #{captchaTime,jdbcType=INTEGER}, #{ipAddress,jdbcType=VARCHAR}, 
+      #{word,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.future.entity.com.FuComCaptcha">
+    insert into fu_com_captcha
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="captchaTime != null">
+        captcha_time,
+      </if>
+      <if test="ipAddress != null">
+        ip_address,
+      </if>
+      <if test="word != null">
+        word,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="captchaTime != null">
+        #{captchaTime,jdbcType=INTEGER},
+      </if>
+      <if test="ipAddress != null">
+        #{ipAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="word != null">
+        #{word,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.future.entity.com.FuComCaptcha">
+    update fu_com_captcha
+    <set>
+      <if test="captchaTime != null">
+        captcha_time = #{captchaTime,jdbcType=INTEGER},
+      </if>
+      <if test="ipAddress != null">
+        ip_address = #{ipAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="word != null">
+        word = #{word,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.future.entity.com.FuComCaptcha">
+    update fu_com_captcha
+    set captcha_time = #{captchaTime,jdbcType=INTEGER},
+      ip_address = #{ipAddress,jdbcType=VARCHAR},
+      word = #{word,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

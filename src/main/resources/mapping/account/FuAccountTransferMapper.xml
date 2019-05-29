@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.future.mapper.account.FuAccountTransferMapper">
+  <resultMap id="BaseResultMap" type="com.future.entity.account.FuAccountTransfer">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="transfer_type" jdbcType="TINYINT" property="transferType" />
+    <result column="transfer_from" jdbcType="VARCHAR" property="transferFrom" />
+    <result column="transfer_to" jdbcType="VARCHAR" property="transferTo" />
+    <result column="transfer_amount" jdbcType="DECIMAL" property="transferAmount" />
+    <result column="transfer_time" jdbcType="TIMESTAMP" property="transferTime" />
+    <result column="transfer_state" jdbcType="TINYINT" property="transferState" />
+    <result column="params" jdbcType="VARCHAR" property="params" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, create_date, user_id, transfer_type, transfer_from, transfer_to, transfer_amount, 
+    transfer_time, transfer_state, params
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from fu_account_transfer
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from fu_account_transfer
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.future.entity.account.FuAccountTransfer">
+    insert into fu_account_transfer (id, create_date, user_id, 
+      transfer_type, transfer_from, transfer_to, 
+      transfer_amount, transfer_time, transfer_state, 
+      params)
+    values (#{id,jdbcType=INTEGER}, #{createDate,jdbcType=TIMESTAMP}, #{userId,jdbcType=INTEGER}, 
+      #{transferType,jdbcType=TINYINT}, #{transferFrom,jdbcType=VARCHAR}, #{transferTo,jdbcType=VARCHAR}, 
+      #{transferAmount,jdbcType=DECIMAL}, #{transferTime,jdbcType=TIMESTAMP}, #{transferState,jdbcType=TINYINT}, 
+      #{params,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.future.entity.account.FuAccountTransfer">
+    insert into fu_account_transfer
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="createDate != null">
+        create_date,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="transferType != null">
+        transfer_type,
+      </if>
+      <if test="transferFrom != null">
+        transfer_from,
+      </if>
+      <if test="transferTo != null">
+        transfer_to,
+      </if>
+      <if test="transferAmount != null">
+        transfer_amount,
+      </if>
+      <if test="transferTime != null">
+        transfer_time,
+      </if>
+      <if test="transferState != null">
+        transfer_state,
+      </if>
+      <if test="params != null">
+        params,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null">
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="transferType != null">
+        #{transferType,jdbcType=TINYINT},
+      </if>
+      <if test="transferFrom != null">
+        #{transferFrom,jdbcType=VARCHAR},
+      </if>
+      <if test="transferTo != null">
+        #{transferTo,jdbcType=VARCHAR},
+      </if>
+      <if test="transferAmount != null">
+        #{transferAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="transferTime != null">
+        #{transferTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="transferState != null">
+        #{transferState,jdbcType=TINYINT},
+      </if>
+      <if test="params != null">
+        #{params,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.future.entity.account.FuAccountTransfer">
+    update fu_account_transfer
+    <set>
+      <if test="createDate != null">
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="transferType != null">
+        transfer_type = #{transferType,jdbcType=TINYINT},
+      </if>
+      <if test="transferFrom != null">
+        transfer_from = #{transferFrom,jdbcType=VARCHAR},
+      </if>
+      <if test="transferTo != null">
+        transfer_to = #{transferTo,jdbcType=VARCHAR},
+      </if>
+      <if test="transferAmount != null">
+        transfer_amount = #{transferAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="transferTime != null">
+        transfer_time = #{transferTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="transferState != null">
+        transfer_state = #{transferState,jdbcType=TINYINT},
+      </if>
+      <if test="params != null">
+        params = #{params,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.future.entity.account.FuAccountTransfer">
+    update fu_account_transfer
+    set create_date = #{createDate,jdbcType=TIMESTAMP},
+      user_id = #{userId,jdbcType=INTEGER},
+      transfer_type = #{transferType,jdbcType=TINYINT},
+      transfer_from = #{transferFrom,jdbcType=VARCHAR},
+      transfer_to = #{transferTo,jdbcType=VARCHAR},
+      transfer_amount = #{transferAmount,jdbcType=DECIMAL},
+      transfer_time = #{transferTime,jdbcType=TIMESTAMP},
+      transfer_state = #{transferState,jdbcType=TINYINT},
+      params = #{params,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

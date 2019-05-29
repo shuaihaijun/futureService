@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.future.mapper.commission.FuCommissionInfoMapper">
+  <resultMap id="BaseResultMap" type="com.future.entity.commission.FuCommissionInfo">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="modify_date" jdbcType="TIMESTAMP" property="modifyDate" />
+    <result column="oper_date" jdbcType="TIMESTAMP" property="operDate" />
+    <result column="source_type" jdbcType="TINYINT" property="sourceType" />
+    <result column="source_user_id" jdbcType="INTEGER" property="sourceUserId" />
+    <result column="source_account_id" jdbcType="INTEGER" property="sourceAccountId" />
+    <result column="source_order_id" jdbcType="INTEGER" property="sourceOrderId" />
+    <result column="source_order_state" jdbcType="TINYINT" property="sourceOrderState" />
+    <result column="source_order_oper" jdbcType="TINYINT" property="sourceOrderOper" />
+    <result column="source_order_money" jdbcType="DECIMAL" property="sourceOrderMoney" />
+    <result column="commission_type" jdbcType="TINYINT" property="commissionType" />
+    <result column="commission_user_id" jdbcType="INTEGER" property="commissionUserId" />
+    <result column="commission_user_type" jdbcType="TINYINT" property="commissionUserType" />
+    <result column="commission_luser_evel" jdbcType="TINYINT" property="commissionLuserEvel" />
+    <result column="commission_account_id" jdbcType="INTEGER" property="commissionAccountId" />
+    <result column="commission_rate" jdbcType="DECIMAL" property="commissionRate" />
+    <result column="commission_money" jdbcType="DECIMAL" property="commissionMoney" />
+    <result column="commission_date" jdbcType="TIMESTAMP" property="commissionDate" />
+    <result column="commission_state" jdbcType="TINYINT" property="commissionState" />
+    <result column="coin_type" jdbcType="TINYINT" property="coinType" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, create_date, modify_date, oper_date, source_type, source_user_id, source_account_id, 
+    source_order_id, source_order_state, source_order_oper, source_order_money, commission_type, 
+    commission_user_id, commission_user_type, commission_luser_evel, commission_account_id, 
+    commission_rate, commission_money, commission_date, commission_state, coin_type
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from fu_commission_info
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from fu_commission_info
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.future.entity.commission.FuCommissionInfo">
+    insert into fu_commission_info (id, create_date, modify_date, 
+      oper_date, source_type, source_user_id, 
+      source_account_id, source_order_id, source_order_state, 
+      source_order_oper, source_order_money, commission_type, 
+      commission_user_id, commission_user_type, commission_luser_evel, 
+      commission_account_id, commission_rate, commission_money, 
+      commission_date, commission_state, coin_type
+      )
+    values (#{id,jdbcType=INTEGER}, #{createDate,jdbcType=TIMESTAMP}, #{modifyDate,jdbcType=TIMESTAMP}, 
+      #{operDate,jdbcType=TIMESTAMP}, #{sourceType,jdbcType=TINYINT}, #{sourceUserId,jdbcType=INTEGER}, 
+      #{sourceAccountId,jdbcType=INTEGER}, #{sourceOrderId,jdbcType=INTEGER}, #{sourceOrderState,jdbcType=TINYINT}, 
+      #{sourceOrderOper,jdbcType=TINYINT}, #{sourceOrderMoney,jdbcType=DECIMAL}, #{commissionType,jdbcType=TINYINT}, 
+      #{commissionUserId,jdbcType=INTEGER}, #{commissionUserType,jdbcType=TINYINT}, #{commissionLuserEvel,jdbcType=TINYINT}, 
+      #{commissionAccountId,jdbcType=INTEGER}, #{commissionRate,jdbcType=DECIMAL}, #{commissionMoney,jdbcType=DECIMAL}, 
+      #{commissionDate,jdbcType=TIMESTAMP}, #{commissionState,jdbcType=TINYINT}, #{coinType,jdbcType=TINYINT}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.future.entity.commission.FuCommissionInfo">
+    insert into fu_commission_info
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="createDate != null">
+        create_date,
+      </if>
+      <if test="modifyDate != null">
+        modify_date,
+      </if>
+      <if test="operDate != null">
+        oper_date,
+      </if>
+      <if test="sourceType != null">
+        source_type,
+      </if>
+      <if test="sourceUserId != null">
+        source_user_id,
+      </if>
+      <if test="sourceAccountId != null">
+        source_account_id,
+      </if>
+      <if test="sourceOrderId != null">
+        source_order_id,
+      </if>
+      <if test="sourceOrderState != null">
+        source_order_state,
+      </if>
+      <if test="sourceOrderOper != null">
+        source_order_oper,
+      </if>
+      <if test="sourceOrderMoney != null">
+        source_order_money,
+      </if>
+      <if test="commissionType != null">
+        commission_type,
+      </if>
+      <if test="commissionUserId != null">
+        commission_user_id,
+      </if>
+      <if test="commissionUserType != null">
+        commission_user_type,
+      </if>
+      <if test="commissionLuserEvel != null">
+        commission_luser_evel,
+      </if>
+      <if test="commissionAccountId != null">
+        commission_account_id,
+      </if>
+      <if test="commissionRate != null">
+        commission_rate,
+      </if>
+      <if test="commissionMoney != null">
+        commission_money,
+      </if>
+      <if test="commissionDate != null">
+        commission_date,
+      </if>
+      <if test="commissionState != null">
+        commission_state,
+      </if>
+      <if test="coinType != null">
+        coin_type,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null">
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyDate != null">
+        #{modifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="operDate != null">
+        #{operDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sourceType != null">
+        #{sourceType,jdbcType=TINYINT},
+      </if>
+      <if test="sourceUserId != null">
+        #{sourceUserId,jdbcType=INTEGER},
+      </if>
+      <if test="sourceAccountId != null">
+        #{sourceAccountId,jdbcType=INTEGER},
+      </if>
+      <if test="sourceOrderId != null">
+        #{sourceOrderId,jdbcType=INTEGER},
+      </if>
+      <if test="sourceOrderState != null">
+        #{sourceOrderState,jdbcType=TINYINT},
+      </if>
+      <if test="sourceOrderOper != null">
+        #{sourceOrderOper,jdbcType=TINYINT},
+      </if>
+      <if test="sourceOrderMoney != null">
+        #{sourceOrderMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="commissionType != null">
+        #{commissionType,jdbcType=TINYINT},
+      </if>
+      <if test="commissionUserId != null">
+        #{commissionUserId,jdbcType=INTEGER},
+      </if>
+      <if test="commissionUserType != null">
+        #{commissionUserType,jdbcType=TINYINT},
+      </if>
+      <if test="commissionLuserEvel != null">
+        #{commissionLuserEvel,jdbcType=TINYINT},
+      </if>
+      <if test="commissionAccountId != null">
+        #{commissionAccountId,jdbcType=INTEGER},
+      </if>
+      <if test="commissionRate != null">
+        #{commissionRate,jdbcType=DECIMAL},
+      </if>
+      <if test="commissionMoney != null">
+        #{commissionMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="commissionDate != null">
+        #{commissionDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="commissionState != null">
+        #{commissionState,jdbcType=TINYINT},
+      </if>
+      <if test="coinType != null">
+        #{coinType,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.future.entity.commission.FuCommissionInfo">
+    update fu_commission_info
+    <set>
+      <if test="createDate != null">
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyDate != null">
+        modify_date = #{modifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="operDate != null">
+        oper_date = #{operDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sourceType != null">
+        source_type = #{sourceType,jdbcType=TINYINT},
+      </if>
+      <if test="sourceUserId != null">
+        source_user_id = #{sourceUserId,jdbcType=INTEGER},
+      </if>
+      <if test="sourceAccountId != null">
+        source_account_id = #{sourceAccountId,jdbcType=INTEGER},
+      </if>
+      <if test="sourceOrderId != null">
+        source_order_id = #{sourceOrderId,jdbcType=INTEGER},
+      </if>
+      <if test="sourceOrderState != null">
+        source_order_state = #{sourceOrderState,jdbcType=TINYINT},
+      </if>
+      <if test="sourceOrderOper != null">
+        source_order_oper = #{sourceOrderOper,jdbcType=TINYINT},
+      </if>
+      <if test="sourceOrderMoney != null">
+        source_order_money = #{sourceOrderMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="commissionType != null">
+        commission_type = #{commissionType,jdbcType=TINYINT},
+      </if>
+      <if test="commissionUserId != null">
+        commission_user_id = #{commissionUserId,jdbcType=INTEGER},
+      </if>
+      <if test="commissionUserType != null">
+        commission_user_type = #{commissionUserType,jdbcType=TINYINT},
+      </if>
+      <if test="commissionLuserEvel != null">
+        commission_luser_evel = #{commissionLuserEvel,jdbcType=TINYINT},
+      </if>
+      <if test="commissionAccountId != null">
+        commission_account_id = #{commissionAccountId,jdbcType=INTEGER},
+      </if>
+      <if test="commissionRate != null">
+        commission_rate = #{commissionRate,jdbcType=DECIMAL},
+      </if>
+      <if test="commissionMoney != null">
+        commission_money = #{commissionMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="commissionDate != null">
+        commission_date = #{commissionDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="commissionState != null">
+        commission_state = #{commissionState,jdbcType=TINYINT},
+      </if>
+      <if test="coinType != null">
+        coin_type = #{coinType,jdbcType=TINYINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.future.entity.commission.FuCommissionInfo">
+    update fu_commission_info
+    set create_date = #{createDate,jdbcType=TIMESTAMP},
+      modify_date = #{modifyDate,jdbcType=TIMESTAMP},
+      oper_date = #{operDate,jdbcType=TIMESTAMP},
+      source_type = #{sourceType,jdbcType=TINYINT},
+      source_user_id = #{sourceUserId,jdbcType=INTEGER},
+      source_account_id = #{sourceAccountId,jdbcType=INTEGER},
+      source_order_id = #{sourceOrderId,jdbcType=INTEGER},
+      source_order_state = #{sourceOrderState,jdbcType=TINYINT},
+      source_order_oper = #{sourceOrderOper,jdbcType=TINYINT},
+      source_order_money = #{sourceOrderMoney,jdbcType=DECIMAL},
+      commission_type = #{commissionType,jdbcType=TINYINT},
+      commission_user_id = #{commissionUserId,jdbcType=INTEGER},
+      commission_user_type = #{commissionUserType,jdbcType=TINYINT},
+      commission_luser_evel = #{commissionLuserEvel,jdbcType=TINYINT},
+      commission_account_id = #{commissionAccountId,jdbcType=INTEGER},
+      commission_rate = #{commissionRate,jdbcType=DECIMAL},
+      commission_money = #{commissionMoney,jdbcType=DECIMAL},
+      commission_date = #{commissionDate,jdbcType=TIMESTAMP},
+      commission_state = #{commissionState,jdbcType=TINYINT},
+      coin_type = #{coinType,jdbcType=TINYINT}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

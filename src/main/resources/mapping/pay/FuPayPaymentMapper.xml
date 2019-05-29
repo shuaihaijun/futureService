@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.future.mapper.pay.FuPayPaymentMapper">
+  <resultMap id="BaseResultMap" type="com.future.entity.pay.FuPayPayment">
+    <id column="id" jdbcType="TINYINT" property="id" />
+    <result column="code" jdbcType="VARCHAR" property="code" />
+    <result column="user" jdbcType="INTEGER" property="user" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="merchant" jdbcType="VARCHAR" property="merchant" />
+    <result column="enabled" jdbcType="TINYINT" property="enabled" />
+    <result column="secret" jdbcType="VARCHAR" property="secret" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, code, user, name, merchant, enabled, secret
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Byte" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from fu_pay_payment
+    where id = #{id,jdbcType=TINYINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Byte">
+    delete from fu_pay_payment
+    where id = #{id,jdbcType=TINYINT}
+  </delete>
+  <insert id="insert" parameterType="com.future.entity.pay.FuPayPayment">
+    insert into fu_pay_payment (id, code, user, 
+      name, merchant, enabled, 
+      secret)
+    values (#{id,jdbcType=TINYINT}, #{code,jdbcType=VARCHAR}, #{user,jdbcType=INTEGER}, 
+      #{name,jdbcType=VARCHAR}, #{merchant,jdbcType=VARCHAR}, #{enabled,jdbcType=TINYINT}, 
+      #{secret,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.future.entity.pay.FuPayPayment">
+    insert into fu_pay_payment
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="code != null">
+        code,
+      </if>
+      <if test="user != null">
+        user,
+      </if>
+      <if test="name != null">
+        name,
+      </if>
+      <if test="merchant != null">
+        merchant,
+      </if>
+      <if test="enabled != null">
+        enabled,
+      </if>
+      <if test="secret != null">
+        secret,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=TINYINT},
+      </if>
+      <if test="code != null">
+        #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="user != null">
+        #{user,jdbcType=INTEGER},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="merchant != null">
+        #{merchant,jdbcType=VARCHAR},
+      </if>
+      <if test="enabled != null">
+        #{enabled,jdbcType=TINYINT},
+      </if>
+      <if test="secret != null">
+        #{secret,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.future.entity.pay.FuPayPayment">
+    update fu_pay_payment
+    <set>
+      <if test="code != null">
+        code = #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="user != null">
+        user = #{user,jdbcType=INTEGER},
+      </if>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="merchant != null">
+        merchant = #{merchant,jdbcType=VARCHAR},
+      </if>
+      <if test="enabled != null">
+        enabled = #{enabled,jdbcType=TINYINT},
+      </if>
+      <if test="secret != null">
+        secret = #{secret,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=TINYINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.future.entity.pay.FuPayPayment">
+    update fu_pay_payment
+    set code = #{code,jdbcType=VARCHAR},
+      user = #{user,jdbcType=INTEGER},
+      name = #{name,jdbcType=VARCHAR},
+      merchant = #{merchant,jdbcType=VARCHAR},
+      enabled = #{enabled,jdbcType=TINYINT},
+      secret = #{secret,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=TINYINT}
+  </update>
+</mapper>

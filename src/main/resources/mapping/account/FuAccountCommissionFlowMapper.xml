@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.future.mapper.account.FuAccountCommissionFlowMapper">
+  <resultMap id="BaseResultMap" type="com.future.entity.account.FuAccountCommissionFlow">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="modify_date" jdbcType="TIMESTAMP" property="modifyDate" />
+    <result column="commission_user_id" jdbcType="INTEGER" property="commissionUserId" />
+    <result column="commission_account_id" jdbcType="INTEGER" property="commissionAccountId" />
+    <result column="commission_date" jdbcType="TIMESTAMP" property="commissionDate" />
+    <result column="commission_type" jdbcType="TINYINT" property="commissionType" />
+    <result column="commission_level" jdbcType="TINYINT" property="commissionLevel" />
+    <result column="commission_rate" jdbcType="TINYINT" property="commissionRate" />
+    <result column="source_money" jdbcType="DECIMAL" property="sourceMoney" />
+    <result column="commission_money" jdbcType="DECIMAL" property="commissionMoney" />
+    <result column="commission_state" jdbcType="TINYINT" property="commissionState" />
+    <result column="coin_type" jdbcType="TINYINT" property="coinType" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, create_date, modify_date, commission_user_id, commission_account_id, commission_date, 
+    commission_type, commission_level, commission_rate, source_money, commission_money, 
+    commission_state, coin_type
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from fu_account_commission_flow
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from fu_account_commission_flow
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.future.entity.account.FuAccountCommissionFlow">
+    insert into fu_account_commission_flow (id, create_date, modify_date, 
+      commission_user_id, commission_account_id, 
+      commission_date, commission_type, commission_level, 
+      commission_rate, source_money, commission_money, 
+      commission_state, coin_type)
+    values (#{id,jdbcType=INTEGER}, #{createDate,jdbcType=TIMESTAMP}, #{modifyDate,jdbcType=TIMESTAMP}, 
+      #{commissionUserId,jdbcType=INTEGER}, #{commissionAccountId,jdbcType=INTEGER}, 
+      #{commissionDate,jdbcType=TIMESTAMP}, #{commissionType,jdbcType=TINYINT}, #{commissionLevel,jdbcType=TINYINT}, 
+      #{commissionRate,jdbcType=TINYINT}, #{sourceMoney,jdbcType=DECIMAL}, #{commissionMoney,jdbcType=DECIMAL}, 
+      #{commissionState,jdbcType=TINYINT}, #{coinType,jdbcType=TINYINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.future.entity.account.FuAccountCommissionFlow">
+    insert into fu_account_commission_flow
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="createDate != null">
+        create_date,
+      </if>
+      <if test="modifyDate != null">
+        modify_date,
+      </if>
+      <if test="commissionUserId != null">
+        commission_user_id,
+      </if>
+      <if test="commissionAccountId != null">
+        commission_account_id,
+      </if>
+      <if test="commissionDate != null">
+        commission_date,
+      </if>
+      <if test="commissionType != null">
+        commission_type,
+      </if>
+      <if test="commissionLevel != null">
+        commission_level,
+      </if>
+      <if test="commissionRate != null">
+        commission_rate,
+      </if>
+      <if test="sourceMoney != null">
+        source_money,
+      </if>
+      <if test="commissionMoney != null">
+        commission_money,
+      </if>
+      <if test="commissionState != null">
+        commission_state,
+      </if>
+      <if test="coinType != null">
+        coin_type,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null">
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyDate != null">
+        #{modifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="commissionUserId != null">
+        #{commissionUserId,jdbcType=INTEGER},
+      </if>
+      <if test="commissionAccountId != null">
+        #{commissionAccountId,jdbcType=INTEGER},
+      </if>
+      <if test="commissionDate != null">
+        #{commissionDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="commissionType != null">
+        #{commissionType,jdbcType=TINYINT},
+      </if>
+      <if test="commissionLevel != null">
+        #{commissionLevel,jdbcType=TINYINT},
+      </if>
+      <if test="commissionRate != null">
+        #{commissionRate,jdbcType=TINYINT},
+      </if>
+      <if test="sourceMoney != null">
+        #{sourceMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="commissionMoney != null">
+        #{commissionMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="commissionState != null">
+        #{commissionState,jdbcType=TINYINT},
+      </if>
+      <if test="coinType != null">
+        #{coinType,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.future.entity.account.FuAccountCommissionFlow">
+    update fu_account_commission_flow
+    <set>
+      <if test="createDate != null">
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyDate != null">
+        modify_date = #{modifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="commissionUserId != null">
+        commission_user_id = #{commissionUserId,jdbcType=INTEGER},
+      </if>
+      <if test="commissionAccountId != null">
+        commission_account_id = #{commissionAccountId,jdbcType=INTEGER},
+      </if>
+      <if test="commissionDate != null">
+        commission_date = #{commissionDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="commissionType != null">
+        commission_type = #{commissionType,jdbcType=TINYINT},
+      </if>
+      <if test="commissionLevel != null">
+        commission_level = #{commissionLevel,jdbcType=TINYINT},
+      </if>
+      <if test="commissionRate != null">
+        commission_rate = #{commissionRate,jdbcType=TINYINT},
+      </if>
+      <if test="sourceMoney != null">
+        source_money = #{sourceMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="commissionMoney != null">
+        commission_money = #{commissionMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="commissionState != null">
+        commission_state = #{commissionState,jdbcType=TINYINT},
+      </if>
+      <if test="coinType != null">
+        coin_type = #{coinType,jdbcType=TINYINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.future.entity.account.FuAccountCommissionFlow">
+    update fu_account_commission_flow
+    set create_date = #{createDate,jdbcType=TIMESTAMP},
+      modify_date = #{modifyDate,jdbcType=TIMESTAMP},
+      commission_user_id = #{commissionUserId,jdbcType=INTEGER},
+      commission_account_id = #{commissionAccountId,jdbcType=INTEGER},
+      commission_date = #{commissionDate,jdbcType=TIMESTAMP},
+      commission_type = #{commissionType,jdbcType=TINYINT},
+      commission_level = #{commissionLevel,jdbcType=TINYINT},
+      commission_rate = #{commissionRate,jdbcType=TINYINT},
+      source_money = #{sourceMoney,jdbcType=DECIMAL},
+      commission_money = #{commissionMoney,jdbcType=DECIMAL},
+      commission_state = #{commissionState,jdbcType=TINYINT},
+      coin_type = #{coinType,jdbcType=TINYINT}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

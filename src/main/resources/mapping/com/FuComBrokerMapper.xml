@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.future.mapper.com.FuComBrokerMapper">
+  <resultMap id="BaseResultMap" type="com.future.entity.com.FuComBroker">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="broker_name" jdbcType="VARCHAR" property="brokerName" />
+    <result column="broker_id" jdbcType="VARCHAR" property="brokerId" />
+    <result column="broker_type" jdbcType="TINYINT" property="brokerType" />
+    <result column="group_name" jdbcType="VARCHAR" property="groupName" />
+    <result column="comment" jdbcType="VARCHAR" property="comment" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, broker_name, broker_id, broker_type, group_name, comment
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from fu_com_broker
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from fu_com_broker
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.future.entity.com.FuComBroker">
+    insert into fu_com_broker (id, broker_name, broker_id, 
+      broker_type, group_name, comment
+      )
+    values (#{id,jdbcType=INTEGER}, #{brokerName,jdbcType=VARCHAR}, #{brokerId,jdbcType=VARCHAR}, 
+      #{brokerType,jdbcType=TINYINT}, #{groupName,jdbcType=VARCHAR}, #{comment,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.future.entity.com.FuComBroker">
+    insert into fu_com_broker
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="brokerName != null">
+        broker_name,
+      </if>
+      <if test="brokerId != null">
+        broker_id,
+      </if>
+      <if test="brokerType != null">
+        broker_type,
+      </if>
+      <if test="groupName != null">
+        group_name,
+      </if>
+      <if test="comment != null">
+        comment,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="brokerName != null">
+        #{brokerName,jdbcType=VARCHAR},
+      </if>
+      <if test="brokerId != null">
+        #{brokerId,jdbcType=VARCHAR},
+      </if>
+      <if test="brokerType != null">
+        #{brokerType,jdbcType=TINYINT},
+      </if>
+      <if test="groupName != null">
+        #{groupName,jdbcType=VARCHAR},
+      </if>
+      <if test="comment != null">
+        #{comment,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.future.entity.com.FuComBroker">
+    update fu_com_broker
+    <set>
+      <if test="brokerName != null">
+        broker_name = #{brokerName,jdbcType=VARCHAR},
+      </if>
+      <if test="brokerId != null">
+        broker_id = #{brokerId,jdbcType=VARCHAR},
+      </if>
+      <if test="brokerType != null">
+        broker_type = #{brokerType,jdbcType=TINYINT},
+      </if>
+      <if test="groupName != null">
+        group_name = #{groupName,jdbcType=VARCHAR},
+      </if>
+      <if test="comment != null">
+        comment = #{comment,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.future.entity.com.FuComBroker">
+    update fu_com_broker
+    set broker_name = #{brokerName,jdbcType=VARCHAR},
+      broker_id = #{brokerId,jdbcType=VARCHAR},
+      broker_type = #{brokerType,jdbcType=TINYINT},
+      group_name = #{groupName,jdbcType=VARCHAR},
+      comment = #{comment,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

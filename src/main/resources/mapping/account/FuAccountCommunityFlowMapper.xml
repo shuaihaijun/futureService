@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.future.mapper.account.FuAccountCommunityFlowMapper">
+  <resultMap id="BaseResultMap" type="com.future.entity.account.FuAccountCommunityFlow">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="deal_date" jdbcType="TIMESTAMP" property="dealDate" />
+    <result column="deal_type" jdbcType="TINYINT" property="dealType" />
+    <result column="money_soure" jdbcType="DECIMAL" property="moneySoure" />
+    <result column="money_exclude" jdbcType="DECIMAL" property="moneyExclude" />
+    <result column="money_required" jdbcType="DECIMAL" property="moneyRequired" />
+    <result column="money_real" jdbcType="DECIMAL" property="moneyReal" />
+    <result column="account_before" jdbcType="DECIMAL" property="accountBefore" />
+    <result column="account_after_amt" jdbcType="DECIMAL" property="accountAfterAmt" />
+    <result column="coin_type" jdbcType="TINYINT" property="coinType" />
+    <result column="state" jdbcType="TINYINT" property="state" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, create_date, deal_date, deal_type, money_soure, money_exclude, money_required, 
+    money_real, account_before, account_after_amt, coin_type, state
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from fu_account_community_flow
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from fu_account_community_flow
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.future.entity.account.FuAccountCommunityFlow">
+    insert into fu_account_community_flow (id, create_date, deal_date, 
+      deal_type, money_soure, money_exclude, 
+      money_required, money_real, account_before, 
+      account_after_amt, coin_type, state
+      )
+    values (#{id,jdbcType=INTEGER}, #{createDate,jdbcType=TIMESTAMP}, #{dealDate,jdbcType=TIMESTAMP}, 
+      #{dealType,jdbcType=TINYINT}, #{moneySoure,jdbcType=DECIMAL}, #{moneyExclude,jdbcType=DECIMAL}, 
+      #{moneyRequired,jdbcType=DECIMAL}, #{moneyReal,jdbcType=DECIMAL}, #{accountBefore,jdbcType=DECIMAL}, 
+      #{accountAfterAmt,jdbcType=DECIMAL}, #{coinType,jdbcType=TINYINT}, #{state,jdbcType=TINYINT}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.future.entity.account.FuAccountCommunityFlow">
+    insert into fu_account_community_flow
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="createDate != null">
+        create_date,
+      </if>
+      <if test="dealDate != null">
+        deal_date,
+      </if>
+      <if test="dealType != null">
+        deal_type,
+      </if>
+      <if test="moneySoure != null">
+        money_soure,
+      </if>
+      <if test="moneyExclude != null">
+        money_exclude,
+      </if>
+      <if test="moneyRequired != null">
+        money_required,
+      </if>
+      <if test="moneyReal != null">
+        money_real,
+      </if>
+      <if test="accountBefore != null">
+        account_before,
+      </if>
+      <if test="accountAfterAmt != null">
+        account_after_amt,
+      </if>
+      <if test="coinType != null">
+        coin_type,
+      </if>
+      <if test="state != null">
+        state,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null">
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="dealDate != null">
+        #{dealDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="dealType != null">
+        #{dealType,jdbcType=TINYINT},
+      </if>
+      <if test="moneySoure != null">
+        #{moneySoure,jdbcType=DECIMAL},
+      </if>
+      <if test="moneyExclude != null">
+        #{moneyExclude,jdbcType=DECIMAL},
+      </if>
+      <if test="moneyRequired != null">
+        #{moneyRequired,jdbcType=DECIMAL},
+      </if>
+      <if test="moneyReal != null">
+        #{moneyReal,jdbcType=DECIMAL},
+      </if>
+      <if test="accountBefore != null">
+        #{accountBefore,jdbcType=DECIMAL},
+      </if>
+      <if test="accountAfterAmt != null">
+        #{accountAfterAmt,jdbcType=DECIMAL},
+      </if>
+      <if test="coinType != null">
+        #{coinType,jdbcType=TINYINT},
+      </if>
+      <if test="state != null">
+        #{state,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.future.entity.account.FuAccountCommunityFlow">
+    update fu_account_community_flow
+    <set>
+      <if test="createDate != null">
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="dealDate != null">
+        deal_date = #{dealDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="dealType != null">
+        deal_type = #{dealType,jdbcType=TINYINT},
+      </if>
+      <if test="moneySoure != null">
+        money_soure = #{moneySoure,jdbcType=DECIMAL},
+      </if>
+      <if test="moneyExclude != null">
+        money_exclude = #{moneyExclude,jdbcType=DECIMAL},
+      </if>
+      <if test="moneyRequired != null">
+        money_required = #{moneyRequired,jdbcType=DECIMAL},
+      </if>
+      <if test="moneyReal != null">
+        money_real = #{moneyReal,jdbcType=DECIMAL},
+      </if>
+      <if test="accountBefore != null">
+        account_before = #{accountBefore,jdbcType=DECIMAL},
+      </if>
+      <if test="accountAfterAmt != null">
+        account_after_amt = #{accountAfterAmt,jdbcType=DECIMAL},
+      </if>
+      <if test="coinType != null">
+        coin_type = #{coinType,jdbcType=TINYINT},
+      </if>
+      <if test="state != null">
+        state = #{state,jdbcType=TINYINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.future.entity.account.FuAccountCommunityFlow">
+    update fu_account_community_flow
+    set create_date = #{createDate,jdbcType=TIMESTAMP},
+      deal_date = #{dealDate,jdbcType=TIMESTAMP},
+      deal_type = #{dealType,jdbcType=TINYINT},
+      money_soure = #{moneySoure,jdbcType=DECIMAL},
+      money_exclude = #{moneyExclude,jdbcType=DECIMAL},
+      money_required = #{moneyRequired,jdbcType=DECIMAL},
+      money_real = #{moneyReal,jdbcType=DECIMAL},
+      account_before = #{accountBefore,jdbcType=DECIMAL},
+      account_after_amt = #{accountAfterAmt,jdbcType=DECIMAL},
+      coin_type = #{coinType,jdbcType=TINYINT},
+      state = #{state,jdbcType=TINYINT}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

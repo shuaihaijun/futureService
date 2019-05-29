@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.future.mapper.com.FuComRegionMapper">
+  <resultMap id="BaseResultMap" type="com.future.entity.com.FuComRegion">
+    <id column="region_id" jdbcType="SMALLINT" property="regionId" />
+    <result column="parent_id" jdbcType="SMALLINT" property="parentId" />
+    <result column="region_name" jdbcType="VARCHAR" property="regionName" />
+    <result column="region_type" jdbcType="BIT" property="regionType" />
+    <result column="agency_id" jdbcType="SMALLINT" property="agencyId" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    region_id, parent_id, region_name, region_type, agency_id
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Short" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from fu_com_region
+    where region_id = #{regionId,jdbcType=SMALLINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Short">
+    delete from fu_com_region
+    where region_id = #{regionId,jdbcType=SMALLINT}
+  </delete>
+  <insert id="insert" parameterType="com.future.entity.com.FuComRegion">
+    insert into fu_com_region (region_id, parent_id, region_name, 
+      region_type, agency_id)
+    values (#{regionId,jdbcType=SMALLINT}, #{parentId,jdbcType=SMALLINT}, #{regionName,jdbcType=VARCHAR}, 
+      #{regionType,jdbcType=BIT}, #{agencyId,jdbcType=SMALLINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.future.entity.com.FuComRegion">
+    insert into fu_com_region
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="regionId != null">
+        region_id,
+      </if>
+      <if test="parentId != null">
+        parent_id,
+      </if>
+      <if test="regionName != null">
+        region_name,
+      </if>
+      <if test="regionType != null">
+        region_type,
+      </if>
+      <if test="agencyId != null">
+        agency_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="regionId != null">
+        #{regionId,jdbcType=SMALLINT},
+      </if>
+      <if test="parentId != null">
+        #{parentId,jdbcType=SMALLINT},
+      </if>
+      <if test="regionName != null">
+        #{regionName,jdbcType=VARCHAR},
+      </if>
+      <if test="regionType != null">
+        #{regionType,jdbcType=BIT},
+      </if>
+      <if test="agencyId != null">
+        #{agencyId,jdbcType=SMALLINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.future.entity.com.FuComRegion">
+    update fu_com_region
+    <set>
+      <if test="parentId != null">
+        parent_id = #{parentId,jdbcType=SMALLINT},
+      </if>
+      <if test="regionName != null">
+        region_name = #{regionName,jdbcType=VARCHAR},
+      </if>
+      <if test="regionType != null">
+        region_type = #{regionType,jdbcType=BIT},
+      </if>
+      <if test="agencyId != null">
+        agency_id = #{agencyId,jdbcType=SMALLINT},
+      </if>
+    </set>
+    where region_id = #{regionId,jdbcType=SMALLINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.future.entity.com.FuComRegion">
+    update fu_com_region
+    set parent_id = #{parentId,jdbcType=SMALLINT},
+      region_name = #{regionName,jdbcType=VARCHAR},
+      region_type = #{regionType,jdbcType=BIT},
+      agency_id = #{agencyId,jdbcType=SMALLINT}
+    where region_id = #{regionId,jdbcType=SMALLINT}
+  </update>
+</mapper>
