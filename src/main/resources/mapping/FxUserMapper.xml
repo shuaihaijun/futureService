@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.future.mapper.FxUserMapper">
+  <resultMap id="BaseResultMap" type="com.future.entity.FxUser">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="username" jdbcType="VARCHAR" property="username" />
+    <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="ref_name" jdbcType="VARCHAR" property="refName" />
+    <result column="email" jdbcType="VARCHAR" property="email" />
+    <result column="reg_time" jdbcType="TIMESTAMP" property="regTime" />
+    <result column="last_login" jdbcType="TIMESTAMP" property="lastLogin" />
+    <result column="login_ip" jdbcType="VARCHAR" property="loginIp" />
+    <result column="reg_ip" jdbcType="VARCHAR" property="regIp" />
+    <result column="is_verified" jdbcType="TINYINT" property="isVerified" />
+    <result column="is_account" jdbcType="TINYINT" property="isAccount" />
+    <result column="user_type" jdbcType="TINYINT" property="userType" />
+    <result column="user_state" jdbcType="TINYINT" property="userState" />
+    <result column="introducer" jdbcType="INTEGER" property="introducer" />
+    <result column="recommend" jdbcType="INTEGER" property="recommend" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="modify_date" jdbcType="TIMESTAMP" property="modifyDate" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.future.entity.FxUser">
+    <result column="certificate" jdbcType="LONGVARCHAR" property="certificate" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, username, password, ref_name, email, reg_time, last_login, login_ip, reg_ip, 
+    is_verified, is_account, user_type, user_state, introducer, recommend, create_date, 
+    modify_date
+  </sql>
+  <sql id="Blob_Column_List">
+    certificate
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from fx_user
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from fx_user
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.future.entity.FxUser">
+    insert into fx_user (id, username, password, 
+      ref_name, email, reg_time, 
+      last_login, login_ip, reg_ip, 
+      is_verified, is_account, user_type, 
+      user_state, introducer, recommend, 
+      create_date, modify_date, certificate
+      )
+    values (#{id,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
+      #{refName,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, #{regTime,jdbcType=TIMESTAMP}, 
+      #{lastLogin,jdbcType=TIMESTAMP}, #{loginIp,jdbcType=VARCHAR}, #{regIp,jdbcType=VARCHAR}, 
+      #{isVerified,jdbcType=TINYINT}, #{isAccount,jdbcType=TINYINT}, #{userType,jdbcType=TINYINT}, 
+      #{userState,jdbcType=TINYINT}, #{introducer,jdbcType=INTEGER}, #{recommend,jdbcType=INTEGER}, 
+      #{createDate,jdbcType=TIMESTAMP}, #{modifyDate,jdbcType=TIMESTAMP}, #{certificate,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.future.entity.FxUser">
+    insert into fx_user
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="username != null">
+        username,
+      </if>
+      <if test="password != null">
+        password,
+      </if>
+      <if test="refName != null">
+        ref_name,
+      </if>
+      <if test="email != null">
+        email,
+      </if>
+      <if test="regTime != null">
+        reg_time,
+      </if>
+      <if test="lastLogin != null">
+        last_login,
+      </if>
+      <if test="loginIp != null">
+        login_ip,
+      </if>
+      <if test="regIp != null">
+        reg_ip,
+      </if>
+      <if test="isVerified != null">
+        is_verified,
+      </if>
+      <if test="isAccount != null">
+        is_account,
+      </if>
+      <if test="userType != null">
+        user_type,
+      </if>
+      <if test="userState != null">
+        user_state,
+      </if>
+      <if test="introducer != null">
+        introducer,
+      </if>
+      <if test="recommend != null">
+        recommend,
+      </if>
+      <if test="createDate != null">
+        create_date,
+      </if>
+      <if test="modifyDate != null">
+        modify_date,
+      </if>
+      <if test="certificate != null">
+        certificate,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="username != null">
+        #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="refName != null">
+        #{refName,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null">
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="regTime != null">
+        #{regTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastLogin != null">
+        #{lastLogin,jdbcType=TIMESTAMP},
+      </if>
+      <if test="loginIp != null">
+        #{loginIp,jdbcType=VARCHAR},
+      </if>
+      <if test="regIp != null">
+        #{regIp,jdbcType=VARCHAR},
+      </if>
+      <if test="isVerified != null">
+        #{isVerified,jdbcType=TINYINT},
+      </if>
+      <if test="isAccount != null">
+        #{isAccount,jdbcType=TINYINT},
+      </if>
+      <if test="userType != null">
+        #{userType,jdbcType=TINYINT},
+      </if>
+      <if test="userState != null">
+        #{userState,jdbcType=TINYINT},
+      </if>
+      <if test="introducer != null">
+        #{introducer,jdbcType=INTEGER},
+      </if>
+      <if test="recommend != null">
+        #{recommend,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null">
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyDate != null">
+        #{modifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="certificate != null">
+        #{certificate,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.future.entity.FxUser">
+    update fx_user
+    <set>
+      <if test="username != null">
+        username = #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="refName != null">
+        ref_name = #{refName,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null">
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="regTime != null">
+        reg_time = #{regTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastLogin != null">
+        last_login = #{lastLogin,jdbcType=TIMESTAMP},
+      </if>
+      <if test="loginIp != null">
+        login_ip = #{loginIp,jdbcType=VARCHAR},
+      </if>
+      <if test="regIp != null">
+        reg_ip = #{regIp,jdbcType=VARCHAR},
+      </if>
+      <if test="isVerified != null">
+        is_verified = #{isVerified,jdbcType=TINYINT},
+      </if>
+      <if test="isAccount != null">
+        is_account = #{isAccount,jdbcType=TINYINT},
+      </if>
+      <if test="userType != null">
+        user_type = #{userType,jdbcType=TINYINT},
+      </if>
+      <if test="userState != null">
+        user_state = #{userState,jdbcType=TINYINT},
+      </if>
+      <if test="introducer != null">
+        introducer = #{introducer,jdbcType=INTEGER},
+      </if>
+      <if test="recommend != null">
+        recommend = #{recommend,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null">
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyDate != null">
+        modify_date = #{modifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="certificate != null">
+        certificate = #{certificate,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.future.entity.FxUser">
+    update fx_user
+    set username = #{username,jdbcType=VARCHAR},
+      password = #{password,jdbcType=VARCHAR},
+      ref_name = #{refName,jdbcType=VARCHAR},
+      email = #{email,jdbcType=VARCHAR},
+      reg_time = #{regTime,jdbcType=TIMESTAMP},
+      last_login = #{lastLogin,jdbcType=TIMESTAMP},
+      login_ip = #{loginIp,jdbcType=VARCHAR},
+      reg_ip = #{regIp,jdbcType=VARCHAR},
+      is_verified = #{isVerified,jdbcType=TINYINT},
+      is_account = #{isAccount,jdbcType=TINYINT},
+      user_type = #{userType,jdbcType=TINYINT},
+      user_state = #{userState,jdbcType=TINYINT},
+      introducer = #{introducer,jdbcType=INTEGER},
+      recommend = #{recommend,jdbcType=INTEGER},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      modify_date = #{modifyDate,jdbcType=TIMESTAMP},
+      certificate = #{certificate,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.future.entity.FxUser">
+    update fx_user
+    set username = #{username,jdbcType=VARCHAR},
+      password = #{password,jdbcType=VARCHAR},
+      ref_name = #{refName,jdbcType=VARCHAR},
+      email = #{email,jdbcType=VARCHAR},
+      reg_time = #{regTime,jdbcType=TIMESTAMP},
+      last_login = #{lastLogin,jdbcType=TIMESTAMP},
+      login_ip = #{loginIp,jdbcType=VARCHAR},
+      reg_ip = #{regIp,jdbcType=VARCHAR},
+      is_verified = #{isVerified,jdbcType=TINYINT},
+      is_account = #{isAccount,jdbcType=TINYINT},
+      user_type = #{userType,jdbcType=TINYINT},
+      user_state = #{userState,jdbcType=TINYINT},
+      introducer = #{introducer,jdbcType=INTEGER},
+      recommend = #{recommend,jdbcType=INTEGER},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      modify_date = #{modifyDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
