@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.future.mapper.product.FuProductSignalMapper">
+  <resultMap id="BaseResultMap" type="com.future.entity.product.FuProductSignal">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="modify_date" jdbcType="TIMESTAMP" property="modifyDate" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="signal_name" jdbcType="VARCHAR" property="signalName" />
+    <result column="signal_level" jdbcType="TINYINT" property="signalLevel" />
+    <result column="signal_desc" jdbcType="VARCHAR" property="signalDesc" />
+    <result column="signal_ratings" jdbcType="TINYINT" property="signalRatings" />
+    <result column="signal_state" jdbcType="TINYINT" property="signalState" />
+    <result column="apply_date" jdbcType="TIMESTAMP" property="applyDate" />
+    <result column="check_date" jdbcType="TIMESTAMP" property="checkDate" />
+    <result column="signal_tem" jdbcType="VARCHAR" property="signalTem" />
+    <result column="signal_currency" jdbcType="VARCHAR" property="signalCurrency" />
+    <result column="monthly_average_income" jdbcType="DECIMAL" property="monthlyAverageIncome" />
+    <result column="history_income" jdbcType="DECIMAL" property="historyIncome" />
+    <result column="history_withdraw" jdbcType="DECIMAL" property="historyWithdraw" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, create_date, modify_date, user_id, signal_name, signal_level, signal_desc, signal_ratings, 
+    signal_state, apply_date, check_date, signal_tem, signal_currency, monthly_average_income, 
+    history_income, history_withdraw
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from fu_product_signal
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from fu_product_signal
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.future.entity.product.FuProductSignal">
+    insert into fu_product_signal (id, create_date, modify_date, 
+      user_id, signal_name, signal_level, 
+      signal_desc, signal_ratings, signal_state, 
+      apply_date, check_date, signal_tem, 
+      signal_currency, monthly_average_income, history_income, 
+      history_withdraw)
+    values (#{id,jdbcType=INTEGER}, #{createDate,jdbcType=TIMESTAMP}, #{modifyDate,jdbcType=TIMESTAMP}, 
+      #{userId,jdbcType=INTEGER}, #{signalName,jdbcType=VARCHAR}, #{signalLevel,jdbcType=TINYINT}, 
+      #{signalDesc,jdbcType=VARCHAR}, #{signalRatings,jdbcType=TINYINT}, #{signalState,jdbcType=TINYINT}, 
+      #{applyDate,jdbcType=TIMESTAMP}, #{checkDate,jdbcType=TIMESTAMP}, #{signalTem,jdbcType=VARCHAR}, 
+      #{signalCurrency,jdbcType=VARCHAR}, #{monthlyAverageIncome,jdbcType=DECIMAL}, #{historyIncome,jdbcType=DECIMAL}, 
+      #{historyWithdraw,jdbcType=DECIMAL})
+  </insert>
+  <insert id="insertSelective" parameterType="com.future.entity.product.FuProductSignal">
+    insert into fu_product_signal
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="createDate != null">
+        create_date,
+      </if>
+      <if test="modifyDate != null">
+        modify_date,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="signalName != null">
+        signal_name,
+      </if>
+      <if test="signalLevel != null">
+        signal_level,
+      </if>
+      <if test="signalDesc != null">
+        signal_desc,
+      </if>
+      <if test="signalRatings != null">
+        signal_ratings,
+      </if>
+      <if test="signalState != null">
+        signal_state,
+      </if>
+      <if test="applyDate != null">
+        apply_date,
+      </if>
+      <if test="checkDate != null">
+        check_date,
+      </if>
+      <if test="signalTem != null">
+        signal_tem,
+      </if>
+      <if test="signalCurrency != null">
+        signal_currency,
+      </if>
+      <if test="monthlyAverageIncome != null">
+        monthly_average_income,
+      </if>
+      <if test="historyIncome != null">
+        history_income,
+      </if>
+      <if test="historyWithdraw != null">
+        history_withdraw,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null">
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyDate != null">
+        #{modifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="signalName != null">
+        #{signalName,jdbcType=VARCHAR},
+      </if>
+      <if test="signalLevel != null">
+        #{signalLevel,jdbcType=TINYINT},
+      </if>
+      <if test="signalDesc != null">
+        #{signalDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="signalRatings != null">
+        #{signalRatings,jdbcType=TINYINT},
+      </if>
+      <if test="signalState != null">
+        #{signalState,jdbcType=TINYINT},
+      </if>
+      <if test="applyDate != null">
+        #{applyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="checkDate != null">
+        #{checkDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="signalTem != null">
+        #{signalTem,jdbcType=VARCHAR},
+      </if>
+      <if test="signalCurrency != null">
+        #{signalCurrency,jdbcType=VARCHAR},
+      </if>
+      <if test="monthlyAverageIncome != null">
+        #{monthlyAverageIncome,jdbcType=DECIMAL},
+      </if>
+      <if test="historyIncome != null">
+        #{historyIncome,jdbcType=DECIMAL},
+      </if>
+      <if test="historyWithdraw != null">
+        #{historyWithdraw,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.future.entity.product.FuProductSignal">
+    update fu_product_signal
+    <set>
+      <if test="createDate != null">
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyDate != null">
+        modify_date = #{modifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="signalName != null">
+        signal_name = #{signalName,jdbcType=VARCHAR},
+      </if>
+      <if test="signalLevel != null">
+        signal_level = #{signalLevel,jdbcType=TINYINT},
+      </if>
+      <if test="signalDesc != null">
+        signal_desc = #{signalDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="signalRatings != null">
+        signal_ratings = #{signalRatings,jdbcType=TINYINT},
+      </if>
+      <if test="signalState != null">
+        signal_state = #{signalState,jdbcType=TINYINT},
+      </if>
+      <if test="applyDate != null">
+        apply_date = #{applyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="checkDate != null">
+        check_date = #{checkDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="signalTem != null">
+        signal_tem = #{signalTem,jdbcType=VARCHAR},
+      </if>
+      <if test="signalCurrency != null">
+        signal_currency = #{signalCurrency,jdbcType=VARCHAR},
+      </if>
+      <if test="monthlyAverageIncome != null">
+        monthly_average_income = #{monthlyAverageIncome,jdbcType=DECIMAL},
+      </if>
+      <if test="historyIncome != null">
+        history_income = #{historyIncome,jdbcType=DECIMAL},
+      </if>
+      <if test="historyWithdraw != null">
+        history_withdraw = #{historyWithdraw,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.future.entity.product.FuProductSignal">
+    update fu_product_signal
+    set create_date = #{createDate,jdbcType=TIMESTAMP},
+      modify_date = #{modifyDate,jdbcType=TIMESTAMP},
+      user_id = #{userId,jdbcType=INTEGER},
+      signal_name = #{signalName,jdbcType=VARCHAR},
+      signal_level = #{signalLevel,jdbcType=TINYINT},
+      signal_desc = #{signalDesc,jdbcType=VARCHAR},
+      signal_ratings = #{signalRatings,jdbcType=TINYINT},
+      signal_state = #{signalState,jdbcType=TINYINT},
+      apply_date = #{applyDate,jdbcType=TIMESTAMP},
+      check_date = #{checkDate,jdbcType=TIMESTAMP},
+      signal_tem = #{signalTem,jdbcType=VARCHAR},
+      signal_currency = #{signalCurrency,jdbcType=VARCHAR},
+      monthly_average_income = #{monthlyAverageIncome,jdbcType=DECIMAL},
+      history_income = #{historyIncome,jdbcType=DECIMAL},
+      history_withdraw = #{historyWithdraw,jdbcType=DECIMAL}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

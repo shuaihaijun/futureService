@@ -1,0 +1,331 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.future.mapper.order.FuOrderInfoMapper">
+  <resultMap id="BaseResultMap" type="com.future.entity.order.FuOrderInfo">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="modify_date" jdbcType="TIMESTAMP" property="modifyDate" />
+    <result column="order_id" jdbcType="VARCHAR" property="orderId" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="mt_id" jdbcType="VARCHAR" property="mtId" />
+    <result column="order_symbol" jdbcType="VARCHAR" property="orderSymbol" />
+    <result column="order_lots" jdbcType="DECIMAL" property="orderLots" />
+    <result column="order_type" jdbcType="TINYINT" property="orderType" />
+    <result column="order_state" jdbcType="TINYINT" property="orderState" />
+    <result column="order_stoploss" jdbcType="DECIMAL" property="orderStoploss" />
+    <result column="order_takeprofit" jdbcType="DECIMAL" property="orderTakeprofit" />
+    <result column="order_superior" jdbcType="VARCHAR" property="orderSuperior" />
+    <result column="order_source_flag" jdbcType="TINYINT" property="orderSourceFlag" />
+    <result column="order_source_id" jdbcType="VARCHAR" property="orderSourceId" />
+    <result column="order_source_mt" jdbcType="VARCHAR" property="orderSourceMt" />
+    <result column="order_split_count" jdbcType="INTEGER" property="orderSplitCount" />
+    <result column="order_split_type" jdbcType="TINYINT" property="orderSplitType" />
+    <result column="order_profit" jdbcType="DECIMAL" property="orderProfit" />
+    <result column="order_trade_price" jdbcType="DECIMAL" property="orderTradePrice" />
+    <result column="order_trade_date" jdbcType="TIMESTAMP" property="orderTradeDate" />
+    <result column="order_close_price" jdbcType="DECIMAL" property="orderClosePrice" />
+    <result column="order_close_date" jdbcType="TIMESTAMP" property="orderCloseDate" />
+    <result column="order_expiration" jdbcType="TIMESTAMP" property="orderExpiration" />
+    <result column="comment" jdbcType="VARCHAR" property="comment" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, create_date, modify_date, order_id, user_id, mt_id, order_symbol, order_lots, 
+    order_type, order_state, order_stoploss, order_takeprofit, order_superior, order_source_flag, 
+    order_source_id, order_source_mt, order_split_count, order_split_type, order_profit, 
+    order_trade_price, order_trade_date, order_close_price, order_close_date, order_expiration, 
+    comment
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from fu_order_info
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from fu_order_info
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.future.entity.order.FuOrderInfo">
+    insert into fu_order_info (id, create_date, modify_date, 
+      order_id, user_id, mt_id, 
+      order_symbol, order_lots, order_type, 
+      order_state, order_stoploss, order_takeprofit, 
+      order_superior, order_source_flag, order_source_id, 
+      order_source_mt, order_split_count, order_split_type, 
+      order_profit, order_trade_price, order_trade_date, 
+      order_close_price, order_close_date, order_expiration, 
+      comment)
+    values (#{id,jdbcType=INTEGER}, #{createDate,jdbcType=TIMESTAMP}, #{modifyDate,jdbcType=TIMESTAMP}, 
+      #{orderId,jdbcType=VARCHAR}, #{userId,jdbcType=INTEGER}, #{mtId,jdbcType=VARCHAR}, 
+      #{orderSymbol,jdbcType=VARCHAR}, #{orderLots,jdbcType=DECIMAL}, #{orderType,jdbcType=TINYINT}, 
+      #{orderState,jdbcType=TINYINT}, #{orderStoploss,jdbcType=DECIMAL}, #{orderTakeprofit,jdbcType=DECIMAL}, 
+      #{orderSuperior,jdbcType=VARCHAR}, #{orderSourceFlag,jdbcType=TINYINT}, #{orderSourceId,jdbcType=VARCHAR}, 
+      #{orderSourceMt,jdbcType=VARCHAR}, #{orderSplitCount,jdbcType=INTEGER}, #{orderSplitType,jdbcType=TINYINT}, 
+      #{orderProfit,jdbcType=DECIMAL}, #{orderTradePrice,jdbcType=DECIMAL}, #{orderTradeDate,jdbcType=TIMESTAMP}, 
+      #{orderClosePrice,jdbcType=DECIMAL}, #{orderCloseDate,jdbcType=TIMESTAMP}, #{orderExpiration,jdbcType=TIMESTAMP}, 
+      #{comment,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.future.entity.order.FuOrderInfo">
+    insert into fu_order_info
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="createDate != null">
+        create_date,
+      </if>
+      <if test="modifyDate != null">
+        modify_date,
+      </if>
+      <if test="orderId != null">
+        order_id,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="mtId != null">
+        mt_id,
+      </if>
+      <if test="orderSymbol != null">
+        order_symbol,
+      </if>
+      <if test="orderLots != null">
+        order_lots,
+      </if>
+      <if test="orderType != null">
+        order_type,
+      </if>
+      <if test="orderState != null">
+        order_state,
+      </if>
+      <if test="orderStoploss != null">
+        order_stoploss,
+      </if>
+      <if test="orderTakeprofit != null">
+        order_takeprofit,
+      </if>
+      <if test="orderSuperior != null">
+        order_superior,
+      </if>
+      <if test="orderSourceFlag != null">
+        order_source_flag,
+      </if>
+      <if test="orderSourceId != null">
+        order_source_id,
+      </if>
+      <if test="orderSourceMt != null">
+        order_source_mt,
+      </if>
+      <if test="orderSplitCount != null">
+        order_split_count,
+      </if>
+      <if test="orderSplitType != null">
+        order_split_type,
+      </if>
+      <if test="orderProfit != null">
+        order_profit,
+      </if>
+      <if test="orderTradePrice != null">
+        order_trade_price,
+      </if>
+      <if test="orderTradeDate != null">
+        order_trade_date,
+      </if>
+      <if test="orderClosePrice != null">
+        order_close_price,
+      </if>
+      <if test="orderCloseDate != null">
+        order_close_date,
+      </if>
+      <if test="orderExpiration != null">
+        order_expiration,
+      </if>
+      <if test="comment != null">
+        comment,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null">
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyDate != null">
+        #{modifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="orderId != null">
+        #{orderId,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="mtId != null">
+        #{mtId,jdbcType=VARCHAR},
+      </if>
+      <if test="orderSymbol != null">
+        #{orderSymbol,jdbcType=VARCHAR},
+      </if>
+      <if test="orderLots != null">
+        #{orderLots,jdbcType=DECIMAL},
+      </if>
+      <if test="orderType != null">
+        #{orderType,jdbcType=TINYINT},
+      </if>
+      <if test="orderState != null">
+        #{orderState,jdbcType=TINYINT},
+      </if>
+      <if test="orderStoploss != null">
+        #{orderStoploss,jdbcType=DECIMAL},
+      </if>
+      <if test="orderTakeprofit != null">
+        #{orderTakeprofit,jdbcType=DECIMAL},
+      </if>
+      <if test="orderSuperior != null">
+        #{orderSuperior,jdbcType=VARCHAR},
+      </if>
+      <if test="orderSourceFlag != null">
+        #{orderSourceFlag,jdbcType=TINYINT},
+      </if>
+      <if test="orderSourceId != null">
+        #{orderSourceId,jdbcType=VARCHAR},
+      </if>
+      <if test="orderSourceMt != null">
+        #{orderSourceMt,jdbcType=VARCHAR},
+      </if>
+      <if test="orderSplitCount != null">
+        #{orderSplitCount,jdbcType=INTEGER},
+      </if>
+      <if test="orderSplitType != null">
+        #{orderSplitType,jdbcType=TINYINT},
+      </if>
+      <if test="orderProfit != null">
+        #{orderProfit,jdbcType=DECIMAL},
+      </if>
+      <if test="orderTradePrice != null">
+        #{orderTradePrice,jdbcType=DECIMAL},
+      </if>
+      <if test="orderTradeDate != null">
+        #{orderTradeDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="orderClosePrice != null">
+        #{orderClosePrice,jdbcType=DECIMAL},
+      </if>
+      <if test="orderCloseDate != null">
+        #{orderCloseDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="orderExpiration != null">
+        #{orderExpiration,jdbcType=TIMESTAMP},
+      </if>
+      <if test="comment != null">
+        #{comment,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.future.entity.order.FuOrderInfo">
+    update fu_order_info
+    <set>
+      <if test="createDate != null">
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyDate != null">
+        modify_date = #{modifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="orderId != null">
+        order_id = #{orderId,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="mtId != null">
+        mt_id = #{mtId,jdbcType=VARCHAR},
+      </if>
+      <if test="orderSymbol != null">
+        order_symbol = #{orderSymbol,jdbcType=VARCHAR},
+      </if>
+      <if test="orderLots != null">
+        order_lots = #{orderLots,jdbcType=DECIMAL},
+      </if>
+      <if test="orderType != null">
+        order_type = #{orderType,jdbcType=TINYINT},
+      </if>
+      <if test="orderState != null">
+        order_state = #{orderState,jdbcType=TINYINT},
+      </if>
+      <if test="orderStoploss != null">
+        order_stoploss = #{orderStoploss,jdbcType=DECIMAL},
+      </if>
+      <if test="orderTakeprofit != null">
+        order_takeprofit = #{orderTakeprofit,jdbcType=DECIMAL},
+      </if>
+      <if test="orderSuperior != null">
+        order_superior = #{orderSuperior,jdbcType=VARCHAR},
+      </if>
+      <if test="orderSourceFlag != null">
+        order_source_flag = #{orderSourceFlag,jdbcType=TINYINT},
+      </if>
+      <if test="orderSourceId != null">
+        order_source_id = #{orderSourceId,jdbcType=VARCHAR},
+      </if>
+      <if test="orderSourceMt != null">
+        order_source_mt = #{orderSourceMt,jdbcType=VARCHAR},
+      </if>
+      <if test="orderSplitCount != null">
+        order_split_count = #{orderSplitCount,jdbcType=INTEGER},
+      </if>
+      <if test="orderSplitType != null">
+        order_split_type = #{orderSplitType,jdbcType=TINYINT},
+      </if>
+      <if test="orderProfit != null">
+        order_profit = #{orderProfit,jdbcType=DECIMAL},
+      </if>
+      <if test="orderTradePrice != null">
+        order_trade_price = #{orderTradePrice,jdbcType=DECIMAL},
+      </if>
+      <if test="orderTradeDate != null">
+        order_trade_date = #{orderTradeDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="orderClosePrice != null">
+        order_close_price = #{orderClosePrice,jdbcType=DECIMAL},
+      </if>
+      <if test="orderCloseDate != null">
+        order_close_date = #{orderCloseDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="orderExpiration != null">
+        order_expiration = #{orderExpiration,jdbcType=TIMESTAMP},
+      </if>
+      <if test="comment != null">
+        comment = #{comment,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.future.entity.order.FuOrderInfo">
+    update fu_order_info
+    set create_date = #{createDate,jdbcType=TIMESTAMP},
+      modify_date = #{modifyDate,jdbcType=TIMESTAMP},
+      order_id = #{orderId,jdbcType=VARCHAR},
+      user_id = #{userId,jdbcType=INTEGER},
+      mt_id = #{mtId,jdbcType=VARCHAR},
+      order_symbol = #{orderSymbol,jdbcType=VARCHAR},
+      order_lots = #{orderLots,jdbcType=DECIMAL},
+      order_type = #{orderType,jdbcType=TINYINT},
+      order_state = #{orderState,jdbcType=TINYINT},
+      order_stoploss = #{orderStoploss,jdbcType=DECIMAL},
+      order_takeprofit = #{orderTakeprofit,jdbcType=DECIMAL},
+      order_superior = #{orderSuperior,jdbcType=VARCHAR},
+      order_source_flag = #{orderSourceFlag,jdbcType=TINYINT},
+      order_source_id = #{orderSourceId,jdbcType=VARCHAR},
+      order_source_mt = #{orderSourceMt,jdbcType=VARCHAR},
+      order_split_count = #{orderSplitCount,jdbcType=INTEGER},
+      order_split_type = #{orderSplitType,jdbcType=TINYINT},
+      order_profit = #{orderProfit,jdbcType=DECIMAL},
+      order_trade_price = #{orderTradePrice,jdbcType=DECIMAL},
+      order_trade_date = #{orderTradeDate,jdbcType=TIMESTAMP},
+      order_close_price = #{orderClosePrice,jdbcType=DECIMAL},
+      order_close_date = #{orderCloseDate,jdbcType=TIMESTAMP},
+      order_expiration = #{orderExpiration,jdbcType=TIMESTAMP},
+      comment = #{comment,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

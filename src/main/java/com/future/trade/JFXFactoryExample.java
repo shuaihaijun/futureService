@@ -41,7 +41,7 @@ import com.jfx.strategy.Strategy;
 
 /**
  * Created by IntelliJ IDEA.
- * User: roman
+ * user: roman
  * Date: 10.06.11
  * Time: 17:56
  */

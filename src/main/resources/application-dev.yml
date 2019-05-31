@@ -61,3 +61,6 @@ mybatis:
 
 swagger:
   base-package: com.future.web
+
+# constant
+baseUrl: 127.0.0.1
