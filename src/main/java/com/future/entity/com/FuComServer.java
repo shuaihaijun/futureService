@@ -19,7 +19,7 @@ public class FuComServer {
     /**
      * 信号源状态（0 正常，1 隐藏，2 作废）
      */
-    private Byte serverState;
+    private int serverState;
 
     /**
      * 经纪人名称
@@ -39,7 +39,7 @@ public class FuComServer {
     /**
      * 是否为主服务器
      */
-    private Byte isChief;
+    private int isChief;
 
     /**
      * 参数
@@ -103,7 +103,7 @@ public class FuComServer {
      * 信号源状态（0 正常，1 隐藏，2 作废）
      * @return server_state 信号源状态（0 正常，1 隐藏，2 作废）
      */
-    public Byte getServerState() {
+    public int getServerState() {
         return serverState;
     }
 
@@ -111,7 +111,7 @@ public class FuComServer {
      * 信号源状态（0 正常，1 隐藏，2 作废）
      * @param serverState 信号源状态（0 正常，1 隐藏，2 作废）
      */
-    public void setServerState(Byte serverState) {
+    public void setServerState(int serverState) {
         this.serverState = serverState;
     }
 
@@ -167,7 +167,7 @@ public class FuComServer {
      * 是否为主服务器
      * @return is_chief 是否为主服务器
      */
-    public Byte getIsChief() {
+    public int getIsChief() {
         return isChief;
     }
 
@@ -175,7 +175,7 @@ public class FuComServer {
      * 是否为主服务器
      * @param isChief 是否为主服务器
      */
-    public void setIsChief(Byte isChief) {
+    public void setIsChief(int isChief) {
         this.isChief = isChief;
     }
 

@@ -72,7 +72,7 @@ public class FuAccountWithdraw {
     /**
      * 回撤状态（0 成功，1 失败，2 执行中）
      */
-    private Byte withdrawState;
+    private int withdrawState;
 
     /**
      * 备注
@@ -291,7 +291,7 @@ public class FuAccountWithdraw {
      * 回撤状态（0 成功，1 失败，2 执行中）
      * @return withdraw_state 回撤状态（0 成功，1 失败，2 执行中）
      */
-    public Byte getWithdrawState() {
+    public int getWithdrawState() {
         return withdrawState;
     }
 
@@ -299,7 +299,7 @@ public class FuAccountWithdraw {
      * 回撤状态（0 成功，1 失败，2 执行中）
      * @param withdrawState 回撤状态（0 成功，1 失败，2 执行中）
      */
-    public void setWithdrawState(Byte withdrawState) {
+    public void setWithdrawState(int withdrawState) {
         this.withdrawState = withdrawState;
     }
 

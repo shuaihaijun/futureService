@@ -39,22 +39,22 @@ public class FuAccountMt {
     /**
      * 交易密码是否已校验（0 否，1是）
      */
-    private Byte passwordTradeChecked;
+    private int passwordTradeChecked;
 
     /**
      * 观摩密码是否已校验（0 否，1是）
      */
-    private Byte passwordWatchChecked;
+    private int passwordWatchChecked;
 
     /**
      * 是否为主账号(1 是，0 否)
      */
-    private Byte isChief;
+    private int isChief;
 
     /**
      * 账户类型：0 mt4,1 mt5
      */
-    private Byte accountType;
+    private int accountType;
 
     /**
      * 
@@ -172,7 +172,7 @@ public class FuAccountMt {
      * 交易密码是否已校验（0 否，1是）
      * @return password_trade_checked 交易密码是否已校验（0 否，1是）
      */
-    public Byte getPasswordTradeChecked() {
+    public int getPasswordTradeChecked() {
         return passwordTradeChecked;
     }
 
@@ -180,7 +180,7 @@ public class FuAccountMt {
      * 交易密码是否已校验（0 否，1是）
      * @param passwordTradeChecked 交易密码是否已校验（0 否，1是）
      */
-    public void setPasswordTradeChecked(Byte passwordTradeChecked) {
+    public void setPasswordTradeChecked(int passwordTradeChecked) {
         this.passwordTradeChecked = passwordTradeChecked;
     }
 
@@ -188,7 +188,7 @@ public class FuAccountMt {
      * 观摩密码是否已校验（0 否，1是）
      * @return password_watch_checked 观摩密码是否已校验（0 否，1是）
      */
-    public Byte getPasswordWatchChecked() {
+    public int getPasswordWatchChecked() {
         return passwordWatchChecked;
     }
 
@@ -196,7 +196,7 @@ public class FuAccountMt {
      * 观摩密码是否已校验（0 否，1是）
      * @param passwordWatchChecked 观摩密码是否已校验（0 否，1是）
      */
-    public void setPasswordWatchChecked(Byte passwordWatchChecked) {
+    public void setPasswordWatchChecked(int passwordWatchChecked) {
         this.passwordWatchChecked = passwordWatchChecked;
     }
 
@@ -204,7 +204,7 @@ public class FuAccountMt {
      * 是否为主账号(1 是，0 否)
      * @return is_chief 是否为主账号(1 是，0 否)
      */
-    public Byte getIsChief() {
+    public int getIsChief() {
         return isChief;
     }
 
@@ -212,7 +212,7 @@ public class FuAccountMt {
      * 是否为主账号(1 是，0 否)
      * @param isChief 是否为主账号(1 是，0 否)
      */
-    public void setIsChief(Byte isChief) {
+    public void setIsChief(int isChief) {
         this.isChief = isChief;
     }
 
@@ -220,7 +220,7 @@ public class FuAccountMt {
      * 账户类型：0 mt4,1 mt5
      * @return account_type 账户类型：0 mt4,1 mt5
      */
-    public Byte getAccountType() {
+    public int getAccountType() {
         return accountType;
     }
 
@@ -228,7 +228,7 @@ public class FuAccountMt {
      * 账户类型：0 mt4,1 mt5
      * @param accountType 账户类型：0 mt4,1 mt5
      */
-    public void setAccountType(Byte accountType) {
+    public void setAccountType(int accountType) {
         this.accountType = accountType;
     }
 }

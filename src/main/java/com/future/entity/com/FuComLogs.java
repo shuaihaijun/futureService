@@ -16,7 +16,7 @@ public class FuComLogs {
     /**
      * 日志类型
      */
-    private Byte type;
+    private int type;
 
     /**
      * 操作（登录，删除，交易，跟单）
@@ -69,7 +69,7 @@ public class FuComLogs {
      * 日志类型
      * @return type 日志类型
      */
-    public Byte getType() {
+    public int getType() {
         return type;
     }
 
@@ -77,7 +77,7 @@ public class FuComLogs {
      * 日志类型
      * @param type 日志类型
      */
-    public void setType(Byte type) {
+    public void setType(int type) {
         this.type = type;
     }
 

@@ -11,7 +11,7 @@ public class FuComAgentApply {
     /**
      * 申请类型（0 IB升级申请，1 注册申请 ，2 IB降级申请）
      */
-    private Byte applyType;
+    private int applyType;
 
     /**
      * 用户ID
@@ -26,12 +26,12 @@ public class FuComAgentApply {
     /**
      * 当前等级
      */
-    private Byte agentLevel;
+    private int agentLevel;
 
     /**
      * 申请级别
      */
-    private Byte applyLevel;
+    private int applyLevel;
 
     /**
      * 申请原由
@@ -46,7 +46,7 @@ public class FuComAgentApply {
     /**
      * 申请状态（ 0 完成，1 暂存，2 待审，3 未通过）
      */
-    private Byte applyState;
+    private int applyState;
 
     /**
      * 审批说明
@@ -88,7 +88,7 @@ public class FuComAgentApply {
      * 申请类型（0 IB升级申请，1 注册申请 ，2 IB降级申请）
      * @return apply_type 申请类型（0 IB升级申请，1 注册申请 ，2 IB降级申请）
      */
-    public Byte getApplyType() {
+    public int getApplyType() {
         return applyType;
     }
 
@@ -96,7 +96,7 @@ public class FuComAgentApply {
      * 申请类型（0 IB升级申请，1 注册申请 ，2 IB降级申请）
      * @param applyType 申请类型（0 IB升级申请，1 注册申请 ，2 IB降级申请）
      */
-    public void setApplyType(Byte applyType) {
+    public void setApplyType(int applyType) {
         this.applyType = applyType;
     }
 
@@ -136,7 +136,7 @@ public class FuComAgentApply {
      * 当前等级
      * @return agent_level 当前等级
      */
-    public Byte getAgentLevel() {
+    public int getAgentLevel() {
         return agentLevel;
     }
 
@@ -144,7 +144,7 @@ public class FuComAgentApply {
      * 当前等级
      * @param agentLevel 当前等级
      */
-    public void setAgentLevel(Byte agentLevel) {
+    public void setAgentLevel(int agentLevel) {
         this.agentLevel = agentLevel;
     }
 
@@ -152,7 +152,7 @@ public class FuComAgentApply {
      * 申请级别
      * @return apply_level 申请级别
      */
-    public Byte getApplyLevel() {
+    public int getApplyLevel() {
         return applyLevel;
     }
 
@@ -160,7 +160,7 @@ public class FuComAgentApply {
      * 申请级别
      * @param applyLevel 申请级别
      */
-    public void setApplyLevel(Byte applyLevel) {
+    public void setApplyLevel(int applyLevel) {
         this.applyLevel = applyLevel;
     }
 
@@ -200,7 +200,7 @@ public class FuComAgentApply {
      * 申请状态（ 0 完成，1 暂存，2 待审，3 未通过）
      * @return apply_state 申请状态（ 0 完成，1 暂存，2 待审，3 未通过）
      */
-    public Byte getApplyState() {
+    public int getApplyState() {
         return applyState;
     }
 
@@ -208,7 +208,7 @@ public class FuComAgentApply {
      * 申请状态（ 0 完成，1 暂存，2 待审，3 未通过）
      * @param applyState 申请状态（ 0 完成，1 暂存，2 待审，3 未通过）
      */
-    public void setApplyState(Byte applyState) {
+    public void setApplyState(int applyState) {
         this.applyState = applyState;
     }
 

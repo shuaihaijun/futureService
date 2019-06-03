@@ -27,7 +27,7 @@ public class FuCommissionInfo {
     /**
      * 佣金来源（0 社区跟单，1 平台返佣，2 信号源租金）
      */
-    private Byte sourceType;
+    private int sourceType;
 
     /**
      * 源用户ID
@@ -47,12 +47,12 @@ public class FuCommissionInfo {
     /**
      * 原订单状态
      */
-    private Byte sourceOrderState;
+    private int sourceOrderState;
 
     /**
      * 源订单操作类型
      */
-    private Byte sourceOrderOper;
+    private int sourceOrderOper;
 
     /**
      * 源金额
@@ -62,7 +62,7 @@ public class FuCommissionInfo {
     /**
      * 佣金类型（0 信号源返佣，1 多级返佣，2 社区返佣，3 其他）
      */
-    private Byte commissionType;
+    private int commissionType;
 
     /**
      * 收佣用户ID
@@ -72,12 +72,12 @@ public class FuCommissionInfo {
     /**
      * 收佣用户类型
      */
-    private Byte commissionUserType;
+    private int commissionUserType;
 
     /**
      * 收佣用户等级
      */
-    private Byte commissionLuserEvel;
+    private int commissionLuserEvel;
 
     /**
      * 收佣账户ID
@@ -102,12 +102,12 @@ public class FuCommissionInfo {
     /**
      * 返佣状态（0 成功，1失败，2 执行中）
      */
-    private Byte commissionState;
+    private int commissionState;
 
     /**
      * 币种类型（0 余额，1社区币，2 期债）
      */
-    private Byte coinType;
+    private int coinType;
 
     /**
      * 
@@ -177,7 +177,7 @@ public class FuCommissionInfo {
      * 佣金来源（0 社区跟单，1 平台返佣，2 信号源租金）
      * @return source_type 佣金来源（0 社区跟单，1 平台返佣，2 信号源租金）
      */
-    public Byte getSourceType() {
+    public int getSourceType() {
         return sourceType;
     }
 
@@ -185,7 +185,7 @@ public class FuCommissionInfo {
      * 佣金来源（0 社区跟单，1 平台返佣，2 信号源租金）
      * @param sourceType 佣金来源（0 社区跟单，1 平台返佣，2 信号源租金）
      */
-    public void setSourceType(Byte sourceType) {
+    public void setSourceType(int sourceType) {
         this.sourceType = sourceType;
     }
 
@@ -241,7 +241,7 @@ public class FuCommissionInfo {
      * 原订单状态
      * @return source_order_state 原订单状态
      */
-    public Byte getSourceOrderState() {
+    public int getSourceOrderState() {
         return sourceOrderState;
     }
 
@@ -249,7 +249,7 @@ public class FuCommissionInfo {
      * 原订单状态
      * @param sourceOrderState 原订单状态
      */
-    public void setSourceOrderState(Byte sourceOrderState) {
+    public void setSourceOrderState(int sourceOrderState) {
         this.sourceOrderState = sourceOrderState;
     }
 
@@ -257,7 +257,7 @@ public class FuCommissionInfo {
      * 源订单操作类型
      * @return source_order_oper 源订单操作类型
      */
-    public Byte getSourceOrderOper() {
+    public int getSourceOrderOper() {
         return sourceOrderOper;
     }
 
@@ -265,7 +265,7 @@ public class FuCommissionInfo {
      * 源订单操作类型
      * @param sourceOrderOper 源订单操作类型
      */
-    public void setSourceOrderOper(Byte sourceOrderOper) {
+    public void setSourceOrderOper(int sourceOrderOper) {
         this.sourceOrderOper = sourceOrderOper;
     }
 
@@ -289,7 +289,7 @@ public class FuCommissionInfo {
      * 佣金类型（0 信号源返佣，1 多级返佣，2 社区返佣，3 其他）
      * @return commission_type 佣金类型（0 信号源返佣，1 多级返佣，2 社区返佣，3 其他）
      */
-    public Byte getCommissionType() {
+    public int getCommissionType() {
         return commissionType;
     }
 
@@ -297,7 +297,7 @@ public class FuCommissionInfo {
      * 佣金类型（0 信号源返佣，1 多级返佣，2 社区返佣，3 其他）
      * @param commissionType 佣金类型（0 信号源返佣，1 多级返佣，2 社区返佣，3 其他）
      */
-    public void setCommissionType(Byte commissionType) {
+    public void setCommissionType(int commissionType) {
         this.commissionType = commissionType;
     }
 
@@ -321,7 +321,7 @@ public class FuCommissionInfo {
      * 收佣用户类型
      * @return commission_user_type 收佣用户类型
      */
-    public Byte getCommissionUserType() {
+    public int getCommissionUserType() {
         return commissionUserType;
     }
 
@@ -329,7 +329,7 @@ public class FuCommissionInfo {
      * 收佣用户类型
      * @param commissionUserType 收佣用户类型
      */
-    public void setCommissionUserType(Byte commissionUserType) {
+    public void setCommissionUserType(int commissionUserType) {
         this.commissionUserType = commissionUserType;
     }
 
@@ -337,7 +337,7 @@ public class FuCommissionInfo {
      * 收佣用户等级
      * @return commission_luser_evel 收佣用户等级
      */
-    public Byte getCommissionLuserEvel() {
+    public int getCommissionLuserEvel() {
         return commissionLuserEvel;
     }
 
@@ -345,7 +345,7 @@ public class FuCommissionInfo {
      * 收佣用户等级
      * @param commissionLuserEvel 收佣用户等级
      */
-    public void setCommissionLuserEvel(Byte commissionLuserEvel) {
+    public void setCommissionLuserEvel(int commissionLuserEvel) {
         this.commissionLuserEvel = commissionLuserEvel;
     }
 
@@ -417,7 +417,7 @@ public class FuCommissionInfo {
      * 返佣状态（0 成功，1失败，2 执行中）
      * @return commission_state 返佣状态（0 成功，1失败，2 执行中）
      */
-    public Byte getCommissionState() {
+    public int getCommissionState() {
         return commissionState;
     }
 
@@ -425,7 +425,7 @@ public class FuCommissionInfo {
      * 返佣状态（0 成功，1失败，2 执行中）
      * @param commissionState 返佣状态（0 成功，1失败，2 执行中）
      */
-    public void setCommissionState(Byte commissionState) {
+    public void setCommissionState(int commissionState) {
         this.commissionState = commissionState;
     }
 
@@ -433,7 +433,7 @@ public class FuCommissionInfo {
      * 币种类型（0 余额，1社区币，2 期债）
      * @return coin_type 币种类型（0 余额，1社区币，2 期债）
      */
-    public Byte getCoinType() {
+    public int getCoinType() {
         return coinType;
     }
 
@@ -441,7 +441,7 @@ public class FuCommissionInfo {
      * 币种类型（0 余额，1社区币，2 期债）
      * @param coinType 币种类型（0 余额，1社区币，2 期债）
      */
-    public void setCoinType(Byte coinType) {
+    public void setCoinType(int coinType) {
         this.coinType = coinType;
     }
 }

@@ -37,12 +37,12 @@ public class FuAccountDeposit {
     /**
      * 存款方式（0 银行卡，1 支付，2微信，3 其他）
      */
-    private Byte depositWay;
+    private int depositWay;
 
     /**
      * 存款类型（0 余额，1 社区币）
      */
-    private Byte depositType;
+    private int depositType;
 
     /**
      * 存款时间
@@ -62,7 +62,7 @@ public class FuAccountDeposit {
     /**
      * 存款状态（0 成功，1 失败，2 处理中）
      */
-    private Byte status;
+    private int status;
 
     /**
      * 备注
@@ -169,7 +169,7 @@ public class FuAccountDeposit {
      * 存款方式（0 银行卡，1 支付，2微信，3 其他）
      * @return deposit_way 存款方式（0 银行卡，1 支付，2微信，3 其他）
      */
-    public Byte getDepositWay() {
+    public int getDepositWay() {
         return depositWay;
     }
 
@@ -177,7 +177,7 @@ public class FuAccountDeposit {
      * 存款方式（0 银行卡，1 支付，2微信，3 其他）
      * @param depositWay 存款方式（0 银行卡，1 支付，2微信，3 其他）
      */
-    public void setDepositWay(Byte depositWay) {
+    public void setDepositWay(int depositWay) {
         this.depositWay = depositWay;
     }
 
@@ -185,7 +185,7 @@ public class FuAccountDeposit {
      * 存款类型（0 余额，1 社区币）
      * @return deposit_type 存款类型（0 余额，1 社区币）
      */
-    public Byte getDepositType() {
+    public int getDepositType() {
         return depositType;
     }
 
@@ -193,7 +193,7 @@ public class FuAccountDeposit {
      * 存款类型（0 余额，1 社区币）
      * @param depositType 存款类型（0 余额，1 社区币）
      */
-    public void setDepositType(Byte depositType) {
+    public void setDepositType(int depositType) {
         this.depositType = depositType;
     }
 
@@ -249,7 +249,7 @@ public class FuAccountDeposit {
      * 存款状态（0 成功，1 失败，2 处理中）
      * @return status 存款状态（0 成功，1 失败，2 处理中）
      */
-    public Byte getStatus() {
+    public int getStatus() {
         return status;
     }
 
@@ -257,7 +257,7 @@ public class FuAccountDeposit {
      * 存款状态（0 成功，1 失败，2 处理中）
      * @param status 存款状态（0 成功，1 失败，2 处理中）
      */
-    public void setStatus(Byte status) {
+    public void setStatus(int status) {
         this.status = status;
     }
 

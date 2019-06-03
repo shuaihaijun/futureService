@@ -41,7 +41,7 @@ public class FuUserBank {
     /**
      * 是否为主账号(1 是，0 否)
      */
-    private Byte isChief;
+    private int isChief;
 
     /**
      * 
@@ -159,7 +159,7 @@ public class FuUserBank {
      * 是否为主账号(1 是，0 否)
      * @return is_chief 是否为主账号(1 是，0 否)
      */
-    public Byte getIsChief() {
+    public int getIsChief() {
         return isChief;
     }
 
@@ -167,7 +167,7 @@ public class FuUserBank {
      * 是否为主账号(1 是，0 否)
      * @param isChief 是否为主账号(1 是，0 否)
      */
-    public void setIsChief(Byte isChief) {
+    public void setIsChief(int isChief) {
         this.isChief = isChief;
     }
 }

@@ -47,7 +47,7 @@ public class FuProductSignalApply {
     /**
      * 申请状态（0 暂存，1 待审核，2 通过，3 未通过）
      */
-    private Byte applyState;
+    private int applyState;
 
     /**
      * 申请时间
@@ -201,7 +201,7 @@ public class FuProductSignalApply {
      * 申请状态（0 暂存，1 待审核，2 通过，3 未通过）
      * @return apply_state 申请状态（0 暂存，1 待审核，2 通过，3 未通过）
      */
-    public Byte getApplyState() {
+    public int getApplyState() {
         return applyState;
     }
 
@@ -209,7 +209,7 @@ public class FuProductSignalApply {
      * 申请状态（0 暂存，1 待审核，2 通过，3 未通过）
      * @param applyState 申请状态（0 暂存，1 待审核，2 通过，3 未通过）
      */
-    public void setApplyState(Byte applyState) {
+    public void setApplyState(int applyState) {
         this.applyState = applyState;
     }
 

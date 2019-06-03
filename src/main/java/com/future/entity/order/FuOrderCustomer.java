@@ -32,7 +32,7 @@ public class FuOrderCustomer {
     /**
      * 用户类型（总经理、总监、业务员、PIB、MIB、IB、VIP会员、普通会员、试用会员、分析师、信号源））
      */
-    private Byte userType;
+    private int userType;
 
     /**
      * 交易账号ID
@@ -52,12 +52,12 @@ public class FuOrderCustomer {
     /**
      * 订单类型（ 0 普通订单，1 拆分订单）
      */
-    private Byte orderType;
+    private int orderType;
 
     /**
      * 订单状态（ 0 交易中 ，1 已交易，2 部分平仓，3 已平仓）
      */
-    private Byte orderState;
+    private int orderState;
 
     /**
      * 止损
@@ -92,12 +92,12 @@ public class FuOrderCustomer {
     /**
      * 交易类别（0 buy，1 sell, 2 buylimit ,3 selllimit, 4 buystop, 5 sellstop,6 deposit, 7 credit，99 close）
      */
-    private Byte orderTradeOperation;
+    private int orderTradeOperation;
 
     /**
      * 交易类型（0 建仓，1 平仓）
      */
-    private Byte orderTradeType;
+    private int orderTradeType;
 
     /**
      * 平仓价格
@@ -193,7 +193,7 @@ public class FuOrderCustomer {
      * 用户类型（总经理、总监、业务员、PIB、MIB、IB、VIP会员、普通会员、试用会员、分析师、信号源））
      * @return user_type 用户类型（总经理、总监、业务员、PIB、MIB、IB、VIP会员、普通会员、试用会员、分析师、信号源））
      */
-    public Byte getUserType() {
+    public int getUserType() {
         return userType;
     }
 
@@ -201,7 +201,7 @@ public class FuOrderCustomer {
      * 用户类型（总经理、总监、业务员、PIB、MIB、IB、VIP会员、普通会员、试用会员、分析师、信号源））
      * @param userType 用户类型（总经理、总监、业务员、PIB、MIB、IB、VIP会员、普通会员、试用会员、分析师、信号源））
      */
-    public void setUserType(Byte userType) {
+    public void setUserType(int userType) {
         this.userType = userType;
     }
 
@@ -257,7 +257,7 @@ public class FuOrderCustomer {
      * 订单类型（ 0 普通订单，1 拆分订单）
      * @return order_type 订单类型（ 0 普通订单，1 拆分订单）
      */
-    public Byte getOrderType() {
+    public int getOrderType() {
         return orderType;
     }
 
@@ -265,7 +265,7 @@ public class FuOrderCustomer {
      * 订单类型（ 0 普通订单，1 拆分订单）
      * @param orderType 订单类型（ 0 普通订单，1 拆分订单）
      */
-    public void setOrderType(Byte orderType) {
+    public void setOrderType(int orderType) {
         this.orderType = orderType;
     }
 
@@ -273,7 +273,7 @@ public class FuOrderCustomer {
      * 订单状态（ 0 交易中 ，1 已交易，2 部分平仓，3 已平仓）
      * @return order_state 订单状态（ 0 交易中 ，1 已交易，2 部分平仓，3 已平仓）
      */
-    public Byte getOrderState() {
+    public int getOrderState() {
         return orderState;
     }
 
@@ -281,7 +281,7 @@ public class FuOrderCustomer {
      * 订单状态（ 0 交易中 ，1 已交易，2 部分平仓，3 已平仓）
      * @param orderState 订单状态（ 0 交易中 ，1 已交易，2 部分平仓，3 已平仓）
      */
-    public void setOrderState(Byte orderState) {
+    public void setOrderState(int orderState) {
         this.orderState = orderState;
     }
 
@@ -385,7 +385,7 @@ public class FuOrderCustomer {
      * 交易类别（0 buy，1 sell, 2 buylimit ,3 selllimit, 4 buystop, 5 sellstop,6 deposit, 7 credit，99 close）
      * @return order_trade_operation 交易类别（0 buy，1 sell, 2 buylimit ,3 selllimit, 4 buystop, 5 sellstop,6 deposit, 7 credit，99 close）
      */
-    public Byte getOrderTradeOperation() {
+    public int getOrderTradeOperation() {
         return orderTradeOperation;
     }
 
@@ -393,7 +393,7 @@ public class FuOrderCustomer {
      * 交易类别（0 buy，1 sell, 2 buylimit ,3 selllimit, 4 buystop, 5 sellstop,6 deposit, 7 credit，99 close）
      * @param orderTradeOperation 交易类别（0 buy，1 sell, 2 buylimit ,3 selllimit, 4 buystop, 5 sellstop,6 deposit, 7 credit，99 close）
      */
-    public void setOrderTradeOperation(Byte orderTradeOperation) {
+    public void setOrderTradeOperation(int orderTradeOperation) {
         this.orderTradeOperation = orderTradeOperation;
     }
 
@@ -401,7 +401,7 @@ public class FuOrderCustomer {
      * 交易类型（0 建仓，1 平仓）
      * @return order_trade_type 交易类型（0 建仓，1 平仓）
      */
-    public Byte getOrderTradeType() {
+    public int getOrderTradeType() {
         return orderTradeType;
     }
 
@@ -409,7 +409,7 @@ public class FuOrderCustomer {
      * 交易类型（0 建仓，1 平仓）
      * @param orderTradeType 交易类型（0 建仓，1 平仓）
      */
-    public void setOrderTradeType(Byte orderTradeType) {
+    public void setOrderTradeType(int orderTradeType) {
         this.orderTradeType = orderTradeType;
     }
 

@@ -26,7 +26,7 @@ public class FuPermissionMenu {
     /**
      * 节点类型（0 菜单，1 按钮）
      */
-    private Byte menuType;
+    private int menuType;
 
     /**
      * 父级节点ID
@@ -46,7 +46,7 @@ public class FuPermissionMenu {
     /**
      * 节点状态（0 正常，1 隐藏，2 删除）
      */
-    private Byte menuState;
+    private int menuState;
 
     /**
      * 创建人ID
@@ -121,7 +121,7 @@ public class FuPermissionMenu {
      * 节点类型（0 菜单，1 按钮）
      * @return menu_type 节点类型（0 菜单，1 按钮）
      */
-    public Byte getMenuType() {
+    public int getMenuType() {
         return menuType;
     }
 
@@ -129,7 +129,7 @@ public class FuPermissionMenu {
      * 节点类型（0 菜单，1 按钮）
      * @param menuType 节点类型（0 菜单，1 按钮）
      */
-    public void setMenuType(Byte menuType) {
+    public void setMenuType(int menuType) {
         this.menuType = menuType;
     }
 
@@ -185,7 +185,7 @@ public class FuPermissionMenu {
      * 节点状态（0 正常，1 隐藏，2 删除）
      * @return menu_state 节点状态（0 正常，1 隐藏，2 删除）
      */
-    public Byte getMenuState() {
+    public int getMenuState() {
         return menuState;
     }
 
@@ -193,7 +193,7 @@ public class FuPermissionMenu {
      * 节点状态（0 正常，1 隐藏，2 删除）
      * @param menuState 节点状态（0 正常，1 隐藏，2 删除）
      */
-    public void setMenuState(Byte menuState) {
+    public void setMenuState(int menuState) {
         this.menuState = menuState;
     }
 

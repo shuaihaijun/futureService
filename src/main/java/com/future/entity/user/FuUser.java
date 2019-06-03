@@ -1,5 +1,6 @@
 package com.future.entity.user;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 public class FuUser {
@@ -9,7 +10,7 @@ public class FuUser {
     private Integer id;
 
     /**
-     * 用户名称
+     * 用户账号
      */
     private String username;
 
@@ -19,14 +20,39 @@ public class FuUser {
     private String password;
 
     /**
+     * 真实姓名
+     */
+    private String realName;
+
+    /**
      * 昵称
      */
     private String refName;
 
     /**
+     * 用户类型（总经理、总监、业务员、PIB、MIB、IB、VIP会员、普通会员、试用会员、分析师、信号源）
+     */
+    private int userType;
+
+    /**
+     * 用户状态(0 未审核，1 正常，2 冻结，2 删除）
+     */
+    private int userState;
+
+    /**
      * 电子邮件
      */
     private String email;
+
+    /**
+     * 电话号码
+     */
+    private String phone;
+
+    /**
+     * 手机
+     */
+    private String mobile;
 
     /**
      * 注册时间
@@ -51,22 +77,12 @@ public class FuUser {
     /**
      * 是否已验证身份
      */
-    private Byte isVerified;
+    private int isVerified;
 
     /**
      * 是否已绑定第三方账户
      */
-    private Byte isAccount;
-
-    /**
-     * 用户类型（总经理、总监、业务员、PIB、MIB、IB、VIP会员、普通会员、试用会员、分析师、信号源）
-     */
-    private Byte userType;
-
-    /**
-     * 用户状态(0 未审核，1 正常，2 冻结，2 删除）
-     */
-    private Byte userState;
+    private int isAccount;
 
     /**
      * 介绍人
@@ -77,6 +93,46 @@ public class FuUser {
      * 推荐人数
      */
     private Integer recommend;
+
+    /**
+     * 性别
+     */
+    private String sex;
+
+    /**
+     * 国家
+     */
+    private String country;
+
+    /**
+     * 省份
+     */
+    private String province;
+
+    /**
+     * 城市
+     */
+    private String city;
+
+    /**
+     * 地址
+     */
+    private String address;
+
+    /**
+     * 最大跟单比例
+     */
+    private BigDecimal followLevel;
+
+    /**
+     * 身份证 反面
+     */
+    private String idObverse;
+
+    /**
+     * 身份证 正面
+     */
+    private String idFront;
 
     /**
      * 创建时间
@@ -105,16 +161,16 @@ public class FuUser {
     }
 
     /**
-     * 用户名称
-     * @return username 用户名称
+     * 用户账号
+     * @return username 用户账号
      */
     public String getUsername() {
         return username;
     }
 
     /**
-     * 用户名称
-     * @param username 用户名称
+     * 用户账号
+     * @param username 用户账号
      */
     public void setUsername(String username) {
         this.username = username == null ? null : username.trim();
@@ -137,6 +193,22 @@ public class FuUser {
     }
 
     /**
+     * 真实姓名
+     * @return real_name 真实姓名
+     */
+    public String getRealName() {
+        return realName;
+    }
+
+    /**
+     * 真实姓名
+     * @param realName 真实姓名
+     */
+    public void setRealName(String realName) {
+        this.realName = realName == null ? null : realName.trim();
+    }
+
+    /**
      * 昵称
      * @return ref_name 昵称
      */
@@ -153,6 +225,38 @@ public class FuUser {
     }
 
     /**
+     * 用户类型（总经理、总监、业务员、PIB、MIB、IB、VIP会员、普通会员、试用会员、分析师、信号源）
+     * @return user_type 用户类型（总经理、总监、业务员、PIB、MIB、IB、VIP会员、普通会员、试用会员、分析师、信号源）
+     */
+    public int getUserType() {
+        return userType;
+    }
+
+    /**
+     * 用户类型（总经理、总监、业务员、PIB、MIB、IB、VIP会员、普通会员、试用会员、分析师、信号源）
+     * @param userType 用户类型（总经理、总监、业务员、PIB、MIB、IB、VIP会员、普通会员、试用会员、分析师、信号源）
+     */
+    public void setUserType(int userType) {
+        this.userType = userType;
+    }
+
+    /**
+     * 用户状态(0 未审核，1 正常，2 冻结，2 删除）
+     * @return user_state 用户状态(0 未审核，1 正常，2 冻结，2 删除）
+     */
+    public int getUserState() {
+        return userState;
+    }
+
+    /**
+     * 用户状态(0 未审核，1 正常，2 冻结，2 删除）
+     * @param userState 用户状态(0 未审核，1 正常，2 冻结，2 删除）
+     */
+    public void setUserState(int userState) {
+        this.userState = userState;
+    }
+
+    /**
      * 电子邮件
      * @return email 电子邮件
      */
@@ -166,6 +270,38 @@ public class FuUser {
      */
     public void setEmail(String email) {
         this.email = email == null ? null : email.trim();
+    }
+
+    /**
+     * 电话号码
+     * @return phone 电话号码
+     */
+    public String getPhone() {
+        return phone;
+    }
+
+    /**
+     * 电话号码
+     * @param phone 电话号码
+     */
+    public void setPhone(String phone) {
+        this.phone = phone == null ? null : phone.trim();
+    }
+
+    /**
+     * 手机
+     * @return mobile 手机
+     */
+    public String getMobile() {
+        return mobile;
+    }
+
+    /**
+     * 手机
+     * @param mobile 手机
+     */
+    public void setMobile(String mobile) {
+        this.mobile = mobile == null ? null : mobile.trim();
     }
 
     /**
@@ -236,7 +372,7 @@ public class FuUser {
      * 是否已验证身份
      * @return is_verified 是否已验证身份
      */
-    public Byte getIsVerified() {
+    public int getIsVerified() {
         return isVerified;
     }
 
@@ -244,7 +380,7 @@ public class FuUser {
      * 是否已验证身份
      * @param isVerified 是否已验证身份
      */
-    public void setIsVerified(Byte isVerified) {
+    public void setIsVerified(int isVerified) {
         this.isVerified = isVerified;
     }
 
@@ -252,7 +388,7 @@ public class FuUser {
      * 是否已绑定第三方账户
      * @return is_account 是否已绑定第三方账户
      */
-    public Byte getIsAccount() {
+    public int getIsAccount() {
         return isAccount;
     }
 
@@ -260,40 +396,8 @@ public class FuUser {
      * 是否已绑定第三方账户
      * @param isAccount 是否已绑定第三方账户
      */
-    public void setIsAccount(Byte isAccount) {
+    public void setIsAccount(int isAccount) {
         this.isAccount = isAccount;
-    }
-
-    /**
-     * 用户类型（总经理、总监、业务员、PIB、MIB、IB、VIP会员、普通会员、试用会员、分析师、信号源）
-     * @return user_type 用户类型（总经理、总监、业务员、PIB、MIB、IB、VIP会员、普通会员、试用会员、分析师、信号源）
-     */
-    public Byte getUserType() {
-        return userType;
-    }
-
-    /**
-     * 用户类型（总经理、总监、业务员、PIB、MIB、IB、VIP会员、普通会员、试用会员、分析师、信号源）
-     * @param userType 用户类型（总经理、总监、业务员、PIB、MIB、IB、VIP会员、普通会员、试用会员、分析师、信号源）
-     */
-    public void setUserType(Byte userType) {
-        this.userType = userType;
-    }
-
-    /**
-     * 用户状态(0 未审核，1 正常，2 冻结，2 删除）
-     * @return user_state 用户状态(0 未审核，1 正常，2 冻结，2 删除）
-     */
-    public Byte getUserState() {
-        return userState;
-    }
-
-    /**
-     * 用户状态(0 未审核，1 正常，2 冻结，2 删除）
-     * @param userState 用户状态(0 未审核，1 正常，2 冻结，2 删除）
-     */
-    public void setUserState(Byte userState) {
-        this.userState = userState;
     }
 
     /**
@@ -326,6 +430,134 @@ public class FuUser {
      */
     public void setRecommend(Integer recommend) {
         this.recommend = recommend;
+    }
+
+    /**
+     * 性别
+     * @return sex 性别
+     */
+    public String getSex() {
+        return sex;
+    }
+
+    /**
+     * 性别
+     * @param sex 性别
+     */
+    public void setSex(String sex) {
+        this.sex = sex == null ? null : sex.trim();
+    }
+
+    /**
+     * 国家
+     * @return country 国家
+     */
+    public String getCountry() {
+        return country;
+    }
+
+    /**
+     * 国家
+     * @param country 国家
+     */
+    public void setCountry(String country) {
+        this.country = country == null ? null : country.trim();
+    }
+
+    /**
+     * 省份
+     * @return province 省份
+     */
+    public String getProvince() {
+        return province;
+    }
+
+    /**
+     * 省份
+     * @param province 省份
+     */
+    public void setProvince(String province) {
+        this.province = province == null ? null : province.trim();
+    }
+
+    /**
+     * 城市
+     * @return city 城市
+     */
+    public String getCity() {
+        return city;
+    }
+
+    /**
+     * 城市
+     * @param city 城市
+     */
+    public void setCity(String city) {
+        this.city = city == null ? null : city.trim();
+    }
+
+    /**
+     * 地址
+     * @return address 地址
+     */
+    public String getAddress() {
+        return address;
+    }
+
+    /**
+     * 地址
+     * @param address 地址
+     */
+    public void setAddress(String address) {
+        this.address = address == null ? null : address.trim();
+    }
+
+    /**
+     * 最大跟单比例
+     * @return follow_level 最大跟单比例
+     */
+    public BigDecimal getFollowLevel() {
+        return followLevel;
+    }
+
+    /**
+     * 最大跟单比例
+     * @param followLevel 最大跟单比例
+     */
+    public void setFollowLevel(BigDecimal followLevel) {
+        this.followLevel = followLevel;
+    }
+
+    /**
+     * 身份证 反面
+     * @return id_obverse 身份证 反面
+     */
+    public String getIdObverse() {
+        return idObverse;
+    }
+
+    /**
+     * 身份证 反面
+     * @param idObverse 身份证 反面
+     */
+    public void setIdObverse(String idObverse) {
+        this.idObverse = idObverse == null ? null : idObverse.trim();
+    }
+
+    /**
+     * 身份证 正面
+     * @return id_Front 身份证 正面
+     */
+    public String getIdFront() {
+        return idFront;
+    }
+
+    /**
+     * 身份证 正面
+     * @param idFront 身份证 正面
+     */
+    public void setIdFront(String idFront) {
+        this.idFront = idFront == null ? null : idFront.trim();
     }
 
     /**

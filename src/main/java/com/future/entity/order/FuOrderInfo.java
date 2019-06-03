@@ -47,12 +47,12 @@ public class FuOrderInfo {
     /**
      * 订单类型（ 0 普通订单，1 拆分订单）
      */
-    private Byte orderType;
+    private int orderType;
 
     /**
      * 订单状态（ 0 交易中 ，1 已建仓，2 部分平仓，3 已平仓）
      */
-    private Byte orderState;
+    private int orderState;
 
     /**
      * 止损价
@@ -72,7 +72,7 @@ public class FuOrderInfo {
     /**
      * 订单来源标识：（0 自交易，1 社区跟单）
      */
-    private Byte orderSourceFlag;
+    private int orderSourceFlag;
 
     /**
      * 跟随订单号
@@ -92,7 +92,7 @@ public class FuOrderInfo {
     /**
      * 拆单类型 ( 0 拆单建仓，1 拆单平仓)
      */
-    private Byte orderSplitType;
+    private int orderSplitType;
 
     /**
      * 盈利
@@ -261,7 +261,7 @@ public class FuOrderInfo {
      * 订单类型（ 0 普通订单，1 拆分订单）
      * @return order_type 订单类型（ 0 普通订单，1 拆分订单）
      */
-    public Byte getOrderType() {
+    public int getOrderType() {
         return orderType;
     }
 
@@ -269,7 +269,7 @@ public class FuOrderInfo {
      * 订单类型（ 0 普通订单，1 拆分订单）
      * @param orderType 订单类型（ 0 普通订单，1 拆分订单）
      */
-    public void setOrderType(Byte orderType) {
+    public void setOrderType(int orderType) {
         this.orderType = orderType;
     }
 
@@ -277,7 +277,7 @@ public class FuOrderInfo {
      * 订单状态（ 0 交易中 ，1 已建仓，2 部分平仓，3 已平仓）
      * @return order_state 订单状态（ 0 交易中 ，1 已建仓，2 部分平仓，3 已平仓）
      */
-    public Byte getOrderState() {
+    public int getOrderState() {
         return orderState;
     }
 
@@ -285,7 +285,7 @@ public class FuOrderInfo {
      * 订单状态（ 0 交易中 ，1 已建仓，2 部分平仓，3 已平仓）
      * @param orderState 订单状态（ 0 交易中 ，1 已建仓，2 部分平仓，3 已平仓）
      */
-    public void setOrderState(Byte orderState) {
+    public void setOrderState(int orderState) {
         this.orderState = orderState;
     }
 
@@ -341,7 +341,7 @@ public class FuOrderInfo {
      * 订单来源标识：（0 自交易，1 社区跟单）
      * @return order_source_flag 订单来源标识：（0 自交易，1 社区跟单）
      */
-    public Byte getOrderSourceFlag() {
+    public int getOrderSourceFlag() {
         return orderSourceFlag;
     }
 
@@ -349,7 +349,7 @@ public class FuOrderInfo {
      * 订单来源标识：（0 自交易，1 社区跟单）
      * @param orderSourceFlag 订单来源标识：（0 自交易，1 社区跟单）
      */
-    public void setOrderSourceFlag(Byte orderSourceFlag) {
+    public void setOrderSourceFlag(int orderSourceFlag) {
         this.orderSourceFlag = orderSourceFlag;
     }
 
@@ -405,7 +405,7 @@ public class FuOrderInfo {
      * 拆单类型 ( 0 拆单建仓，1 拆单平仓)
      * @return order_split_type 拆单类型 ( 0 拆单建仓，1 拆单平仓)
      */
-    public Byte getOrderSplitType() {
+    public int getOrderSplitType() {
         return orderSplitType;
     }
 
@@ -413,7 +413,7 @@ public class FuOrderInfo {
      * 拆单类型 ( 0 拆单建仓，1 拆单平仓)
      * @param orderSplitType 拆单类型 ( 0 拆单建仓，1 拆单平仓)
      */
-    public void setOrderSplitType(Byte orderSplitType) {
+    public void setOrderSplitType(int orderSplitType) {
         this.orderSplitType = orderSplitType;
     }
 

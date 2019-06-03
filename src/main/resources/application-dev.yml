@@ -1,3 +1,7 @@
+#端口设置
+server:
+  port: 7075
+
 #基础设置
 spring:
   application:
@@ -5,9 +9,9 @@ spring:
     #  数据设置
   datasource:
     name: test
-    url: jdbc:mysql://127.0.0.1:3306/haiting?useUnicode=true&characterEncoding=utf8&allowMultiQueries=true&serverTimezone=GMT%2B8
+    url: jdbc:mysql://127.0.0.1:3306/test?useUnicode=true&characterEncoding=utf8&allowMultiQueries=true&serverTimezone=GMT%2B8
     username: root
-    password: 123456
+    password: shuaige
     # 使用druid数据源
     type: com.alibaba.druid.pool.DruidDataSource
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -24,21 +28,18 @@ spring:
     testOnReturn: false
     poolPreparedStatements: true
     maxOpenPreparedStatements: 20
-    # redis配置
+  # 使用redis
   redis:
-    host: 127.0.0.1
-    port: 6397
-    password:
+    host: 192.168.88.80
+    port: 6379
+    password: foobared
+    timeout: 3000 # 连接超时时间（毫秒）
     jedis:
       pool:
-        max-active: 16
-        max-idle: 8
-        min-idle: 0
-    timeout: 1000
-
-#端口设置
-server:
-  port: 7075
+        max-active: 8 # 连接池最大连接数（使用负值表示没有限制）
+        max-idle: 8 # 连接池中的最大空闲连接
+        min-idle: 0 # 连接池中的最小空闲连接
+        max-wait: -1 # 连接池最大阻塞等待时间（使用负值表示没有限制）
 
 #注册中心
 eureka:
@@ -56,7 +57,7 @@ pagehelper:
 
 ## 该配置节点为独立的节点，有很多同学容易将这个配置放在spring的节点下，导致配置无法被识别
 mybatis:
-  mapper-locations: classpath:mapping/*.xml  #注意：一定要对应mapper映射xml文件的所在路径
+  mapper-locations: classpath:mapping/*/*.xml  #注意：一定要对应mapper映射xml文件的所在路径
   type-aliases-package: com.future.entity  # 注意：对应实体类的路径
 
 swagger:

@@ -32,12 +32,12 @@ public class FuPayInfo {
     /**
      * 支付类型（0 购买产品，1 充值，2 其他）
      */
-    private Byte payType;
+    private int payType;
 
     /**
      * 支付方式（0 银行卡，1 支付，2微信，3 其他）
      */
-    private Byte payWay;
+    private int payWay;
 
     /**
      * 存款时间
@@ -47,7 +47,7 @@ public class FuPayInfo {
     /**
      * 支付状态（0 成功，1 失败，2 处理中）
      */
-    private Byte status;
+    private int status;
 
     /**
      * 备注
@@ -148,7 +148,7 @@ public class FuPayInfo {
      * 支付类型（0 购买产品，1 充值，2 其他）
      * @return pay_type 支付类型（0 购买产品，1 充值，2 其他）
      */
-    public Byte getPayType() {
+    public int getPayType() {
         return payType;
     }
 
@@ -156,7 +156,7 @@ public class FuPayInfo {
      * 支付类型（0 购买产品，1 充值，2 其他）
      * @param payType 支付类型（0 购买产品，1 充值，2 其他）
      */
-    public void setPayType(Byte payType) {
+    public void setPayType(int payType) {
         this.payType = payType;
     }
 
@@ -164,7 +164,7 @@ public class FuPayInfo {
      * 支付方式（0 银行卡，1 支付，2微信，3 其他）
      * @return pay_way 支付方式（0 银行卡，1 支付，2微信，3 其他）
      */
-    public Byte getPayWay() {
+    public int getPayWay() {
         return payWay;
     }
 
@@ -172,7 +172,7 @@ public class FuPayInfo {
      * 支付方式（0 银行卡，1 支付，2微信，3 其他）
      * @param payWay 支付方式（0 银行卡，1 支付，2微信，3 其他）
      */
-    public void setPayWay(Byte payWay) {
+    public void setPayWay(int payWay) {
         this.payWay = payWay;
     }
 
@@ -196,7 +196,7 @@ public class FuPayInfo {
      * 支付状态（0 成功，1 失败，2 处理中）
      * @return status 支付状态（0 成功，1 失败，2 处理中）
      */
-    public Byte getStatus() {
+    public int getStatus() {
         return status;
     }
 
@@ -204,7 +204,7 @@ public class FuPayInfo {
      * 支付状态（0 成功，1 失败，2 处理中）
      * @param status 支付状态（0 成功，1 失败，2 处理中）
      */
-    public void setStatus(Byte status) {
+    public void setStatus(int status) {
         this.status = status;
     }
 

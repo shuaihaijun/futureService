@@ -11,7 +11,7 @@ public class FuComMaterial {
     /**
      * 素材类型（0 文本，1 图片，2 文件，3 视频，4 链接）
      */
-    private Byte materialType;
+    private int materialType;
 
     /**
      * 素材主题
@@ -21,7 +21,7 @@ public class FuComMaterial {
     /**
      * 素材状态（0 发布，1 暂存，2 待审核，3 下架，4 删除）
      */
-    private Byte materialState;
+    private int materialState;
 
     /**
      * 素材区域ID
@@ -73,7 +73,7 @@ public class FuComMaterial {
      * 素材类型（0 文本，1 图片，2 文件，3 视频，4 链接）
      * @return material_type 素材类型（0 文本，1 图片，2 文件，3 视频，4 链接）
      */
-    public Byte getMaterialType() {
+    public int getMaterialType() {
         return materialType;
     }
 
@@ -81,7 +81,7 @@ public class FuComMaterial {
      * 素材类型（0 文本，1 图片，2 文件，3 视频，4 链接）
      * @param materialType 素材类型（0 文本，1 图片，2 文件，3 视频，4 链接）
      */
-    public void setMaterialType(Byte materialType) {
+    public void setMaterialType(int materialType) {
         this.materialType = materialType;
     }
 
@@ -105,7 +105,7 @@ public class FuComMaterial {
      * 素材状态（0 发布，1 暂存，2 待审核，3 下架，4 删除）
      * @return material_state 素材状态（0 发布，1 暂存，2 待审核，3 下架，4 删除）
      */
-    public Byte getMaterialState() {
+    public int getMaterialState() {
         return materialState;
     }
 
@@ -113,7 +113,7 @@ public class FuComMaterial {
      * 素材状态（0 发布，1 暂存，2 待审核，3 下架，4 删除）
      * @param materialState 素材状态（0 发布，1 暂存，2 待审核，3 下架，4 删除）
      */
-    public void setMaterialState(Byte materialState) {
+    public void setMaterialState(int materialState) {
         this.materialState = materialState;
     }
 

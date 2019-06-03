@@ -22,7 +22,7 @@ public class FuAccountCommunityFlow {
     /**
      * 结算类型（0 交易返佣，1 用户充值 ，2 平台返佣 ）
      */
-    private Byte dealType;
+    private int dealType;
 
     /**
      * 发生源金额
@@ -57,12 +57,12 @@ public class FuAccountCommunityFlow {
     /**
      * 币种类型（0 余额，1社区币，2 期债）
      */
-    private Byte coinType;
+    private int coinType;
 
     /**
      * 状态（0 成功，1 失败，2 执行中）
      */
-    private Byte state;
+    private int state;
 
     /**
      * 
@@ -116,7 +116,7 @@ public class FuAccountCommunityFlow {
      * 结算类型（0 交易返佣，1 用户充值 ，2 平台返佣 ）
      * @return deal_type 结算类型（0 交易返佣，1 用户充值 ，2 平台返佣 ）
      */
-    public Byte getDealType() {
+    public int getDealType() {
         return dealType;
     }
 
@@ -124,7 +124,7 @@ public class FuAccountCommunityFlow {
      * 结算类型（0 交易返佣，1 用户充值 ，2 平台返佣 ）
      * @param dealType 结算类型（0 交易返佣，1 用户充值 ，2 平台返佣 ）
      */
-    public void setDealType(Byte dealType) {
+    public void setDealType(int dealType) {
         this.dealType = dealType;
     }
 
@@ -228,7 +228,7 @@ public class FuAccountCommunityFlow {
      * 币种类型（0 余额，1社区币，2 期债）
      * @return coin_type 币种类型（0 余额，1社区币，2 期债）
      */
-    public Byte getCoinType() {
+    public int getCoinType() {
         return coinType;
     }
 
@@ -236,7 +236,7 @@ public class FuAccountCommunityFlow {
      * 币种类型（0 余额，1社区币，2 期债）
      * @param coinType 币种类型（0 余额，1社区币，2 期债）
      */
-    public void setCoinType(Byte coinType) {
+    public void setCoinType(int coinType) {
         this.coinType = coinType;
     }
 
@@ -244,7 +244,7 @@ public class FuAccountCommunityFlow {
      * 状态（0 成功，1 失败，2 执行中）
      * @return state 状态（0 成功，1 失败，2 执行中）
      */
-    public Byte getState() {
+    public int getState() {
         return state;
     }
 
@@ -252,7 +252,7 @@ public class FuAccountCommunityFlow {
      * 状态（0 成功，1 失败，2 执行中）
      * @param state 状态（0 成功，1 失败，2 执行中）
      */
-    public void setState(Byte state) {
+    public void setState(int state) {
         this.state = state;
     }
 }

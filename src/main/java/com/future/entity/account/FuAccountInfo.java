@@ -72,7 +72,7 @@ public class FuAccountInfo {
     /**
      * 账户状态（0 正常，1冻结，2 删除）
      */
-    private Byte accountState;
+    private int accountState;
 
     /**
      * 相关账户信息
@@ -291,7 +291,7 @@ public class FuAccountInfo {
      * 账户状态（0 正常，1冻结，2 删除）
      * @return account_state 账户状态（0 正常，1冻结，2 删除）
      */
-    public Byte getAccountState() {
+    public int getAccountState() {
         return accountState;
     }
 
@@ -299,7 +299,7 @@ public class FuAccountInfo {
      * 账户状态（0 正常，1冻结，2 删除）
      * @param accountState 账户状态（0 正常，1冻结，2 删除）
      */
-    public void setAccountState(Byte accountState) {
+    public void setAccountState(int accountState) {
         this.accountState = accountState;
     }
 

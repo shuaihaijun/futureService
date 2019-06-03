@@ -42,7 +42,7 @@ public class FuPayOrder {
     /**
      * 优惠类型（0 奖励，1 活动）
      */
-    private Byte payOfferType;
+    private int payOfferType;
 
     /**
      * 优惠ID
@@ -57,7 +57,7 @@ public class FuPayOrder {
     /**
      * 支付类型（0 购买产品，1 充值，2 购买币）
      */
-    private Byte payType;
+    private int payType;
 
     /**
      * 商品ID
@@ -82,7 +82,7 @@ public class FuPayOrder {
     /**
      * 支付状态（0 成功，1 失败，2 处理中）
      */
-    private Byte status;
+    private int status;
 
     /**
      * 备注
@@ -215,7 +215,7 @@ public class FuPayOrder {
      * 优惠类型（0 奖励，1 活动）
      * @return pay_offer_type 优惠类型（0 奖励，1 活动）
      */
-    public Byte getPayOfferType() {
+    public int getPayOfferType() {
         return payOfferType;
     }
 
@@ -223,7 +223,7 @@ public class FuPayOrder {
      * 优惠类型（0 奖励，1 活动）
      * @param payOfferType 优惠类型（0 奖励，1 活动）
      */
-    public void setPayOfferType(Byte payOfferType) {
+    public void setPayOfferType(int payOfferType) {
         this.payOfferType = payOfferType;
     }
 
@@ -263,7 +263,7 @@ public class FuPayOrder {
      * 支付类型（0 购买产品，1 充值，2 购买币）
      * @return pay_type 支付类型（0 购买产品，1 充值，2 购买币）
      */
-    public Byte getPayType() {
+    public int getPayType() {
         return payType;
     }
 
@@ -271,7 +271,7 @@ public class FuPayOrder {
      * 支付类型（0 购买产品，1 充值，2 购买币）
      * @param payType 支付类型（0 购买产品，1 充值，2 购买币）
      */
-    public void setPayType(Byte payType) {
+    public void setPayType(int payType) {
         this.payType = payType;
     }
 
@@ -343,7 +343,7 @@ public class FuPayOrder {
      * 支付状态（0 成功，1 失败，2 处理中）
      * @return status 支付状态（0 成功，1 失败，2 处理中）
      */
-    public Byte getStatus() {
+    public int getStatus() {
         return status;
     }
 
@@ -351,7 +351,7 @@ public class FuPayOrder {
      * 支付状态（0 成功，1 失败，2 处理中）
      * @param status 支付状态（0 成功，1 失败，2 处理中）
      */
-    public void setStatus(Byte status) {
+    public void setStatus(int status) {
         this.status = status;
     }
 

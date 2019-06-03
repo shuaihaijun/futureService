@@ -19,7 +19,7 @@ public class FuComBroker {
     /**
      * 经纪商类型（0 合作，1 其他）
      */
-    private Byte brokerType;
+    private int brokerType;
 
     /**
      * 分组名称
@@ -83,7 +83,7 @@ public class FuComBroker {
      * 经纪商类型（0 合作，1 其他）
      * @return broker_type 经纪商类型（0 合作，1 其他）
      */
-    public Byte getBrokerType() {
+    public int getBrokerType() {
         return brokerType;
     }
 
@@ -91,7 +91,7 @@ public class FuComBroker {
      * 经纪商类型（0 合作，1 其他）
      * @param brokerType 经纪商类型（0 合作，1 其他）
      */
-    public void setBrokerType(Byte brokerType) {
+    public void setBrokerType(int brokerType) {
         this.brokerType = brokerType;
     }
 

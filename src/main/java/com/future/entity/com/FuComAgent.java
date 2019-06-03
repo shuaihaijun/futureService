@@ -19,7 +19,7 @@ public class FuComAgent {
     /**
      * 代理人等级(0 IB ,1 MIB, 2 PIB)
      */
-    private Byte agentLevel;
+    private int agentLevel;
 
     /**
      * 代理描述
@@ -34,7 +34,7 @@ public class FuComAgent {
     /**
      * 代理人状态
      */
-    private Byte agentState;
+    private int agentState;
 
     /**
      * 分组名称
@@ -98,7 +98,7 @@ public class FuComAgent {
      * 代理人等级(0 IB ,1 MIB, 2 PIB)
      * @return agent_level 代理人等级(0 IB ,1 MIB, 2 PIB)
      */
-    public Byte getAgentLevel() {
+    public int getAgentLevel() {
         return agentLevel;
     }
 
@@ -106,7 +106,7 @@ public class FuComAgent {
      * 代理人等级(0 IB ,1 MIB, 2 PIB)
      * @param agentLevel 代理人等级(0 IB ,1 MIB, 2 PIB)
      */
-    public void setAgentLevel(Byte agentLevel) {
+    public void setAgentLevel(int agentLevel) {
         this.agentLevel = agentLevel;
     }
 
@@ -146,7 +146,7 @@ public class FuComAgent {
      * 代理人状态
      * @return agent_state 代理人状态
      */
-    public Byte getAgentState() {
+    public int getAgentState() {
         return agentState;
     }
 
@@ -154,7 +154,7 @@ public class FuComAgent {
      * 代理人状态
      * @param agentState 代理人状态
      */
-    public void setAgentState(Byte agentState) {
+    public void setAgentState(int agentState) {
         this.agentState = agentState;
     }
 
