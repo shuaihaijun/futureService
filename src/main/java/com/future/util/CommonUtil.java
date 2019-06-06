@@ -1,5 +1,7 @@
 package com.future.util;
 
+import com.alibaba.fastjson.JSONException;
+import com.alibaba.fastjson.JSONObject;
 import org.springframework.util.StringUtils;
 
 import java.lang.reflect.Field;
@@ -199,18 +201,7 @@ public class CommonUtil {
 		return rtn+str;
 	}
 	
-	    /** 
-	    * 获得助记码
-		* @param str
-		* @return
-		* @author add by x@2012-11-16
-	    * @return String  
-		*
-	    */  
-	/*public static String getREM(String str){
-		return MnemonicUtil.cn2py(str);
-	}*/
-	
+
 	  /** 
 	    * 把传入的字符串 转化成where xxx in (xxx) 的形式，
 		* @param str  1,2,3,4
@@ -605,4 +596,104 @@ public class CommonUtil {
 		}
  		return map;
 	}
+
+	/**
+	 * @param regex
+	 * 正则表达式字符串
+	 * @param str
+	 * 要匹配的字符串
+	 * @return 如果str 符合 regex的正则表达式格式,返回true, 否则返回 false;
+	 */
+	private static boolean match(String regex, String str) {
+		Pattern pattern = Pattern.compile(regex);
+		Matcher matcher = pattern.matcher(str);
+		return matcher.matches();
+	}
+
+	/**
+	 * 验证邮箱
+	 * @param str 待验证的字符串
+	 * @return 如果是符合的字符串,返回 <b>true </b>,否则为 <b>false </b>
+	 */
+	public static boolean isEmail(String str) {
+		String regex = "^([\\w-\\.]+)@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.)|(([\\w-]+\\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\\]?)$";
+		return match(regex, str);
+	}
+
+	/**
+	 * 验证输入身份证号
+	 * @param str 待验证的字符串
+	 * @return 如果是符合格式的字符串,返回 <b>true </b>,否则为 <b>false </b>
+	 */
+	public static boolean IsIDcard(String str) {
+		String regex = "(^\\d{18}$)|(^\\d{15}$)";
+		return match(regex, str);
+	}
+
+	/**
+	 * 验证输入手机号码
+	 * @param str 待验证的字符串
+	 * @return 如果是符合格式的字符串,返回 <b>true </b>,否则为 <b>false </b>
+	 */
+	public static boolean IsHandset(String str) {
+		String regex = "^[1]+[3,5]+\\d{9}$";
+		return match(regex, str);
+	}
+
+	/**
+	 * 验证输入邮政编号
+	 * @param str 待验证的字符串
+	 * @return 如果是符合格式的字符串,返回 <b>true </b>,否则为 <b>false </b>
+	 */
+	public static boolean IsPostalcode(String str) {
+		String regex = "^\\d{6}$";
+		return match(regex, str);
+	}
+
+	/**
+	 * 验证电话号码
+	 * @param str 待验证的字符串
+	 * @return 如果是符合格式的字符串,返回 <b>true </b>,否则为 <b>false </b>
+	 */
+	public static boolean IsTelephone(String str) {
+		String regex = "^(\\d{3,4}-)?\\d{6,8}$";
+		return match(regex, str);
+	}
+
+	/**
+	 * 校验密码是否符合规则(6-18位/字符与数据同时出现)
+	 * @param str
+	 * @return
+	 */
+	public static Boolean verifyPassword(String str){
+
+		String regex1 = "[A-Za-z]+[0-9]";
+		if(!match(regex1, str)){
+			return  false;
+		}
+		String regex2 = "^\\d{6,18}$";
+		if(!match(regex2, str)){
+			return  false;
+		}
+		return true;
+	}
+
+	/**
+	 * 判断string是否符合json格式 fastjson
+	 * @param jsonString
+	 * @return
+	 */
+	public static boolean isJSONValid(String jsonString) {
+		try {
+			JSONObject.parseObject(jsonString);
+		} catch (JSONException ex) {
+			try {
+				JSONObject.parseArray(jsonString);
+			} catch (JSONException ex1) {
+				return false;
+			}
+		}
+		return true;
+	}
+
 }

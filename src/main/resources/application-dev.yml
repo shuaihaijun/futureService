@@ -1,6 +1,6 @@
 #端口设置
 server:
-  port: 7075
+  port: 80
 
 #基础设置
 spring:
@@ -42,10 +42,10 @@ spring:
         max-wait: -1 # 连接池最大阻塞等待时间（使用负值表示没有限制）
 
 #注册中心
-eureka:
-  client:
-    service-url:
-      defaultZone: http://localhost:8761/eureka/
+  #eureka:
+    #  client:
+      #    service-url:
+#      defaultZone: http://127.0.0.1:8761/eureka/
 
 
 #pagehelper分页插件
