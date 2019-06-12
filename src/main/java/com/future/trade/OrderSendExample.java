@@ -56,6 +56,9 @@ public class OrderSendExample extends Strategy {
         System.out.println("========connected orderSend begin");
         orderSendExample.newPosition("EURUSD", "B", 0.01);
         System.out.println("========orderSended well done!");
+        System.out.println("========connect again  ");
+        orderSendExample.init();
+        System.out.println("========connect again end");
     }
 
 }

@@ -112,7 +112,7 @@ public class JFXStreamerExample extends Strategy {
         connectToMT4Server();
         //
         System.out.println("30-seconds demo...");
-        Thread.sleep(30000);
+        Thread.sleep(90000);
         //
         System.out.println("Exit.");
         System.exit(0);

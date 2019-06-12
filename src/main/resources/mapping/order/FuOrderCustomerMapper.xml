@@ -15,8 +15,11 @@
     <result column="order_state" jdbcType="TINYINT" property="orderState" />
     <result column="order_stoploss" jdbcType="DECIMAL" property="orderStoploss" />
     <result column="order_takeprofit" jdbcType="DECIMAL" property="orderTakeprofit" />
+    <result column="order_swap" jdbcType="DECIMAL" property="orderSwap" />
+    <result column="order_commission" jdbcType="DECIMAL" property="orderCommission" />
     <result column="order_superior" jdbcType="VARCHAR" property="orderSuperior" />
     <result column="order_expiration" jdbcType="TIMESTAMP" property="orderExpiration" />
+    <result column="order_magic" jdbcType="DECIMAL" property="orderMagic" />
     <result column="order_trade_price" jdbcType="DECIMAL" property="orderTradePrice" />
     <result column="order_trade_date" jdbcType="TIMESTAMP" property="orderTradeDate" />
     <result column="order_trade_operation" jdbcType="TINYINT" property="orderTradeOperation" />
@@ -26,9 +29,9 @@
   </resultMap>
   <sql id="Base_Column_List">
     id, create_date, modify_date, order_id, user_id, user_type, mt_id, order_symbol, 
-    order_lots, order_type, order_state, order_stoploss, order_takeprofit, order_superior, 
-    order_expiration, order_trade_price, order_trade_date, order_trade_operation, order_trade_type, 
-    order_close_price, order_close_date
+    order_lots, order_type, order_state, order_stoploss, order_takeprofit, order_swap, 
+    order_commission, order_superior, order_expiration, order_magic, order_trade_price, 
+    order_trade_date, order_trade_operation, order_trade_type, order_close_price, order_close_date
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -45,7 +48,8 @@
       order_id, user_id, user_type, 
       mt_id, order_symbol, order_lots, 
       order_type, order_state, order_stoploss, 
-      order_takeprofit, order_superior, order_expiration, 
+      order_takeprofit, order_swap, order_commission, 
+      order_superior, order_expiration, order_magic, 
       order_trade_price, order_trade_date, order_trade_operation, 
       order_trade_type, order_close_price, order_close_date
       )
@@ -53,7 +57,8 @@
       #{orderId,jdbcType=VARCHAR}, #{userId,jdbcType=INTEGER}, #{userType,jdbcType=TINYINT}, 
       #{mtId,jdbcType=VARCHAR}, #{orderSymbol,jdbcType=VARCHAR}, #{orderLots,jdbcType=DECIMAL}, 
       #{orderType,jdbcType=TINYINT}, #{orderState,jdbcType=TINYINT}, #{orderStoploss,jdbcType=DECIMAL}, 
-      #{orderTakeprofit,jdbcType=DECIMAL}, #{orderSuperior,jdbcType=VARCHAR}, #{orderExpiration,jdbcType=TIMESTAMP}, 
+      #{orderTakeprofit,jdbcType=DECIMAL}, #{orderSwap,jdbcType=DECIMAL}, #{orderCommission,jdbcType=DECIMAL}, 
+      #{orderSuperior,jdbcType=VARCHAR}, #{orderExpiration,jdbcType=TIMESTAMP}, #{orderMagic,jdbcType=DECIMAL}, 
       #{orderTradePrice,jdbcType=DECIMAL}, #{orderTradeDate,jdbcType=TIMESTAMP}, #{orderTradeOperation,jdbcType=TINYINT}, 
       #{orderTradeType,jdbcType=TINYINT}, #{orderClosePrice,jdbcType=DECIMAL}, #{orderCloseDate,jdbcType=TIMESTAMP}
       )
@@ -100,11 +105,20 @@
       <if test="orderTakeprofit != null">
         order_takeprofit,
       </if>
+      <if test="orderSwap != null">
+        order_swap,
+      </if>
+      <if test="orderCommission != null">
+        order_commission,
+      </if>
       <if test="orderSuperior != null">
         order_superior,
       </if>
       <if test="orderExpiration != null">
         order_expiration,
+      </if>
+      <if test="orderMagic != null">
+        order_magic,
       </if>
       <if test="orderTradePrice != null">
         order_trade_price,
@@ -165,11 +179,20 @@
       <if test="orderTakeprofit != null">
         #{orderTakeprofit,jdbcType=DECIMAL},
       </if>
+      <if test="orderSwap != null">
+        #{orderSwap,jdbcType=DECIMAL},
+      </if>
+      <if test="orderCommission != null">
+        #{orderCommission,jdbcType=DECIMAL},
+      </if>
       <if test="orderSuperior != null">
         #{orderSuperior,jdbcType=VARCHAR},
       </if>
       <if test="orderExpiration != null">
         #{orderExpiration,jdbcType=TIMESTAMP},
+      </if>
+      <if test="orderMagic != null">
+        #{orderMagic,jdbcType=DECIMAL},
       </if>
       <if test="orderTradePrice != null">
         #{orderTradePrice,jdbcType=DECIMAL},
@@ -230,11 +253,20 @@
       <if test="orderTakeprofit != null">
         order_takeprofit = #{orderTakeprofit,jdbcType=DECIMAL},
       </if>
+      <if test="orderSwap != null">
+        order_swap = #{orderSwap,jdbcType=DECIMAL},
+      </if>
+      <if test="orderCommission != null">
+        order_commission = #{orderCommission,jdbcType=DECIMAL},
+      </if>
       <if test="orderSuperior != null">
         order_superior = #{orderSuperior,jdbcType=VARCHAR},
       </if>
       <if test="orderExpiration != null">
         order_expiration = #{orderExpiration,jdbcType=TIMESTAMP},
+      </if>
+      <if test="orderMagic != null">
+        order_magic = #{orderMagic,jdbcType=DECIMAL},
       </if>
       <if test="orderTradePrice != null">
         order_trade_price = #{orderTradePrice,jdbcType=DECIMAL},
@@ -271,8 +303,11 @@
       order_state = #{orderState,jdbcType=TINYINT},
       order_stoploss = #{orderStoploss,jdbcType=DECIMAL},
       order_takeprofit = #{orderTakeprofit,jdbcType=DECIMAL},
+      order_swap = #{orderSwap,jdbcType=DECIMAL},
+      order_commission = #{orderCommission,jdbcType=DECIMAL},
       order_superior = #{orderSuperior,jdbcType=VARCHAR},
       order_expiration = #{orderExpiration,jdbcType=TIMESTAMP},
+      order_magic = #{orderMagic,jdbcType=DECIMAL},
       order_trade_price = #{orderTradePrice,jdbcType=DECIMAL},
       order_trade_date = #{orderTradeDate,jdbcType=TIMESTAMP},
       order_trade_operation = #{orderTradeOperation,jdbcType=TINYINT},

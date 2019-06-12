@@ -65,3 +65,5 @@ swagger:
 
 # constant
 baseUrl: 127.0.0.1
+termServerHost: 127.0.0.1
+termServerPort: 7788

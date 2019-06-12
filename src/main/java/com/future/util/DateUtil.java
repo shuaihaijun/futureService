@@ -86,12 +86,11 @@ public class DateUtil {
 	 * @return 字符串转换成的日期.如字符串为NULL或空串,返回NULL
 	 */
 	public static Date toDateTimeFromString(String s) {
-		s = StringUtils.trimAllWhitespace(s);
 		if (s.length() < 1) {
 			return null;
 		}
 		try {
-			if (s.length() <= 10) {
+			if (s.length() <= 20) {
 				return datetimeFormat.parse(s);
 			}
 			return toDate(Timestamp.valueOf(s));

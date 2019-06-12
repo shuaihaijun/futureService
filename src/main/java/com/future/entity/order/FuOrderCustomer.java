@@ -70,6 +70,16 @@ public class FuOrderCustomer {
     private BigDecimal orderTakeprofit;
 
     /**
+     * 库存费
+     */
+    private BigDecimal orderSwap;
+
+    /**
+     * 手续费
+     */
+    private BigDecimal orderCommission;
+
+    /**
      * 原订单号
      */
     private String orderSuperior;
@@ -78,6 +88,11 @@ public class FuOrderCustomer {
      * 挂单时间
      */
     private Date orderExpiration;
+
+    /**
+     * 魔力值
+     */
+    private BigDecimal orderMagic;
 
     /**
      * 交易价格
@@ -318,6 +333,38 @@ public class FuOrderCustomer {
     }
 
     /**
+     * 库存费
+     * @return order_swap 库存费
+     */
+    public BigDecimal getOrderSwap() {
+        return orderSwap;
+    }
+
+    /**
+     * 库存费
+     * @param orderSwap 库存费
+     */
+    public void setOrderSwap(BigDecimal orderSwap) {
+        this.orderSwap = orderSwap;
+    }
+
+    /**
+     * 手续费
+     * @return order_commission 手续费
+     */
+    public BigDecimal getOrderCommission() {
+        return orderCommission;
+    }
+
+    /**
+     * 手续费
+     * @param orderCommission 手续费
+     */
+    public void setOrderCommission(BigDecimal orderCommission) {
+        this.orderCommission = orderCommission;
+    }
+
+    /**
      * 原订单号
      * @return order_superior 原订单号
      */
@@ -347,6 +394,22 @@ public class FuOrderCustomer {
      */
     public void setOrderExpiration(Date orderExpiration) {
         this.orderExpiration = orderExpiration;
+    }
+
+    /**
+     * 魔力值
+     * @return order_magic 魔力值
+     */
+    public BigDecimal getOrderMagic() {
+        return orderMagic;
+    }
+
+    /**
+     * 魔力值
+     * @param orderMagic 魔力值
+     */
+    public void setOrderMagic(BigDecimal orderMagic) {
+        this.orderMagic = orderMagic;
     }
 
     /**

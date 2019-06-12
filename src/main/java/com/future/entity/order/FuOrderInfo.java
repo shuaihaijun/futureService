@@ -100,14 +100,29 @@ public class FuOrderInfo {
     private BigDecimal orderProfit;
 
     /**
+     * 库存费
+     */
+    private BigDecimal orderSwap;
+
+    /**
+     * 手续费
+     */
+    private BigDecimal orderCommission;
+
+    /**
+     * 魔力值
+     */
+    private BigDecimal orderMagic;
+
+    /**
      * 订单建仓价格
      */
-    private BigDecimal orderTradePrice;
+    private BigDecimal orderOpenPrice;
 
     /**
      * 订单建仓时间
      */
-    private Date orderTradeDate;
+    private Date orderOpenDate;
 
     /**
      * 平仓价格
@@ -434,35 +449,83 @@ public class FuOrderInfo {
     }
 
     /**
-     * 订单建仓价格
-     * @return order_trade_price 订单建仓价格
+     * 库存费
+     * @return order_swap 库存费
      */
-    public BigDecimal getOrderTradePrice() {
-        return orderTradePrice;
+    public BigDecimal getOrderSwap() {
+        return orderSwap;
+    }
+
+    /**
+     * 库存费
+     * @param orderSwap 库存费
+     */
+    public void setOrderSwap(BigDecimal orderSwap) {
+        this.orderSwap = orderSwap;
+    }
+
+    /**
+     * 手续费
+     * @return order_commission 手续费
+     */
+    public BigDecimal getOrderCommission() {
+        return orderCommission;
+    }
+
+    /**
+     * 手续费
+     * @param orderCommission 手续费
+     */
+    public void setOrderCommission(BigDecimal orderCommission) {
+        this.orderCommission = orderCommission;
+    }
+
+    /**
+     * 魔力值
+     * @return order_magic 魔力值
+     */
+    public BigDecimal getOrderMagic() {
+        return orderMagic;
+    }
+
+    /**
+     * 魔力值
+     * @param orderMagic 魔力值
+     */
+    public void setOrderMagic(BigDecimal orderMagic) {
+        this.orderMagic = orderMagic;
     }
 
     /**
      * 订单建仓价格
-     * @param orderTradePrice 订单建仓价格
+     * @return order_open_price 订单建仓价格
      */
-    public void setOrderTradePrice(BigDecimal orderTradePrice) {
-        this.orderTradePrice = orderTradePrice;
+    public BigDecimal getOrderOpenPrice() {
+        return orderOpenPrice;
+    }
+
+    /**
+     * 订单建仓价格
+     * @param orderOpenPrice 订单建仓价格
+     */
+    public void setOrderOpenPrice(BigDecimal orderOpenPrice) {
+        this.orderOpenPrice = orderOpenPrice;
     }
 
     /**
      * 订单建仓时间
-     * @return order_trade_date 订单建仓时间
+     * @return order_open_date 订单建仓时间
      */
-    public Date getOrderTradeDate() {
-        return orderTradeDate;
+    public Date getOrderOpenDate() {
+        return orderOpenDate;
     }
 
     /**
      * 订单建仓时间
-     * @param orderTradeDate 订单建仓时间
+     * @param orderOpenDate 订单建仓时间
      */
-    public void setOrderTradeDate(Date orderTradeDate) {
-        this.orderTradeDate = orderTradeDate;
+    public void setOrderOpenDate(Date orderOpenDate) {
+        this.orderOpenDate = orderOpenDate;
     }
 
     /**

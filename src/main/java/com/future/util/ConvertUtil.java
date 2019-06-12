@@ -1,5 +1,9 @@
 package com.future.util;
 
+import com.future.entity.order.FuOrderInfo;
+import com.jfx.strategy.OrderInfo;
+import org.springframework.util.ObjectUtils;
+
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
@@ -8,9 +12,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 
 /**
@@ -233,5 +235,52 @@ public class ConvertUtil {
             }
         }
         return returnMap;
+    }
+
+    /**
+     * 将MTorderinfo转换成Fuorderinfo
+     * @param mtOrders
+     * @return
+     */
+    public static List<FuOrderInfo> convertOrderInfo(Map<Long, OrderInfo> mtOrders ){
+
+        List<FuOrderInfo> orderInfos= new ArrayList<FuOrderInfo>();
+
+        if(ObjectUtils.isEmpty(mtOrders)){
+            return null;
+        }
+
+        int i=0;//考虑到效率问题，只转换前1000条
+        for(OrderInfo order:mtOrders.values()){
+            if(++i>1000){
+                break;
+            }
+            FuOrderInfo fuOrderInfo=new FuOrderInfo();
+
+            fuOrderInfo.setOrderId(String.valueOf(order.ticket()));
+            fuOrderInfo.setCreateDate(order.getOpenTime());
+            fuOrderInfo.setOrderCloseDate(order.getCloseTime());
+            fuOrderInfo.setOrderOpenDate(order.getOpenTime());
+
+            fuOrderInfo.setOrderLots(new BigDecimal(order.getLots()));
+            fuOrderInfo.setOrderOpenPrice(new BigDecimal(order.getOpenPrice()));
+            fuOrderInfo.setOrderClosePrice(new BigDecimal(order.getClosePrice()));
+
+            fuOrderInfo.setOrderSymbol(order.getSymbol());
+            fuOrderInfo.setComment(order.getComment());
+            fuOrderInfo.setOrderProfit(new BigDecimal(order.getProfit()));
+
+            fuOrderInfo.setOrderType(order.getType().val);
+            fuOrderInfo.setOrderStoploss(new BigDecimal(order.getSl()));
+            fuOrderInfo.setOrderTakeprofit(new BigDecimal(order.getTp()));
+
+            fuOrderInfo.setOrderMagic(new BigDecimal(order.getMagic()));
+            fuOrderInfo.setOrderSwap(new BigDecimal(order.getMagic()));
+            fuOrderInfo.setOrderCommission(new BigDecimal(order.getCommission()));
+
+            orderInfos.add(fuOrderInfo);
+        }
+
+        return orderInfos;
     }
 }
