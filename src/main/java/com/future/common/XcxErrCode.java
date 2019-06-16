@@ -1,4 +1,4 @@
-package com.future.constant;
+package com.future.common;
 
 /**
  * 小程序请求返回code

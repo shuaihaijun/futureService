@@ -1,6 +1,7 @@
 package com.future.service.user;
 
 import com.alibaba.druid.util.StringUtils;
+import com.future.common.PageBean;
 import com.future.common.Response;
 import com.future.common.ResultMsg;
 import com.future.entity.user.FuUser;
@@ -232,4 +233,18 @@ public class AdminService {
         }
         return fuUser;
     }
+
+
+    /**
+     * 根据状态分页查询用户信息
+     * @param userType
+     * @param userState
+     * @param isAccount
+     * @param isVerified
+     * @return
+     */
+    public PageBean findByCondition(int userType,int userState,int isAccount,int isVerified){
+        return null;
+    }
+
 }

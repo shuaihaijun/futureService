@@ -1,7 +1,6 @@
 package com.future.common;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.future.constant.StatusCode;
 
 import java.io.Serializable;
 

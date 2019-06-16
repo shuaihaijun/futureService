@@ -1,4 +1,4 @@
-package com.future.constant;
+package com.future.common;
 
 /**
  * 服务接口响应状态码枚举类

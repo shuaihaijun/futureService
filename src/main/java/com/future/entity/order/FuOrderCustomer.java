@@ -67,7 +67,7 @@ public class FuOrderCustomer {
     /**
      * 获利
      */
-    private BigDecimal orderTakeprofit;
+    private BigDecimal orderProfit;
 
     /**
      * 库存费
@@ -97,12 +97,12 @@ public class FuOrderCustomer {
     /**
      * 交易价格
      */
-    private BigDecimal orderTradePrice;
+    private BigDecimal orderOpenPrice;
 
     /**
      * 交易时间
      */
-    private Date orderTradeDate;
+    private Date orderOpenDate;
 
     /**
      * 交易类别（0 buy，1 sell, 2 buylimit ,3 selllimit, 4 buystop, 5 sellstop,6 deposit, 7 credit，99 close）
@@ -123,6 +123,11 @@ public class FuOrderCustomer {
      * 平仓时间
      */
     private Date orderCloseDate;
+
+    /**
+     * 备注
+     */
+    private String comment;
 
     /**
      * 
@@ -318,18 +323,18 @@ public class FuOrderCustomer {
 
     /**
      * 获利
-     * @return order_takeprofit 获利
+     * @return order_profit 获利
      */
-    public BigDecimal getOrderTakeprofit() {
-        return orderTakeprofit;
+    public BigDecimal getOrderProfit() {
+        return orderProfit;
     }
 
     /**
      * 获利
-     * @param orderTakeprofit 获利
+     * @param orderProfit 获利
      */
-    public void setOrderTakeprofit(BigDecimal orderTakeprofit) {
-        this.orderTakeprofit = orderTakeprofit;
+    public void setOrderProfit(BigDecimal orderProfit) {
+        this.orderProfit = orderProfit;
     }
 
     /**
@@ -414,34 +419,34 @@ public class FuOrderCustomer {
 
     /**
      * 交易价格
-     * @return order_trade_price 交易价格
+     * @return order_open_price 交易价格
      */
-    public BigDecimal getOrderTradePrice() {
-        return orderTradePrice;
+    public BigDecimal getOrderOpenPrice() {
+        return orderOpenPrice;
     }
 
     /**
      * 交易价格
-     * @param orderTradePrice 交易价格
+     * @param orderOpenPrice 交易价格
      */
-    public void setOrderTradePrice(BigDecimal orderTradePrice) {
-        this.orderTradePrice = orderTradePrice;
+    public void setOrderOpenPrice(BigDecimal orderOpenPrice) {
+        this.orderOpenPrice = orderOpenPrice;
     }
 
     /**
      * 交易时间
-     * @return order_trade_date 交易时间
+     * @return order_open_date 交易时间
      */
-    public Date getOrderTradeDate() {
-        return orderTradeDate;
+    public Date getOrderOpenDate() {
+        return orderOpenDate;
     }
 
     /**
      * 交易时间
-     * @param orderTradeDate 交易时间
+     * @param orderOpenDate 交易时间
      */
-    public void setOrderTradeDate(Date orderTradeDate) {
-        this.orderTradeDate = orderTradeDate;
+    public void setOrderOpenDate(Date orderOpenDate) {
+        this.orderOpenDate = orderOpenDate;
     }
 
     /**
@@ -506,5 +511,21 @@ public class FuOrderCustomer {
      */
     public void setOrderCloseDate(Date orderCloseDate) {
         this.orderCloseDate = orderCloseDate;
+    }
+
+    /**
+     * 备注
+     * @return comment 备注
+     */
+    public String getComment() {
+        return comment;
+    }
+
+    /**
+     * 备注
+     * @param comment 备注
+     */
+    public void setComment(String comment) {
+        this.comment = comment == null ? null : comment.trim();
     }
 }

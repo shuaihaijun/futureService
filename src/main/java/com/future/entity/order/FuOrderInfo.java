@@ -85,6 +85,11 @@ public class FuOrderInfo {
     private String orderSourceMt;
 
     /**
+     * 交易类别（0 buy，1 sell, 2 buylimit ,3 selllimit, 4 buystop, 5 sellstop,6 deposit, 7 credit，99 close）
+     */
+    private int orderTradeOperation;
+
+    /**
      * 订单拆分次数
      */
     private Integer orderSplitCount;
@@ -398,6 +403,22 @@ public class FuOrderInfo {
      */
     public void setOrderSourceMt(String orderSourceMt) {
         this.orderSourceMt = orderSourceMt == null ? null : orderSourceMt.trim();
+    }
+
+    /**
+     * 交易类别（0 buy，1 sell, 2 buylimit ,3 selllimit, 4 buystop, 5 sellstop,6 deposit, 7 credit，99 close）
+     * @return order_trade_operation 交易类别（0 buy，1 sell, 2 buylimit ,3 selllimit, 4 buystop, 5 sellstop,6 deposit, 7 credit，99 close）
+     */
+    public int getOrderTradeOperation() {
+        return orderTradeOperation;
+    }
+
+    /**
+     * 交易类别（0 buy，1 sell, 2 buylimit ,3 selllimit, 4 buystop, 5 sellstop,6 deposit, 7 credit，99 close）
+     * @param orderTradeOperation 交易类别（0 buy，1 sell, 2 buylimit ,3 selllimit, 4 buystop, 5 sellstop,6 deposit, 7 credit，99 close）
+     */
+    public void setOrderTradeOperation(int orderTradeOperation) {
+        this.orderTradeOperation = orderTradeOperation;
     }
 
     /**

@@ -1,5 +1,6 @@
 package com.future.util;
 
+import com.future.entity.order.FuOrderCustomer;
 import com.future.entity.order.FuOrderInfo;
 import com.jfx.strategy.OrderInfo;
 import org.springframework.util.ObjectUtils;
@@ -270,7 +271,7 @@ public class ConvertUtil {
             fuOrderInfo.setComment(order.getComment());
             fuOrderInfo.setOrderProfit(new BigDecimal(order.getProfit()));
 
-            fuOrderInfo.setOrderType(order.getType().val);
+            fuOrderInfo.setOrderTradeOperation(order.getType().val);
             fuOrderInfo.setOrderStoploss(new BigDecimal(order.getSl()));
             fuOrderInfo.setOrderTakeprofit(new BigDecimal(order.getTp()));
 
@@ -282,5 +283,52 @@ public class ConvertUtil {
         }
 
         return orderInfos;
+    }
+
+
+    /**
+     * 将fuOrderInfo转换成FuOrderCustomer
+     * @param fuOrderInfo
+     * @return
+     */
+    public static FuOrderCustomer convertOrderCustomer(FuOrderInfo fuOrderInfo){
+
+
+        if(ObjectUtils.isEmpty(fuOrderInfo)){
+            return null;
+        }
+
+        FuOrderCustomer fuOrderCustomer=new FuOrderCustomer();
+
+        /*订单信息*/
+        fuOrderCustomer.setOrderId(fuOrderInfo.getOrderId());
+        fuOrderCustomer.setOrderLots(fuOrderInfo.getOrderLots());
+        fuOrderCustomer.setOrderType(fuOrderInfo.getOrderType());
+        fuOrderCustomer.setOrderState(fuOrderInfo.getOrderState());
+
+        /*时间 价格*/
+        fuOrderCustomer.setCreateDate(fuOrderInfo.getCreateDate());
+        fuOrderCustomer.setOrderCloseDate(fuOrderInfo.getOrderCloseDate());
+        fuOrderCustomer.setOrderClosePrice(fuOrderInfo.getOrderClosePrice());
+        fuOrderCustomer.setOrderOpenDate(fuOrderInfo.getOrderOpenDate());
+        fuOrderCustomer.setOrderOpenPrice(fuOrderInfo.getOrderOpenPrice());
+
+        /*交易 收益*/
+        fuOrderCustomer.setOrderSymbol(fuOrderInfo.getOrderSymbol());
+        fuOrderCustomer.setComment(fuOrderInfo.getComment());
+        fuOrderCustomer.setOrderProfit(fuOrderInfo.getOrderProfit());
+        fuOrderCustomer.setOrderStoploss(fuOrderInfo.getOrderStoploss());
+        fuOrderCustomer.setOrderProfit(fuOrderInfo.getOrderTakeprofit());
+        fuOrderCustomer.setOrderMagic(fuOrderInfo.getOrderMagic());
+        fuOrderCustomer.setOrderSwap(fuOrderInfo.getOrderSwap());
+        fuOrderCustomer.setOrderCommission(fuOrderInfo.getOrderCommission());
+
+        /*用户 账户信息*/
+        fuOrderCustomer.setUserId(fuOrderInfo.getUserId());
+        fuOrderCustomer.setUserType(fuOrderInfo.getOrderType());
+        fuOrderCustomer.setMtId(fuOrderInfo.getMtId());
+
+
+        return fuOrderCustomer;
     }
 }
