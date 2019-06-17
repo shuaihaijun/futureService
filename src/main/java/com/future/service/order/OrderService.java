@@ -1,7 +1,7 @@
 package com.future.service.order;
 
 import com.alibaba.druid.util.StringUtils;
-import com.future.constant.OrderConstant;
+import com.future.common.constants.OrderConstant;
 import com.future.entity.order.FuOrderCustomer;
 import com.future.entity.order.FuOrderInfo;
 import com.future.entity.user.FuUser;

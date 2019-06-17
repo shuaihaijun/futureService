@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.future.mapper.permission.FuPermissionResourceMapper">
+
+    <resultMap id="Node" type="com.future.pojo.bo.Node">
+        <id column="Id" property="id" jdbcType="INTEGER"/>
+        <result column="Id" property="id" jdbcType="INTEGER"/>
+        <result column="res_Pid" property="pid" jdbcType="VARCHAR"/>
+        <result column="res_Name" property="name" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="baseColumnList">
+        Id,
+        Res_pid,
+        Res_name,
+        Res_action,
+        Res_desc,
+        Res_ico,
+        Proj_key,
+        Res_switchBut,
+        Res_status,
+        Res_sort,
+        Creater,
+        create_date,
+        modify_date
+    </sql>
+
+    <sql id="sampleColumnList">
+        Id,
+        Res_pid,
+        Res_name,
+        Res_sort
+    </sql>
+
+    <!-- 通过权限资源BO以及KEY集合查询 -->
+    <select id="selectPageList" parameterType="com.future.pojo.bo.permission.FuPermissionResourceBO"
+            resultType="com.future.pojo.vo.permission.FuPermissionResourceVO">
+        SELECT
+        tpr.Id,
+        tpr.Res_pid,
+        tpr.Res_name,
+        tpr.Res_action,
+        tpr.Res_desc,
+        tpr.Res_ico,
+        tpr.Proj_key,
+        tpr.Res_switchBut,
+        tpr.Res_status,
+        tpr.Res_sort,
+        tpr.Creater,
+        tpr.create_date,
+        tpr.modify_date,
+        tpp.proj_name
+        FROM fu_permission_resource tpr
+        LEFT JOIN fu_permission_project tpp ON tpp.proj_key = tpr.Proj_key
+        WHERE tpr.Res_status = 1 AND tpp.proj_status = 1
+        <if test="resBO != null and resBO.resName != null and resBO.resName != ''">
+            AND tpr.Res_name LIKE CONCAT('%','${resBO.resName}','%')
+        </if>
+        <if test="resBO != null and resBO.resPid != null">
+            AND tpr.Res_pid=#{resBO.resPid,jdbcType=INTEGER}
+        </if>
+        <if test="projKeys != null and projKeys.size>0">
+            AND tpr.Proj_key
+            <foreach collection="projKeys" item="projKey" open="IN (" close=")" separator=",">
+                #{projKey, jdbcType=INTEGER}
+            </foreach>
+        </if>
+        ORDER BY tpr.Res_sort ASC
+    </select>
+
+    <!-- 通过工程项目KEY集合查询 -->
+    <select id="selectByProjKeys" parameterType="list" resultType="com.future.entity.permission.FuPermissionResource">
+        SELECT
+        <include refid="sampleColumnList"/>
+        FROM fu_permission_resource
+        WHERE Res_status=1
+        <if test="projKeys != null and projKeys.size > 0">
+            AND proj_key
+            <foreach collection="projKeys" open="IN (" close=")" separator="," item="projKey">
+                #{projKey,jdbcType=INTEGER}
+            </foreach>
+        </if>
+        ORDER BY Res_sort ASC
+    </select>
+
+    <!-- 通过工程项目KEY集合查询树形节点 -->
+    <select id="selectTreeNodeByProjKeysSort" parameterType="list" resultMap="Node">
+        SELECT
+        <include refid="sampleColumnList"/>
+        FROM fu_permission_resource
+        WHERE Res_status=1
+        <if test="projKeys != null and projKeys.size > 0">
+            AND Proj_key
+            <foreach collection="projKeys" open="IN (" close=")" separator="," item="projKey">
+                #{projKey,jdbcType=INTEGER}
+            </foreach>
+        </if>
+        ORDER BY Res_sort ASC
+    </select>
+
+    <!-- 通过工程项目KEY集合查询树形节点 -->
+    <select id="selectTreeNodeByProjKeys" resultMap="Node">
+        SELECT
+        <include refid="sampleColumnList"/>
+        FROM fu_permission_resource
+        WHERE Res_status = 1
+        <if test="projKeys != null and projKeys.size > 0">
+            AND Proj_key
+            <foreach collection="projKeys" open="IN (" close=")" separator="," item="projKey">
+                #{projKey,jdbcType=INTEGER}
+            </foreach>
+        </if>
+    </select>
+
+    <!-- 通过工程项目KEY查询权限资源ID集合 -->
+    <select id="selectResIdsByProjKeys" parameterType="list" resultType="int">
+        SELECT
+        Id
+        FROM fu_permission_resource
+        WHERE Proj_key
+        <foreach collection="projKeys" item="projKey" open="IN (" close=")" separator=",">
+            #{projKey,jdbcType=INTEGER}
+        </foreach>
+    </select>
+
+    <!-- 通过角色ID查询所关联的权限资源 -->
+    <select id="selectByRoleId" resultType="com.future.pojo.vo.permission.FuPermissionResourceVO">
+        SELECT
+        <include refid="baseColumnList"/>
+        FROM fu_permission_resource tpr
+        WHERE tpr.Id IN (SELECT tprs.Res_id FROM fu_permission_roleresource tprs WHERE tprs.Role_id = #{roleId, jdbcType=INTEGER})
+    </select>
+</mapper>

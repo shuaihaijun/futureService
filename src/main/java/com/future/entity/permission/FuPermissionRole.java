@@ -1,152 +1,91 @@
 package com.future.entity.permission;
 
+import com.baomidou.mybatisplus.annotations.TableField;
+import com.baomidou.mybatisplus.annotations.TableId;
+import com.baomidou.mybatisplus.annotations.TableName;
+import com.baomidou.mybatisplus.enums.IdType;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
+
+import java.io.Serializable;
 import java.util.Date;
 
-public class FuPermissionRole {
+/**
+ * 角色信息实体类
+ *
+ * @author Admin
+ * @version: 1.0
+ */
+@ApiModel("角色信息实体类")
+@TableName("fu_permission_role")
+@Data
+public class FuPermissionRole implements Serializable {
+
     /**
-     * 
+     * 主键
      */
+    @ApiModelProperty(value = "角色")
+    @TableId(type = IdType.AUTO)
     private Integer id;
-
     /**
-     * 创建时间
+     * 角色代码
      */
-    private Date createDate;
-
-    /**
-     * 修改时间
-     */
-    private Date modifyDate;
-
+    @ApiModelProperty(value = "角色代码")
+    @TableField()
+    private String roleCode;
     /**
      * 角色名称
      */
+    @ApiModelProperty(value = "角色名称")
+    @TableField()
     private String roleName;
-
+    /**
+     * 级别1、超级管理员 2、管理员 3、普通用户
+     */
+    @ApiModelProperty(value = "角色级别")
+    @TableField()
+    private Integer roleLevel;
+    /**
+     * 角色 0、无效 1、有效
+     */
+    @ApiModelProperty(value = "角色状态  0：无效  1：有效")
+    @TableField()
+    private Integer roleStatus;
+    /**
+     * 角色标示 1、特殊角色 2、普通角色
+     */
+    @ApiModelProperty(value = "角色标识  1：特殊角色  2：普通角色")
+    @TableField()
+    private Integer roleSign;
+    /**
+     * 角色所关联的工程项目KEY
+     */
+    @ApiModelProperty(value = "角色所关联的系统标识")
+    @TableField()
+    private Integer projKey;
     /**
      * 角色描述
      */
-    private String roleDes;
-
+    @ApiModelProperty(value = "角色描述")
+    @TableField()
+    private String roleDesc;
     /**
-     * 创建人
+     * 创建人姓名
      */
-    private String createMan;
-
-    /**
-     * 修改人
-     */
-    private String modifyMan;
-
-    /**
-     * 
-     * @return id 
-     */
-    public Integer getId() {
-        return id;
-    }
-
-    /**
-     * 
-     * @param id 
-     */
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
+    @ApiModelProperty(value = "创建人姓名")
+    @TableField
+    private String creater;
     /**
      * 创建时间
-     * @return create_date 创建时间
      */
-    public Date getCreateDate() {
-        return createDate;
-    }
-
+    @ApiModelProperty(value = "创建时间")
+    @TableField
+    private Date createDate;
     /**
      * 创建时间
-     * @param createDate 创建时间
      */
-    public void setCreateDate(Date createDate) {
-        this.createDate = createDate;
-    }
-
-    /**
-     * 修改时间
-     * @return modify_date 修改时间
-     */
-    public Date getModifyDate() {
-        return modifyDate;
-    }
-
-    /**
-     * 修改时间
-     * @param modifyDate 修改时间
-     */
-    public void setModifyDate(Date modifyDate) {
-        this.modifyDate = modifyDate;
-    }
-
-    /**
-     * 角色名称
-     * @return role_name 角色名称
-     */
-    public String getRoleName() {
-        return roleName;
-    }
-
-    /**
-     * 角色名称
-     * @param roleName 角色名称
-     */
-    public void setRoleName(String roleName) {
-        this.roleName = roleName == null ? null : roleName.trim();
-    }
-
-    /**
-     * 角色描述
-     * @return role_des 角色描述
-     */
-    public String getRoleDes() {
-        return roleDes;
-    }
-
-    /**
-     * 角色描述
-     * @param roleDes 角色描述
-     */
-    public void setRoleDes(String roleDes) {
-        this.roleDes = roleDes == null ? null : roleDes.trim();
-    }
-
-    /**
-     * 创建人
-     * @return create_man 创建人
-     */
-    public String getCreateMan() {
-        return createMan;
-    }
-
-    /**
-     * 创建人
-     * @param createMan 创建人
-     */
-    public void setCreateMan(String createMan) {
-        this.createMan = createMan == null ? null : createMan.trim();
-    }
-
-    /**
-     * 修改人
-     * @return modify_man 修改人
-     */
-    public String getModifyMan() {
-        return modifyMan;
-    }
-
-    /**
-     * 修改人
-     * @param modifyMan 修改人
-     */
-    public void setModifyMan(String modifyMan) {
-        this.modifyMan = modifyMan == null ? null : modifyMan.trim();
-    }
+    @ApiModelProperty(value = "修改时间")
+    @TableField
+    private Date modifyDate;
 }

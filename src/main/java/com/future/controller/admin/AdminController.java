@@ -1,0 +1,27 @@
+package com.future.controller.admin;
+
+import com.future.service.user.AdminService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.ObjectUtils;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.Map;
+
+@RestController
+@RequestMapping("/admin")
+public class AdminController{
+
+    @Autowired
+    AdminService adminService;
+
+    //登录操作
+    @RequestMapping(value= "/login",method=RequestMethod.POST)
+    public @ResponseBody Map login(HttpServletRequest request, HttpServletResponse response){
+        String username=request.getParameter("username");
+        String password=request.getParameter("password");
+        Map resMap=adminService.login(username,password);
+        return resMap;
+    }
+}

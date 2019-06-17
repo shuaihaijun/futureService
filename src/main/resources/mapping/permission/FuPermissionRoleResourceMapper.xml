@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.future.mapper.permission.FuPermissionRoleResourceMapper">
+
+    <!-- 通过角色ID集合查询所关联的权限资源ID集合并去重 -->
+    <select id="selectResIdByRoleIds" parameterType="java.util.List" resultType="java.lang.Integer">
+        SELECT DISTINCT Res_id
+        FROM fu_permission_roleresource
+        WHERE Role_id IN
+        <foreach collection="roleIds" item="roleId" open="(" close=")" separator=",">
+            #{roleId,jdbcType=INTEGER}
+        </foreach>
+    </select>
+
+    <!-- 通过权限资源ID查询所关联的角色ID集合 -->
+    <select id="selectRoleIdsByResId" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+        SELECT Role_id
+        FROM fu_permission_roleresource
+        WHERE Res_id = #{resId, jdbcType=INTEGER}
+    </select>
+
+    <!-- 通过角色ID查询所关联的权限资源ID拼接的字符串 -->
+    <select id="selectResIdsByRoleId" parameterType="java.lang.Integer" resultType="java.lang.String">
+         SELECT DISTINCT concat_ws(',',Res_id,Role_id)
+        FROM fu_permission_roleresource
+        WHERE Role_id = #{roleId, jdbcType=INTEGER}
+    </select>
+
+    <!--  通过工程项目KEY以及角色ID删除角色权限资源关系数据 -->
+    <delete id="deleteByRoleIdProjKeys">
+        DELETE fu_permission_roleresource
+        FROM fu_permission_roleresource
+        INNER JOIN fu_permission_resource ON fu_permission_resource.Id=fu_permission_roleresource.Res_id
+        WHERE fu_permission_roleresource.Role_id=#{roleId,jdbcType=INTEGER}
+        AND fu_permission_resource.Proj_key IN
+        <foreach collection="projKeys" item="projKey" open="(" close=")" separator=",">
+            #{projKey,jdbcType=INTEGER}
+        </foreach>
+    </delete>
+</mapper>

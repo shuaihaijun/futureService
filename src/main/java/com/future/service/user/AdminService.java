@@ -1,12 +1,19 @@
 package com.future.service.user;
 
 import com.alibaba.druid.util.StringUtils;
-import com.future.common.PageBean;
-import com.future.common.Response;
-import com.future.common.ResultMsg;
+import com.future.common.enums.GlobalResultCode;
+import com.future.common.enums.ResultCode;
+import com.future.common.enums.UserResultCode;
+import com.future.common.exception.BusinessException;
+import com.future.common.exception.DataNotFoundException;
+import com.future.common.exception.ParameterInvalidException;
+import com.future.common.exception.UserException;
+import com.future.common.result.Result;
+import com.future.common.result.ResultMsg;
 import com.future.entity.user.FuUser;
 import com.future.mapper.user.FuUserMapper;
 import com.future.util.CommonUtil;
+import com.github.pagehelper.PageInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -32,30 +39,29 @@ public class AdminService {
      * @param password
      * @return
      */
-    public Response login(String username, String password){
-        Response response=new Response();
-        response.setCode(ResultMsg.FAILED.getCode());
+    public Map login(String username, String password){
+
+        Map resultMap=new HashMap();
 
         if(StringUtils.isEmpty(username)||StringUtils.isEmpty(password)){
-            response.setMsg("用户名或密码为空！");
-           return response;
+           throw new BusinessException(GlobalResultCode.PARAM_NULL_POINTER);
         }
 
         /*这块儿可以从redis里查询*/
         FuUser fuUser=fuUserMapper.selectByUsername(username);
         if(ObjectUtils.isEmpty(fuUser)){
-            response.setMsg("用户不存在！");
-            return response;
+            resultMap.put("code",GlobalResultCode.FAIL.code());
+            resultMap.put("msg","用户名或密码错误！");
         }
 
         if(!fuUser.getPassword().equalsIgnoreCase(DigestUtils.md5DigestAsHex(password.getBytes()))){
-            response.setMsg("用户名或密码错误！");
-            return response;
+            resultMap.put("code",GlobalResultCode.FAIL.code());
+            resultMap.put("msg","用户名或密码错误！");
         }
 
-        response.setCode(ResultMsg.SUCCESS.getCode());
-        response.setMsg("用户名、密码验证通过！");
-        return response;
+        resultMap.put("code",GlobalResultCode.SUCCESS.code());
+        resultMap.put("msg",GlobalResultCode.SUCCESS.message());
+        return resultMap;
     }
 
     /**
@@ -63,49 +69,33 @@ public class AdminService {
      * @param fuUser
      * @return
      */
-    public Response save(FuUser fuUser){
-
-        Response response=new Response();
-        response.setCode(ResultMsg.FAILED.getCode());
+    public void save(FuUser fuUser) throws Exception{
 
         /*验证*/
         if(ObjectUtils.isEmpty(fuUser)){
-            response.setMsg("用户数据为空！");
-            return response;
+            throw new ParameterInvalidException(GlobalResultCode.PARAM_NULL_POINTER);
         }
         if(StringUtils.isEmpty(fuUser.getUsername())
                 ||StringUtils.isEmpty(fuUser.getPassword())
                 ||StringUtils.isEmpty(fuUser.getEmail())
                 ||StringUtils.isEmpty(fuUser.getMobile())
                 ||StringUtils.isEmpty(fuUser.getRealName())){
-            response.setMsg("用户数据不完整！");
-            return response;
+            throw new ParameterInvalidException(GlobalResultCode.PARAM_NULL_POINTER);
         }
 
-        try{
-            /*此处可从redis中查询*/
-            FuUser eUser=fuUserMapper.selectByUsername(fuUser.getUsername());
-            /*此处还需判断用户状态（123）*/
-            if(!ObjectUtils.isEmpty(eUser)){
-                response.setMsg("用户已存在！");
-                return response;
-            }
-
-            /*密码加密*/
-            fuUser.setPassword(DigestUtils.md5DigestAsHex(fuUser.getPassword().getBytes()));
-
-            /*保存数据*/
-            fuUserMapper.insertSelective(fuUser);
-
-        }catch (Exception e){
-            log.error(e.getMessage(),e);
-            response.setMsg("保存用户数据失败！");
-            return response;
+        /*此处可从redis中查询*/
+        FuUser eUser=fuUserMapper.selectByUsername(fuUser.getUsername());
+        /*此处还需判断用户状态（123）*/
+        if(!ObjectUtils.isEmpty(eUser)){
+            throw new DataNotFoundException(UserResultCode.USER_NOTEXIST_ERROR);
         }
 
-        response.setCode(ResultMsg.SUCCESS.getCode());
-        response.setMsg("保存成功！");
-        return response;
+        /*密码加密*/
+        fuUser.setPassword(DigestUtils.md5DigestAsHex(fuUser.getPassword().getBytes()));
+
+        /*保存数据*/
+        fuUserMapper.insertSelective(fuUser);
+
     }
 
 
@@ -114,50 +104,31 @@ public class AdminService {
      * @param fuUser
      * @return
      */
-    public Response updateAdmin(FuUser fuUser){
-
-        Response response=new Response();
-        response.setCode(ResultMsg.FAILED.getCode());
+    public void updateAdmin(FuUser fuUser) throws Exception{
 
         /*验证*/
         if(ObjectUtils.isEmpty(fuUser)){
-            response.setMsg("用户数据为空！");
-            return response;
+            throw new ParameterInvalidException(GlobalResultCode.PARAM_NULL_POINTER);
         }
         if(StringUtils.isEmpty(fuUser.getUsername())){
-            response.setMsg("用户数据不完整！");
-            return response;
+            throw new ParameterInvalidException(GlobalResultCode.PARAM_NULL_POINTER);
         }
 
         /*不能修改密码*/
         if(!StringUtils.isEmpty(fuUser.getPassword())){
-            response.setMsg("修改用户信息时 不能修改密码！");
-            return response;
+            fuUser.setPassword(null);
+        }
+        /*此处可从redis中查询*/
+        FuUser eUser=fuUserMapper.selectByUsername(fuUser.getUsername());
+        /*此处还需判断用户状态（123）*/
+        if(ObjectUtils.isEmpty(eUser)){
+            throw new DataNotFoundException(UserResultCode.USER_NOTEXIST_ERROR);
         }
 
-        try{
-            /*此处可从redis中查询*/
-            FuUser eUser=fuUserMapper.selectByUsername(fuUser.getUsername());
-            /*此处还需判断用户状态（123）*/
-            if(ObjectUtils.isEmpty(eUser)){
-                response.setMsg("用户不存在！");
-                return response;
-            }
-
-            /*copy信息*/
-            BeanUtils.copyProperties(fuUser,eUser);
-            /*修改数据*/
-            fuUserMapper.updateByPrimaryKeySelective(fuUser);
-
-        }catch (Exception e){
-            log.error(e.getMessage(),e);
-            response.setMsg("保存用户数据失败！");
-            return response;
-        }
-
-        response.setCode(ResultMsg.SUCCESS.getCode());
-        response.setMsg("修改成功！");
-        return response;
+        /*copy信息*/
+        BeanUtils.copyProperties(fuUser,eUser);
+        /*修改数据*/
+        fuUserMapper.updateByPrimaryKeySelective(fuUser);
     }
 
     /**
@@ -167,51 +138,34 @@ public class AdminService {
      * @param newPass
      * @return
      */
-    public Response updatePassword(String username,String oldPass,String newPass){
-        Response response=new Response();
-        response.setCode(ResultMsg.FAILED.getCode());
-
+    public void updatePassword(String username,String oldPass,String newPass) throws Exception{
 
         if(StringUtils.isEmpty(username)
                 ||StringUtils.isEmpty(oldPass)
                 ||StringUtils.isEmpty(newPass)){
-            response.setMsg("输入信息不完整！");
-            return response;
+            throw new ParameterInvalidException(GlobalResultCode.PARAM_NULL_POINTER);
         }
 
         /*校验密码格式*/
         if(!CommonUtil.verifyPassword(newPass)){
-            response.setMsg("密码格式不正确！ 请输入6-18位数字加字母组合！");
-            return response;
+            throw new UserException("校验密码格式不正确，规则(6-18位/字符与数据同时出现)");
         }
 
-        try {
-            FuUser fuUser=fuUserMapper.selectByUsername(username);
-            if(ObjectUtils.isEmpty(fuUser)){
-                response.setMsg("用户名称错误，请输入正确的用户名！");
-                return response;
-            }
-
-            if(!fuUser.getPassword().equalsIgnoreCase(DigestUtils.md5DigestAsHex(oldPass.getBytes()))){
-                response.setMsg("旧密码错误！");
-                return response;
-            }
-
-            FuUser user=new FuUser();
-            user.setId(fuUser.getId());
-            user.setPassword(DigestUtils.md5DigestAsHex(newPass.getBytes()));
-            /*修改密码*/
-            fuUserMapper.updateByPrimaryKeySelective(user);
-
-        }catch (Exception e){
-            log.error(e.getMessage(),e);
-            response.setMsg("密码修改失败！");
-            return response;
+        FuUser fuUser=fuUserMapper.selectByUsername(username);
+        if(ObjectUtils.isEmpty(fuUser)){
+            throw new DataNotFoundException(UserResultCode.USER_NOTEXIST_ERROR);
         }
 
-        response.setCode(ResultMsg.SUCCESS.getCode());
-        response.setMsg("修改成功！");
-        return response;
+        if(!fuUser.getPassword().equalsIgnoreCase(DigestUtils.md5DigestAsHex(oldPass.getBytes()))){
+            throw new UserException("旧密码错误！");
+        }
+
+        FuUser user=new FuUser();
+        user.setId(fuUser.getId());
+        user.setPassword(DigestUtils.md5DigestAsHex(newPass.getBytes()));
+        /*修改密码*/
+        fuUserMapper.updateByPrimaryKeySelective(user);
+
     }
 
     /**
@@ -243,7 +197,7 @@ public class AdminService {
      * @param isVerified
      * @return
      */
-    public PageBean findByCondition(int userType,int userState,int isAccount,int isVerified){
+    public PageInfo findByCondition(int userType, int userState, int isAccount, int isVerified){
         return null;
     }
 

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.future.mapper.permission.FuPermissionUserProjectMapper">
+
+    <!-- 查询管理员用户所管理的工程项目KEy集合 -->
+    <select id="selectPorjKeysByUserId" resultType="int">
+        SELECT Proj_key
+        FROM fu_permission_userProject
+        WHERE User_Id=#{userId,jdbcType=INTEGER}
+    </select>
+</mapper>

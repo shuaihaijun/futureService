@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.future.mapper.permission.FuPermissionUserRoleMapper">
+
+    <!-- 通过用户ID查询所关联的角色ID集合 -->
+    <select id="selectRoleIdsByUserId" resultType="int">
+        SELECT
+        Role_id
+        FROM fu_permission_userRole
+        WHERE User_id = #{userId}
+    </select>
+
+    <!-- 查询所有的用户ID集合并去重 -->
+    <select id="selectUserIds" resultType="int">
+        SELECT DISTINCT User_id FROM fu_permission_userRole
+    </select>
+
+    <!-- 通过角色ID集合查询所关联的用户ID集合并去重 -->
+    <select id="selectUserIdsByRoleIds" resultType="int">
+        SELECT DISTINCT User_id
+        FROM fu_permission_userRole
+        WHERE 1=1
+        <if test="roleIds != null and roleIds.size > 0">
+            AND Role_id
+            <foreach collection="roleIds" item="roleId" open="IN (" close=")" separator=",">
+                #{roleId,jdbcType=INTEGER}
+            </foreach>
+        </if>
+    </select>
+
+</mapper>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.future.mapper.permission.FuPermissionProjectMapper">
+
+    <sql id="baseColumnList">
+        Id,
+        Proj_name,
+        Proj_key,
+        Proj_admin,
+        Proj_status,
+        Proj_type,
+        Creater,
+        create_date,
+        modify_date
+    </sql>
+
+    <!-- 通过工程项目BO查询 -->
+    <select id="selectPageList" parameterType="com.future.pojo.bo.permission.FuPermissionProjectBO"
+            resultType="com.future.pojo.vo.permission.FuPermissionProjectVO">
+        SELECT
+        <include refid="baseColumnList"/>
+        FROM fu_permission_project
+        WHERE Proj_status = 1
+        <if test="param.projKey != null">
+            AND Proj_key = #{param.projKey,jdbcType=INTEGER}
+        </if>
+        <if test="param.projName != null and param.projName != ''">
+            AND Proj_name = #{param.projName,jdbcType=VARCHAR}
+        </if>
+        <if test="param.projKeys != null and param.projKeys.size > 0">
+            AND Proj_key
+            <foreach collection="param.projKeys" open="IN (" close=")" separator="," item="projKey">
+                #{projKey,jdbcType=INTEGER}
+            </foreach>
+        </if>
+    </select>
+
+    <!-- 通过ID集合查询KEY -->
+    <select id="selectKeyById" parameterType="list" resultType="int">
+        SELECT Proj_key
+        FROM fu_permission_project
+        WHERE 1=1
+        <if test="param != null">
+            AND id
+            <foreach collection="param" item="id" close=")" open="IN (" separator=",">
+                #{id,jdbcType=INTEGER}
+            </foreach>
+        </if>
+    </select>
+
+    <!-- 查询全部信息 -->
+    <select id="selectAllProjet" resultType="com.future.entity.permission.FuPermissionProject">
+        SELECT
+        <include refid="baseColumnList"/>
+        FROM fu_permission_project
+        WHERE Proj_status = 1
+    </select>
+</mapper>
