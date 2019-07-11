@@ -11,6 +11,7 @@ import com.future.common.util.JsonUtils;
 import com.future.common.util.LogUtil;
 import com.future.common.util.ThreadCache;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -25,6 +26,7 @@ import java.util.List;
  * @version: 1.0
  */
 @UpGrade()
+@Component
 public class RequestInterceptor implements HandlerInterceptor {
 
     private static LogUtil logger = LogUtil.logger(RequestInterceptor.class);
@@ -62,6 +64,7 @@ public class RequestInterceptor implements HandlerInterceptor {
         }
         response.setCharacterEncoding(GlobalConstant.PLATFORM_CHARACTER_ENCODING);
         response.setContentType(GlobalConstant.PLATFORM_RESPONSE_CONTENTTYPE_JSON);
+
         //接口放行
         if (urls != null && urls.contains(request.getRequestURI())) {
             return true;
@@ -70,6 +73,7 @@ public class RequestInterceptor implements HandlerInterceptor {
         if (contentType != null) {
             contentType = contentType.toLowerCase();
         }
+        logger.info("Request intercepter!");
         logger.info(request.getRequestURI());
         logger.info(request.getRemoteAddr());
         logger.info(request.getRemotePort() + "");

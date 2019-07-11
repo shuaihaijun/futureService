@@ -110,6 +110,7 @@ public class ResultUtil {
     public static <T> PlatformResult<T> success(T data) {
         PlatformResult<T> result = new PlatformResult<>();
         GlobalResultCode success = GlobalResultCode.SUCCESS;
+        result.setStatus(success.code());
         result.setMsg(success.message());
         Map<String, Object> resultMap = new HashMap<>();
         if (data instanceof List || data instanceof String || data instanceof Integer || data instanceof Long) {
@@ -131,6 +132,7 @@ public class ResultUtil {
 
         PlatformResult<T> result = new PlatformResult<>();
         GlobalResultCode success = GlobalResultCode.SUCCESS;
+        result.setStatus(success.code());
         result.setMsg(success.message());
         Map<String, Object> resultMap = new HashMap<>();
         resultMap.put(DEFAULT_KEY, pageInfo.getList());

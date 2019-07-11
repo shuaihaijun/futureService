@@ -50,13 +50,13 @@ public class AdminService {
         /*这块儿可以从redis里查询*/
         FuUser fuUser=fuUserMapper.selectByUsername(username);
         if(ObjectUtils.isEmpty(fuUser)){
-            resultMap.put("code",GlobalResultCode.FAIL.code());
-            resultMap.put("msg","用户名或密码错误！");
+            /*用户不存在*/
+            throw new BusinessException(UserResultCode.USER_NOTEXIST_ERROR);
         }
 
         if(!fuUser.getPassword().equalsIgnoreCase(DigestUtils.md5DigestAsHex(password.getBytes()))){
-            resultMap.put("code",GlobalResultCode.FAIL.code());
-            resultMap.put("msg","用户名或密码错误！");
+            /*"用户名或密码错误！")*/
+            throw new BusinessException(UserResultCode.USER_PASSWORD_ERROR);
         }
 
         resultMap.put("code",GlobalResultCode.SUCCESS.code());
