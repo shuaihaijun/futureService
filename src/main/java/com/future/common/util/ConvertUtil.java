@@ -1,4 +1,4 @@
-package com.future.util;
+package com.future.common.util;
 
 import com.future.entity.order.FuOrderCustomer;
 import com.future.entity.order.FuOrderInfo;
@@ -263,26 +263,63 @@ public class ConvertUtil {
             fuOrderInfo.setOrderCloseDate(order.getCloseTime());
             fuOrderInfo.setOrderOpenDate(order.getOpenTime());
 
-            fuOrderInfo.setOrderLots(new BigDecimal(order.getLots()));
-            fuOrderInfo.setOrderOpenPrice(new BigDecimal(order.getOpenPrice()));
-            fuOrderInfo.setOrderClosePrice(new BigDecimal(order.getClosePrice()));
+            fuOrderInfo.setOrderLots(new BigDecimal(order.getLots()).setScale(6,BigDecimal.ROUND_HALF_UP));
+            fuOrderInfo.setOrderOpenPrice(new BigDecimal(order.getOpenPrice()).setScale(6,BigDecimal.ROUND_HALF_UP));
+            fuOrderInfo.setOrderClosePrice(new BigDecimal(order.getClosePrice()).setScale(6,BigDecimal.ROUND_HALF_UP));
 
             fuOrderInfo.setOrderSymbol(order.getSymbol());
             fuOrderInfo.setComment(order.getComment());
-            fuOrderInfo.setOrderProfit(new BigDecimal(order.getProfit()));
+            fuOrderInfo.setOrderProfit(new BigDecimal(order.getProfit()).setScale(6,BigDecimal.ROUND_HALF_UP));
 
             fuOrderInfo.setOrderTradeOperation(order.getType().val);
-            fuOrderInfo.setOrderStoploss(new BigDecimal(order.getSl()));
-            fuOrderInfo.setOrderTakeprofit(new BigDecimal(order.getTp()));
+            fuOrderInfo.setOrderStoploss(new BigDecimal(order.getSl()).setScale(6,BigDecimal.ROUND_HALF_UP));
+            fuOrderInfo.setOrderTakeprofit(new BigDecimal(order.getTp()).setScale(6,BigDecimal.ROUND_HALF_UP));
 
-            fuOrderInfo.setOrderMagic(new BigDecimal(order.getMagic()));
-            fuOrderInfo.setOrderSwap(new BigDecimal(order.getMagic()));
+            fuOrderInfo.setOrderMagic(new BigDecimal(order.getMagic()).setScale(6,BigDecimal.ROUND_HALF_UP));
+            fuOrderInfo.setOrderSwap(new BigDecimal(order.getSwap()).setScale(6,BigDecimal.ROUND_HALF_UP));
             fuOrderInfo.setOrderCommission(new BigDecimal(order.getCommission()));
 
             orderInfos.add(fuOrderInfo);
         }
 
         return orderInfos;
+    }
+
+    /**
+     * 将MTorderinfo转换成Fuorderinfo
+     * @param orderInfo
+     * @return
+     */
+    public static FuOrderInfo convertOrderInfo(OrderInfo orderInfo){
+
+        if(ObjectUtils.isEmpty(orderInfo)){
+            return null;
+        }
+
+        FuOrderInfo fuOrderInfo=new FuOrderInfo();
+
+        fuOrderInfo.setOrderId(String.valueOf(orderInfo.ticket()));
+        fuOrderInfo.setCreateDate(orderInfo.getOpenTime());
+        fuOrderInfo.setOrderCloseDate(orderInfo.getCloseTime());
+        fuOrderInfo.setOrderOpenDate(orderInfo.getOpenTime());
+
+        fuOrderInfo.setOrderLots(new BigDecimal(orderInfo.getLots()).setScale(6,BigDecimal.ROUND_HALF_UP));
+        fuOrderInfo.setOrderOpenPrice(new BigDecimal(orderInfo.getOpenPrice()).setScale(6,BigDecimal.ROUND_HALF_UP));
+        fuOrderInfo.setOrderClosePrice(new BigDecimal(orderInfo.getClosePrice()).setScale(6,BigDecimal.ROUND_HALF_UP));
+
+        fuOrderInfo.setOrderSymbol(orderInfo.getSymbol());
+        fuOrderInfo.setComment(orderInfo.getComment());
+        fuOrderInfo.setOrderProfit(new BigDecimal(orderInfo.getProfit()).setScale(6,BigDecimal.ROUND_HALF_UP));
+
+        fuOrderInfo.setOrderTradeOperation(orderInfo.getType().val);
+        fuOrderInfo.setOrderStoploss(new BigDecimal(orderInfo.getSl()).setScale(6,BigDecimal.ROUND_HALF_UP));
+        fuOrderInfo.setOrderTakeprofit(new BigDecimal(orderInfo.getTp()).setScale(6,BigDecimal.ROUND_HALF_UP));
+
+        fuOrderInfo.setOrderMagic(new BigDecimal(orderInfo.getMagic()).setScale(6,BigDecimal.ROUND_HALF_UP));
+        fuOrderInfo.setOrderSwap(new BigDecimal(orderInfo.getMagic()).setScale(6,BigDecimal.ROUND_HALF_UP));
+        fuOrderInfo.setOrderCommission(new BigDecimal(orderInfo.getCommission()));
+
+        return fuOrderInfo;
     }
 
 
@@ -299,28 +336,29 @@ public class ConvertUtil {
         }
 
         FuOrderCustomer fuOrderCustomer=new FuOrderCustomer();
+        fuOrderCustomer.setModifyDate(new Date());
+        fuOrderCustomer.setCreateDate(new Date());
 
         /*订单信息*/
         fuOrderCustomer.setOrderId(fuOrderInfo.getOrderId());
-        fuOrderCustomer.setOrderLots(fuOrderInfo.getOrderLots());
+        fuOrderCustomer.setOrderLots(fuOrderInfo.getOrderLots().setScale(6,BigDecimal.ROUND_HALF_UP));
         fuOrderCustomer.setOrderType(fuOrderInfo.getOrderType());
         fuOrderCustomer.setOrderState(fuOrderInfo.getOrderState());
 
         /*时间 价格*/
         fuOrderCustomer.setCreateDate(fuOrderInfo.getCreateDate());
         fuOrderCustomer.setOrderCloseDate(fuOrderInfo.getOrderCloseDate());
-        fuOrderCustomer.setOrderClosePrice(fuOrderInfo.getOrderClosePrice());
+        fuOrderCustomer.setOrderClosePrice(fuOrderInfo.getOrderClosePrice().setScale(6,BigDecimal.ROUND_HALF_UP));
         fuOrderCustomer.setOrderOpenDate(fuOrderInfo.getOrderOpenDate());
-        fuOrderCustomer.setOrderOpenPrice(fuOrderInfo.getOrderOpenPrice());
+        fuOrderCustomer.setOrderOpenPrice(fuOrderInfo.getOrderOpenPrice().setScale(6,BigDecimal.ROUND_HALF_UP));
 
         /*交易 收益*/
         fuOrderCustomer.setOrderSymbol(fuOrderInfo.getOrderSymbol());
         fuOrderCustomer.setComment(fuOrderInfo.getComment());
-        fuOrderCustomer.setOrderProfit(fuOrderInfo.getOrderProfit());
-        fuOrderCustomer.setOrderStoploss(fuOrderInfo.getOrderStoploss());
-        fuOrderCustomer.setOrderProfit(fuOrderInfo.getOrderTakeprofit());
-        fuOrderCustomer.setOrderMagic(fuOrderInfo.getOrderMagic());
-        fuOrderCustomer.setOrderSwap(fuOrderInfo.getOrderSwap());
+        fuOrderCustomer.setOrderProfit(fuOrderInfo.getOrderProfit().setScale(6,BigDecimal.ROUND_HALF_UP));
+        fuOrderCustomer.setOrderStoploss(fuOrderInfo.getOrderStoploss().setScale(6,BigDecimal.ROUND_HALF_UP));
+        fuOrderCustomer.setOrderMagic(fuOrderInfo.getOrderMagic().setScale(6,BigDecimal.ROUND_HALF_UP));
+        fuOrderCustomer.setOrderSwap(fuOrderInfo.getOrderSwap().setScale(6,BigDecimal.ROUND_HALF_UP));
         fuOrderCustomer.setOrderCommission(fuOrderInfo.getOrderCommission());
 
         /*用户 账户信息*/

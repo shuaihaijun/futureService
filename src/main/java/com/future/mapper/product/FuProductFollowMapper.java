@@ -1,7 +1,9 @@
 package com.future.mapper.product;
 
 import com.future.entity.product.FuProductFollow;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface FuProductFollowMapper {
     int deleteByPrimaryKey(Integer id);
 

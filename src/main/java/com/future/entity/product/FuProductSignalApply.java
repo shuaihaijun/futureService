@@ -1,12 +1,26 @@
 package com.future.entity.product;
 
+import com.baomidou.mybatisplus.annotations.TableId;
+import com.baomidou.mybatisplus.enums.IdType;
+
 import java.math.BigDecimal;
 import java.util.Date;
 
 public class FuProductSignalApply {
+
+    public static final String APPLY_ID = "id";
+    public static final String USER_ID = "user_id";
+    public static final String SIGNAL_NAME = "signal_name";
+    public static final String APPLY_STATE = "apply_state";
+    public static final String SERVER_NAME = "server_name";
+    public static final String MT_ACC_ID = "mt_acc_id";
+    public static final String CREATE_DATE = "create_date";
+    public static final String APPLY_DATE = "apply_date";
+    public static final String CHECK_DATE = "check_date";
     /**
      * 
      */
+    @TableId(type = IdType.AUTO)
     private Integer id;
 
     /**
@@ -68,6 +82,61 @@ public class FuProductSignalApply {
      * 修改时间
      */
     private Date modifyDate;
+
+    /**
+     * 电子邮件
+     */
+    private String email;
+
+    /**
+     * 电话号码
+     */
+    private String phone;
+
+    /**
+     * qq号码
+     */
+    private String qqNumber;
+
+    /**
+     * 服务器名称
+     */
+    private String serverName;
+
+    /**
+     * mt平台账号
+     */
+    private String mtAccId;
+
+    /**
+     * 密码交易
+     */
+    private String mtPasswordTrade;
+
+    /**
+     * 观摩密码
+     */
+    private String mtPasswordWatch;
+
+    /**
+     * 最少参与资金
+     */
+    private BigDecimal minimum;
+
+    /**
+     * 年化预期收益率
+     */
+    private BigDecimal annualizedExpectedReturn;
+
+    /**
+     * 历史收益率(年)
+     */
+    private BigDecimal historicalReturn;
+
+    /**
+     * 建议跟随周期
+     */
+    private BigDecimal suggestCycle;
 
     /**
      * 
@@ -275,5 +344,181 @@ public class FuProductSignalApply {
      */
     public void setModifyDate(Date modifyDate) {
         this.modifyDate = modifyDate;
+    }
+
+    /**
+     * 电子邮件
+     * @return email 电子邮件
+     */
+    public String getEmail() {
+        return email;
+    }
+
+    /**
+     * 电子邮件
+     * @param email 电子邮件
+     */
+    public void setEmail(String email) {
+        this.email = email == null ? null : email.trim();
+    }
+
+    /**
+     * 电话号码
+     * @return phone 电话号码
+     */
+    public String getPhone() {
+        return phone;
+    }
+
+    /**
+     * 电话号码
+     * @param phone 电话号码
+     */
+    public void setPhone(String phone) {
+        this.phone = phone == null ? null : phone.trim();
+    }
+
+    /**
+     * qq号码
+     * @return qq_number qq号码
+     */
+    public String getQqNumber() {
+        return qqNumber;
+    }
+
+    /**
+     * qq号码
+     * @param qqNumber qq号码
+     */
+    public void setQqNumber(String qqNumber) {
+        this.qqNumber = qqNumber == null ? null : qqNumber.trim();
+    }
+
+    /**
+     * 服务器名称
+     * @return server_name 服务器名称
+     */
+    public String getServerName() {
+        return serverName;
+    }
+
+    /**
+     * 服务器名称
+     * @param serverName 服务器名称
+     */
+    public void setServerName(String serverName) {
+        this.serverName = serverName == null ? null : serverName.trim();
+    }
+
+    /**
+     * mt平台账号
+     * @return mt_acc_id mt平台账号
+     */
+    public String getMtAccId() {
+        return mtAccId;
+    }
+
+    /**
+     * mt平台账号
+     * @param mtAccId mt平台账号
+     */
+    public void setMtAccId(String mtAccId) {
+        this.mtAccId = mtAccId == null ? null : mtAccId.trim();
+    }
+
+    /**
+     * 密码交易
+     * @return mt_password_trade 密码交易
+     */
+    public String getMtPasswordTrade() {
+        return mtPasswordTrade;
+    }
+
+    /**
+     * 密码交易
+     * @param mtPasswordTrade 密码交易
+     */
+    public void setMtPasswordTrade(String mtPasswordTrade) {
+        this.mtPasswordTrade = mtPasswordTrade == null ? null : mtPasswordTrade.trim();
+    }
+
+    /**
+     * 观摩密码
+     * @return mt_password_watch 观摩密码
+     */
+    public String getMtPasswordWatch() {
+        return mtPasswordWatch;
+    }
+
+    /**
+     * 观摩密码
+     * @param mtPasswordWatch 观摩密码
+     */
+    public void setMtPasswordWatch(String mtPasswordWatch) {
+        this.mtPasswordWatch = mtPasswordWatch == null ? null : mtPasswordWatch.trim();
+    }
+
+    /**
+     * 最少参与资金
+     * @return minimum 最少参与资金
+     */
+    public BigDecimal getMinimum() {
+        return minimum;
+    }
+
+    /**
+     * 最少参与资金
+     * @param minimum 最少参与资金
+     */
+    public void setMinimum(BigDecimal minimum) {
+        this.minimum = minimum;
+    }
+
+    /**
+     * 年化预期收益率
+     * @return annualized_expected_return 年化预期收益率
+     */
+    public BigDecimal getAnnualizedExpectedReturn() {
+        return annualizedExpectedReturn;
+    }
+
+    /**
+     * 年化预期收益率
+     * @param annualizedExpectedReturn 年化预期收益率
+     */
+    public void setAnnualizedExpectedReturn(BigDecimal annualizedExpectedReturn) {
+        this.annualizedExpectedReturn = annualizedExpectedReturn;
+    }
+
+    /**
+     * 历史收益率(年)
+     * @return historical_return 历史收益率(年)
+     */
+    public BigDecimal getHistoricalReturn() {
+        return historicalReturn;
+    }
+
+    /**
+     * 历史收益率(年)
+     * @param historicalReturn 历史收益率(年)
+     */
+    public void setHistoricalReturn(BigDecimal historicalReturn) {
+        this.historicalReturn = historicalReturn;
+    }
+
+    /**
+     * 建议跟随周期
+     * @return suggest_cycle 建议跟随周期
+     */
+    public BigDecimal getSuggestCycle() {
+        return suggestCycle;
+    }
+
+    /**
+     * 建议跟随周期
+     * @param suggestCycle 建议跟随周期
+     */
+    public void setSuggestCycle(BigDecimal suggestCycle) {
+        this.suggestCycle = suggestCycle;
     }
 }

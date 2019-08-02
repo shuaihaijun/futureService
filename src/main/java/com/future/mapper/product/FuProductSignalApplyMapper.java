@@ -1,11 +1,14 @@
 package com.future.mapper.product;
 
+import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.future.entity.product.FuProductSignalApply;
+import org.springframework.stereotype.Repository;
 
-public interface FuProductSignalApplyMapper {
+@Repository
+public interface FuProductSignalApplyMapper extends BaseMapper<FuProductSignalApply> {
     int deleteByPrimaryKey(Integer id);
 
-    int insert(FuProductSignalApply record);
+    Integer insert(FuProductSignalApply record);
 
     int insertSelective(FuProductSignalApply record);
 

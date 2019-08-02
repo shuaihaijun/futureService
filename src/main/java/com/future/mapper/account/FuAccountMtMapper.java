@@ -1,11 +1,18 @@
 package com.future.mapper.account;
 
+import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.future.entity.account.FuAccountMt;
+import com.future.pojo.bo.order.UserMTAccountBO;
+import org.springframework.stereotype.Repository;
 
-public interface FuAccountMtMapper {
+import java.util.List;
+import java.util.Map;
+
+@Repository
+public interface FuAccountMtMapper  extends BaseMapper<FuAccountMt> {
     int deleteByPrimaryKey(Integer id);
 
-    int insert(FuAccountMt record);
+    Integer insert(FuAccountMt record);
 
     int insertSelective(FuAccountMt record);
 
@@ -14,4 +21,6 @@ public interface FuAccountMtMapper {
     int updateByPrimaryKeySelective(FuAccountMt record);
 
     int updateByPrimaryKey(FuAccountMt record);
+
+    List<UserMTAccountBO> selectUserMTAccByCondition(Map conditionMap);
 }

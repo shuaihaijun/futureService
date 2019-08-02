@@ -1,11 +1,12 @@
 package com.future.mapper.order;
 
+import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.future.entity.order.FuOrderInfo;
 
-public interface FuOrderInfoMapper {
+public interface FuOrderInfoMapper extends BaseMapper<FuOrderInfo> {
     int deleteByPrimaryKey(Integer id);
 
-    int insert(FuOrderInfo record);
+    Integer insert(FuOrderInfo record);
 
     int insertSelective(FuOrderInfo record);
 

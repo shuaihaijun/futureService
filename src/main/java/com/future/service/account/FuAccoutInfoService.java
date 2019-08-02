@@ -1,7 +1,10 @@
 package com.future.service.account;
 
-import com.alibaba.druid.util.StringUtils;
-import com.future.entity.account.FuAccountMt;
+import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.future.common.exception.DataConflictException;
+import com.future.common.util.StringUtils;
+import com.future.entity.account.FuAccountInfo;
+import com.future.mapper.account.FuAccountInfoMapper;
 import com.future.service.com.ServerService;
 import com.future.service.mt.MTAccountService;
 import com.jfx.Broker;
@@ -17,24 +20,15 @@ import java.util.Map;
  * 社区账户服务
  */
 @Service
-public class AccoutService {
+public class FuAccoutInfoService extends ServiceImpl<FuAccountInfoMapper, FuAccountInfo> {
 
-    Logger log = LoggerFactory.getLogger(AccoutService.class);
+    Logger log = LoggerFactory.getLogger(FuAccoutInfoService.class);
 
     @Autowired
     MTAccountService mtAccountService;
     @Autowired
     ServerService serverService;
 
-    /**
-     * 根据用户名查询用户mt账户信息
-     * @param username
-     * @param chief
-     * @return
-     */
-    public Map getUserMTAccountByUsername(String username ,int chief){
-        return null;
-    }
 
     /**
      * 根据账户ID获取账户信息
@@ -54,15 +48,6 @@ public class AccoutService {
         return null;
     }
 
-    /**
-     * 保存MT账户信息
-     * @param fuAccountMt
-     * @return
-     */
-    public long saveMTAccount(FuAccountMt fuAccountMt){
-        int i=0;
-        return i;
-    }
 
     /**
      *  校验用户mt账户信息

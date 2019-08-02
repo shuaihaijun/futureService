@@ -1,4 +1,4 @@
-package com.future.util;
+package com.future.common.util;
 
 import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
@@ -289,7 +289,7 @@ public class CommonUtil {
 		String orderId=businessCode+clientId+version+userType+userId;
 		String dateTime=String.valueOf(new Date().getTime());
 		String timeStamp=dateTime.substring(dateTime.length()-9,dateTime.length()-1);
-		orderId=orderId+timeStamp+CommonUtil.getRandomNumber(4);
+		orderId=orderId+timeStamp+ CommonUtil.getRandomNumber(4);
 
 		/*大于28位后，截取前28位*/
 		if(orderId.length()>28){

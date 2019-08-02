@@ -6,10 +6,21 @@ import java.io.IOException;
 
 public class OrderSendExample extends Strategy {
 
+    public Broker MT_4_SERVER = new Broker("AETOS-Demo F");
+    public String MT_4_USER = "2102261700";
+    public String MT_4_PASSWORD = "jxg3vvd";
+    public String HOST_URL="127.0.0.1";//"127.0.0.1"
+//    public String HOST_URL="192.168.199.101";//"127.0.0.1"
+
+    public void setData(Broker broker,String username,String password){
+        MT_4_SERVER =broker;
+        MT_4_USER =username;
+        MT_4_PASSWORD = password;
+    }
+
     public OrderSendExample init() throws MT4Exception {
         try {
-            connect("127.0.0.1", 7788, DemoAccount.MT_4_SERVER, DemoAccount.MT_4_USER, DemoAccount.MT_4_PASSWORD);
-            setReconnect(true);
+            connect(HOST_URL, 7788, MT_4_SERVER, MT_4_USER, MT_4_PASSWORD);
             System.out.println("Connected to " + accountCompany() + " As " + accountName());
             //
             return this;
@@ -56,9 +67,6 @@ public class OrderSendExample extends Strategy {
         System.out.println("========connected orderSend begin");
         orderSendExample.newPosition("EURUSD", "B", 0.01);
         System.out.println("========orderSended well done!");
-        System.out.println("========connect again  ");
-        orderSendExample.init();
-        System.out.println("========connect again end");
     }
 
 }

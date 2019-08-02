@@ -1,5 +1,5 @@
 package com.future.service.mt;
-import com.future.util.DateUtil;
+import com.future.common.util.DateUtil;
 import com.jfx.Broker;
 import com.jfx.strategy.Strategy;
 import org.slf4j.Logger;

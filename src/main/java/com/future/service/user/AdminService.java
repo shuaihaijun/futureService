@@ -1,6 +1,8 @@
 package com.future.service.user;
 
 import com.alibaba.druid.util.StringUtils;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.future.common.enums.GlobalResultCode;
 import com.future.common.enums.ResultCode;
 import com.future.common.enums.UserResultCode;
@@ -10,9 +12,9 @@ import com.future.common.exception.ParameterInvalidException;
 import com.future.common.exception.UserException;
 import com.future.common.result.Result;
 import com.future.common.result.ResultMsg;
+import com.future.common.util.CommonUtil;
 import com.future.entity.user.FuUser;
 import com.future.mapper.user.FuUserMapper;
-import com.future.util.CommonUtil;
 import com.github.pagehelper.PageInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,9 +60,23 @@ public class AdminService {
             /*"用户名或密码错误！")*/
             throw new BusinessException(UserResultCode.USER_PASSWORD_ERROR);
         }
+        //(0 未审核，1 正常，2 冻结，3 删除）
+        if(fuUser.getUserState()>1){
+            /*用户状态异常*/
+            throw new BusinessException(UserResultCode.USER_STATE_EXCEPTION);
+        }
+        /*返回数据填充*/
+        Map userMap=new HashMap();
+        userMap.put("userId",fuUser.getId());
+        userMap.put("username",fuUser.getUsername());
+        userMap.put("refName",fuUser.getRefName());
+        userMap.put("realName",fuUser.getRealName());
+        userMap.put("userType",fuUser.getUserType());
+        userMap.put("userState",fuUser.getUserState());
 
         resultMap.put("code",GlobalResultCode.SUCCESS.code());
         resultMap.put("msg",GlobalResultCode.SUCCESS.message());
+        resultMap.put("data",JSONObject.toJSON(userMap));
         return resultMap;
     }
 

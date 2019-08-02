@@ -15,10 +15,23 @@
     <result column="check_date" jdbcType="TIMESTAMP" property="checkDate" />
     <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
     <result column="modify_date" jdbcType="TIMESTAMP" property="modifyDate" />
+    <result column="email" jdbcType="VARCHAR" property="email" />
+    <result column="phone" jdbcType="VARCHAR" property="phone" />
+    <result column="qq_number" jdbcType="VARCHAR" property="qqNumber" />
+    <result column="server_name" jdbcType="VARCHAR" property="serverName" />
+    <result column="mt_acc_id" jdbcType="VARCHAR" property="mtAccId" />
+    <result column="mt_password_trade" jdbcType="VARCHAR" property="mtPasswordTrade" />
+    <result column="mt_password_watch" jdbcType="VARCHAR" property="mtPasswordWatch" />
+    <result column="minimum" jdbcType="DECIMAL" property="minimum" />
+    <result column="annualized_expected_return" jdbcType="DECIMAL" property="annualizedExpectedReturn" />
+    <result column="historical_return" jdbcType="DECIMAL" property="historicalReturn" />
+    <result column="suggest_cycle" jdbcType="DECIMAL" property="suggestCycle" />
   </resultMap>
   <sql id="Base_Column_List">
     id, user_id, signal_name, signal_tem, signal_desc, signal_currency, monthly_average_income, 
-    history_withdraw, apply_state, apply_date, check_date, create_date, modify_date
+    history_withdraw, apply_state, apply_date, check_date, create_date, modify_date, 
+    email, phone, qq_number, server_name, mt_acc_id, mt_password_trade, mt_password_watch, 
+    minimum, annualized_expected_return, historical_return, suggest_cycle
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -35,12 +48,20 @@
       signal_tem, signal_desc, signal_currency, 
       monthly_average_income, history_withdraw, 
       apply_state, apply_date, check_date, 
-      create_date, modify_date)
+      create_date, modify_date, email, 
+      phone, qq_number, server_name, 
+      mt_acc_id, mt_password_trade, mt_password_watch, 
+      minimum, annualized_expected_return, historical_return, 
+      suggest_cycle)
     values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{signalName,jdbcType=VARCHAR}, 
       #{signalTem,jdbcType=VARCHAR}, #{signalDesc,jdbcType=VARCHAR}, #{signalCurrency,jdbcType=VARCHAR}, 
       #{monthlyAverageIncome,jdbcType=DECIMAL}, #{historyWithdraw,jdbcType=DECIMAL}, 
       #{applyState,jdbcType=TINYINT}, #{applyDate,jdbcType=TIMESTAMP}, #{checkDate,jdbcType=TIMESTAMP}, 
-      #{createDate,jdbcType=TIMESTAMP}, #{modifyDate,jdbcType=TIMESTAMP})
+      #{createDate,jdbcType=TIMESTAMP}, #{modifyDate,jdbcType=TIMESTAMP}, #{email,jdbcType=VARCHAR}, 
+      #{phone,jdbcType=VARCHAR}, #{qqNumber,jdbcType=VARCHAR}, #{serverName,jdbcType=VARCHAR}, 
+      #{mtAccId,jdbcType=VARCHAR}, #{mtPasswordTrade,jdbcType=VARCHAR}, #{mtPasswordWatch,jdbcType=VARCHAR}, 
+      #{minimum,jdbcType=DECIMAL}, #{annualizedExpectedReturn,jdbcType=DECIMAL}, #{historicalReturn,jdbcType=DECIMAL}, 
+      #{suggestCycle,jdbcType=DECIMAL})
   </insert>
   <insert id="insertSelective" parameterType="com.future.entity.product.FuProductSignalApply">
     insert into fu_product_signal_apply
@@ -84,6 +105,39 @@
       <if test="modifyDate != null">
         modify_date,
       </if>
+      <if test="email != null">
+        email,
+      </if>
+      <if test="phone != null">
+        phone,
+      </if>
+      <if test="qqNumber != null">
+        qq_number,
+      </if>
+      <if test="serverName != null">
+        server_name,
+      </if>
+      <if test="mtAccId != null">
+        mt_acc_id,
+      </if>
+      <if test="mtPasswordTrade != null">
+        mt_password_trade,
+      </if>
+      <if test="mtPasswordWatch != null">
+        mt_password_watch,
+      </if>
+      <if test="minimum != null">
+        minimum,
+      </if>
+      <if test="annualizedExpectedReturn != null">
+        annualized_expected_return,
+      </if>
+      <if test="historicalReturn != null">
+        historical_return,
+      </if>
+      <if test="suggestCycle != null">
+        suggest_cycle,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -124,6 +178,39 @@
       </if>
       <if test="modifyDate != null">
         #{modifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="email != null">
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null">
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="qqNumber != null">
+        #{qqNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="serverName != null">
+        #{serverName,jdbcType=VARCHAR},
+      </if>
+      <if test="mtAccId != null">
+        #{mtAccId,jdbcType=VARCHAR},
+      </if>
+      <if test="mtPasswordTrade != null">
+        #{mtPasswordTrade,jdbcType=VARCHAR},
+      </if>
+      <if test="mtPasswordWatch != null">
+        #{mtPasswordWatch,jdbcType=VARCHAR},
+      </if>
+      <if test="minimum != null">
+        #{minimum,jdbcType=DECIMAL},
+      </if>
+      <if test="annualizedExpectedReturn != null">
+        #{annualizedExpectedReturn,jdbcType=DECIMAL},
+      </if>
+      <if test="historicalReturn != null">
+        #{historicalReturn,jdbcType=DECIMAL},
+      </if>
+      <if test="suggestCycle != null">
+        #{suggestCycle,jdbcType=DECIMAL},
       </if>
     </trim>
   </insert>
@@ -166,6 +253,39 @@
       <if test="modifyDate != null">
         modify_date = #{modifyDate,jdbcType=TIMESTAMP},
       </if>
+      <if test="email != null">
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null">
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="qqNumber != null">
+        qq_number = #{qqNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="serverName != null">
+        server_name = #{serverName,jdbcType=VARCHAR},
+      </if>
+      <if test="mtAccId != null">
+        mt_acc_id = #{mtAccId,jdbcType=VARCHAR},
+      </if>
+      <if test="mtPasswordTrade != null">
+        mt_password_trade = #{mtPasswordTrade,jdbcType=VARCHAR},
+      </if>
+      <if test="mtPasswordWatch != null">
+        mt_password_watch = #{mtPasswordWatch,jdbcType=VARCHAR},
+      </if>
+      <if test="minimum != null">
+        minimum = #{minimum,jdbcType=DECIMAL},
+      </if>
+      <if test="annualizedExpectedReturn != null">
+        annualized_expected_return = #{annualizedExpectedReturn,jdbcType=DECIMAL},
+      </if>
+      <if test="historicalReturn != null">
+        historical_return = #{historicalReturn,jdbcType=DECIMAL},
+      </if>
+      <if test="suggestCycle != null">
+        suggest_cycle = #{suggestCycle,jdbcType=DECIMAL},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -182,7 +302,18 @@
       apply_date = #{applyDate,jdbcType=TIMESTAMP},
       check_date = #{checkDate,jdbcType=TIMESTAMP},
       create_date = #{createDate,jdbcType=TIMESTAMP},
-      modify_date = #{modifyDate,jdbcType=TIMESTAMP}
+      modify_date = #{modifyDate,jdbcType=TIMESTAMP},
+      email = #{email,jdbcType=VARCHAR},
+      phone = #{phone,jdbcType=VARCHAR},
+      qq_number = #{qqNumber,jdbcType=VARCHAR},
+      server_name = #{serverName,jdbcType=VARCHAR},
+      mt_acc_id = #{mtAccId,jdbcType=VARCHAR},
+      mt_password_trade = #{mtPasswordTrade,jdbcType=VARCHAR},
+      mt_password_watch = #{mtPasswordWatch,jdbcType=VARCHAR},
+      minimum = #{minimum,jdbcType=DECIMAL},
+      annualized_expected_return = #{annualizedExpectedReturn,jdbcType=DECIMAL},
+      historical_return = #{historicalReturn,jdbcType=DECIMAL},
+      suggest_cycle = #{suggestCycle,jdbcType=DECIMAL}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

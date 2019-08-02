@@ -1,5 +1,9 @@
 package com.future.entity.order;
 
+import com.baomidou.mybatisplus.annotations.TableField;
+import com.baomidou.mybatisplus.annotations.TableId;
+import com.baomidou.mybatisplus.enums.IdType;
+
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -7,131 +11,163 @@ public class FuOrderCustomer {
     /**
      * 
      */
+    @TableId(type = IdType.AUTO)
     private Integer id;
 
     /**
      * 创建时间
      */
+    @TableField
     private Date createDate;
 
     /**
      * 修改时间
      */
+    @TableField
     private Date modifyDate;
 
     /**
      * 订单号
      */
+    @TableField
     private String orderId;
 
     /**
      * 用户ID
      */
+    @TableField
     private Integer userId;
 
     /**
      * 用户类型（总经理、总监、业务员、PIB、MIB、IB、VIP会员、普通会员、试用会员、分析师、信号源））
      */
+    @TableField
     private int userType;
 
     /**
      * 交易账号ID
      */
+    @TableField
     private String mtId;
 
     /**
      * 外汇产品
      */
+    @TableField
     private String orderSymbol;
 
     /**
      * 交易手数
      */
+    @TableField
     private BigDecimal orderLots;
 
     /**
      * 订单类型（ 0 普通订单，1 拆分订单）
      */
+    @TableField
     private int orderType;
 
     /**
      * 订单状态（ 0 交易中 ，1 已交易，2 部分平仓，3 已平仓）
      */
+    @TableField
     private int orderState;
 
     /**
      * 止损
      */
+    @TableField
     private BigDecimal orderStoploss;
 
     /**
      * 获利
      */
+    @TableField
     private BigDecimal orderProfit;
 
     /**
      * 库存费
      */
+    @TableField
     private BigDecimal orderSwap;
 
     /**
      * 手续费
      */
+    @TableField
     private BigDecimal orderCommission;
 
     /**
      * 原订单号
      */
+    @TableField
     private String orderSuperior;
 
     /**
      * 挂单时间
      */
+    @TableField
     private Date orderExpiration;
 
     /**
      * 魔力值
      */
+    @TableField
     private BigDecimal orderMagic;
 
     /**
      * 交易价格
      */
+    @TableField
     private BigDecimal orderOpenPrice;
 
     /**
      * 交易时间
      */
+    @TableField
     private Date orderOpenDate;
 
     /**
      * 交易类别（0 buy，1 sell, 2 buylimit ,3 selllimit, 4 buystop, 5 sellstop,6 deposit, 7 credit，99 close）
      */
+    @TableField
     private int orderTradeOperation;
 
     /**
      * 交易类型（0 建仓，1 平仓）
      */
+    @TableField
     private int orderTradeType;
 
     /**
      * 平仓价格
      */
+    @TableField
     private BigDecimal orderClosePrice;
 
     /**
      * 平仓时间
      */
+    @TableField
     private Date orderCloseDate;
 
     /**
      * 备注
      */
+    @TableField
     private String comment;
 
+
+    public static final String USER_ID = "user_id";
+    public static final String ORDER_ID = "order_id";
+    public static final String ORDER_SYMBOL = "order_symbol";
+    public static final String ORDER_OPEN_DATE = "order_open_date";
+    public static final String ORDER_CLOSE_DATE = "order_close_date";
+
     /**
-     * 
-     * @return id 
+     *
+     * @return id
      */
     public Integer getId() {
         return id;

@@ -6,17 +6,17 @@
     <result column="user_id" jdbcType="INTEGER" property="userId" />
     <result column="server_id" jdbcType="INTEGER" property="serverId" />
     <result column="broker_id" jdbcType="INTEGER" property="brokerId" />
-    <result column="account_id" jdbcType="VARCHAR" property="accountId" />
-    <result column="password_trade" jdbcType="VARCHAR" property="passwordTrade" />
-    <result column="password_watch" jdbcType="VARCHAR" property="passwordWatch" />
+    <result column="mt_acc_id" jdbcType="VARCHAR" property="mtAccId" />
+    <result column="mt_password_trade" jdbcType="VARCHAR" property="mtPasswordTrade" />
+    <result column="mt_password_watch" jdbcType="VARCHAR" property="mtPasswordWatch" />
     <result column="password_trade_checked" jdbcType="TINYINT" property="passwordTradeChecked" />
     <result column="password_watch_checked" jdbcType="TINYINT" property="passwordWatchChecked" />
     <result column="is_chief" jdbcType="TINYINT" property="isChief" />
     <result column="account_type" jdbcType="TINYINT" property="accountType" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, user_id, server_id, broker_id, account_id, password_trade, password_watch, password_trade_checked, 
-    password_watch_checked, is_chief, account_type
+    id, user_id, server_id, broker_id, mt_acc_id, mt_password_trade, mt_password_watch, 
+    password_trade_checked, password_watch_checked, is_chief, account_type
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -30,13 +30,15 @@
   </delete>
   <insert id="insert" parameterType="com.future.entity.account.FuAccountMt">
     insert into fu_account_mt (id, user_id, server_id, 
-      broker_id, account_id, password_trade, 
-      password_watch, password_trade_checked, password_watch_checked, 
-      is_chief, account_type)
+      broker_id, mt_acc_id, mt_password_trade, 
+      mt_password_watch, password_trade_checked, 
+      password_watch_checked, is_chief, account_type
+      )
     values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{serverId,jdbcType=INTEGER}, 
-      #{brokerId,jdbcType=INTEGER}, #{accountId,jdbcType=VARCHAR}, #{passwordTrade,jdbcType=VARCHAR}, 
-      #{passwordWatch,jdbcType=VARCHAR}, #{passwordTradeChecked,jdbcType=TINYINT}, #{passwordWatchChecked,jdbcType=TINYINT}, 
-      #{isChief,jdbcType=TINYINT}, #{accountType,jdbcType=TINYINT})
+      #{brokerId,jdbcType=INTEGER}, #{mtAccId,jdbcType=VARCHAR}, #{mtPasswordTrade,jdbcType=VARCHAR}, 
+      #{mtPasswordWatch,jdbcType=VARCHAR}, #{passwordTradeChecked,jdbcType=TINYINT}, 
+      #{passwordWatchChecked,jdbcType=TINYINT}, #{isChief,jdbcType=TINYINT}, #{accountType,jdbcType=TINYINT}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.future.entity.account.FuAccountMt">
     insert into fu_account_mt
@@ -53,14 +55,14 @@
       <if test="brokerId != null">
         broker_id,
       </if>
-      <if test="accountId != null">
-        account_id,
+      <if test="mtAccId != null">
+        mt_acc_id,
       </if>
-      <if test="passwordTrade != null">
-        password_trade,
+      <if test="mtPasswordTrade != null">
+        mt_password_trade,
       </if>
-      <if test="passwordWatch != null">
-        password_watch,
+      <if test="mtPasswordWatch != null">
+        mt_password_watch,
       </if>
       <if test="passwordTradeChecked != null">
         password_trade_checked,
@@ -88,14 +90,14 @@
       <if test="brokerId != null">
         #{brokerId,jdbcType=INTEGER},
       </if>
-      <if test="accountId != null">
-        #{accountId,jdbcType=VARCHAR},
+      <if test="mtAccId != null">
+        #{mtAccId,jdbcType=VARCHAR},
       </if>
-      <if test="passwordTrade != null">
-        #{passwordTrade,jdbcType=VARCHAR},
+      <if test="mtPasswordTrade != null">
+        #{mtPasswordTrade,jdbcType=VARCHAR},
       </if>
-      <if test="passwordWatch != null">
-        #{passwordWatch,jdbcType=VARCHAR},
+      <if test="mtPasswordWatch != null">
+        #{mtPasswordWatch,jdbcType=VARCHAR},
       </if>
       <if test="passwordTradeChecked != null">
         #{passwordTradeChecked,jdbcType=TINYINT},
@@ -123,14 +125,14 @@
       <if test="brokerId != null">
         broker_id = #{brokerId,jdbcType=INTEGER},
       </if>
-      <if test="accountId != null">
-        account_id = #{accountId,jdbcType=VARCHAR},
+      <if test="mtAccId != null">
+        mt_acc_id = #{mtAccId,jdbcType=VARCHAR},
       </if>
-      <if test="passwordTrade != null">
-        password_trade = #{passwordTrade,jdbcType=VARCHAR},
+      <if test="mtPasswordTrade != null">
+        mt_password_trade = #{mtPasswordTrade,jdbcType=VARCHAR},
       </if>
-      <if test="passwordWatch != null">
-        password_watch = #{passwordWatch,jdbcType=VARCHAR},
+      <if test="mtPasswordWatch != null">
+        mt_password_watch = #{mtPasswordWatch,jdbcType=VARCHAR},
       </if>
       <if test="passwordTradeChecked != null">
         password_trade_checked = #{passwordTradeChecked,jdbcType=TINYINT},
@@ -152,13 +154,70 @@
     set user_id = #{userId,jdbcType=INTEGER},
       server_id = #{serverId,jdbcType=INTEGER},
       broker_id = #{brokerId,jdbcType=INTEGER},
-      account_id = #{accountId,jdbcType=VARCHAR},
-      password_trade = #{passwordTrade,jdbcType=VARCHAR},
-      password_watch = #{passwordWatch,jdbcType=VARCHAR},
+      mt_acc_id = #{mtAccId,jdbcType=VARCHAR},
+      mt_password_trade = #{mtPasswordTrade,jdbcType=VARCHAR},
+      mt_password_watch = #{mtPasswordWatch,jdbcType=VARCHAR},
       password_trade_checked = #{passwordTradeChecked,jdbcType=TINYINT},
       password_watch_checked = #{passwordWatchChecked,jdbcType=TINYINT},
       is_chief = #{isChief,jdbcType=TINYINT},
       account_type = #{accountType,jdbcType=TINYINT}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+  <select id="selectUserMTAccByCondition" parameterType="java.util.Map" resultType="com.future.pojo.bo.order.UserMTAccountBO">
+    SELECT
+      acc.id accountId,
+      acc.mt_acc_id mtAccId,
+      acc.is_chief isChief,
+      acc.id accountId,
+      acc.account_type accountType,
+      acc.mt_password_trade mtPasswordTrade,
+      acc.mt_password_watch mtPasswordWatch,
+      u.id userId,
+      u.username,
+      u.real_name realName,
+      u.ref_name refName,
+      u.user_state userState,
+      u.user_type userType,
+      u.email,
+      u.mobile,
+      s.id serverId,
+      s.server_name serverName,
+      s.broker_name brokerName,
+      s.server_state serverState
+    FROM
+      fu_account_mt acc
+      LEFT JOIN fu_user u on u.id=acc.user_id
+      LEFT JOIN fu_com_server s on acc.server_id=s.id
+    where
+    <trim  prefixOverrides="and">
+        <if test="username != null">
+         and u.username = #{username,jdbcType=VARCHAR}
+        </if>
+        <if test="mobile != null">
+          and u.mobile = #{mobile,jdbcType=VARCHAR}
+        </if>
+        <if test="userId != null">
+          and acc.user_id = #{userId,jdbcType=INTEGER}
+        </if>
+        <if test="accountId != null">
+          and  acc.id = #{accountId,jdbcType=INTEGER}
+        </if>
+        <if test="mtAccId != null">
+          and acc.mt_acc_id = #{mtAccId,jdbcType=INTEGER}
+        </if>
+        <if test="isChief != null">
+          and acc.is_chief = #{isChief,jdbcType=TINYINT}
+        </if>
+        <if test="accountType != null">
+          and acc.account_type = #{accountType,jdbcType=TINYINT}
+        </if>
+        <if test="serverName != null">
+          and  s.server_name = #{serverName,jdbcType=VARCHAR}
+        </if>
+        <if test="brokerName != null">
+          and s.broker_name = #{brokerName,jdbcType=VARCHAR}
+        </if>
+    </trim>
+  </select>
 </mapper>

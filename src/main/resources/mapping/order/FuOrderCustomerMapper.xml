@@ -327,4 +327,21 @@
       comment = #{comment,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+  <select id="getLastCustomerOrder" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    o.id, o.create_date, o.modify_date, o.order_id, o.user_id, o.user_type, o.mt_id, o.order_symbol,
+    o.order_lots, o.order_type, o.order_state, o.order_stoploss, o.order_profit, o.order_swap, o.order_commission,
+    o.order_superior, o.order_expiration, o.order_magic, o.order_open_price, o.order_open_date,
+    o.order_trade_operation, o.order_trade_type, o.order_close_price, o.order_close_date, o.comment
+    FROM
+        fu_user u
+    LEFT JOIN fu_order_customer o ON u.id = o.user_id
+    WHERE
+        u.username = #{username}
+    ORDER BY
+        order_close_date desc
+    LIMIT 0,
+     1;
+  </select>
 </mapper>

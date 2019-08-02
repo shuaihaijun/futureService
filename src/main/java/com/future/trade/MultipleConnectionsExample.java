@@ -16,6 +16,13 @@ public class MultipleConnectionsExample {
     Strategy.Terminal terminal;
     Strategy.Terminal t2;
     Strategy.Terminal t3;
+    Strategy.Terminal t4;
+    Strategy.Terminal t5;
+    Strategy.Terminal t6;
+    Strategy.Terminal t7;
+    Strategy.Terminal t8;
+    Strategy.Terminal t9;
+    Strategy.Terminal t10;
 
     private void run() throws IOException, InterruptedException, MT4Exception {
         s = new Strategy();
@@ -52,15 +59,38 @@ public class MultipleConnectionsExample {
         });
         t2 = s.addTerminal(Strategy.TerminalType.FREE_WORKER);
         t3 = s.addTerminal(Strategy.TerminalType.FREE_WORKER);
+        /*t4 = s.addTerminal(Strategy.TerminalType.FREE_WORKER);
+        t5 = s.addTerminal(Strategy.TerminalType.FREE_WORKER);
+        t6 = s.addTerminal(Strategy.TerminalType.FREE_WORKER);
+        t7 = s.addTerminal(Strategy.TerminalType.FREE_WORKER);
+        t8 = s.addTerminal(Strategy.TerminalType.FREE_WORKER);
+        t9 = s.addTerminal(Strategy.TerminalType.FREE_WORKER);
+        t10 = s.addTerminal(Strategy.TerminalType.FREE_WORKER);*/
+
         terminal.connect();
         System.out.println("Connected tick listener.");
         t2.connect();
         System.out.println("Connected terminal #2.");
         t3.connect();
         System.out.println("Connected terminal #3.");
+        /*t4.connect();
+        System.out.println("Connected terminal #4.");
+        t5.connect();
+        System.out.println("Connected terminal #5.");
+        t6.connect();
+        System.out.println("Connected terminal #6.");
+        t7.connect();
+        System.out.println("Connected terminal #7.");
+        t8.connect();
+        System.out.println("Connected terminal #7.");
+        t9.connect();
+        System.out.println("Connected terminal #9.");
+        t10.connect();
+        System.out.println("Connected terminal #10.");*/
+
         //
-        t2.getMt4Connection().iHigh(eurjpy, Timeframe.PERIOD_M1, 0);
-        t3.getMt4Connection().iHigh(eurjpy, Timeframe.PERIOD_M1, 0);
+//        t2.getMt4Connection().iHigh(eurjpy, Timeframe.PERIOD_M1, 0);
+//        t3.getMt4Connection().iHigh(eurjpy, Timeframe.PERIOD_M1, 0);
         // ...
 
         Runnable task1 = new Runnable() {

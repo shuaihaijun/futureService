@@ -6,6 +6,7 @@
     <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
     <result column="modify_date" jdbcType="TIMESTAMP" property="modifyDate" />
     <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="account_id" jdbcType="VARCHAR" property="accountId" />
     <result column="signal_name" jdbcType="VARCHAR" property="signalName" />
     <result column="signal_level" jdbcType="TINYINT" property="signalLevel" />
     <result column="signal_desc" jdbcType="VARCHAR" property="signalDesc" />
@@ -14,15 +15,32 @@
     <result column="apply_date" jdbcType="TIMESTAMP" property="applyDate" />
     <result column="check_date" jdbcType="TIMESTAMP" property="checkDate" />
     <result column="signal_tem" jdbcType="VARCHAR" property="signalTem" />
+    <result column="signal_lots" jdbcType="INTEGER" property="signalLots" />
+    <result column="signal_lots_profit" jdbcType="INTEGER" property="signalLotsProfit" />
+    <result column="signal_account_money" jdbcType="DECIMAL" property="signalAccountMoney" />
     <result column="signal_currency" jdbcType="VARCHAR" property="signalCurrency" />
+    <result column="signal_follows" jdbcType="INTEGER" property="signalFollows" />
     <result column="monthly_average_income" jdbcType="DECIMAL" property="monthlyAverageIncome" />
     <result column="history_income" jdbcType="DECIMAL" property="historyIncome" />
     <result column="history_withdraw" jdbcType="DECIMAL" property="historyWithdraw" />
+    <result column="email" jdbcType="VARCHAR" property="email" />
+    <result column="phone" jdbcType="VARCHAR" property="phone" />
+    <result column="qq_number" jdbcType="VARCHAR" property="qqNumber" />
+    <result column="server_name" jdbcType="VARCHAR" property="serverName" />
+    <result column="mt_acc_id" jdbcType="VARCHAR" property="mtAccId" />
+    <result column="mt_password_trade" jdbcType="VARCHAR" property="mtPasswordTrade" />
+    <result column="mt_password_watch" jdbcType="VARCHAR" property="mtPasswordWatch" />
+    <result column="minimum" jdbcType="DECIMAL" property="minimum" />
+    <result column="annualized_expected_return" jdbcType="DECIMAL" property="annualizedExpectedReturn" />
+    <result column="historical_return" jdbcType="DECIMAL" property="historicalReturn" />
+    <result column="suggest_cycle" jdbcType="DECIMAL" property="suggestCycle" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, create_date, modify_date, user_id, signal_name, signal_level, signal_desc, signal_ratings, 
-    signal_state, apply_date, check_date, signal_tem, signal_currency, monthly_average_income, 
-    history_income, history_withdraw
+    id, create_date, modify_date, user_id, account_id, signal_name, signal_level, signal_desc, 
+    signal_ratings, signal_state, apply_date, check_date, signal_tem, signal_lots, signal_lots_profit, 
+    signal_account_money, signal_currency, signal_follows, monthly_average_income, history_income, 
+    history_withdraw, email, phone, qq_number, server_name, mt_acc_id, mt_password_trade, 
+    mt_password_watch, minimum, annualized_expected_return, historical_return, suggest_cycle
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -36,17 +54,27 @@
   </delete>
   <insert id="insert" parameterType="com.future.entity.product.FuProductSignal">
     insert into fu_product_signal (id, create_date, modify_date, 
-      user_id, signal_name, signal_level, 
-      signal_desc, signal_ratings, signal_state, 
-      apply_date, check_date, signal_tem, 
-      signal_currency, monthly_average_income, history_income, 
-      history_withdraw)
+      user_id, account_id, signal_name, 
+      signal_level, signal_desc, signal_ratings, 
+      signal_state, apply_date, check_date, 
+      signal_tem, signal_lots, signal_lots_profit, 
+      signal_account_money, signal_currency, signal_follows, 
+      monthly_average_income, history_income, history_withdraw, 
+      email, phone, qq_number, 
+      server_name, mt_acc_id, mt_password_trade, 
+      mt_password_watch, minimum, annualized_expected_return, 
+      historical_return, suggest_cycle)
     values (#{id,jdbcType=INTEGER}, #{createDate,jdbcType=TIMESTAMP}, #{modifyDate,jdbcType=TIMESTAMP}, 
-      #{userId,jdbcType=INTEGER}, #{signalName,jdbcType=VARCHAR}, #{signalLevel,jdbcType=TINYINT}, 
-      #{signalDesc,jdbcType=VARCHAR}, #{signalRatings,jdbcType=TINYINT}, #{signalState,jdbcType=TINYINT}, 
-      #{applyDate,jdbcType=TIMESTAMP}, #{checkDate,jdbcType=TIMESTAMP}, #{signalTem,jdbcType=VARCHAR}, 
-      #{signalCurrency,jdbcType=VARCHAR}, #{monthlyAverageIncome,jdbcType=DECIMAL}, #{historyIncome,jdbcType=DECIMAL}, 
-      #{historyWithdraw,jdbcType=DECIMAL})
+      #{userId,jdbcType=INTEGER}, #{accountId,jdbcType=VARCHAR}, #{signalName,jdbcType=VARCHAR}, 
+      #{signalLevel,jdbcType=TINYINT}, #{signalDesc,jdbcType=VARCHAR}, #{signalRatings,jdbcType=TINYINT}, 
+      #{signalState,jdbcType=TINYINT}, #{applyDate,jdbcType=TIMESTAMP}, #{checkDate,jdbcType=TIMESTAMP}, 
+      #{signalTem,jdbcType=VARCHAR}, #{signalLots,jdbcType=INTEGER}, #{signalLotsProfit,jdbcType=INTEGER}, 
+      #{signalAccountMoney,jdbcType=DECIMAL}, #{signalCurrency,jdbcType=VARCHAR}, #{signalFollows,jdbcType=INTEGER}, 
+      #{monthlyAverageIncome,jdbcType=DECIMAL}, #{historyIncome,jdbcType=DECIMAL}, #{historyWithdraw,jdbcType=DECIMAL}, 
+      #{email,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{qqNumber,jdbcType=VARCHAR}, 
+      #{serverName,jdbcType=VARCHAR}, #{mtAccId,jdbcType=VARCHAR}, #{mtPasswordTrade,jdbcType=VARCHAR}, 
+      #{mtPasswordWatch,jdbcType=VARCHAR}, #{minimum,jdbcType=DECIMAL}, #{annualizedExpectedReturn,jdbcType=DECIMAL}, 
+      #{historicalReturn,jdbcType=DECIMAL}, #{suggestCycle,jdbcType=DECIMAL})
   </insert>
   <insert id="insertSelective" parameterType="com.future.entity.product.FuProductSignal">
     insert into fu_product_signal
@@ -62,6 +90,9 @@
       </if>
       <if test="userId != null">
         user_id,
+      </if>
+      <if test="accountId != null">
+        account_id,
       </if>
       <if test="signalName != null">
         signal_name,
@@ -87,8 +118,20 @@
       <if test="signalTem != null">
         signal_tem,
       </if>
+      <if test="signalLots != null">
+        signal_lots,
+      </if>
+      <if test="signalLotsProfit != null">
+        signal_lots_profit,
+      </if>
+      <if test="signalAccountMoney != null">
+        signal_account_money,
+      </if>
       <if test="signalCurrency != null">
         signal_currency,
+      </if>
+      <if test="signalFollows != null">
+        signal_follows,
       </if>
       <if test="monthlyAverageIncome != null">
         monthly_average_income,
@@ -98,6 +141,39 @@
       </if>
       <if test="historyWithdraw != null">
         history_withdraw,
+      </if>
+      <if test="email != null">
+        email,
+      </if>
+      <if test="phone != null">
+        phone,
+      </if>
+      <if test="qqNumber != null">
+        qq_number,
+      </if>
+      <if test="serverName != null">
+        server_name,
+      </if>
+      <if test="mtAccId != null">
+        mt_acc_id,
+      </if>
+      <if test="mtPasswordTrade != null">
+        mt_password_trade,
+      </if>
+      <if test="mtPasswordWatch != null">
+        mt_password_watch,
+      </if>
+      <if test="minimum != null">
+        minimum,
+      </if>
+      <if test="annualizedExpectedReturn != null">
+        annualized_expected_return,
+      </if>
+      <if test="historicalReturn != null">
+        historical_return,
+      </if>
+      <if test="suggestCycle != null">
+        suggest_cycle,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -112,6 +188,9 @@
       </if>
       <if test="userId != null">
         #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="accountId != null">
+        #{accountId,jdbcType=VARCHAR},
       </if>
       <if test="signalName != null">
         #{signalName,jdbcType=VARCHAR},
@@ -137,8 +216,20 @@
       <if test="signalTem != null">
         #{signalTem,jdbcType=VARCHAR},
       </if>
+      <if test="signalLots != null">
+        #{signalLots,jdbcType=INTEGER},
+      </if>
+      <if test="signalLotsProfit != null">
+        #{signalLotsProfit,jdbcType=INTEGER},
+      </if>
+      <if test="signalAccountMoney != null">
+        #{signalAccountMoney,jdbcType=DECIMAL},
+      </if>
       <if test="signalCurrency != null">
         #{signalCurrency,jdbcType=VARCHAR},
+      </if>
+      <if test="signalFollows != null">
+        #{signalFollows,jdbcType=INTEGER},
       </if>
       <if test="monthlyAverageIncome != null">
         #{monthlyAverageIncome,jdbcType=DECIMAL},
@@ -148,6 +239,39 @@
       </if>
       <if test="historyWithdraw != null">
         #{historyWithdraw,jdbcType=DECIMAL},
+      </if>
+      <if test="email != null">
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null">
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="qqNumber != null">
+        #{qqNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="serverName != null">
+        #{serverName,jdbcType=VARCHAR},
+      </if>
+      <if test="mtAccId != null">
+        #{mtAccId,jdbcType=VARCHAR},
+      </if>
+      <if test="mtPasswordTrade != null">
+        #{mtPasswordTrade,jdbcType=VARCHAR},
+      </if>
+      <if test="mtPasswordWatch != null">
+        #{mtPasswordWatch,jdbcType=VARCHAR},
+      </if>
+      <if test="minimum != null">
+        #{minimum,jdbcType=DECIMAL},
+      </if>
+      <if test="annualizedExpectedReturn != null">
+        #{annualizedExpectedReturn,jdbcType=DECIMAL},
+      </if>
+      <if test="historicalReturn != null">
+        #{historicalReturn,jdbcType=DECIMAL},
+      </if>
+      <if test="suggestCycle != null">
+        #{suggestCycle,jdbcType=DECIMAL},
       </if>
     </trim>
   </insert>
@@ -162,6 +286,9 @@
       </if>
       <if test="userId != null">
         user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="accountId != null">
+        account_id = #{accountId,jdbcType=VARCHAR},
       </if>
       <if test="signalName != null">
         signal_name = #{signalName,jdbcType=VARCHAR},
@@ -187,8 +314,20 @@
       <if test="signalTem != null">
         signal_tem = #{signalTem,jdbcType=VARCHAR},
       </if>
+      <if test="signalLots != null">
+        signal_lots = #{signalLots,jdbcType=INTEGER},
+      </if>
+      <if test="signalLotsProfit != null">
+        signal_lots_profit = #{signalLotsProfit,jdbcType=INTEGER},
+      </if>
+      <if test="signalAccountMoney != null">
+        signal_account_money = #{signalAccountMoney,jdbcType=DECIMAL},
+      </if>
       <if test="signalCurrency != null">
         signal_currency = #{signalCurrency,jdbcType=VARCHAR},
+      </if>
+      <if test="signalFollows != null">
+        signal_follows = #{signalFollows,jdbcType=INTEGER},
       </if>
       <if test="monthlyAverageIncome != null">
         monthly_average_income = #{monthlyAverageIncome,jdbcType=DECIMAL},
@@ -199,6 +338,39 @@
       <if test="historyWithdraw != null">
         history_withdraw = #{historyWithdraw,jdbcType=DECIMAL},
       </if>
+      <if test="email != null">
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null">
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="qqNumber != null">
+        qq_number = #{qqNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="serverName != null">
+        server_name = #{serverName,jdbcType=VARCHAR},
+      </if>
+      <if test="mtAccId != null">
+        mt_acc_id = #{mtAccId,jdbcType=VARCHAR},
+      </if>
+      <if test="mtPasswordTrade != null">
+        mt_password_trade = #{mtPasswordTrade,jdbcType=VARCHAR},
+      </if>
+      <if test="mtPasswordWatch != null">
+        mt_password_watch = #{mtPasswordWatch,jdbcType=VARCHAR},
+      </if>
+      <if test="minimum != null">
+        minimum = #{minimum,jdbcType=DECIMAL},
+      </if>
+      <if test="annualizedExpectedReturn != null">
+        annualized_expected_return = #{annualizedExpectedReturn,jdbcType=DECIMAL},
+      </if>
+      <if test="historicalReturn != null">
+        historical_return = #{historicalReturn,jdbcType=DECIMAL},
+      </if>
+      <if test="suggestCycle != null">
+        suggest_cycle = #{suggestCycle,jdbcType=DECIMAL},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -207,6 +379,7 @@
     set create_date = #{createDate,jdbcType=TIMESTAMP},
       modify_date = #{modifyDate,jdbcType=TIMESTAMP},
       user_id = #{userId,jdbcType=INTEGER},
+      account_id = #{accountId,jdbcType=VARCHAR},
       signal_name = #{signalName,jdbcType=VARCHAR},
       signal_level = #{signalLevel,jdbcType=TINYINT},
       signal_desc = #{signalDesc,jdbcType=VARCHAR},
@@ -215,10 +388,25 @@
       apply_date = #{applyDate,jdbcType=TIMESTAMP},
       check_date = #{checkDate,jdbcType=TIMESTAMP},
       signal_tem = #{signalTem,jdbcType=VARCHAR},
+      signal_lots = #{signalLots,jdbcType=INTEGER},
+      signal_lots_profit = #{signalLotsProfit,jdbcType=INTEGER},
+      signal_account_money = #{signalAccountMoney,jdbcType=DECIMAL},
       signal_currency = #{signalCurrency,jdbcType=VARCHAR},
+      signal_follows = #{signalFollows,jdbcType=INTEGER},
       monthly_average_income = #{monthlyAverageIncome,jdbcType=DECIMAL},
       history_income = #{historyIncome,jdbcType=DECIMAL},
-      history_withdraw = #{historyWithdraw,jdbcType=DECIMAL}
+      history_withdraw = #{historyWithdraw,jdbcType=DECIMAL},
+      email = #{email,jdbcType=VARCHAR},
+      phone = #{phone,jdbcType=VARCHAR},
+      qq_number = #{qqNumber,jdbcType=VARCHAR},
+      server_name = #{serverName,jdbcType=VARCHAR},
+      mt_acc_id = #{mtAccId,jdbcType=VARCHAR},
+      mt_password_trade = #{mtPasswordTrade,jdbcType=VARCHAR},
+      mt_password_watch = #{mtPasswordWatch,jdbcType=VARCHAR},
+      minimum = #{minimum,jdbcType=DECIMAL},
+      annualized_expected_return = #{annualizedExpectedReturn,jdbcType=DECIMAL},
+      historical_return = #{historicalReturn,jdbcType=DECIMAL},
+      suggest_cycle = #{suggestCycle,jdbcType=DECIMAL}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>
