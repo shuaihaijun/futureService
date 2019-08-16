@@ -1,21 +1,24 @@
 package com.future.entity.com;
 
-import com.baomidou.mybatisplus.annotations.TableId;
-import com.baomidou.mybatisplus.enums.IdType;
-
 import java.util.Date;
 
 public class FuComAgentApply {
+
+    public static final String ID = "id";
+    public static final String AGENT_NAME = "agent_name";
+    public static final String APPLY_TYPE = "apply_type";
+    public static final String APPLY_STATE = "apply_state";
+    public static final String USER_ID = "user_id";
+
     /**
      * 
      */
-    @TableId(type = IdType.AUTO)
     private Integer id;
 
     /**
      * 申请类型（0 IB升级申请，1 注册申请 ，2 IB降级申请）
      */
-    private int applyType;
+    private Integer applyType;
 
     /**
      * 用户ID
@@ -30,12 +33,12 @@ public class FuComAgentApply {
     /**
      * 当前等级
      */
-    private int agentLevel;
+    private Integer agentLevel;
 
     /**
      * 申请级别
      */
-    private int applyLevel;
+    private Integer applyLevel;
 
     /**
      * 申请原由
@@ -50,7 +53,7 @@ public class FuComAgentApply {
     /**
      * 申请状态（ 0 完成，1 暂存，2 待审，3 未通过）
      */
-    private int applyState;
+    private Integer applyState;
 
     /**
      * 审批说明
@@ -73,6 +76,16 @@ public class FuComAgentApply {
     private Date checkDate;
 
     /**
+     * 代理名称
+     */
+    private String agentName;
+
+    /**
+     * IB类型（IB ,MIB,PIB）
+     */
+    private String agentType;
+
+    /**
      * 
      * @return id 
      */
@@ -92,7 +105,7 @@ public class FuComAgentApply {
      * 申请类型（0 IB升级申请，1 注册申请 ，2 IB降级申请）
      * @return apply_type 申请类型（0 IB升级申请，1 注册申请 ，2 IB降级申请）
      */
-    public int getApplyType() {
+    public Integer getApplyType() {
         return applyType;
     }
 
@@ -100,7 +113,7 @@ public class FuComAgentApply {
      * 申请类型（0 IB升级申请，1 注册申请 ，2 IB降级申请）
      * @param applyType 申请类型（0 IB升级申请，1 注册申请 ，2 IB降级申请）
      */
-    public void setApplyType(int applyType) {
+    public void setApplyType(Integer applyType) {
         this.applyType = applyType;
     }
 
@@ -140,7 +153,7 @@ public class FuComAgentApply {
      * 当前等级
      * @return agent_level 当前等级
      */
-    public int getAgentLevel() {
+    public Integer getAgentLevel() {
         return agentLevel;
     }
 
@@ -148,7 +161,7 @@ public class FuComAgentApply {
      * 当前等级
      * @param agentLevel 当前等级
      */
-    public void setAgentLevel(int agentLevel) {
+    public void setAgentLevel(Integer agentLevel) {
         this.agentLevel = agentLevel;
     }
 
@@ -156,7 +169,7 @@ public class FuComAgentApply {
      * 申请级别
      * @return apply_level 申请级别
      */
-    public int getApplyLevel() {
+    public Integer getApplyLevel() {
         return applyLevel;
     }
 
@@ -164,7 +177,7 @@ public class FuComAgentApply {
      * 申请级别
      * @param applyLevel 申请级别
      */
-    public void setApplyLevel(int applyLevel) {
+    public void setApplyLevel(Integer applyLevel) {
         this.applyLevel = applyLevel;
     }
 
@@ -204,7 +217,7 @@ public class FuComAgentApply {
      * 申请状态（ 0 完成，1 暂存，2 待审，3 未通过）
      * @return apply_state 申请状态（ 0 完成，1 暂存，2 待审，3 未通过）
      */
-    public int getApplyState() {
+    public Integer getApplyState() {
         return applyState;
     }
 
@@ -212,7 +225,7 @@ public class FuComAgentApply {
      * 申请状态（ 0 完成，1 暂存，2 待审，3 未通过）
      * @param applyState 申请状态（ 0 完成，1 暂存，2 待审，3 未通过）
      */
-    public void setApplyState(int applyState) {
+    public void setApplyState(Integer applyState) {
         this.applyState = applyState;
     }
 
@@ -278,5 +291,37 @@ public class FuComAgentApply {
      */
     public void setCheckDate(Date checkDate) {
         this.checkDate = checkDate;
+    }
+
+    /**
+     * 代理名称
+     * @return agent_name 代理名称
+     */
+    public String getAgentName() {
+        return agentName;
+    }
+
+    /**
+     * 代理名称
+     * @param agentName 代理名称
+     */
+    public void setAgentName(String agentName) {
+        this.agentName = agentName == null ? null : agentName.trim();
+    }
+
+    /**
+     * IB类型（IB ,MIB,PIB）
+     * @return agent_type IB类型（IB ,MIB,PIB）
+     */
+    public String getAgentType() {
+        return agentType;
+    }
+
+    /**
+     * IB类型（IB ,MIB,PIB）
+     * @param agentType IB类型（IB ,MIB,PIB）
+     */
+    public void setAgentType(String agentType) {
+        this.agentType = agentType == null ? null : agentType.trim();
     }
 }

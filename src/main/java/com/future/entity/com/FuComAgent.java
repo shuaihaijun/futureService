@@ -1,13 +1,18 @@
 package com.future.entity.com;
 
-import com.baomidou.mybatisplus.annotations.TableId;
-import com.baomidou.mybatisplus.enums.IdType;
+import java.util.Date;
 
 public class FuComAgent {
+
+    public static final String ID = "id";
+    public static final String AGENT_NAME = "agent_name";
+    public static final String AGENT_TYPE = "agent_type";
+    public static final String AGENT_LEVEL = "agent_level";
+    public static final String AGENT_STATE = "agent_state";
+    public static final String USER_ID = "user_id";
     /**
      * 
      */
-    @TableId(type = IdType.AUTO)
     private Integer id;
 
     /**
@@ -23,7 +28,7 @@ public class FuComAgent {
     /**
      * 代理人等级(0 IB ,1 MIB, 2 PIB)
      */
-    private int agentLevel;
+    private Integer agentLevel;
 
     /**
      * 代理描述
@@ -38,7 +43,7 @@ public class FuComAgent {
     /**
      * 代理人状态
      */
-    private int agentState;
+    private Integer agentState;
 
     /**
      * 分组名称
@@ -49,6 +54,26 @@ public class FuComAgent {
      * 说明
      */
     private String comment;
+
+    /**
+     * 用户ID
+     */
+    private Integer userId;
+
+    /**
+     * 创建时间
+     */
+    private Date createDate;
+
+    /**
+     * 修改时间
+     */
+    private Date modifyDate;
+
+    /**
+     * 申请时间
+     */
+    private Date applyDate;
 
     /**
      * 
@@ -102,7 +127,7 @@ public class FuComAgent {
      * 代理人等级(0 IB ,1 MIB, 2 PIB)
      * @return agent_level 代理人等级(0 IB ,1 MIB, 2 PIB)
      */
-    public int getAgentLevel() {
+    public Integer getAgentLevel() {
         return agentLevel;
     }
 
@@ -110,7 +135,7 @@ public class FuComAgent {
      * 代理人等级(0 IB ,1 MIB, 2 PIB)
      * @param agentLevel 代理人等级(0 IB ,1 MIB, 2 PIB)
      */
-    public void setAgentLevel(int agentLevel) {
+    public void setAgentLevel(Integer agentLevel) {
         this.agentLevel = agentLevel;
     }
 
@@ -150,7 +175,7 @@ public class FuComAgent {
      * 代理人状态
      * @return agent_state 代理人状态
      */
-    public int getAgentState() {
+    public Integer getAgentState() {
         return agentState;
     }
 
@@ -158,7 +183,7 @@ public class FuComAgent {
      * 代理人状态
      * @param agentState 代理人状态
      */
-    public void setAgentState(int agentState) {
+    public void setAgentState(Integer agentState) {
         this.agentState = agentState;
     }
 
@@ -192,5 +217,69 @@ public class FuComAgent {
      */
     public void setComment(String comment) {
         this.comment = comment == null ? null : comment.trim();
+    }
+
+    /**
+     * 用户ID
+     * @return user_id 用户ID
+     */
+    public Integer getUserId() {
+        return userId;
+    }
+
+    /**
+     * 用户ID
+     * @param userId 用户ID
+     */
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
+
+    /**
+     * 创建时间
+     * @return create_date 创建时间
+     */
+    public Date getCreateDate() {
+        return createDate;
+    }
+
+    /**
+     * 创建时间
+     * @param createDate 创建时间
+     */
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
+    }
+
+    /**
+     * 修改时间
+     * @return modify_date 修改时间
+     */
+    public Date getModifyDate() {
+        return modifyDate;
+    }
+
+    /**
+     * 修改时间
+     * @param modifyDate 修改时间
+     */
+    public void setModifyDate(Date modifyDate) {
+        this.modifyDate = modifyDate;
+    }
+
+    /**
+     * 申请时间
+     * @return apply_date 申请时间
+     */
+    public Date getApplyDate() {
+        return applyDate;
+    }
+
+    /**
+     * 申请时间
+     * @param applyDate 申请时间
+     */
+    public void setApplyDate(Date applyDate) {
+        this.applyDate = applyDate;
     }
 }

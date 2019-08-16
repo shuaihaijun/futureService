@@ -65,10 +65,10 @@ public class FuAccoutInfoService extends ServiceImpl<FuAccountInfoMapper, FuAcco
         }
 
         /*校验 服务器名称*/
-        if(serverService.findByServerName(serverName)==null){
+       /* if(serverService.findByServerName(serverName)==null){
             log.error("校验用户mt账户信息, 服务器名称错误或不支持！");
             return false;
-        }
+        }*/
 
         Broker broker=new Broker(serverName);
         return mtAccountService.getConnect(null,broker,username,password);

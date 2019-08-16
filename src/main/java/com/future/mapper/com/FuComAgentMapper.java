@@ -1,11 +1,14 @@
 package com.future.mapper.com;
 
+import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.future.entity.com.FuComAgent;
+import org.springframework.stereotype.Repository;
 
-public interface FuComAgentMapper {
+@Repository
+public interface FuComAgentMapper extends BaseMapper<FuComAgent> {
     int deleteByPrimaryKey(Integer id);
 
-    int insert(FuComAgent record);
+    Integer insert(FuComAgent record);
 
     int insertSelective(FuComAgent record);
 

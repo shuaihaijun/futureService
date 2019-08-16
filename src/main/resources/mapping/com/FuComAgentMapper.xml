@@ -11,10 +11,14 @@
     <result column="agent_state" jdbcType="TINYINT" property="agentState" />
     <result column="group_name" jdbcType="VARCHAR" property="groupName" />
     <result column="comment" jdbcType="VARCHAR" property="comment" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="modify_date" jdbcType="TIMESTAMP" property="modifyDate" />
+    <result column="apply_date" jdbcType="TIMESTAMP" property="applyDate" />
   </resultMap>
   <sql id="Base_Column_List">
     id, agent_name, agent_type, agent_level, apply_desc, agent_number, agent_state, group_name, 
-    comment
+    comment, user_id, create_date, modify_date, apply_date
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -29,12 +33,14 @@
   <insert id="insert" parameterType="com.future.entity.com.FuComAgent">
     insert into fu_com_agent (id, agent_name, agent_type, 
       agent_level, apply_desc, agent_number, 
-      agent_state, group_name, comment
-      )
+      agent_state, group_name, comment, 
+      user_id, create_date, modify_date, 
+      apply_date)
     values (#{id,jdbcType=INTEGER}, #{agentName,jdbcType=VARCHAR}, #{agentType,jdbcType=VARCHAR}, 
       #{agentLevel,jdbcType=TINYINT}, #{applyDesc,jdbcType=VARCHAR}, #{agentNumber,jdbcType=INTEGER}, 
-      #{agentState,jdbcType=TINYINT}, #{groupName,jdbcType=VARCHAR}, #{comment,jdbcType=VARCHAR}
-      )
+      #{agentState,jdbcType=TINYINT}, #{groupName,jdbcType=VARCHAR}, #{comment,jdbcType=VARCHAR}, 
+      #{userId,jdbcType=INTEGER}, #{createDate,jdbcType=TIMESTAMP}, #{modifyDate,jdbcType=TIMESTAMP}, 
+      #{applyDate,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.future.entity.com.FuComAgent">
     insert into fu_com_agent
@@ -66,6 +72,18 @@
       <if test="comment != null">
         comment,
       </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="createDate != null">
+        create_date,
+      </if>
+      <if test="modifyDate != null">
+        modify_date,
+      </if>
+      <if test="applyDate != null">
+        apply_date,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -94,6 +112,18 @@
       </if>
       <if test="comment != null">
         #{comment,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null">
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyDate != null">
+        #{modifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="applyDate != null">
+        #{applyDate,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
@@ -124,6 +154,18 @@
       <if test="comment != null">
         comment = #{comment,jdbcType=VARCHAR},
       </if>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null">
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyDate != null">
+        modify_date = #{modifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="applyDate != null">
+        apply_date = #{applyDate,jdbcType=TIMESTAMP},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -136,7 +178,11 @@
       agent_number = #{agentNumber,jdbcType=INTEGER},
       agent_state = #{agentState,jdbcType=TINYINT},
       group_name = #{groupName,jdbcType=VARCHAR},
-      comment = #{comment,jdbcType=VARCHAR}
+      comment = #{comment,jdbcType=VARCHAR},
+      user_id = #{userId,jdbcType=INTEGER},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      modify_date = #{modifyDate,jdbcType=TIMESTAMP},
+      apply_date = #{applyDate,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>
