@@ -1,11 +1,14 @@
 package com.future.mapper.com;
 
+import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.future.entity.com.FuComServer;
+import org.springframework.stereotype.Repository;
 
-public interface FuComServerMapper {
+@Repository
+public interface FuComServerMapper extends BaseMapper<FuComServer> {
     int deleteByPrimaryKey(Integer id);
 
-    int insert(FuComServer record);
+    Integer insert(FuComServer record);
 
     int insertSelective(FuComServer record);
 

@@ -29,11 +29,6 @@ public class FuProductSignal {
     private Integer userId;
 
     /**
-     * mt账户ID
-     */
-    private String accountId;
-
-    /**
      * 信号源名称
      */
     private String signalName;
@@ -41,7 +36,7 @@ public class FuProductSignal {
     /**
      * 信号源等级
      */
-    private int signalLevel;
+    private Byte signalLevel;
 
     /**
      * 信号源描述
@@ -51,12 +46,12 @@ public class FuProductSignal {
     /**
      * 信号源综合评分
      */
-    private int signalRatings;
+    private Byte signalRatings;
 
     /**
      * 信号源状态（0 正常，1 隐藏，2 删除）
      */
-    private int signalState;
+    private Byte signalState;
 
     /**
      * 申请时间
@@ -169,6 +164,11 @@ public class FuProductSignal {
     private BigDecimal suggestCycle;
 
     /**
+     * 备注
+     */
+    private String remarks;
+
+    /**
      * 
      * @return id 
      */
@@ -233,22 +233,6 @@ public class FuProductSignal {
     }
 
     /**
-     * mt账户ID
-     * @return account_id mt账户ID
-     */
-    public String getAccountId() {
-        return accountId;
-    }
-
-    /**
-     * mt账户ID
-     * @param accountId mt账户ID
-     */
-    public void setAccountId(String accountId) {
-        this.accountId = accountId == null ? null : accountId.trim();
-    }
-
-    /**
      * 信号源名称
      * @return signal_name 信号源名称
      */
@@ -268,7 +252,7 @@ public class FuProductSignal {
      * 信号源等级
      * @return signal_level 信号源等级
      */
-    public int getSignalLevel() {
+    public Byte getSignalLevel() {
         return signalLevel;
     }
 
@@ -276,7 +260,7 @@ public class FuProductSignal {
      * 信号源等级
      * @param signalLevel 信号源等级
      */
-    public void setSignalLevel(int signalLevel) {
+    public void setSignalLevel(Byte signalLevel) {
         this.signalLevel = signalLevel;
     }
 
@@ -300,7 +284,7 @@ public class FuProductSignal {
      * 信号源综合评分
      * @return signal_ratings 信号源综合评分
      */
-    public int getSignalRatings() {
+    public Byte getSignalRatings() {
         return signalRatings;
     }
 
@@ -308,7 +292,7 @@ public class FuProductSignal {
      * 信号源综合评分
      * @param signalRatings 信号源综合评分
      */
-    public void setSignalRatings(int signalRatings) {
+    public void setSignalRatings(Byte signalRatings) {
         this.signalRatings = signalRatings;
     }
 
@@ -316,7 +300,7 @@ public class FuProductSignal {
      * 信号源状态（0 正常，1 隐藏，2 删除）
      * @return signal_state 信号源状态（0 正常，1 隐藏，2 删除）
      */
-    public int getSignalState() {
+    public Byte getSignalState() {
         return signalState;
     }
 
@@ -324,7 +308,7 @@ public class FuProductSignal {
      * 信号源状态（0 正常，1 隐藏，2 删除）
      * @param signalState 信号源状态（0 正常，1 隐藏，2 删除）
      */
-    public void setSignalState(int signalState) {
+    public void setSignalState(Byte signalState) {
         this.signalState = signalState;
     }
 
@@ -678,5 +662,21 @@ public class FuProductSignal {
      */
     public void setSuggestCycle(BigDecimal suggestCycle) {
         this.suggestCycle = suggestCycle;
+    }
+
+    /**
+     * 备注
+     * @return remarks 备注
+     */
+    public String getRemarks() {
+        return remarks;
+    }
+
+    /**
+     * 备注
+     * @param remarks 备注
+     */
+    public void setRemarks(String remarks) {
+        this.remarks = remarks == null ? null : remarks.trim();
     }
 }

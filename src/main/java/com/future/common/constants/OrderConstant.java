@@ -1,7 +1,7 @@
 package com.future.common.constants;
 
 /**
- * 平台全局常量类
+ * 订单全局常量类
  */
 public class OrderConstant {
 

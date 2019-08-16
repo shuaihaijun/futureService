@@ -1,11 +1,14 @@
 package com.future.mapper.com;
 
+import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.future.entity.com.FuComDictionary;
+import org.springframework.stereotype.Repository;
 
-public interface FuComDictionaryMapper {
+@Repository
+public interface FuComDictionaryMapper extends BaseMapper<FuComDictionary> {
     int deleteByPrimaryKey(Integer id);
 
-    int insert(FuComDictionary record);
+    Integer insert(FuComDictionary record);
 
     int insertSelective(FuComDictionary record);
 

@@ -5,16 +5,22 @@ import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.future.common.constants.SignalConstant;
 import com.future.common.enums.GlobalResultCode;
+import com.future.common.exception.BusinessException;
 import com.future.common.exception.DataConflictException;
+import com.future.common.util.ConvertUtil;
 import com.future.common.util.StringUtils;
 import com.future.entity.product.FuProductSignal;
 import com.future.entity.product.FuProductSignalApply;
 import com.future.mapper.product.FuProductSignalApplyMapper;
+import com.future.mapper.product.FuProductSignalMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
 import java.math.BigDecimal;
@@ -30,6 +36,8 @@ public class FuProductSignalApplyService extends ServiceImpl<FuProductSignalAppl
     FuProductSignalService fuProductSignalService;
     @Autowired
     FuProductSignalApplyMapper fuProductSignalApplyMapper;
+    @Autowired
+    FuProductSignalMapper fuProductSignalMapper;
 
     /**
      * 根据条件查找信号源信息
@@ -67,7 +75,17 @@ public class FuProductSignalApplyService extends ServiceImpl<FuProductSignalAppl
             wrapper.eq(FuProductSignalApply.SIGNAL_NAME,String.valueOf(conditionMap.get("signalName")));
         }
         if(!ObjectUtils.isEmpty(conditionMap.get("applyState"))){
-            wrapper.eq(FuProductSignalApply.APPLY_STATE,String.valueOf(conditionMap.get("applyState")));
+            if(String.valueOf(conditionMap.get("applyState")).indexOf(",")<0){
+                wrapper.eq(FuProductSignalApply.APPLY_STATE,String.valueOf(conditionMap.get("applyState")));
+            }else {
+                //多状态
+                String[] state=String.valueOf(conditionMap.get("applyState")).split(",");
+                Wrapper<FuProductSignalApply> stateWrapper=new EntityWrapper<FuProductSignalApply>();
+                wrapper.andNew().eq(FuProductSignalApply.APPLY_STATE,state[0]);
+                for (int i=1;i<state.length;i++){
+                    wrapper.or().eq(FuProductSignalApply.APPLY_STATE,state[i]);
+                }
+            }
         }
         if(!ObjectUtils.isEmpty(conditionMap.get("serverName"))){
             wrapper.eq(FuProductSignalApply.SERVER_NAME,String.valueOf(conditionMap.get("serverName")));
@@ -141,17 +159,192 @@ public class FuProductSignalApplyService extends ServiceImpl<FuProductSignalAppl
      */
     public int saveProductSignal(Map signalMap){
         /*校验信息*/
+        if(ObjectUtils.isEmpty(signalMap.get("userId"))){
+            log.error("申请人信息不能为空！");
+            throw new DataConflictException(GlobalResultCode.PARAM_NULL_POINTER,"申请人信息不能为空！");
+        }
+        if(ObjectUtils.isEmpty(signalMap.get("signalName"))){
+            log.error("信号源名称不能为空！");
+            throw new DataConflictException(GlobalResultCode.PARAM_NULL_POINTER,"信号源名称不能为空！！");
+        }
+        if(ObjectUtils.isEmpty(signalMap.get("serverName"))){
+            log.error("服务器名称不能为空！");
+            throw new DataConflictException(GlobalResultCode.PARAM_NULL_POINTER,"服务器名称不能为空！！");
+        }
+        if(ObjectUtils.isEmpty(signalMap.get("mtAccId"))){
+            log.error("MT账户不能为空！");
+            throw new DataConflictException(GlobalResultCode.PARAM_NULL_POINTER,"MT账户不能为空！！");
+        }
+        if(ObjectUtils.isEmpty(signalMap.get("mtPasswordWatch"))){
+            log.error("MT账户密码不能为空！");
+            throw new DataConflictException(GlobalResultCode.PARAM_NULL_POINTER,"MT账户密码不能为空！！");
+        }
+        if(ObjectUtils.isEmpty(signalMap.get("email"))){
+            log.error("email不能为空！");
+            throw new DataConflictException(GlobalResultCode.PARAM_NULL_POINTER,"email不能为空！！");
+        }
+        if(ObjectUtils.isEmpty(signalMap.get("phone"))){
+            log.error("联系人电话不能为空！");
+            throw new DataConflictException(GlobalResultCode.PARAM_NULL_POINTER,"联系人电话不能为空！！");
+        }
+        if(ObjectUtils.isEmpty(signalMap.get("qqNumber"))){
+            log.error("联系人QQ不能为空！");
+            throw new DataConflictException(GlobalResultCode.PARAM_NULL_POINTER,"联系人QQ不能为空！！");
+        }
+        /*组装信息*/
+        FuProductSignalApply signal=setSignal(signalMap);
+
+        /*默认数据填充*/
+        signal.setCreateDate(new Date());
+        signal.setApplyState(0);
+        signal.setModifyDate(new Date());
+
+        return fuProductSignalApplyMapper.insertSelective(signal);
+    }
+
+    /**
+     * 修改信号源信息
+     * @param signalMap
+     */
+    public int updateProductSignalApply(int signalId, Map signalMap){
+        /*校验信息*/
+        /*校验信息*/
+        if(signalId<1){
+            log.error("传入ID数据为空！");
+            throw new DataConflictException(GlobalResultCode.PARAM_NULL_POINTER,"传入ID数据为空!");
+        }
+        /*组装信息*/
+        FuProductSignalApply signal=setSignal(signalMap);
+
+        /*默认数据填充*/
+        signal.setModifyDate(new Date());
+
+        return fuProductSignalApplyMapper.updateByPrimaryKeySelective(signal);
+    }
+
+    /**
+     * 提交申请信息
+     * @param signalId
+     * @param mesage
+     * @return
+     */
+    public int submitProductSignal(int signalId,String mesage){
+        /**校验信息*/
+        if(signalId<1){
+            log.error("传入数据为空！");
+            throw new DataConflictException(GlobalResultCode.PARAM_NULL_POINTER,"传入数据为空!");
+        }
+
+        /*组装信息*/
+        FuProductSignalApply signalApply=new FuProductSignalApply();
+        signalApply.setId(signalId);
+        /*状态：待审核*/
+        signalApply.setApplyState(1);
+        signalApply.setRemarks(mesage);
+
+        return fuProductSignalApplyMapper.updateByPrimaryKeySelective(signalApply);
+    }
+
+    /**
+     * 审核信号源信息
+     * @param signalId
+     * @param state
+     * @param mesage
+     */
+    @Transactional(propagation=Propagation.REQUIRED)
+    public void reviewProductSignal(int signalId,int state, String mesage){
+        /**校验信息*/
+        if(signalId<1||state<1){
+            log.error("传入数据为空！");
+            throw new DataConflictException(GlobalResultCode.PARAM_NULL_POINTER,"传入数据为空!");
+        }
+        /*组装信息*/
+        try {
+            FuProductSignalApply signalApply=new FuProductSignalApply();
+            signalApply.setId(signalId);
+            if(state== SignalConstant.SIGNAL_APPLY_STATE_CHECKED){
+                /*审核通过*/
+                FuProductSignalApply apply=findSignalApplyById(signalId);
+                if(ObjectUtils.isEmpty(apply)){
+                    log.error("查询申请信息错误！");
+                    throw new BusinessException("查询申请信息错误！");
+                }
+                FuProductSignal signal=ConvertUtil.convertSignal(apply);
+
+                signal.setCheckDate(new Date());
+                signal.setCreateDate(new Date());
+                signal.setModifyDate(new Date());
+                /*保存信号源*/
+                fuProductSignalMapper.insertSelective(signal);
+                signalApply.setApplyState(2);
+            }else if(state==SignalConstant.SIGNAL_APPLY_STATE_UNPASS){
+                /*审核未通过*/
+                signalApply.setApplyState(3);
+            }else {
+                log.error("审核状态错误！");
+                throw new DataConflictException(GlobalResultCode.PARAM_IS_INVALID,"核状态错误！");
+            }
+            signalApply.setRemarks(mesage);
+            /*修改数据*/
+            updateById(signalApply);
+
+        }catch (Exception e){
+            log.error(e.getMessage(),e);
+            throw new BusinessException(e);
+        }
+
+    }
+
+    /**
+     * 删除信号源信息
+     * @param signalId
+     */
+    public Boolean deleteProductSignalApply(int signalId){
+        /**校验信息*/
+        /*校验信息*/
+        if(signalId<1){
+            log.error("传入数据为空！");
+            throw new DataConflictException(GlobalResultCode.PARAM_NULL_POINTER,"传入数据为空!");
+        }
+        return deleteById(signalId);
+    }
+
+    /**
+     * 填充信号源申请数值
+     * @param signalMap
+     * @return
+     */
+    public FuProductSignalApply setSignal(Map signalMap){
         /*组装信息*/
         FuProductSignalApply signal=new FuProductSignalApply();
         try {
-            signal.setUserId(Integer.valueOf(String.valueOf(signalMap.get("userId"))));
-            signal.setSignalName(String.valueOf(signalMap.get("signalName")));
-            signal.setServerName(String.valueOf(signalMap.get("serverName")));
-            signal.setMtAccId(String.valueOf(signalMap.get("mtAccId")));
-            signal.setMtPasswordWatch(String.valueOf(signalMap.get("mtPasswordWatch")));
-            signal.setEmail(String.valueOf(signalMap.get("email")));
-            signal.setPhone(String.valueOf(signalMap.get("phone")));
-            signal.setQqNumber(String.valueOf(signalMap.get("qqNumber")));
+            if(!ObjectUtils.isEmpty(signalMap.get("id"))){
+                signal.setId(Integer.valueOf(String.valueOf(signalMap.get("id"))));
+            }
+            if(!ObjectUtils.isEmpty(signalMap.get("userId"))){
+                signal.setUserId(Integer.valueOf(String.valueOf(signalMap.get("userId"))));
+            }
+            if(!ObjectUtils.isEmpty(signalMap.get("signalName"))){
+                signal.setSignalName(String.valueOf(signalMap.get("signalName")));
+            }
+            if(!ObjectUtils.isEmpty(signalMap.get("serverName"))){
+                signal.setServerName(String.valueOf(signalMap.get("serverName")));
+            }
+            if(!ObjectUtils.isEmpty(signalMap.get("mtAccId"))){
+                signal.setMtAccId(String.valueOf(signalMap.get("mtAccId")));
+            }
+            if(!ObjectUtils.isEmpty(signalMap.get("mtPasswordWatch"))){
+                signal.setMtPasswordWatch(String.valueOf(signalMap.get("mtPasswordWatch")));
+            }
+            if(!ObjectUtils.isEmpty(signalMap.get("email"))){
+                signal.setEmail(String.valueOf(signalMap.get("email")));
+            }
+            if(!ObjectUtils.isEmpty(signalMap.get("phone"))){
+                signal.setPhone(String.valueOf(signalMap.get("phone")));
+            }
+            if(!ObjectUtils.isEmpty(signalMap.get("qqNumber"))){
+                signal.setQqNumber(String.valueOf(signalMap.get("qqNumber")));
+            }
             if(!ObjectUtils.isEmpty(signalMap.get("mtPasswordTrade"))){
                 signal.setMtPasswordTrade(String.valueOf(signalMap.get("mtPasswordTrade")));
             }
@@ -198,86 +391,10 @@ public class FuProductSignalApplyService extends ServiceImpl<FuProductSignalAppl
                 signal.setSignalDesc(String.valueOf(signalMap.get("signalDesc")));
             }
 
-            /*默认数据填充*/
-            signal.setCreateDate(new Date());
-            signal.setApplyState(0);
-            signal.setModifyDate(new Date());
         }catch (Exception e){
-            log.error(e.getMessage());
+            log.error(e.getMessage(),e);
             throw new DataConflictException(e);
         }
-
-        return fuProductSignalApplyMapper.insertSelective(signal);
-    }
-
-    /**
-     * 修改信号源信息
-     * @param signalMap
-     */
-    public Boolean updateProductSignalApply(int signalId, Map signalMap){
-        /*校验信息*/
-        /*校验信息*/
-        if(signalId<1){
-            log.error("传入数据为空！");
-            throw new DataConflictException(GlobalResultCode.PARAM_NULL_POINTER,"传入数据为空!");
-        }
-        /*组装信息*/
-        FuProductSignalApply signal=new FuProductSignalApply();
-        return updateById(signal);
-    }
-
-    /**
-     * 提交信号源申请信息
-     * @param signalId
-     */
-    public int submitProductSignal(int signalId){
-        /**校验信息*/
-        if(signalId<1){
-            log.error("传入数据为空！");
-            throw new DataConflictException(GlobalResultCode.PARAM_NULL_POINTER,"传入数据为空!");
-        }
-        /*组装信息*/
-        FuProductSignalApply signalApply=new FuProductSignalApply();
-        signalApply.setId(signalId);
-        signalApply.setApplyState(1);
-        return fuProductSignalApplyMapper.updateByPrimaryKeySelective(signalApply);
-    }
-
-    /**
-     * 审核信号源信息
-     * @param signalMap
-     */
-    public void reviewProductSignal(int signalId,Map signalMap){
-        /**校验信息*/
-        if(signalId<1){
-            log.error("传入数据为空！");
-            throw new DataConflictException(GlobalResultCode.PARAM_NULL_POINTER,"传入数据为空!");
-        }
-        /*组装信息*/
-        FuProductSignalApply signalApply=new FuProductSignalApply();
-        if(true){
-            /*审核通过*/
-            FuProductSignal signal=new FuProductSignal();
-            fuProductSignalService.saveProductSignal(signalMap);
-            signalApply.setApplyState(2);
-        }else {
-            signalApply.setApplyState(3);
-        }
-        /*修改数据*/
-        updateById(signalApply);
-    }
-
-    /**
-     * 删除信号源信息
-     * @param signalId
-     */
-    public Boolean deleteProductSignalApply(int signalId){
-        /**校验信息*/
-        /*校验信息*/
-        if(signalId<1){
-            log.error("传入数据为空！");
-            throw new DataConflictException(GlobalResultCode.PARAM_NULL_POINTER,"传入数据为空!");
-        }
-        return deleteById(signalId);
+        return signal;
     }
 }

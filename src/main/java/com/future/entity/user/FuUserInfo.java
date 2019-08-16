@@ -1,5 +1,8 @@
 package com.future.entity.user;
 
+import com.baomidou.mybatisplus.annotations.TableId;
+import com.baomidou.mybatisplus.enums.IdType;
+
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -7,6 +10,7 @@ public class FuUserInfo {
     /**
      * 
      */
+    @TableId(type = IdType.AUTO)
     private Integer id;
 
     /**

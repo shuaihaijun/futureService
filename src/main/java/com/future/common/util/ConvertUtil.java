@@ -2,6 +2,8 @@ package com.future.common.util;
 
 import com.future.entity.order.FuOrderCustomer;
 import com.future.entity.order.FuOrderInfo;
+import com.future.entity.product.FuProductSignal;
+import com.future.entity.product.FuProductSignalApply;
 import com.jfx.strategy.OrderInfo;
 import org.springframework.util.ObjectUtils;
 
@@ -368,5 +370,41 @@ public class ConvertUtil {
 
 
         return fuOrderCustomer;
+    }
+
+    /**
+     * 将申请信息转换为信号源
+     * @param apply
+     * @return
+     */
+    public static FuProductSignal convertSignal(FuProductSignalApply apply){
+        FuProductSignal signal=new FuProductSignal();
+
+        signal.setUserId(apply.getUserId());
+
+        signal.setSignalName(apply.getSignalName());
+        signal.setSignalTem(apply.getSignalTem());
+        signal.setSignalDesc(apply.getSignalDesc());
+        signal.setSignalCurrency(apply.getSignalCurrency());
+
+        signal.setMonthlyAverageIncome(apply.getMonthlyAverageIncome());
+        signal.setHistoryWithdraw(apply.getHistoryWithdraw());
+        signal.setApplyDate(apply.getApplyDate());
+
+        signal.setEmail(apply.getEmail());
+        signal.setPhone(apply.getPhone());
+        signal.setQqNumber(apply.getQqNumber());
+
+        signal.setServerName(apply.getServerName());
+        signal.setMtAccId(apply.getMtAccId());
+        signal.setMtPasswordTrade(apply.getMtPasswordTrade());
+        signal.setMtPasswordWatch(apply.getMtPasswordWatch());
+
+        signal.setMinimum(apply.getMinimum());
+        signal.setAnnualizedExpectedReturn(apply.getAnnualizedExpectedReturn());
+        signal.setHistoricalReturn(apply.getHistoricalReturn());
+        signal.setSuggestCycle(apply.getSuggestCycle());
+
+        return signal;
     }
 }

@@ -1,7 +1,9 @@
 package com.future.mapper.user;
 
 import com.future.entity.user.FuUser;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface FuUserMapper {
     int deleteByPrimaryKey(Integer id);
 

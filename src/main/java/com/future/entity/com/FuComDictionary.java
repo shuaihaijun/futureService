@@ -1,11 +1,15 @@
 package com.future.entity.com;
 
+import com.baomidou.mybatisplus.annotations.TableId;
+import com.baomidou.mybatisplus.enums.IdType;
+
 import java.util.Date;
 
 public class FuComDictionary {
     /**
      * 
      */
+    @TableId(type = IdType.AUTO)
     private Integer id;
 
     /**

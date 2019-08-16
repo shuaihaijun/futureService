@@ -65,3 +65,8 @@ termServerHost: 127.0.0.1
 termServerPort: 7788
 #超级管理员id集合 Administrator,使用逗号分隔
 SUPER_ADMINISTRATOR: 11
+
+
+logging:
+  level:
+    com.future.mapper: debug

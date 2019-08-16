@@ -1,11 +1,10 @@
 package com.future.service.account;
 
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
-import com.future.common.exception.DataConflictException;
 import com.future.common.util.StringUtils;
 import com.future.entity.account.FuAccountInfo;
 import com.future.mapper.account.FuAccountInfoMapper;
-import com.future.service.com.ServerService;
+import com.future.service.com.FuComServerService;
 import com.future.service.mt.MTAccountService;
 import com.jfx.Broker;
 import org.slf4j.Logger;
@@ -27,7 +26,7 @@ public class FuAccoutInfoService extends ServiceImpl<FuAccountInfoMapper, FuAcco
     @Autowired
     MTAccountService mtAccountService;
     @Autowired
-    ServerService serverService;
+    FuComServerService serverService;
 
 
     /**

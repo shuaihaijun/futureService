@@ -18,7 +18,7 @@ public class FuProductSignalApply {
     public static final String APPLY_DATE = "apply_date";
     public static final String CHECK_DATE = "check_date";
     /**
-     * 
+     *
      */
     @TableId(type = IdType.AUTO)
     private Integer id;
@@ -137,18 +137,22 @@ public class FuProductSignalApply {
      * 建议跟随周期
      */
     private BigDecimal suggestCycle;
+    /**
+     * 备注
+     */
+    private String remarks;
 
     /**
-     * 
-     * @return id 
+     *
+     * @return id
      */
     public Integer getId() {
         return id;
     }
 
     /**
-     * 
-     * @param id 
+     *
+     * @param id
      */
     public void setId(Integer id) {
         this.id = id;
@@ -520,5 +524,13 @@ public class FuProductSignalApply {
      */
     public void setSuggestCycle(BigDecimal suggestCycle) {
         this.suggestCycle = suggestCycle;
+    }
+
+    public String getRemarks() {
+        return remarks;
+    }
+
+    public void setRemarks(String remarks) {
+        this.remarks = remarks;
     }
 }

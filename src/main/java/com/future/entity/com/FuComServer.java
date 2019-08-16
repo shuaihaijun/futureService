@@ -1,9 +1,13 @@
 package com.future.entity.com;
 
+import com.baomidou.mybatisplus.annotations.TableId;
+import com.baomidou.mybatisplus.enums.IdType;
+
 public class FuComServer {
     /**
      * 
      */
+    @TableId(type = IdType.AUTO)
     private Integer id;
 
     /**
@@ -17,7 +21,7 @@ public class FuComServer {
     private Integer brokerId;
 
     /**
-     * 信号源状态（0 正常，1 隐藏，2 作废）
+     * 服务器状态（0 正常，1 隐藏，2 作废）
      */
     private int serverState;
 

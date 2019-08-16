@@ -6,7 +6,6 @@
     <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
     <result column="modify_date" jdbcType="TIMESTAMP" property="modifyDate" />
     <result column="user_id" jdbcType="INTEGER" property="userId" />
-    <result column="account_id" jdbcType="VARCHAR" property="accountId" />
     <result column="signal_name" jdbcType="VARCHAR" property="signalName" />
     <result column="signal_level" jdbcType="TINYINT" property="signalLevel" />
     <result column="signal_desc" jdbcType="VARCHAR" property="signalDesc" />
@@ -34,13 +33,15 @@
     <result column="annualized_expected_return" jdbcType="DECIMAL" property="annualizedExpectedReturn" />
     <result column="historical_return" jdbcType="DECIMAL" property="historicalReturn" />
     <result column="suggest_cycle" jdbcType="DECIMAL" property="suggestCycle" />
+    <result column="remarks" jdbcType="VARCHAR" property="remarks" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, create_date, modify_date, user_id, account_id, signal_name, signal_level, signal_desc, 
-    signal_ratings, signal_state, apply_date, check_date, signal_tem, signal_lots, signal_lots_profit, 
+    id, create_date, modify_date, user_id, signal_name, signal_level, signal_desc, signal_ratings, 
+    signal_state, apply_date, check_date, signal_tem, signal_lots, signal_lots_profit, 
     signal_account_money, signal_currency, signal_follows, monthly_average_income, history_income, 
     history_withdraw, email, phone, qq_number, server_name, mt_acc_id, mt_password_trade, 
-    mt_password_watch, minimum, annualized_expected_return, historical_return, suggest_cycle
+    mt_password_watch, minimum, annualized_expected_return, historical_return, suggest_cycle, 
+    remarks
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -54,27 +55,27 @@
   </delete>
   <insert id="insert" parameterType="com.future.entity.product.FuProductSignal">
     insert into fu_product_signal (id, create_date, modify_date, 
-      user_id, account_id, signal_name, 
-      signal_level, signal_desc, signal_ratings, 
-      signal_state, apply_date, check_date, 
-      signal_tem, signal_lots, signal_lots_profit, 
-      signal_account_money, signal_currency, signal_follows, 
-      monthly_average_income, history_income, history_withdraw, 
-      email, phone, qq_number, 
-      server_name, mt_acc_id, mt_password_trade, 
-      mt_password_watch, minimum, annualized_expected_return, 
-      historical_return, suggest_cycle)
+      user_id, signal_name, signal_level, 
+      signal_desc, signal_ratings, signal_state, 
+      apply_date, check_date, signal_tem, 
+      signal_lots, signal_lots_profit, signal_account_money, 
+      signal_currency, signal_follows, monthly_average_income, 
+      history_income, history_withdraw, email, 
+      phone, qq_number, server_name, 
+      mt_acc_id, mt_password_trade, mt_password_watch, 
+      minimum, annualized_expected_return, historical_return, 
+      suggest_cycle, remarks)
     values (#{id,jdbcType=INTEGER}, #{createDate,jdbcType=TIMESTAMP}, #{modifyDate,jdbcType=TIMESTAMP}, 
-      #{userId,jdbcType=INTEGER}, #{accountId,jdbcType=VARCHAR}, #{signalName,jdbcType=VARCHAR}, 
-      #{signalLevel,jdbcType=TINYINT}, #{signalDesc,jdbcType=VARCHAR}, #{signalRatings,jdbcType=TINYINT}, 
-      #{signalState,jdbcType=TINYINT}, #{applyDate,jdbcType=TIMESTAMP}, #{checkDate,jdbcType=TIMESTAMP}, 
-      #{signalTem,jdbcType=VARCHAR}, #{signalLots,jdbcType=INTEGER}, #{signalLotsProfit,jdbcType=INTEGER}, 
-      #{signalAccountMoney,jdbcType=DECIMAL}, #{signalCurrency,jdbcType=VARCHAR}, #{signalFollows,jdbcType=INTEGER}, 
-      #{monthlyAverageIncome,jdbcType=DECIMAL}, #{historyIncome,jdbcType=DECIMAL}, #{historyWithdraw,jdbcType=DECIMAL}, 
-      #{email,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{qqNumber,jdbcType=VARCHAR}, 
-      #{serverName,jdbcType=VARCHAR}, #{mtAccId,jdbcType=VARCHAR}, #{mtPasswordTrade,jdbcType=VARCHAR}, 
-      #{mtPasswordWatch,jdbcType=VARCHAR}, #{minimum,jdbcType=DECIMAL}, #{annualizedExpectedReturn,jdbcType=DECIMAL}, 
-      #{historicalReturn,jdbcType=DECIMAL}, #{suggestCycle,jdbcType=DECIMAL})
+      #{userId,jdbcType=INTEGER}, #{signalName,jdbcType=VARCHAR}, #{signalLevel,jdbcType=TINYINT}, 
+      #{signalDesc,jdbcType=VARCHAR}, #{signalRatings,jdbcType=TINYINT}, #{signalState,jdbcType=TINYINT}, 
+      #{applyDate,jdbcType=TIMESTAMP}, #{checkDate,jdbcType=TIMESTAMP}, #{signalTem,jdbcType=VARCHAR}, 
+      #{signalLots,jdbcType=INTEGER}, #{signalLotsProfit,jdbcType=INTEGER}, #{signalAccountMoney,jdbcType=DECIMAL}, 
+      #{signalCurrency,jdbcType=VARCHAR}, #{signalFollows,jdbcType=INTEGER}, #{monthlyAverageIncome,jdbcType=DECIMAL}, 
+      #{historyIncome,jdbcType=DECIMAL}, #{historyWithdraw,jdbcType=DECIMAL}, #{email,jdbcType=VARCHAR}, 
+      #{phone,jdbcType=VARCHAR}, #{qqNumber,jdbcType=VARCHAR}, #{serverName,jdbcType=VARCHAR}, 
+      #{mtAccId,jdbcType=VARCHAR}, #{mtPasswordTrade,jdbcType=VARCHAR}, #{mtPasswordWatch,jdbcType=VARCHAR}, 
+      #{minimum,jdbcType=DECIMAL}, #{annualizedExpectedReturn,jdbcType=DECIMAL}, #{historicalReturn,jdbcType=DECIMAL}, 
+      #{suggestCycle,jdbcType=DECIMAL}, #{remarks,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.future.entity.product.FuProductSignal">
     insert into fu_product_signal
@@ -90,9 +91,6 @@
       </if>
       <if test="userId != null">
         user_id,
-      </if>
-      <if test="accountId != null">
-        account_id,
       </if>
       <if test="signalName != null">
         signal_name,
@@ -175,6 +173,9 @@
       <if test="suggestCycle != null">
         suggest_cycle,
       </if>
+      <if test="remarks != null">
+        remarks,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -188,9 +189,6 @@
       </if>
       <if test="userId != null">
         #{userId,jdbcType=INTEGER},
-      </if>
-      <if test="accountId != null">
-        #{accountId,jdbcType=VARCHAR},
       </if>
       <if test="signalName != null">
         #{signalName,jdbcType=VARCHAR},
@@ -273,6 +271,9 @@
       <if test="suggestCycle != null">
         #{suggestCycle,jdbcType=DECIMAL},
       </if>
+      <if test="remarks != null">
+        #{remarks,jdbcType=VARCHAR},
+      </if>
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.future.entity.product.FuProductSignal">
@@ -286,9 +287,6 @@
       </if>
       <if test="userId != null">
         user_id = #{userId,jdbcType=INTEGER},
-      </if>
-      <if test="accountId != null">
-        account_id = #{accountId,jdbcType=VARCHAR},
       </if>
       <if test="signalName != null">
         signal_name = #{signalName,jdbcType=VARCHAR},
@@ -371,6 +369,9 @@
       <if test="suggestCycle != null">
         suggest_cycle = #{suggestCycle,jdbcType=DECIMAL},
       </if>
+      <if test="remarks != null">
+        remarks = #{remarks,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -379,7 +380,6 @@
     set create_date = #{createDate,jdbcType=TIMESTAMP},
       modify_date = #{modifyDate,jdbcType=TIMESTAMP},
       user_id = #{userId,jdbcType=INTEGER},
-      account_id = #{accountId,jdbcType=VARCHAR},
       signal_name = #{signalName,jdbcType=VARCHAR},
       signal_level = #{signalLevel,jdbcType=TINYINT},
       signal_desc = #{signalDesc,jdbcType=VARCHAR},
@@ -406,7 +406,8 @@
       minimum = #{minimum,jdbcType=DECIMAL},
       annualized_expected_return = #{annualizedExpectedReturn,jdbcType=DECIMAL},
       historical_return = #{historicalReturn,jdbcType=DECIMAL},
-      suggest_cycle = #{suggestCycle,jdbcType=DECIMAL}
+      suggest_cycle = #{suggestCycle,jdbcType=DECIMAL},
+      remarks = #{remarks,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>
