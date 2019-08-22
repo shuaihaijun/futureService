@@ -2,13 +2,12 @@ package com.future.controller.com;
 
 
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.plugins.Page;
 import com.future.common.exception.DataConflictException;
 import com.future.common.util.StringUtils;
 import com.future.common.util.ThreadCache;
 import com.future.entity.com.FuComDictionary;
-import com.future.entity.com.FuComServer;
 import com.future.service.com.FuComDictionaryService;
-import com.future.service.com.FuComServerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/comDictionary")
+@RequestMapping("/dictionary")
 public class FuComDictionaryontroller {
 
     Logger log= LoggerFactory.getLogger(FuComDictionaryontroller.class);
@@ -29,8 +28,8 @@ public class FuComDictionaryontroller {
     FuComDictionaryService dictionaryService;
 
 
-    @RequestMapping("/saveComDictionnary")
-    public @ResponseBody int saveComDictionnary(){
+    @RequestMapping("/saveDictionary")
+    public @ResponseBody int saveDictionnary(){
         // 获取请求参数
         String requestJSONStr = ThreadCache.getPostRequestParams();
         JSONObject requestMap = JSONObject.parseObject(requestJSONStr);
@@ -38,12 +37,17 @@ public class FuComDictionaryontroller {
             log.error("数据为空！");
             throw new DataConflictException("数据为空！");
         }
-
-        return dictionaryService.saveComDictionnary(requestMap);
+        String serverId=requestMap.getString("id");
+        if(StringUtils.isEmpty(serverId)){
+            return dictionaryService.saveDictionnary(requestMap);
+        }else {
+            return dictionaryService.updateDictionary(requestMap);
+        }
     }
 
-    @RequestMapping("/findComDictionary")
-    public @ResponseBody List<FuComDictionary> findComDictionary(){
+    @RequestMapping("/queryDictionary")
+    public @ResponseBody
+    Page<FuComDictionary> queryDictionary(){
         // 获取请求参数
         String requestJSONStr = ThreadCache.getPostRequestParams();
         JSONObject requestMap = JSONObject.parseObject(requestJSONStr);
@@ -54,8 +58,8 @@ public class FuComDictionaryontroller {
         return dictionaryService.findByCondition(requestMap);
     }
 
-    @RequestMapping("/findComDictionaryById")
-    public @ResponseBody FuComDictionary findComDictionaryById(){
+    @RequestMapping("/getDictionaryById")
+    public @ResponseBody FuComDictionary getDictionaryById(){
         // 获取请求参数
         String requestJSONStr = ThreadCache.getPostRequestParams();
         JSONObject requestMap = JSONObject.parseObject(requestJSONStr);
@@ -94,8 +98,8 @@ public class FuComDictionaryontroller {
     }
 
 
-    @RequestMapping("/updateComDictionary")
-    public @ResponseBody int updateComDictionary(){
+    @RequestMapping("/updateDictionary")
+    public @ResponseBody int updateDictionary(){
         // 获取请求参数
         String requestJSONStr = ThreadCache.getPostRequestParams();
         JSONObject requestMap = JSONObject.parseObject(requestJSONStr);
@@ -104,7 +108,7 @@ public class FuComDictionaryontroller {
             throw new DataConflictException("数据为空！");
         }
 
-        return dictionaryService.updateComDictionary(requestMap);
+        return dictionaryService.updateDictionary(requestMap);
     }
 
 }

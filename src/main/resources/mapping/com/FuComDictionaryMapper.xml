@@ -3,14 +3,15 @@
 <mapper namespace="com.future.mapper.com.FuComDictionaryMapper">
   <resultMap id="BaseResultMap" type="com.future.entity.com.FuComDictionary">
     <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="sign" jdbcType="VARCHAR" property="sign" />
-    <result column="key" jdbcType="VARCHAR" property="key" />
-    <result column="value" jdbcType="VARCHAR" property="value" />
+    <result column="dic_sign" jdbcType="VARCHAR" property="dicSign" />
+    <result column="dic_name" jdbcType="VARCHAR" property="dicName" />
+    <result column="dic_key" jdbcType="VARCHAR" property="dicKey" />
+    <result column="dic_value" jdbcType="VARCHAR" property="dicValue" />
     <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
     <result column="modify_date" jdbcType="TIMESTAMP" property="modifyDate" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, sign, key, value, create_date, modify_date
+    id, dic_sign, dic_name, dic_key, dic_value, create_date, modify_date
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -23,12 +24,12 @@
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.future.entity.com.FuComDictionary">
-    insert into fu_com_dictionary (id, sign, key, 
-      value, create_date, modify_date
-      )
-    values (#{id,jdbcType=INTEGER}, #{sign,jdbcType=VARCHAR}, #{key,jdbcType=VARCHAR}, 
-      #{value,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, #{modifyDate,jdbcType=TIMESTAMP}
-      )
+    insert into fu_com_dictionary (id, dic_sign, dic_name, 
+      dic_key, dic_value, create_date, 
+      modify_date)
+    values (#{id,jdbcType=INTEGER}, #{dicSign,jdbcType=VARCHAR}, #{dicName,jdbcType=VARCHAR}, 
+      #{dicKey,jdbcType=VARCHAR}, #{dicValue,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, 
+      #{modifyDate,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.future.entity.com.FuComDictionary">
     insert into fu_com_dictionary
@@ -36,14 +37,17 @@
       <if test="id != null">
         id,
       </if>
-      <if test="sign != null">
-        sign,
+      <if test="dicSign != null">
+        dic_sign,
       </if>
-      <if test="key != null">
-        key,
+      <if test="dicName != null">
+        dic_name,
       </if>
-      <if test="value != null">
-        value,
+      <if test="dicKey != null">
+        dic_key,
+      </if>
+      <if test="dicValue != null">
+        dic_value,
       </if>
       <if test="createDate != null">
         create_date,
@@ -56,14 +60,17 @@
       <if test="id != null">
         #{id,jdbcType=INTEGER},
       </if>
-      <if test="sign != null">
-        #{sign,jdbcType=VARCHAR},
+      <if test="dicSign != null">
+        #{dicSign,jdbcType=VARCHAR},
       </if>
-      <if test="key != null">
-        #{key,jdbcType=VARCHAR},
+      <if test="dicName != null">
+        #{dicName,jdbcType=VARCHAR},
       </if>
-      <if test="value != null">
-        #{value,jdbcType=VARCHAR},
+      <if test="dicKey != null">
+        #{dicKey,jdbcType=VARCHAR},
+      </if>
+      <if test="dicValue != null">
+        #{dicValue,jdbcType=VARCHAR},
       </if>
       <if test="createDate != null">
         #{createDate,jdbcType=TIMESTAMP},
@@ -76,14 +83,17 @@
   <update id="updateByPrimaryKeySelective" parameterType="com.future.entity.com.FuComDictionary">
     update fu_com_dictionary
     <set>
-      <if test="sign != null">
-        sign = #{sign,jdbcType=VARCHAR},
+      <if test="dicSign != null">
+        dic_sign = #{dicSign,jdbcType=VARCHAR},
       </if>
-      <if test="key != null">
-        key = #{key,jdbcType=VARCHAR},
+      <if test="dicName != null">
+        dic_name = #{dicName,jdbcType=VARCHAR},
       </if>
-      <if test="value != null">
-        value = #{value,jdbcType=VARCHAR},
+      <if test="dicKey != null">
+        dic_key = #{dicKey,jdbcType=VARCHAR},
+      </if>
+      <if test="dicValue != null">
+        dic_value = #{dicValue,jdbcType=VARCHAR},
       </if>
       <if test="createDate != null">
         create_date = #{createDate,jdbcType=TIMESTAMP},
@@ -96,9 +106,10 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="com.future.entity.com.FuComDictionary">
     update fu_com_dictionary
-    set sign = #{sign,jdbcType=VARCHAR},
-      key = #{key,jdbcType=VARCHAR},
-      value = #{value,jdbcType=VARCHAR},
+    set dic_sign = #{dicSign,jdbcType=VARCHAR},
+      dic_name = #{dicName,jdbcType=VARCHAR},
+      dic_key = #{dicKey,jdbcType=VARCHAR},
+      dic_value = #{dicValue,jdbcType=VARCHAR},
       create_date = #{createDate,jdbcType=TIMESTAMP},
       modify_date = #{modifyDate,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}

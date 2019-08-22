@@ -1,14 +1,18 @@
 package com.future.service.com;
 
+import com.alibaba.fastjson.JSON;
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.mapper.Wrapper;
+import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
-import com.future.common.constants.CommonConstant;
 import com.future.common.exception.BusinessException;
 import com.future.common.exception.DataConflictException;
+import com.future.common.util.CommonUtil;
 import com.future.common.util.ConvertUtil;
+import com.future.common.util.PageBean;
 import com.future.entity.com.FuComDictionary;
-import com.future.entity.com.FuComServer;
+import com.future.entity.product.FuProductSignalApply;
 import com.future.mapper.com.FuComDictionaryMapper;
-import com.future.mapper.com.FuComServerMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,42 +21,72 @@ import org.springframework.util.ObjectUtils;
 
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Service
 public class FuComDictionaryService extends ServiceImpl<FuComDictionaryMapper, FuComDictionary> {
 
-    Logger log= LoggerFactory.getLogger(FuComDictionaryService.class);
+    Logger log = LoggerFactory.getLogger(FuComDictionaryService.class);
 
     @Autowired
     FuComDictionaryMapper fuComDictionaryMapper;
 
     /**
      * 根据服务器名称 查询服务器信息
+     *
      * @param conditionMap
      * @return
      */
-    public List<FuComDictionary> findByCondition(Map conditionMap){
-        if(ObjectUtils.isEmpty(conditionMap)){
+    public Page<FuComDictionary> findByCondition(Map conditionMap) {
+        if (ObjectUtils.isEmpty(conditionMap)) {
             log.error("传入参数为空！");
             throw new DataConflictException("传入参数为空！");
         }
 
-        if(ObjectUtils.isEmpty(conditionMap.get("id"))
-                &&ObjectUtils.isEmpty(conditionMap.get("sign"))
-                &&ObjectUtils.isEmpty(conditionMap.get("key"))
-                &&ObjectUtils.isEmpty(conditionMap.get("value"))){
+        /*if (ObjectUtils.isEmpty(conditionMap.get("id"))
+                && ObjectUtils.isEmpty(conditionMap.get("dicSign"))
+                && ObjectUtils.isEmpty(conditionMap.get("dicKey"))
+                && ObjectUtils.isEmpty(conditionMap.get("dicValue"))) {
             log.error("请传入必要参数！");
             throw new DataConflictException("请传入必要参数！");
+        }*/
+        /*校验信息*/
+        Wrapper<FuComDictionary> wrapper = new EntityWrapper<FuComDictionary>();
+        PageBean<FuComDictionary> pageBean = new PageBean<FuComDictionary>();
+        Page<FuComDictionary> page = pageBean.getPage(conditionMap);
+
+        if (!ObjectUtils.isEmpty(conditionMap.get("id"))) {
+            wrapper.eq(FuComDictionary.DIC_ID, conditionMap.get("id"));
+        }
+        if (!ObjectUtils.isEmpty(conditionMap.get("dicSign"))) {
+            wrapper.eq(FuComDictionary.DIC_SIGN, conditionMap.get("dicSign"));
+        }
+        if (!ObjectUtils.isEmpty(conditionMap.get("dicKey"))) {
+            wrapper.eq(FuComDictionary.DIC_KEY, conditionMap.get("dicKey"));
+        }
+        if (!ObjectUtils.isEmpty(conditionMap.get("dicName"))) {
+            wrapper.eq(FuComDictionary.DIC_NAME, conditionMap.get("dicName"));
         }
 
         try {
-            return fuComDictionaryMapper.selectByMap(conditionMap);
-        }catch (Exception e){
-            log.error(e.getMessage(),e);
+            return selectPage(page, wrapper);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
             throw new BusinessException(e);
         }
+    }
+
+    /**
+     * 根据ID 查找数据字典信息
+     * @param id
+     * @return
+     */
+    public FuComDictionary findById(Integer id) {
+        if(id<=0){
+            log.error("传入参数为空!");
+            throw new DataConflictException("传入参数为空!");
+        }
+        return findById(id);
     }
 
 
@@ -61,32 +95,51 @@ public class FuComDictionaryService extends ServiceImpl<FuComDictionaryMapper, F
      * @param dataMap
      * @return
      */
-    public int saveComDictionnary(Map dataMap){
+    public int saveDictionnary(Map dataMap){
         /*校验保存数据*/
         if(ObjectUtils.isEmpty(dataMap)){
             log.error("传入参数为空！");
             throw new DataConflictException("传入参数为空！");
         }
 
-        if(ObjectUtils.isEmpty(ObjectUtils.isEmpty(dataMap.get("sign"))
-                ||ObjectUtils.isEmpty(dataMap.get("key"))
-                ||ObjectUtils.isEmpty(dataMap.get("value")))){
+        if(ObjectUtils.isEmpty(ObjectUtils.isEmpty(dataMap.get("dicSign"))
+                ||ObjectUtils.isEmpty(dataMap.get("dicKey"))
+                ||ObjectUtils.isEmpty(dataMap.get("dicValue")))){
             log.error("请传入必要参数！");
             throw new DataConflictException("请传入必要参数！");
         }
 
         try {
-            if(fuComDictionaryMapper.selectByMap(dataMap).size()>0){
+            Wrapper<FuComDictionary> wrapper = new EntityWrapper<FuComDictionary>();
+
+            if (!ObjectUtils.isEmpty(dataMap.get("id"))) {
+                throw new DataConflictException("数据已存在！");
+            }
+            if (!ObjectUtils.isEmpty(dataMap.get("dicSign"))) {
+                wrapper.eq(FuComDictionary.DIC_SIGN, dataMap.get("dicSign"));
+            }
+            if (!ObjectUtils.isEmpty(dataMap.get("dicKey"))) {
+                wrapper.eq(FuComDictionary.DIC_KEY, dataMap.get("dicKey"));
+            }
+            if (!ObjectUtils.isEmpty(dataMap.get("dicName"))) {
+                wrapper.eq(FuComDictionary.DIC_NAME, dataMap.get("dicName"));
+            }
+
+            if(fuComDictionaryMapper.selectList(wrapper).size()>0){
                 log.error("该条数据已存在！");
                 throw new DataConflictException("该条数据已存在！");
             }
             /*map 转 entity*/
-            FuComDictionary dictionary=(FuComDictionary) ConvertUtil.MapToJavaBean((HashMap) dataMap,FuComDictionary.class);
+            //将对象转换成为字符串
+            String str = JSON.toJSONString(dataMap);
+            //字符串转换成为对象
+            HashMap infoMap = JSON.parseObject(str, HashMap.class);
+            FuComDictionary dictionary=(FuComDictionary) ConvertUtil.MapToJavaBean(infoMap,FuComDictionary.class);
 
             dictionary.setCreateDate(new Date());
             dictionary.setModifyDate(new Date());
             /*修改数据*/
-            return fuComDictionaryMapper.insert(dictionary);
+            return fuComDictionaryMapper.insertSelective(dictionary);
         }catch (Exception e){
             log.error(e.getMessage(),e);
             throw new BusinessException(e);
@@ -98,7 +151,7 @@ public class FuComDictionaryService extends ServiceImpl<FuComDictionaryMapper, F
      * @param dataMap
      * @return
      */
-    public int updateComDictionary(Map dataMap){
+    public int updateDictionary(Map dataMap){
         /*校验保存数据*/
         if(ObjectUtils.isEmpty(dataMap)){
             log.error("传入参数为空！");
@@ -112,10 +165,14 @@ public class FuComDictionaryService extends ServiceImpl<FuComDictionaryMapper, F
 
         try {
             /*map 转 entity*/
-            FuComDictionary fuComServer=(FuComDictionary) ConvertUtil.MapToJavaBean((HashMap) dataMap,FuComDictionary.class);
+            //将对象转换成为字符串
+            String str = JSON.toJSONString(dataMap);
+            //字符串转换成为对象
+            HashMap infoMap = JSON.parseObject(str, HashMap.class);
+            FuComDictionary fuComServer=(FuComDictionary) ConvertUtil.MapToJavaBean(infoMap,FuComDictionary.class);
 
             /*修改数据*/
-            return fuComDictionaryMapper.updateByPrimaryKey(fuComServer);
+            return fuComDictionaryMapper.updateByPrimaryKeySelective(fuComServer);
         }catch (Exception e){
             log.error(e.getMessage(),e);
             throw new BusinessException(e);

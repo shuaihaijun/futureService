@@ -6,6 +6,12 @@ import com.baomidou.mybatisplus.enums.IdType;
 import java.util.Date;
 
 public class FuComDictionary {
+
+    public static String DIC_ID="id";
+    public static String DIC_SIGN="dic_sign";
+    public static String DIC_NAME="dic_name";
+    public static String DIC_KEY="dic_key";
+    public static String DIC_VALUE="dic_value";
     /**
      * 
      */
@@ -15,17 +21,22 @@ public class FuComDictionary {
     /**
      * 字典标识
      */
-    private String sign;
+    private String dicSign;
+
+    /**
+     * 名称
+     */
+    private String dicName;
 
     /**
      * 字典key
      */
-    private String key;
+    private String dicKey;
 
     /**
      * 字典值
      */
-    private String value;
+    private String dicValue;
 
     /**
      * 创建时间
@@ -55,50 +66,66 @@ public class FuComDictionary {
 
     /**
      * 字典标识
-     * @return sign 字典标识
+     * @return dic_sign 字典标识
      */
-    public String getSign() {
-        return sign;
+    public String getDicSign() {
+        return dicSign;
     }
 
     /**
      * 字典标识
-     * @param sign 字典标识
+     * @param dicSign 字典标识
      */
-    public void setSign(String sign) {
-        this.sign = sign == null ? null : sign.trim();
+    public void setDicSign(String dicSign) {
+        this.dicSign = dicSign == null ? null : dicSign.trim();
+    }
+
+    /**
+     * 名称
+     * @return dic_name 名称
+     */
+    public String getDicName() {
+        return dicName;
+    }
+
+    /**
+     * 名称
+     * @param dicName 名称
+     */
+    public void setDicName(String dicName) {
+        this.dicName = dicName == null ? null : dicName.trim();
     }
 
     /**
      * 字典key
-     * @return key 字典key
+     * @return dic_key 字典key
      */
-    public String getKey() {
-        return key;
+    public String getDicKey() {
+        return dicKey;
     }
 
     /**
      * 字典key
-     * @param key 字典key
+     * @param dicKey 字典key
      */
-    public void setKey(String key) {
-        this.key = key == null ? null : key.trim();
+    public void setDicKey(String dicKey) {
+        this.dicKey = dicKey == null ? null : dicKey.trim();
     }
 
     /**
      * 字典值
-     * @return value 字典值
+     * @return dic_value 字典值
      */
-    public String getValue() {
-        return value;
+    public String getDicValue() {
+        return dicValue;
     }
 
     /**
      * 字典值
-     * @param value 字典值
+     * @param dicValue 字典值
      */
-    public void setValue(String value) {
-        this.value = value == null ? null : value.trim();
+    public void setDicValue(String dicValue) {
+        this.dicValue = dicValue == null ? null : dicValue.trim();
     }
 
     /**

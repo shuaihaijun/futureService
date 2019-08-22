@@ -2,6 +2,7 @@ package com.future.controller.com;
 
 
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.plugins.Page;
 import com.future.common.exception.DataConflictException;
 import com.future.common.util.StringUtils;
 import com.future.common.util.ThreadCache;
@@ -14,8 +15,6 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/comServer")
@@ -37,11 +36,17 @@ public class FuComServerController {
             throw new DataConflictException("数据为空！");
         }
 
-        return fuComServerService.saveComServer(requestMap);
+        String serverId=requestMap.getString("id");
+        if(StringUtils.isEmpty(serverId)){
+            return fuComServerService.saveComServer(requestMap);
+        }else {
+            return fuComServerService.updateComServer(requestMap);
+        }
     }
 
-    @RequestMapping("/findComServer")
-    public @ResponseBody List<FuComServer> findComServer(){
+    @RequestMapping("/queryComServer")
+    public @ResponseBody
+    Page<FuComServer> queryComServer(){
         // 获取请求参数
         String requestJSONStr = ThreadCache.getPostRequestParams();
         JSONObject requestMap = JSONObject.parseObject(requestJSONStr);
@@ -49,7 +54,7 @@ public class FuComServerController {
             log.error("数据为空！");
             throw new DataConflictException("数据为空！");
         }
-        return fuComServerService.findByCondition(requestMap);
+        return fuComServerService.queryComServer(requestMap);
     }
 
     @RequestMapping("/findComServerById")

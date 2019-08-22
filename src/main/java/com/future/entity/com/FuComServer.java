@@ -4,6 +4,13 @@ import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.enums.IdType;
 
 public class FuComServer {
+
+    public static final String ID="id";
+    public static final String SERVER_NAME="server_name";
+    public static final String SERVER_STATE="server_state";
+    public static final String BROKER_NAME="broker_name";
+    public static final String SERVER_IP="server_ip";//MT5需要
+    public static final String LOCAL_PORT="local_port";
     /**
      * 
      */
