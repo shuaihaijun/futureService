@@ -41,17 +41,17 @@ public class FuAccountCommissionFlow {
     /**
      * 佣金类型（0 信号源返佣，1 多级返佣，2 社区返佣，3 其他）
      */
-    private int commissionType;
+    private Integer commissionType;
 
     /**
      * 返佣等级
      */
-    private int commissionLevel;
+    private Integer commissionLevel;
 
     /**
      * 返佣比率
      */
-    private int commissionRate;
+    private Integer commissionRate;
 
     /**
      * 源金额
@@ -66,12 +66,12 @@ public class FuAccountCommissionFlow {
     /**
      * 返佣状态（0 成功，1失败，2 执行中）
      */
-    private int commissionState;
+    private Integer commissionState;
 
     /**
      * 币种类型（0 余额，1社区币，2 期债）
      */
-    private int coinType;
+    private Integer coinType;
 
     /**
      * 
@@ -173,7 +173,7 @@ public class FuAccountCommissionFlow {
      * 佣金类型（0 信号源返佣，1 多级返佣，2 社区返佣，3 其他）
      * @return commission_type 佣金类型（0 信号源返佣，1 多级返佣，2 社区返佣，3 其他）
      */
-    public int getCommissionType() {
+    public Integer getCommissionType() {
         return commissionType;
     }
 
@@ -181,7 +181,7 @@ public class FuAccountCommissionFlow {
      * 佣金类型（0 信号源返佣，1 多级返佣，2 社区返佣，3 其他）
      * @param commissionType 佣金类型（0 信号源返佣，1 多级返佣，2 社区返佣，3 其他）
      */
-    public void setCommissionType(int commissionType) {
+    public void setCommissionType(Integer commissionType) {
         this.commissionType = commissionType;
     }
 
@@ -189,7 +189,7 @@ public class FuAccountCommissionFlow {
      * 返佣等级
      * @return commission_level 返佣等级
      */
-    public int getCommissionLevel() {
+    public Integer getCommissionLevel() {
         return commissionLevel;
     }
 
@@ -197,7 +197,7 @@ public class FuAccountCommissionFlow {
      * 返佣等级
      * @param commissionLevel 返佣等级
      */
-    public void setCommissionLevel(int commissionLevel) {
+    public void setCommissionLevel(Integer commissionLevel) {
         this.commissionLevel = commissionLevel;
     }
 
@@ -205,7 +205,7 @@ public class FuAccountCommissionFlow {
      * 返佣比率
      * @return commission_rate 返佣比率
      */
-    public int getCommissionRate() {
+    public Integer getCommissionRate() {
         return commissionRate;
     }
 
@@ -213,7 +213,7 @@ public class FuAccountCommissionFlow {
      * 返佣比率
      * @param commissionRate 返佣比率
      */
-    public void setCommissionRate(int commissionRate) {
+    public void setCommissionRate(Integer commissionRate) {
         this.commissionRate = commissionRate;
     }
 
@@ -253,7 +253,7 @@ public class FuAccountCommissionFlow {
      * 返佣状态（0 成功，1失败，2 执行中）
      * @return commission_state 返佣状态（0 成功，1失败，2 执行中）
      */
-    public int getCommissionState() {
+    public Integer getCommissionState() {
         return commissionState;
     }
 
@@ -261,7 +261,7 @@ public class FuAccountCommissionFlow {
      * 返佣状态（0 成功，1失败，2 执行中）
      * @param commissionState 返佣状态（0 成功，1失败，2 执行中）
      */
-    public void setCommissionState(int commissionState) {
+    public void setCommissionState(Integer commissionState) {
         this.commissionState = commissionState;
     }
 
@@ -269,7 +269,7 @@ public class FuAccountCommissionFlow {
      * 币种类型（0 余额，1社区币，2 期债）
      * @return coin_type 币种类型（0 余额，1社区币，2 期债）
      */
-    public int getCoinType() {
+    public Integer getCoinType() {
         return coinType;
     }
 
@@ -277,7 +277,7 @@ public class FuAccountCommissionFlow {
      * 币种类型（0 余额，1社区币，2 期债）
      * @param coinType 币种类型（0 余额，1社区币，2 期债）
      */
-    public void setCoinType(int coinType) {
+    public void setCoinType(Integer coinType) {
         this.coinType = coinType;
     }
 }

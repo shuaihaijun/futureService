@@ -219,6 +219,7 @@ public class FuProductSignalApplyService extends ServiceImpl<FuProductSignalAppl
         /*默认数据填充*/
         signal.setModifyDate(new Date());
 
+
         return fuProductSignalApplyMapper.updateByPrimaryKeySelective(signal);
     }
 
@@ -262,7 +263,7 @@ public class FuProductSignalApplyService extends ServiceImpl<FuProductSignalAppl
         try {
             FuProductSignalApply signalApply=new FuProductSignalApply();
             signalApply.setId(signalId);
-            if(state== SignalConstant.SIGNAL_APPLY_STATE_CHECKED){
+            if(state== SignalConstant.SIGNAL_APPLY_STATE_NORMAL){
                 /*审核通过*/
                 FuProductSignalApply apply=findSignalApplyById(signalId);
                 if(ObjectUtils.isEmpty(apply)){
@@ -276,10 +277,10 @@ public class FuProductSignalApplyService extends ServiceImpl<FuProductSignalAppl
                 signal.setModifyDate(new Date());
                 /*保存信号源*/
                 fuProductSignalMapper.insertSelective(signal);
-                signalApply.setApplyState(2);
+                signalApply.setApplyState(SignalConstant.SIGNAL_APPLY_STATE_NORMAL);
             }else if(state==SignalConstant.SIGNAL_APPLY_STATE_UNPASS){
                 /*审核未通过*/
-                signalApply.setApplyState(3);
+                signalApply.setApplyState(SignalConstant.SIGNAL_APPLY_STATE_UNPASS);
             }else {
                 log.error("审核状态错误！");
                 throw new DataConflictException(GlobalResultCode.PARAM_IS_INVALID,"核状态错误！");

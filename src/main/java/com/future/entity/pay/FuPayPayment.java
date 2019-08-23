@@ -4,7 +4,7 @@ public class FuPayPayment {
     /**
      * 
      */
-    private int id;
+    private Integer id;
 
     /**
      * 支付码
@@ -29,7 +29,7 @@ public class FuPayPayment {
     /**
      * 是否可用
      */
-    private int enabled;
+    private Integer enabled;
 
     /**
      * 秘钥
@@ -40,7 +40,7 @@ public class FuPayPayment {
      * 
      * @return id 
      */
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
@@ -48,7 +48,7 @@ public class FuPayPayment {
      * 
      * @param id 
      */
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -120,7 +120,7 @@ public class FuPayPayment {
      * 是否可用
      * @return enabled 是否可用
      */
-    public int getEnabled() {
+    public Integer getEnabled() {
         return enabled;
     }
 
@@ -128,7 +128,7 @@ public class FuPayPayment {
      * 是否可用
      * @param enabled 是否可用
      */
-    public void setEnabled(int enabled) {
+    public void setEnabled(Integer enabled) {
         this.enabled = enabled;
     }
 

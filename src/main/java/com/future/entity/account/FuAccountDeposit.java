@@ -41,12 +41,12 @@ public class FuAccountDeposit {
     /**
      * 存款方式（0 银行卡，1 支付，2微信，3 其他）
      */
-    private int depositWay;
+    private Integer depositWay;
 
     /**
      * 存款类型（0 余额，1 社区币）
      */
-    private int depositType;
+    private Integer depositType;
 
     /**
      * 存款时间
@@ -66,7 +66,7 @@ public class FuAccountDeposit {
     /**
      * 存款状态（0 成功，1 失败，2 处理中）
      */
-    private int status;
+    private Integer status;
 
     /**
      * 备注
@@ -173,7 +173,7 @@ public class FuAccountDeposit {
      * 存款方式（0 银行卡，1 支付，2微信，3 其他）
      * @return deposit_way 存款方式（0 银行卡，1 支付，2微信，3 其他）
      */
-    public int getDepositWay() {
+    public Integer getDepositWay() {
         return depositWay;
     }
 
@@ -181,7 +181,7 @@ public class FuAccountDeposit {
      * 存款方式（0 银行卡，1 支付，2微信，3 其他）
      * @param depositWay 存款方式（0 银行卡，1 支付，2微信，3 其他）
      */
-    public void setDepositWay(int depositWay) {
+    public void setDepositWay(Integer depositWay) {
         this.depositWay = depositWay;
     }
 
@@ -189,7 +189,7 @@ public class FuAccountDeposit {
      * 存款类型（0 余额，1 社区币）
      * @return deposit_type 存款类型（0 余额，1 社区币）
      */
-    public int getDepositType() {
+    public Integer getDepositType() {
         return depositType;
     }
 
@@ -197,7 +197,7 @@ public class FuAccountDeposit {
      * 存款类型（0 余额，1 社区币）
      * @param depositType 存款类型（0 余额，1 社区币）
      */
-    public void setDepositType(int depositType) {
+    public void setDepositType(Integer depositType) {
         this.depositType = depositType;
     }
 
@@ -253,7 +253,7 @@ public class FuAccountDeposit {
      * 存款状态（0 成功，1 失败，2 处理中）
      * @return status 存款状态（0 成功，1 失败，2 处理中）
      */
-    public int getStatus() {
+    public Integer getStatus() {
         return status;
     }
 
@@ -261,7 +261,7 @@ public class FuAccountDeposit {
      * 存款状态（0 成功，1 失败，2 处理中）
      * @param status 存款状态（0 成功，1 失败，2 处理中）
      */
-    public void setStatus(int status) {
+    public void setStatus(Integer status) {
         this.status = status;
     }
 

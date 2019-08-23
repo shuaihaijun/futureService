@@ -26,7 +26,7 @@ public class FuAccountTransfer {
     /**
      * 转移类型（0 佣金提取，1 虚拟币兑换）
      */
-    private int transferType;
+    private Integer transferType;
 
     /**
      * 转移来源
@@ -51,7 +51,7 @@ public class FuAccountTransfer {
     /**
      * 转移状态（0 成功，1 失败，2 执行中）
      */
-    private int transferState;
+    private Integer transferState;
 
     /**
      * 详情
@@ -110,7 +110,7 @@ public class FuAccountTransfer {
      * 转移类型（0 佣金提取，1 虚拟币兑换）
      * @return transfer_type 转移类型（0 佣金提取，1 虚拟币兑换）
      */
-    public int getTransferType() {
+    public Integer getTransferType() {
         return transferType;
     }
 
@@ -118,7 +118,7 @@ public class FuAccountTransfer {
      * 转移类型（0 佣金提取，1 虚拟币兑换）
      * @param transferType 转移类型（0 佣金提取，1 虚拟币兑换）
      */
-    public void setTransferType(int transferType) {
+    public void setTransferType(Integer transferType) {
         this.transferType = transferType;
     }
 
@@ -190,7 +190,7 @@ public class FuAccountTransfer {
      * 转移状态（0 成功，1 失败，2 执行中）
      * @return transfer_state 转移状态（0 成功，1 失败，2 执行中）
      */
-    public int getTransferState() {
+    public Integer getTransferState() {
         return transferState;
     }
 
@@ -198,7 +198,7 @@ public class FuAccountTransfer {
      * 转移状态（0 成功，1 失败，2 执行中）
      * @param transferState 转移状态（0 成功，1 失败，2 执行中）
      */
-    public void setTransferState(int transferState) {
+    public void setTransferState(Integer transferState) {
         this.transferState = transferState;
     }
 

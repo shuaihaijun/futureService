@@ -59,9 +59,9 @@ public class FuProductSignalApply {
     private BigDecimal historyWithdraw;
 
     /**
-     * 申请状态（0 暂存，1 待审核，2 通过，3 未通过）
+     * 申请状态（0 正常，1 暂存，2 待审核，3 未通过）
      */
-    private int applyState;
+    private Integer applyState;
 
     /**
      * 申请时间
@@ -271,18 +271,18 @@ public class FuProductSignalApply {
     }
 
     /**
-     * 申请状态（0 暂存，1 待审核，2 通过，3 未通过）
-     * @return apply_state 申请状态（0 暂存，1 待审核，2 通过，3 未通过）
+     * 申请状态（0 正常，1 暂存，2 待审核，3 未通过）
+     * @return apply_state 申请状态（0 正常，1 暂存，2 待审核，3 未通过）
      */
-    public int getApplyState() {
+    public Integer getApplyState() {
         return applyState;
     }
 
     /**
-     * 申请状态（0 暂存，1 待审核，2 通过，3 未通过）
-     * @param applyState 申请状态（0 暂存，1 待审核，2 通过，3 未通过）
+     * 申请状态申请状态（0 正常，1 暂存，2 待审核，3 未通过）
+     * @param applyState 申请状态（0 正常，1 暂存，2 待审核，3 未通过）
      */
-    public void setApplyState(int applyState) {
+    public void setApplyState(Integer applyState) {
         this.applyState = applyState;
     }
 

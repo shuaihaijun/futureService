@@ -56,7 +56,7 @@ public class FuAccountCommission {
     /**
      * 返佣等级
      */
-    private int commissionLevel;
+    private Integer commissionLevel;
 
     /**
      * 返佣比率
@@ -71,7 +71,7 @@ public class FuAccountCommission {
     /**
      * 佣金账户状态（0 正常，1冻结，2 删除）
      */
-    private int accountState;
+    private Integer accountState;
 
     /**
      * 
@@ -221,7 +221,7 @@ public class FuAccountCommission {
      * 返佣等级
      * @return commission_level 返佣等级
      */
-    public int getCommissionLevel() {
+    public Integer getCommissionLevel() {
         return commissionLevel;
     }
 
@@ -229,7 +229,7 @@ public class FuAccountCommission {
      * 返佣等级
      * @param commissionLevel 返佣等级
      */
-    public void setCommissionLevel(int commissionLevel) {
+    public void setCommissionLevel(Integer commissionLevel) {
         this.commissionLevel = commissionLevel;
     }
 
@@ -269,7 +269,7 @@ public class FuAccountCommission {
      * 佣金账户状态（0 正常，1冻结，2 删除）
      * @return account_state 佣金账户状态（0 正常，1冻结，2 删除）
      */
-    public int getAccountState() {
+    public Integer getAccountState() {
         return accountState;
     }
 
@@ -277,7 +277,7 @@ public class FuAccountCommission {
      * 佣金账户状态（0 正常，1冻结，2 删除）
      * @param accountState 佣金账户状态（0 正常，1冻结，2 删除）
      */
-    public void setAccountState(int accountState) {
+    public void setAccountState(Integer accountState) {
         this.accountState = accountState;
     }
 }

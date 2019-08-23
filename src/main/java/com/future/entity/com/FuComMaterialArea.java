@@ -25,7 +25,7 @@ public class FuComMaterialArea {
     /**
      * 区域状态（0 正常，1 删除）
      */
-    private int areaState;
+    private Integer areaState;
 
     /**
      * 创建时间
@@ -89,7 +89,7 @@ public class FuComMaterialArea {
      * 区域状态（0 正常，1 删除）
      * @return area_state 区域状态（0 正常，1 删除）
      */
-    public int getAreaState() {
+    public Integer getAreaState() {
         return areaState;
     }
 
@@ -97,7 +97,7 @@ public class FuComMaterialArea {
      * 区域状态（0 正常，1 删除）
      * @param areaState 区域状态（0 正常，1 删除）
      */
-    public void setAreaState(int areaState) {
+    public void setAreaState(Integer areaState) {
         this.areaState = areaState;
     }
 

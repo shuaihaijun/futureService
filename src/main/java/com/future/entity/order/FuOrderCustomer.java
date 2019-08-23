@@ -42,7 +42,7 @@ public class FuOrderCustomer {
      * 用户类型（总经理、总监、业务员、PIB、MIB、IB、VIP会员、普通会员、试用会员、分析师、信号源））
      */
     @TableField
-    private int userType;
+    private Integer userType;
 
     /**
      * 交易账号ID
@@ -66,13 +66,13 @@ public class FuOrderCustomer {
      * 订单类型（ 0 普通订单，1 拆分订单）
      */
     @TableField
-    private int orderType;
+    private Integer orderType;
 
     /**
      * 订单状态（ 0 交易中 ，1 已交易，2 部分平仓，3 已平仓）
      */
     @TableField
-    private int orderState;
+    private Integer orderState;
 
     /**
      * 止损
@@ -132,13 +132,13 @@ public class FuOrderCustomer {
      * 交易类别（0 buy，1 sell, 2 buylimit ,3 selllimit, 4 buystop, 5 sellstop,6 deposit, 7 credit，99 close）
      */
     @TableField
-    private int orderTradeOperation;
+    private Integer orderTradeOperation;
 
     /**
      * 交易类型（0 建仓，1 平仓）
      */
     @TableField
-    private int orderTradeType;
+    private Integer orderTradeType;
 
     /**
      * 平仓价格
@@ -249,7 +249,7 @@ public class FuOrderCustomer {
      * 用户类型（总经理、总监、业务员、PIB、MIB、IB、VIP会员、普通会员、试用会员、分析师、信号源））
      * @return user_type 用户类型（总经理、总监、业务员、PIB、MIB、IB、VIP会员、普通会员、试用会员、分析师、信号源））
      */
-    public int getUserType() {
+    public Integer getUserType() {
         return userType;
     }
 
@@ -257,7 +257,7 @@ public class FuOrderCustomer {
      * 用户类型（总经理、总监、业务员、PIB、MIB、IB、VIP会员、普通会员、试用会员、分析师、信号源））
      * @param userType 用户类型（总经理、总监、业务员、PIB、MIB、IB、VIP会员、普通会员、试用会员、分析师、信号源））
      */
-    public void setUserType(int userType) {
+    public void setUserType(Integer userType) {
         this.userType = userType;
     }
 
@@ -313,7 +313,7 @@ public class FuOrderCustomer {
      * 订单类型（ 0 普通订单，1 拆分订单）
      * @return order_type 订单类型（ 0 普通订单，1 拆分订单）
      */
-    public int getOrderType() {
+    public Integer getOrderType() {
         return orderType;
     }
 
@@ -321,7 +321,7 @@ public class FuOrderCustomer {
      * 订单类型（ 0 普通订单，1 拆分订单）
      * @param orderType 订单类型（ 0 普通订单，1 拆分订单）
      */
-    public void setOrderType(int orderType) {
+    public void setOrderType(Integer orderType) {
         this.orderType = orderType;
     }
 
@@ -329,7 +329,7 @@ public class FuOrderCustomer {
      * 订单状态（ 0 交易中 ，1 已交易，2 部分平仓，3 已平仓）
      * @return order_state 订单状态（ 0 交易中 ，1 已交易，2 部分平仓，3 已平仓）
      */
-    public int getOrderState() {
+    public Integer getOrderState() {
         return orderState;
     }
 
@@ -337,7 +337,7 @@ public class FuOrderCustomer {
      * 订单状态（ 0 交易中 ，1 已交易，2 部分平仓，3 已平仓）
      * @param orderState 订单状态（ 0 交易中 ，1 已交易，2 部分平仓，3 已平仓）
      */
-    public void setOrderState(int orderState) {
+    public void setOrderState(Integer orderState) {
         this.orderState = orderState;
     }
 
@@ -489,7 +489,7 @@ public class FuOrderCustomer {
      * 交易类别（0 buy，1 sell, 2 buylimit ,3 selllimit, 4 buystop, 5 sellstop,6 deposit, 7 credit，99 close）
      * @return order_trade_operation 交易类别（0 buy，1 sell, 2 buylimit ,3 selllimit, 4 buystop, 5 sellstop,6 deposit, 7 credit，99 close）
      */
-    public int getOrderTradeOperation() {
+    public Integer getOrderTradeOperation() {
         return orderTradeOperation;
     }
 
@@ -497,7 +497,7 @@ public class FuOrderCustomer {
      * 交易类别（0 buy，1 sell, 2 buylimit ,3 selllimit, 4 buystop, 5 sellstop,6 deposit, 7 credit，99 close）
      * @param orderTradeOperation 交易类别（0 buy，1 sell, 2 buylimit ,3 selllimit, 4 buystop, 5 sellstop,6 deposit, 7 credit，99 close）
      */
-    public void setOrderTradeOperation(int orderTradeOperation) {
+    public void setOrderTradeOperation(Integer orderTradeOperation) {
         this.orderTradeOperation = orderTradeOperation;
     }
 
@@ -505,7 +505,7 @@ public class FuOrderCustomer {
      * 交易类型（0 建仓，1 平仓）
      * @return order_trade_type 交易类型（0 建仓，1 平仓）
      */
-    public int getOrderTradeType() {
+    public Integer getOrderTradeType() {
         return orderTradeType;
     }
 
@@ -513,7 +513,7 @@ public class FuOrderCustomer {
      * 交易类型（0 建仓，1 平仓）
      * @param orderTradeType 交易类型（0 建仓，1 平仓）
      */
-    public void setOrderTradeType(int orderTradeType) {
+    public void setOrderTradeType(Integer orderTradeType) {
         this.orderTradeType = orderTradeType;
     }
 

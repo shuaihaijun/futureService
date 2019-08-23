@@ -26,27 +26,27 @@ public class FuCommissionLevel {
     /**
      * 佣金发生来源 ( 0 订单返佣，1 其他返佣)
      */
-    private int commissionType;
+    private Integer commissionType;
 
     /**
      * 订单类型（0 社区跟单，1 自主交易）
      */
-    private int orderType;
+    private Integer orderType;
 
     /**
      * 返佣用户类型（0 社区，1 信号源，2 多级返佣，3 IB）
      */
-    private int commissionUserType;
+    private Integer commissionUserType;
 
     /**
      * 返佣角色等级
      */
-    private int commissionUserLevel;
+    private Integer commissionUserLevel;
 
     /**
      * 比率计算类型（0 按原金额，1 按返佣金额）
      */
-    private int rateType;
+    private Integer rateType;
 
     /**
      * 返佣比率
@@ -105,7 +105,7 @@ public class FuCommissionLevel {
      * 佣金发生来源 ( 0 订单返佣，1 其他返佣)
      * @return commission_type 佣金发生来源 ( 0 订单返佣，1 其他返佣)
      */
-    public int getCommissionType() {
+    public Integer getCommissionType() {
         return commissionType;
     }
 
@@ -113,7 +113,7 @@ public class FuCommissionLevel {
      * 佣金发生来源 ( 0 订单返佣，1 其他返佣)
      * @param commissionType 佣金发生来源 ( 0 订单返佣，1 其他返佣)
      */
-    public void setCommissionType(int commissionType) {
+    public void setCommissionType(Integer commissionType) {
         this.commissionType = commissionType;
     }
 
@@ -121,7 +121,7 @@ public class FuCommissionLevel {
      * 订单类型（0 社区跟单，1 自主交易）
      * @return order_type 订单类型（0 社区跟单，1 自主交易）
      */
-    public int getOrderType() {
+    public Integer getOrderType() {
         return orderType;
     }
 
@@ -129,7 +129,7 @@ public class FuCommissionLevel {
      * 订单类型（0 社区跟单，1 自主交易）
      * @param orderType 订单类型（0 社区跟单，1 自主交易）
      */
-    public void setOrderType(int orderType) {
+    public void setOrderType(Integer orderType) {
         this.orderType = orderType;
     }
 
@@ -137,7 +137,7 @@ public class FuCommissionLevel {
      * 返佣用户类型（0 社区，1 信号源，2 多级返佣，3 IB）
      * @return commission_user_type 返佣用户类型（0 社区，1 信号源，2 多级返佣，3 IB）
      */
-    public int getCommissionUserType() {
+    public Integer getCommissionUserType() {
         return commissionUserType;
     }
 
@@ -145,7 +145,7 @@ public class FuCommissionLevel {
      * 返佣用户类型（0 社区，1 信号源，2 多级返佣，3 IB）
      * @param commissionUserType 返佣用户类型（0 社区，1 信号源，2 多级返佣，3 IB）
      */
-    public void setCommissionUserType(int commissionUserType) {
+    public void setCommissionUserType(Integer commissionUserType) {
         this.commissionUserType = commissionUserType;
     }
 
@@ -153,7 +153,7 @@ public class FuCommissionLevel {
      * 返佣角色等级
      * @return commission_user_level 返佣角色等级
      */
-    public int getCommissionUserLevel() {
+    public Integer getCommissionUserLevel() {
         return commissionUserLevel;
     }
 
@@ -161,7 +161,7 @@ public class FuCommissionLevel {
      * 返佣角色等级
      * @param commissionUserLevel 返佣角色等级
      */
-    public void setCommissionUserLevel(int commissionUserLevel) {
+    public void setCommissionUserLevel(Integer commissionUserLevel) {
         this.commissionUserLevel = commissionUserLevel;
     }
 
@@ -169,7 +169,7 @@ public class FuCommissionLevel {
      * 比率计算类型（0 按原金额，1 按返佣金额）
      * @return rate_type 比率计算类型（0 按原金额，1 按返佣金额）
      */
-    public int getRateType() {
+    public Integer getRateType() {
         return rateType;
     }
 
@@ -177,7 +177,7 @@ public class FuCommissionLevel {
      * 比率计算类型（0 按原金额，1 按返佣金额）
      * @param rateType 比率计算类型（0 按原金额，1 按返佣金额）
      */
-    public void setRateType(int rateType) {
+    public void setRateType(Integer rateType) {
         this.rateType = rateType;
     }
 

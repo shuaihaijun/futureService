@@ -51,12 +51,12 @@ public class FuOrderInfo {
     /**
      * 订单类型（ 0 普通订单，1 拆分订单）
      */
-    private int orderType;
+    private Integer orderType;
 
     /**
      * 订单状态（ 0 交易中 ，1 已建仓，2 部分平仓，3 已平仓）
      */
-    private int orderState;
+    private Integer orderState;
 
     /**
      * 止损价
@@ -76,7 +76,7 @@ public class FuOrderInfo {
     /**
      * 订单来源标识：（0 自交易，1 社区跟单）
      */
-    private int orderSourceFlag;
+    private Integer orderSourceFlag;
 
     /**
      * 跟随订单号
@@ -91,7 +91,7 @@ public class FuOrderInfo {
     /**
      * 交易类别（0 buy，1 sell, 2 buylimit ,3 selllimit, 4 buystop, 5 sellstop,6 deposit, 7 credit，99 close）
      */
-    private int orderTradeOperation;
+    private Integer orderTradeOperation;
 
     /**
      * 订单拆分次数
@@ -101,7 +101,7 @@ public class FuOrderInfo {
     /**
      * 拆单类型 ( 0 拆单建仓，1 拆单平仓)
      */
-    private int orderSplitType;
+    private Integer orderSplitType;
 
     /**
      * 盈利
@@ -285,7 +285,7 @@ public class FuOrderInfo {
      * 订单类型（ 0 普通订单，1 拆分订单）
      * @return order_type 订单类型（ 0 普通订单，1 拆分订单）
      */
-    public int getOrderType() {
+    public Integer getOrderType() {
         return orderType;
     }
 
@@ -293,7 +293,7 @@ public class FuOrderInfo {
      * 订单类型（ 0 普通订单，1 拆分订单）
      * @param orderType 订单类型（ 0 普通订单，1 拆分订单）
      */
-    public void setOrderType(int orderType) {
+    public void setOrderType(Integer orderType) {
         this.orderType = orderType;
     }
 
@@ -301,7 +301,7 @@ public class FuOrderInfo {
      * 订单状态（ 0 交易中 ，1 已建仓，2 部分平仓，3 已平仓）
      * @return order_state 订单状态（ 0 交易中 ，1 已建仓，2 部分平仓，3 已平仓）
      */
-    public int getOrderState() {
+    public Integer getOrderState() {
         return orderState;
     }
 
@@ -309,7 +309,7 @@ public class FuOrderInfo {
      * 订单状态（ 0 交易中 ，1 已建仓，2 部分平仓，3 已平仓）
      * @param orderState 订单状态（ 0 交易中 ，1 已建仓，2 部分平仓，3 已平仓）
      */
-    public void setOrderState(int orderState) {
+    public void setOrderState(Integer orderState) {
         this.orderState = orderState;
     }
 
@@ -365,7 +365,7 @@ public class FuOrderInfo {
      * 订单来源标识：（0 自交易，1 社区跟单）
      * @return order_source_flag 订单来源标识：（0 自交易，1 社区跟单）
      */
-    public int getOrderSourceFlag() {
+    public Integer getOrderSourceFlag() {
         return orderSourceFlag;
     }
 
@@ -373,7 +373,7 @@ public class FuOrderInfo {
      * 订单来源标识：（0 自交易，1 社区跟单）
      * @param orderSourceFlag 订单来源标识：（0 自交易，1 社区跟单）
      */
-    public void setOrderSourceFlag(int orderSourceFlag) {
+    public void setOrderSourceFlag(Integer orderSourceFlag) {
         this.orderSourceFlag = orderSourceFlag;
     }
 
@@ -413,7 +413,7 @@ public class FuOrderInfo {
      * 交易类别（0 buy，1 sell, 2 buylimit ,3 selllimit, 4 buystop, 5 sellstop,6 deposit, 7 credit，99 close）
      * @return order_trade_operation 交易类别（0 buy，1 sell, 2 buylimit ,3 selllimit, 4 buystop, 5 sellstop,6 deposit, 7 credit，99 close）
      */
-    public int getOrderTradeOperation() {
+    public Integer getOrderTradeOperation() {
         return orderTradeOperation;
     }
 
@@ -421,7 +421,7 @@ public class FuOrderInfo {
      * 交易类别（0 buy，1 sell, 2 buylimit ,3 selllimit, 4 buystop, 5 sellstop,6 deposit, 7 credit，99 close）
      * @param orderTradeOperation 交易类别（0 buy，1 sell, 2 buylimit ,3 selllimit, 4 buystop, 5 sellstop,6 deposit, 7 credit，99 close）
      */
-    public void setOrderTradeOperation(int orderTradeOperation) {
+    public void setOrderTradeOperation(Integer orderTradeOperation) {
         this.orderTradeOperation = orderTradeOperation;
     }
 
@@ -445,7 +445,7 @@ public class FuOrderInfo {
      * 拆单类型 ( 0 拆单建仓，1 拆单平仓)
      * @return order_split_type 拆单类型 ( 0 拆单建仓，1 拆单平仓)
      */
-    public int getOrderSplitType() {
+    public Integer getOrderSplitType() {
         return orderSplitType;
     }
 
@@ -453,7 +453,7 @@ public class FuOrderInfo {
      * 拆单类型 ( 0 拆单建仓，1 拆单平仓)
      * @param orderSplitType 拆单类型 ( 0 拆单建仓，1 拆单平仓)
      */
-    public void setOrderSplitType(int orderSplitType) {
+    public void setOrderSplitType(Integer orderSplitType) {
         this.orderSplitType = orderSplitType;
     }
 

@@ -46,12 +46,12 @@ public class FuCommissionCustomer {
     /**
      * 原订单状态
      */
-    private int sourceOrderState;
+    private Integer sourceOrderState;
 
     /**
      * 原订单操作类型
      */
-    private int sourceOrderOper;
+    private Integer sourceOrderOper;
 
     /**
      * 源金额
@@ -61,7 +61,7 @@ public class FuCommissionCustomer {
     /**
      * 佣金类型（0 信号源返佣，1 多级返佣，2 社区返佣，3 其他）
      */
-    private int commissionType;
+    private Integer commissionType;
 
     /**
      * 收佣用户ID
@@ -71,12 +71,12 @@ public class FuCommissionCustomer {
     /**
      * 收佣用户类型
      */
-    private int commissionUserType;
+    private Integer commissionUserType;
 
     /**
      * 收佣用户等级
      */
-    private int commissionUserLevel;
+    private Integer commissionUserLevel;
 
     /**
      * 收佣账户ID
@@ -101,7 +101,7 @@ public class FuCommissionCustomer {
     /**
      * 返佣状态（0 成功，1失败，2 执行中）
      */
-    private int commissionState;
+    private Integer commissionState;
 
     /**
      * 
@@ -219,7 +219,7 @@ public class FuCommissionCustomer {
      * 原订单状态
      * @return source_order_state 原订单状态
      */
-    public int getSourceOrderState() {
+    public Integer getSourceOrderState() {
         return sourceOrderState;
     }
 
@@ -227,7 +227,7 @@ public class FuCommissionCustomer {
      * 原订单状态
      * @param sourceOrderState 原订单状态
      */
-    public void setSourceOrderState(int sourceOrderState) {
+    public void setSourceOrderState(Integer sourceOrderState) {
         this.sourceOrderState = sourceOrderState;
     }
 
@@ -235,7 +235,7 @@ public class FuCommissionCustomer {
      * 原订单操作类型
      * @return source_order_oper 原订单操作类型
      */
-    public int getSourceOrderOper() {
+    public Integer getSourceOrderOper() {
         return sourceOrderOper;
     }
 
@@ -243,7 +243,7 @@ public class FuCommissionCustomer {
      * 原订单操作类型
      * @param sourceOrderOper 原订单操作类型
      */
-    public void setSourceOrderOper(int sourceOrderOper) {
+    public void setSourceOrderOper(Integer sourceOrderOper) {
         this.sourceOrderOper = sourceOrderOper;
     }
 
@@ -267,7 +267,7 @@ public class FuCommissionCustomer {
      * 佣金类型（0 信号源返佣，1 多级返佣，2 社区返佣，3 其他）
      * @return commission_type 佣金类型（0 信号源返佣，1 多级返佣，2 社区返佣，3 其他）
      */
-    public int getCommissionType() {
+    public Integer getCommissionType() {
         return commissionType;
     }
 
@@ -275,7 +275,7 @@ public class FuCommissionCustomer {
      * 佣金类型（0 信号源返佣，1 多级返佣，2 社区返佣，3 其他）
      * @param commissionType 佣金类型（0 信号源返佣，1 多级返佣，2 社区返佣，3 其他）
      */
-    public void setCommissionType(int commissionType) {
+    public void setCommissionType(Integer commissionType) {
         this.commissionType = commissionType;
     }
 
@@ -299,7 +299,7 @@ public class FuCommissionCustomer {
      * 收佣用户类型
      * @return commission_user_type 收佣用户类型
      */
-    public int getCommissionUserType() {
+    public Integer getCommissionUserType() {
         return commissionUserType;
     }
 
@@ -307,7 +307,7 @@ public class FuCommissionCustomer {
      * 收佣用户类型
      * @param commissionUserType 收佣用户类型
      */
-    public void setCommissionUserType(int commissionUserType) {
+    public void setCommissionUserType(Integer commissionUserType) {
         this.commissionUserType = commissionUserType;
     }
 
@@ -315,7 +315,7 @@ public class FuCommissionCustomer {
      * 收佣用户等级
      * @return commission_user_level 收佣用户等级
      */
-    public int getCommissionUserLevel() {
+    public Integer getCommissionUserLevel() {
         return commissionUserLevel;
     }
 
@@ -323,7 +323,7 @@ public class FuCommissionCustomer {
      * 收佣用户等级
      * @param commissionUserLevel 收佣用户等级
      */
-    public void setCommissionUserLevel(int commissionUserLevel) {
+    public void setCommissionUserLevel(Integer commissionUserLevel) {
         this.commissionUserLevel = commissionUserLevel;
     }
 
@@ -395,7 +395,7 @@ public class FuCommissionCustomer {
      * 返佣状态（0 成功，1失败，2 执行中）
      * @return commission_state 返佣状态（0 成功，1失败，2 执行中）
      */
-    public int getCommissionState() {
+    public Integer getCommissionState() {
         return commissionState;
     }
 
@@ -403,7 +403,7 @@ public class FuCommissionCustomer {
      * 返佣状态（0 成功，1失败，2 执行中）
      * @param commissionState 返佣状态（0 成功，1失败，2 执行中）
      */
-    public void setCommissionState(int commissionState) {
+    public void setCommissionState(Integer commissionState) {
         this.commissionState = commissionState;
     }
 }

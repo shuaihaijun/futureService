@@ -1,5 +1,6 @@
 package com.future.service.com;
 
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.Page;
@@ -127,7 +128,11 @@ public class FuComAgentApplyService extends ServiceImpl<FuComAgentApplyMapper,Fu
 
         try {
             /*组装信息*/
-            FuComAgentApply agentApply=(FuComAgentApply)ConvertUtil.MapToJavaBean((HashMap) agentMap,FuComAgentApply.class);
+            //将对象转换成为字符串
+            String str = JSON.toJSONString(agentMap);
+            //字符串转换成为对象
+            HashMap infoMap = JSON.parseObject(str, HashMap.class);
+            FuComAgentApply agentApply=(FuComAgentApply)ConvertUtil.MapToJavaBean(infoMap,FuComAgentApply.class);
             if(ObjectUtils.isEmpty(agentMap.get("applyType"))){
                 //申请类型（0 IB升级申请，1 注册申请 ，2 IB降级申请）
                 agentApply.setApplyType(AgentConstant.AGENT_APPLY_TYPE_NEW);
@@ -158,7 +163,11 @@ public class FuComAgentApplyService extends ServiceImpl<FuComAgentApplyMapper,Fu
         }
         try {
             /*组装信息*/
-            FuComAgentApply agentApply=(FuComAgentApply)ConvertUtil.MapToJavaBean((HashMap) agentMap,FuComAgentApply.class);
+            //将对象转换成为字符串
+            String str = JSON.toJSONString(agentMap);
+            //字符串转换成为对象
+            HashMap infoMap = JSON.parseObject(str, HashMap.class);
+            FuComAgentApply agentApply=(FuComAgentApply)ConvertUtil.MapToJavaBean(infoMap,FuComAgentApply.class);
 
             agentApply.setId(applyId);
             /*修改信息*/
@@ -175,7 +184,7 @@ public class FuComAgentApplyService extends ServiceImpl<FuComAgentApplyMapper,Fu
      * @param mesage
      * @return
      */
-    public int submitAgentSignal(int signalId,String mesage){
+    public int submitAgentApply(int signalId,String mesage){
         /**校验信息*/
         if(signalId<1){
             log.error("传入数据为空！");
@@ -199,12 +208,12 @@ public class FuComAgentApplyService extends ServiceImpl<FuComAgentApplyMapper,Fu
      * 审核信号源信息
      * @param applyId
      * @param state
-     * @param mesage
+     * @param message
      */
     @Transactional(rollbackFor = Exception.class)
-    public void reviewProductSignal(int applyId,int state, String mesage){
+    public void reviewAgentApply(int applyId,int state, String message){
         /**校验信息*/
-        if(applyId<1||state<1){
+        if(applyId<1||state<0){
             log.error("传入数据为空！");
             throw new DataConflictException(GlobalResultCode.PARAM_NULL_POINTER,"传入数据为空!");
         }
@@ -216,7 +225,7 @@ public class FuComAgentApplyService extends ServiceImpl<FuComAgentApplyMapper,Fu
                 throw new BusinessException("查询申请信息错误！");
             }
             agentApply.setCheckDate(new Date());
-            agentApply.setCheckDesc(mesage);
+            agentApply.setCheckDesc(message);
 
             if(state== AgentConstant.AGENT_APPLY_STATE_DONE){
                 /*审核通过*/

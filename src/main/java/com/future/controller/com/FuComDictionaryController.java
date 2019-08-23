@@ -16,13 +16,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/dictionary")
-public class FuComDictionaryontroller {
+public class FuComDictionaryController {
 
-    Logger log= LoggerFactory.getLogger(FuComDictionaryontroller.class);
+    Logger log= LoggerFactory.getLogger(FuComDictionaryController.class);
 
     @Autowired
     FuComDictionaryService dictionaryService;
@@ -37,8 +35,8 @@ public class FuComDictionaryontroller {
             log.error("数据为空！");
             throw new DataConflictException("数据为空！");
         }
-        String serverId=requestMap.getString("id");
-        if(StringUtils.isEmpty(serverId)){
+        String dicId=requestMap.getString("id");
+        if(StringUtils.isEmpty(dicId)){
             return dictionaryService.saveDictionnary(requestMap);
         }else {
             return dictionaryService.updateDictionary(requestMap);
@@ -68,13 +66,13 @@ public class FuComDictionaryontroller {
             throw new DataConflictException("数据为空！");
         }
 
-        String serverId=requestMap.getString("id");
-        if(StringUtils.isEmpty(requestJSONStr)){
+        String dicId=requestMap.getString("id");
+        if(StringUtils.isEmpty(dicId)){
             log.error("ID数据为空！");
             throw new DataConflictException("ID数据为空！");
         }
 
-        return dictionaryService.selectById(serverId);
+        return dictionaryService.selectById(dicId);
     }
 
 
@@ -88,13 +86,13 @@ public class FuComDictionaryontroller {
             throw new DataConflictException("数据为空！");
         }
 
-        String serverId=requestMap.getString("id");
-        if(StringUtils.isEmpty(requestJSONStr)){
+        String dicId=requestMap.getString("id");
+        if(StringUtils.isEmpty(dicId)){
             log.error("ID数据为空！");
             throw new DataConflictException("ID数据为空！");
         }
 
-        return dictionaryService.deleteDictionary(Integer.parseInt(serverId));
+        return dictionaryService.deleteDictionary(Integer.parseInt(dicId));
     }
 
 

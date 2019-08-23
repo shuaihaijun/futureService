@@ -20,7 +20,7 @@ public class FuComLogs {
     /**
      * 日志类型
      */
-    private int type;
+    private Integer type;
 
     /**
      * 操作（登录，删除，交易，跟单）
@@ -73,7 +73,7 @@ public class FuComLogs {
      * 日志类型
      * @return type 日志类型
      */
-    public int getType() {
+    public Integer getType() {
         return type;
     }
 
@@ -81,7 +81,7 @@ public class FuComLogs {
      * 日志类型
      * @param type 日志类型
      */
-    public void setType(int type) {
+    public void setType(Integer type) {
         this.type = type;
     }
 

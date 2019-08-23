@@ -36,12 +36,12 @@ public class FuUser {
     /**
      * 用户类型（总经理、总监、业务员、PIB、MIB、IB、VIP会员、普通会员、试用会员、分析师、信号源）
      */
-    private int userType;
+    private Integer userType;
 
     /**
      * 用户状态(0 未审核，1 正常，2 冻结，2 删除）
      */
-    private int userState;
+    private Integer userState;
 
     /**
      * 电子邮件
@@ -81,12 +81,12 @@ public class FuUser {
     /**
      * 是否已验证身份
      */
-    private int isVerified;
+    private Integer isVerified;
 
     /**
      * 是否已绑定第三方账户
      */
-    private int isAccount;
+    private Integer isAccount;
 
     /**
      * 介绍人
@@ -232,7 +232,7 @@ public class FuUser {
      * 用户类型（总经理、总监、业务员、PIB、MIB、IB、VIP会员、普通会员、试用会员、分析师、信号源）
      * @return user_type 用户类型（总经理、总监、业务员、PIB、MIB、IB、VIP会员、普通会员、试用会员、分析师、信号源）
      */
-    public int getUserType() {
+    public Integer getUserType() {
         return userType;
     }
 
@@ -240,7 +240,7 @@ public class FuUser {
      * 用户类型（总经理、总监、业务员、PIB、MIB、IB、VIP会员、普通会员、试用会员、分析师、信号源）
      * @param userType 用户类型（总经理、总监、业务员、PIB、MIB、IB、VIP会员、普通会员、试用会员、分析师、信号源）
      */
-    public void setUserType(int userType) {
+    public void setUserType(Integer userType) {
         this.userType = userType;
     }
 
@@ -248,7 +248,7 @@ public class FuUser {
      * 用户状态(0 未审核，1 正常，2 冻结，2 删除）
      * @return user_state 用户状态(0 未审核，1 正常，2 冻结，2 删除）
      */
-    public int getUserState() {
+    public Integer getUserState() {
         return userState;
     }
 
@@ -256,7 +256,7 @@ public class FuUser {
      * 用户状态(0 未审核，1 正常，2 冻结，2 删除）
      * @param userState 用户状态(0 未审核，1 正常，2 冻结，2 删除）
      */
-    public void setUserState(int userState) {
+    public void setUserState(Integer userState) {
         this.userState = userState;
     }
 
@@ -376,7 +376,7 @@ public class FuUser {
      * 是否已验证身份
      * @return is_verified 是否已验证身份
      */
-    public int getIsVerified() {
+    public Integer getIsVerified() {
         return isVerified;
     }
 
@@ -384,7 +384,7 @@ public class FuUser {
      * 是否已验证身份
      * @param isVerified 是否已验证身份
      */
-    public void setIsVerified(int isVerified) {
+    public void setIsVerified(Integer isVerified) {
         this.isVerified = isVerified;
     }
 
@@ -392,7 +392,7 @@ public class FuUser {
      * 是否已绑定第三方账户
      * @return is_account 是否已绑定第三方账户
      */
-    public int getIsAccount() {
+    public Integer getIsAccount() {
         return isAccount;
     }
 
@@ -400,7 +400,7 @@ public class FuUser {
      * 是否已绑定第三方账户
      * @param isAccount 是否已绑定第三方账户
      */
-    public void setIsAccount(int isAccount) {
+    public void setIsAccount(Integer isAccount) {
         this.isAccount = isAccount;
     }
 
