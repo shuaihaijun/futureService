@@ -66,10 +66,14 @@ public class PermissionResourceService extends ServiceImpl<FuPermissionResourceM
      * @param fuPermissionResourceBO 保存的数据信息
      */
     @Transactional(rollbackFor = Exception.class)
-    public void save(FuPermissionResourceBO fuPermissionResourceBO) {
+    public int save(FuPermissionResourceBO fuPermissionResourceBO) {
         //验证参数对象是否为空
-        if (fuPermissionResourceBO == null || StringUtils.isEmpty(fuPermissionResourceBO.getResName()) || fuPermissionResourceBO.getProjKey() == null) {
+        if (fuPermissionResourceBO == null || StringUtils.isEmpty(fuPermissionResourceBO.getResName())) {
             throw new BusinessException(GlobalResultCode.PARAM_NULL_POINTER);
+        }
+        //系统默认为0
+        if(fuPermissionResourceBO.getProjKey() == null){
+            fuPermissionResourceBO.setProjKey(0);
         }
         //父类节点ID默认为0
         if (fuPermissionResourceBO.getResPid() == null) {
@@ -97,6 +101,7 @@ public class PermissionResourceService extends ServiceImpl<FuPermissionResourceM
             throw new BusinessException(RmsResultCode.PERMISSION_RESOURCE_DATA_SAVE_FAILURE);
         }
 
+        return isSuccess;
     }
 
     /**
@@ -131,9 +136,9 @@ public class PermissionResourceService extends ServiceImpl<FuPermissionResourceM
      */
     public PageInfo<FuPermissionResourceVO> findPageList(FuPermissionResourceBO fuPermissionResourceBO, PageInfoHelper helper) {
         //验证参数对象是否为空
-        if (fuPermissionResourceBO == null) {
+        /*if (fuPermissionResourceBO == null) {
             throw new BusinessException(GlobalResultCode.PARAM_NULL_POINTER);
-        }
+        }*/
 
         //获取当前登录用户信息
         AdminInfo user = RequestContextHolderUtil.getAdminInfo();

@@ -44,6 +44,16 @@ public class FuPermissionResourceBO implements Serializable {
     @ApiModelProperty(value = "权限资源描述")
     private String resDesc;
     /**
+     * 权限资源状态
+     */
+    @ApiModelProperty(value = "权限资源状态")
+    private String resStatus;
+    /**
+     * 权限资源排序
+     */
+    @ApiModelProperty(value = "权限资源排序")
+    private String resSort;
+    /**
      * 响应式图标
      */
     @ApiModelProperty(value = "响应式图标")

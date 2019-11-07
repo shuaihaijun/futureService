@@ -7,8 +7,7 @@ import com.future.common.exception.DataConflictException;
 import com.future.common.util.DateUtil;
 import com.future.common.util.StringUtils;
 import com.future.common.util.ThreadCache;
-import com.future.entity.order.FuOrderCustomer;
-import com.future.entity.order.FuOrderInfo;
+import com.future.entity.order.FuOrderFollowInfo;
 import com.future.service.order.FuOrderInfoService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,7 +30,7 @@ public class OrderController {
     //获得Mt历史订单操作
     @RequestMapping(value= "/getMTtHistoryOrders",method=RequestMethod.POST)
     public @ResponseBody
-    List<FuOrderInfo> getMTtHistoryOrders(){
+    List<FuOrderFollowInfo> getMTtHistoryOrders(){
         // 获取请求参数
         String requestJSONStr = ThreadCache.getPostRequestParams();
         JSONObject requestMap = JSONObject.parseObject(requestJSONStr);
@@ -52,7 +51,7 @@ public class OrderController {
     //获得Mt在仓订单操作
     @RequestMapping(value= "/getMTAliveOrders",method=RequestMethod.POST)
     public @ResponseBody
-    List<FuOrderInfo> getMTAliveOrders(){
+    List<FuOrderFollowInfo> getMTAliveOrders(){
         // 获取请求参数
         String requestJSONStr = ThreadCache.getPostRequestParams();
         JSONObject requestMap = JSONObject.parseObject(requestJSONStr);

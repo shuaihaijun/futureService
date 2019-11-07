@@ -1,16 +1,12 @@
 package com.future.entity.order;
 
-import com.baomidou.mybatisplus.annotations.TableId;
-import com.baomidou.mybatisplus.enums.IdType;
-
 import java.math.BigDecimal;
 import java.util.Date;
 
-public class FuOrderInfo {
+public class FuOrderFollowInfo {
     /**
      * 
      */
-    @TableId(type = IdType.AUTO)
     private Integer id;
 
     /**
@@ -36,7 +32,27 @@ public class FuOrderInfo {
     /**
      * 交易账号ID
      */
-    private String mtId;
+    private String userMtAccId;
+
+    /**
+     * 用户服务器ID
+     */
+    private Integer userServerId;
+
+    /**
+     * 信号源服务器ID
+     */
+    private Integer signalServerId;
+
+    /**
+     * 信号源订单号
+     */
+    private String signalOrderId;
+
+    /**
+     * 信号源mt平台账号
+     */
+    private String signalMtAccId;
 
     /**
      * 外汇产品
@@ -49,16 +65,6 @@ public class FuOrderInfo {
     private BigDecimal orderLots;
 
     /**
-     * 订单类型（ 0 普通订单，1 拆分订单）
-     */
-    private Integer orderType;
-
-    /**
-     * 订单状态（ 0 交易中 ，1 已建仓，2 部分平仓，3 已平仓）
-     */
-    private Integer orderState;
-
-    /**
      * 止损价
      */
     private BigDecimal orderStoploss;
@@ -69,24 +75,9 @@ public class FuOrderInfo {
     private BigDecimal orderTakeprofit;
 
     /**
-     * 原订单号
-     */
-    private String orderSuperior;
-
-    /**
      * 订单来源标识：（0 自交易，1 社区跟单）
      */
     private Integer orderSourceFlag;
-
-    /**
-     * 跟随订单号
-     */
-    private String orderSourceId;
-
-    /**
-     * 跟随mt账号
-     */
-    private String orderSourceMt;
 
     /**
      * 交易类别（0 buy，1 sell, 2 buylimit ,3 selllimit, 4 buystop, 5 sellstop,6 deposit, 7 credit，99 close）
@@ -94,14 +85,19 @@ public class FuOrderInfo {
     private Integer orderTradeOperation;
 
     /**
-     * 订单拆分次数
+     * 订单类型（ 0 普通订单，1 拆分订单）
      */
-    private Integer orderSplitCount;
+    private Integer orderType;
 
     /**
-     * 拆单类型 ( 0 拆单建仓，1 拆单平仓)
+     * 拆单类型 ( 0 拆单平仓，1 拆单键仓)
      */
     private Integer orderSplitType;
+
+    /**
+     * 原订单号
+     */
+    private String orderSuperior;
 
     /**
      * 盈利
@@ -235,18 +231,82 @@ public class FuOrderInfo {
 
     /**
      * 交易账号ID
-     * @return mt_id 交易账号ID
+     * @return user_mt_acc_id 交易账号ID
      */
-    public String getMtId() {
-        return mtId;
+    public String getUserMtAccId() {
+        return userMtAccId;
     }
 
     /**
      * 交易账号ID
-     * @param mtId 交易账号ID
+     * @param userMtAccId 交易账号ID
      */
-    public void setMtId(String mtId) {
-        this.mtId = mtId == null ? null : mtId.trim();
+    public void setUserMtAccId(String userMtAccId) {
+        this.userMtAccId = userMtAccId == null ? null : userMtAccId.trim();
+    }
+
+    /**
+     * 用户服务器ID
+     * @return user_server_id 用户服务器ID
+     */
+    public Integer getUserServerId() {
+        return userServerId;
+    }
+
+    /**
+     * 用户服务器ID
+     * @param userServerId 用户服务器ID
+     */
+    public void setUserServerId(Integer userServerId) {
+        this.userServerId = userServerId;
+    }
+
+    /**
+     * 信号源服务器ID
+     * @return signal_server_id 信号源服务器ID
+     */
+    public Integer getSignalServerId() {
+        return signalServerId;
+    }
+
+    /**
+     * 信号源服务器ID
+     * @param signalServerId 信号源服务器ID
+     */
+    public void setSignalServerId(Integer signalServerId) {
+        this.signalServerId = signalServerId;
+    }
+
+    /**
+     * 信号源订单号
+     * @return signal_order_id 信号源订单号
+     */
+    public String getSignalOrderId() {
+        return signalOrderId;
+    }
+
+    /**
+     * 信号源订单号
+     * @param signalOrderId 信号源订单号
+     */
+    public void setSignalOrderId(String signalOrderId) {
+        this.signalOrderId = signalOrderId == null ? null : signalOrderId.trim();
+    }
+
+    /**
+     * 信号源mt平台账号
+     * @return signal_mt_acc_id 信号源mt平台账号
+     */
+    public String getSignalMtAccId() {
+        return signalMtAccId;
+    }
+
+    /**
+     * 信号源mt平台账号
+     * @param signalMtAccId 信号源mt平台账号
+     */
+    public void setSignalMtAccId(String signalMtAccId) {
+        this.signalMtAccId = signalMtAccId == null ? null : signalMtAccId.trim();
     }
 
     /**
@@ -282,38 +342,6 @@ public class FuOrderInfo {
     }
 
     /**
-     * 订单类型（ 0 普通订单，1 拆分订单）
-     * @return order_type 订单类型（ 0 普通订单，1 拆分订单）
-     */
-    public Integer getOrderType() {
-        return orderType;
-    }
-
-    /**
-     * 订单类型（ 0 普通订单，1 拆分订单）
-     * @param orderType 订单类型（ 0 普通订单，1 拆分订单）
-     */
-    public void setOrderType(Integer orderType) {
-        this.orderType = orderType;
-    }
-
-    /**
-     * 订单状态（ 0 交易中 ，1 已建仓，2 部分平仓，3 已平仓）
-     * @return order_state 订单状态（ 0 交易中 ，1 已建仓，2 部分平仓，3 已平仓）
-     */
-    public Integer getOrderState() {
-        return orderState;
-    }
-
-    /**
-     * 订单状态（ 0 交易中 ，1 已建仓，2 部分平仓，3 已平仓）
-     * @param orderState 订单状态（ 0 交易中 ，1 已建仓，2 部分平仓，3 已平仓）
-     */
-    public void setOrderState(Integer orderState) {
-        this.orderState = orderState;
-    }
-
-    /**
      * 止损价
      * @return order_stoploss 止损价
      */
@@ -346,22 +374,6 @@ public class FuOrderInfo {
     }
 
     /**
-     * 原订单号
-     * @return order_superior 原订单号
-     */
-    public String getOrderSuperior() {
-        return orderSuperior;
-    }
-
-    /**
-     * 原订单号
-     * @param orderSuperior 原订单号
-     */
-    public void setOrderSuperior(String orderSuperior) {
-        this.orderSuperior = orderSuperior == null ? null : orderSuperior.trim();
-    }
-
-    /**
      * 订单来源标识：（0 自交易，1 社区跟单）
      * @return order_source_flag 订单来源标识：（0 自交易，1 社区跟单）
      */
@@ -375,38 +387,6 @@ public class FuOrderInfo {
      */
     public void setOrderSourceFlag(Integer orderSourceFlag) {
         this.orderSourceFlag = orderSourceFlag;
-    }
-
-    /**
-     * 跟随订单号
-     * @return order_source_id 跟随订单号
-     */
-    public String getOrderSourceId() {
-        return orderSourceId;
-    }
-
-    /**
-     * 跟随订单号
-     * @param orderSourceId 跟随订单号
-     */
-    public void setOrderSourceId(String orderSourceId) {
-        this.orderSourceId = orderSourceId == null ? null : orderSourceId.trim();
-    }
-
-    /**
-     * 跟随mt账号
-     * @return order_source_mt 跟随mt账号
-     */
-    public String getOrderSourceMt() {
-        return orderSourceMt;
-    }
-
-    /**
-     * 跟随mt账号
-     * @param orderSourceMt 跟随mt账号
-     */
-    public void setOrderSourceMt(String orderSourceMt) {
-        this.orderSourceMt = orderSourceMt == null ? null : orderSourceMt.trim();
     }
 
     /**
@@ -426,35 +406,51 @@ public class FuOrderInfo {
     }
 
     /**
-     * 订单拆分次数
-     * @return order_split_count 订单拆分次数
+     * 订单类型（ 0 普通订单，1 拆分订单）
+     * @return order_type 订单类型（ 0 普通订单，1 拆分订单）
      */
-    public Integer getOrderSplitCount() {
-        return orderSplitCount;
+    public Integer getOrderType() {
+        return orderType;
     }
 
     /**
-     * 订单拆分次数
-     * @param orderSplitCount 订单拆分次数
+     * 订单类型（ 0 普通订单，1 拆分订单）
+     * @param orderType 订单类型（ 0 普通订单，1 拆分订单）
      */
-    public void setOrderSplitCount(Integer orderSplitCount) {
-        this.orderSplitCount = orderSplitCount;
+    public void setOrderType(Integer orderType) {
+        this.orderType = orderType;
     }
 
     /**
-     * 拆单类型 ( 0 拆单建仓，1 拆单平仓)
-     * @return order_split_type 拆单类型 ( 0 拆单建仓，1 拆单平仓)
+     * 拆单类型 ( 0 拆单平仓，1 拆单键仓)
+     * @return order_split_type 拆单类型 ( 0 拆单平仓，1 拆单键仓)
      */
     public Integer getOrderSplitType() {
         return orderSplitType;
     }
 
     /**
-     * 拆单类型 ( 0 拆单建仓，1 拆单平仓)
-     * @param orderSplitType 拆单类型 ( 0 拆单建仓，1 拆单平仓)
+     * 拆单类型 ( 0 拆单平仓，1 拆单键仓)
+     * @param orderSplitType 拆单类型 ( 0 拆单平仓，1 拆单键仓)
      */
     public void setOrderSplitType(Integer orderSplitType) {
         this.orderSplitType = orderSplitType;
+    }
+
+    /**
+     * 原订单号
+     * @return order_superior 原订单号
+     */
+    public String getOrderSuperior() {
+        return orderSuperior;
+    }
+
+    /**
+     * 原订单号
+     * @param orderSuperior 原订单号
+     */
+    public void setOrderSuperior(String orderSuperior) {
+        this.orderSuperior = orderSuperior == null ? null : orderSuperior.trim();
     }
 
     /**

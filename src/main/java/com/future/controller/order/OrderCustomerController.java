@@ -3,18 +3,13 @@ package com.future.controller.order;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
-import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.future.common.enums.GlobalResultCode;
 import com.future.common.exception.DataConflictException;
-import com.future.common.util.DateUtil;
 import com.future.common.util.StringUtils;
 import com.future.common.util.ThreadCache;
 import com.future.entity.order.FuOrderCustomer;
-import com.future.entity.order.FuOrderInfo;
 import com.future.service.order.FuOrderCustomerService;
-import com.future.service.order.FuOrderInfoService;
-import com.github.pagehelper.PageInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,10 +18,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/orderCustomer")

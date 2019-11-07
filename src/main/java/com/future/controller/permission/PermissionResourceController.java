@@ -41,7 +41,11 @@ public class PermissionResourceController {
     @PostMapping(value = "/save")
     public void save(@RequestBody RequestParams<FuPermissionResourceBO> requestParams) {
         FuPermissionResourceBO permenuBO = requestParams.getParams();
-        permissionResourceService.save(permenuBO);
+        if(permenuBO.getId()!=null){
+            permissionResourceService.modify(permenuBO);
+        }else {
+            permissionResourceService.save(permenuBO);
+        }
     }
 
     /**

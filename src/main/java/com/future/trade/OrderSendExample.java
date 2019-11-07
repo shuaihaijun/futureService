@@ -6,9 +6,9 @@ import java.io.IOException;
 
 public class OrderSendExample extends Strategy {
 
-    public Broker MT_4_SERVER = new Broker("AETOS-Demo F");
-    public String MT_4_USER = "2102261700";
-    public String MT_4_PASSWORD = "jxg3vvd";
+    public Broker MT_4_SERVER = new Broker("MultiBankFXInt-Demo F");
+    public String MT_4_USER = "2102272054";
+    public String MT_4_PASSWORD = "dcb6ose";
     public String HOST_URL="127.0.0.1";//"127.0.0.1"
 //    public String HOST_URL="192.168.199.101";//"127.0.0.1"
 
@@ -41,32 +41,26 @@ public class OrderSendExample extends Strategy {
                     0, 0, "comment", 0, null, 0
             );
         }
+    }
 
-       /* long tickCount= getTickCount();
-        ArrayList<Tick> ticks= getTicks();
-        for(int i=0;i<ticks.size();i++){
-            logger.info("--------ticks----"+i);
-            logger.info("---"+ticks.get(i).symbol);
-            logger.info("---"+ticks.get(i).time.toString());
-            logger.info("---"+ticks.get(i).flags);
-            logger.info("---"+ticks.get(i).ask);
-            logger.info("---"+ticks.get(i).bid);
-            logger.info("---"+ticks.get(i).last);
-            logger.info("---"+ticks.get(i).volume);
-        }*/
+    public void disconnetct() throws MT4Exception {
+        try {
+            disconnect();
+        }catch (IOException e){
+            throw new MT4Exception(2, "No connection to TS", e);
+        }
     }
 
 
 
     public static void main(String[] args) throws Exception  {
-//        System.setProperty("jfx_activation_key", "235961853");
-//        System.setProperty("jfx_activation_key", "2034239897");
         OrderSendExample orderSendExample = new OrderSendExample();
         System.out.println("========connect begin");
         orderSendExample.init();
         System.out.println("========connected orderSend begin");
         orderSendExample.newPosition("EURUSD", "B", 0.01);
         System.out.println("========orderSended well done!");
+//        orderSendExample.disconnect();
     }
 
 }

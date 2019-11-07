@@ -8,7 +8,7 @@ import com.future.common.exception.DataConflictException;
 import com.future.common.util.ConvertUtil;
 import com.future.common.util.StringUtils;
 import com.future.entity.order.FuOrderCustomer;
-import com.future.entity.order.FuOrderInfo;
+import com.future.entity.order.FuOrderFollowInfo;
 import com.future.mapper.order.FuOrderCustomerMapper;
 import com.future.pojo.bo.order.UserMTAccountBO;
 import com.future.service.account.FuAccountMtSevice;
@@ -86,9 +86,9 @@ public class FuOrderCustomerService extends ServiceImpl<FuOrderCustomerMapper, F
             lastCLostTime=lastOrder.getCreateDate();
         }
 
-        List<FuOrderInfo> fuOrderInfos=new ArrayList<FuOrderInfo>();
+        List<FuOrderFollowInfo> fuOrderInfos=new ArrayList<FuOrderFollowInfo>();
         List<FuOrderCustomer> customers=new ArrayList<FuOrderCustomer>();
-        FuOrderInfo info;
+        FuOrderFollowInfo info;
         Broker broker;
         String server;
         String password;
@@ -117,7 +117,7 @@ public class FuOrderCustomerService extends ServiceImpl<FuOrderCustomerMapper, F
                 fuOrderInfos=mtOrderService.getHistoryOrders(broker,mtAccountId,password,lastCLostTime,new Date(),null);
 
                 if(!ObjectUtils.isEmpty(fuOrderInfos)){
-                    for(FuOrderInfo fuOrderInfo:fuOrderInfos){
+                    for(FuOrderFollowInfo fuOrderInfo:fuOrderInfos){
                         /*与社区订单查重，已有订单无需操作*/
                         selectMap.put("order_id",fuOrderInfo.getOrderId());
                         List<FuOrderCustomer> infos=fuOrderCustomerMapper.selectByMap(selectMap);
@@ -129,7 +129,7 @@ public class FuOrderCustomerService extends ServiceImpl<FuOrderCustomerMapper, F
                         /*转换订单*/
                         FuOrderCustomer customerInfo= ConvertUtil.convertOrderCustomer(fuOrderInfo);
                         customerInfo.setUserId(userId);
-                        customerInfo.setMtId(mtAccountId);
+                        customerInfo.setMtAccId(mtAccountId);
                         customerInfo.setOrderState(OrderConstant.ORDER_STATE_CLOSE);
                         fuOrderCustomerMapper.insertSelective(customerInfo);
                         customers.add(customerInfo);

@@ -2,14 +2,10 @@ package com.future.service.order;
 
 import com.alibaba.druid.util.StringUtils;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
-import com.future.common.constants.OrderConstant;
 import com.future.common.exception.BusinessException;
-import com.future.common.util.ConvertUtil;
 import com.future.entity.order.FuOrderCustomer;
-import com.future.entity.order.FuOrderInfo;
-import com.future.mapper.account.FuAccountMtMapper;
-import com.future.mapper.order.FuOrderCustomerMapper;
-import com.future.mapper.order.FuOrderInfoMapper;
+import com.future.entity.order.FuOrderFollowInfo;
+import com.future.mapper.order.FuOrderFollowInfoMapper;
 import com.future.pojo.bo.order.UserMTAccountBO;
 import com.future.service.account.FuAccountMtSevice;
 import com.future.service.account.FuAccoutInfoService;
@@ -26,7 +22,7 @@ import org.springframework.util.ObjectUtils;
 import java.util.*;
 
 @Service
-public class FuOrderInfoService extends ServiceImpl<FuOrderInfoMapper,FuOrderInfo> {
+public class FuOrderInfoService extends ServiceImpl<FuOrderFollowInfoMapper,FuOrderFollowInfo> {
 
     Logger log = LoggerFactory.getLogger(FuOrderInfoService.class);
 
@@ -51,7 +47,7 @@ public class FuOrderInfoService extends ServiceImpl<FuOrderInfoMapper,FuOrderInf
      * @param symbol
      * @return
      */
-    public List<FuOrderInfo> geMTtHistoryOrders(String userId,String username, String accountId,Date dataFrom,Date dateTo,String symbol){
+    public List<FuOrderFollowInfo> geMTtHistoryOrders(String userId,String username, String accountId,Date dataFrom,Date dateTo,String symbol){
         return getMTOrders(true,userId,username,accountId,dataFrom,dateTo,symbol);
     }
 
@@ -66,7 +62,7 @@ public class FuOrderInfoService extends ServiceImpl<FuOrderInfoMapper,FuOrderInf
      * @param symbol
      * @return
      */
-    public List<FuOrderInfo> getMTAliveOrders(String userId,String username, String accountId,Date dataFrom,Date dateTo,String symbol){
+    public List<FuOrderFollowInfo> getMTAliveOrders(String userId,String username, String accountId,Date dataFrom,Date dateTo,String symbol){
         return getMTOrders(false,userId,username,accountId,dataFrom,dateTo,symbol);
     }
 
@@ -77,7 +73,7 @@ public class FuOrderInfoService extends ServiceImpl<FuOrderInfoMapper,FuOrderInf
      * @param index
      * @return
      */
-    public FuOrderInfo getMTHistoryOrderByIndex(String username, String accountId,long index){
+    public FuOrderFollowInfo getMTHistoryOrderByIndex(String username, String accountId,long index){
         return getMTOrderByIndex(username,accountId,index,true);
     }
 
@@ -88,7 +84,7 @@ public class FuOrderInfoService extends ServiceImpl<FuOrderInfoMapper,FuOrderInf
      * @param index
      * @return
      */
-    public FuOrderInfo getMTAliveOrderByIndex(String username, String accountId,long index){
+    public FuOrderFollowInfo getMTAliveOrderByIndex(String username, String accountId,long index){
         return getMTOrderByIndex(username,accountId,index,false);
     }
 
@@ -103,7 +99,7 @@ public class FuOrderInfoService extends ServiceImpl<FuOrderInfoMapper,FuOrderInf
      * @param symbol
      * @return
      */
-    public List<FuOrderInfo> getMTOrders(Boolean isHistoryOrder, String userId,String username, String accountId,Date dataFrom,Date dateTo,String symbol){
+    public List<FuOrderFollowInfo> getMTOrders(Boolean isHistoryOrder, String userId,String username, String accountId,Date dataFrom,Date dateTo,String symbol){
         if(StringUtils.isEmpty(username)&&StringUtils.isEmpty(userId)){
             log.error("根据时间段 查询用户历史订单，用户信息为空！");
             return null;
@@ -141,7 +137,7 @@ public class FuOrderInfoService extends ServiceImpl<FuOrderInfoMapper,FuOrderInf
             return null;
         }
         Broker broker=new Broker(server);
-        List<FuOrderInfo> infos=new ArrayList<FuOrderInfo>();
+        List<FuOrderFollowInfo> infos=new ArrayList<FuOrderFollowInfo>();
         if(isHistoryOrder){
             infos= mtOrderService.getHistoryOrders(broker,mtAccId,mtPassword,dataFrom,dateTo,symbol);
         }else {
@@ -149,8 +145,8 @@ public class FuOrderInfoService extends ServiceImpl<FuOrderInfoMapper,FuOrderInf
         }
 
         /*填充数据*/
-        for (FuOrderInfo info:infos){
-            info.setMtId(mtAccId);
+        for (FuOrderFollowInfo info:infos){
+            info.setUserMtAccId(mtAccId);
             info.setUserId(Integer.parseInt(userId));
         }
         return infos;
@@ -165,7 +161,7 @@ public class FuOrderInfoService extends ServiceImpl<FuOrderInfoMapper,FuOrderInf
      * @param isHistoryOrder
      * @return
      */
-    public FuOrderInfo getMTOrderByIndex(String username, String accountId,long index,Boolean isHistoryOrder){
+    public FuOrderFollowInfo getMTOrderByIndex(String username, String accountId,long index,Boolean isHistoryOrder){
 
         if(StringUtils.isEmpty(username)||index==0){
             log.error("根据时间段 查询用户历史订单，数据为空！");
@@ -230,9 +226,9 @@ public class FuOrderInfoService extends ServiceImpl<FuOrderInfoMapper,FuOrderInf
      * @param orderId
      * @return
      */
-    public FuOrderInfo getOrderById(String orderId){
+    public FuOrderFollowInfo getOrderById(String orderId){
 
-        FuOrderInfo fuOrderInfo=new FuOrderInfo();
+        FuOrderFollowInfo fuOrderInfo=new FuOrderFollowInfo();
         /*redis 或 数据库*/
         return null;
     }

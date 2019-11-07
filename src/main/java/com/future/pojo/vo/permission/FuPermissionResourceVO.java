@@ -70,6 +70,16 @@ public class FuPermissionResourceVO implements Serializable {
     @ApiModelProperty(value = "创建人姓名")
     private String creater;
     /**
+     * 权限资源状态
+     */
+    @ApiModelProperty(value = "权限资源状态")
+    private String resStatus;
+    /**
+     * 权限资源排序
+     */
+    @ApiModelProperty(value = "权限资源排序")
+    private String resSort;
+    /**
      * 新增时间
      */
     @ApiModelProperty(value = "创建时间")

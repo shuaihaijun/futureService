@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.future.mapper.user.FuUserFollowRuleMapper">
+  <resultMap id="BaseResultMap" type="com.future.entity.user.FuUserFollowRule">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="user_server_id" jdbcType="INTEGER" property="userServerId" />
+    <result column="user_mt_acc_id" jdbcType="VARCHAR" property="userMtAccId" />
+    <result column="rule_type" jdbcType="TINYINT" property="ruleType" />
+    <result column="amount" jdbcType="DECIMAL" property="amount" />
+    <result column="rule_state" jdbcType="TINYINT" property="ruleState" />
+    <result column="limit_upper_amount" jdbcType="DECIMAL" property="limitUpperAmount" />
+    <result column="account_equity_amount" jdbcType="DECIMAL" property="accountEquityAmount" />
+    <result column="account_equity_percentage" jdbcType="DECIMAL" property="accountEquityPercentage" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="modify_date" jdbcType="TIMESTAMP" property="modifyDate" />
+    <result column="follow_max_amount" jdbcType="DECIMAL" property="followMaxAmount" />
+    <result column="follow_alarm_amount" jdbcType="DECIMAL" property="followAlarmAmount" />
+    <result column="follow_alarm_lose" jdbcType="DECIMAL" property="followAlarmLose" />
+    <result column="follow_alarm_level" jdbcType="DECIMAL" property="followAlarmLevel" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, user_id, user_server_id, user_mt_acc_id, rule_type, amount, rule_state, limit_upper_amount, 
+    account_equity_amount, account_equity_percentage, create_date, modify_date, follow_max_amount, 
+    follow_alarm_amount, follow_alarm_lose, follow_alarm_level
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from fu_user_follow_rule
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from fu_user_follow_rule
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.future.entity.user.FuUserFollowRule">
+    insert into fu_user_follow_rule (id, user_id, user_server_id, 
+      user_mt_acc_id, rule_type, amount, 
+      rule_state, limit_upper_amount, account_equity_amount, 
+      account_equity_percentage, create_date, 
+      modify_date, follow_max_amount, follow_alarm_amount, 
+      follow_alarm_lose, follow_alarm_level)
+    values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{userServerId,jdbcType=INTEGER}, 
+      #{userMtAccId,jdbcType=VARCHAR}, #{ruleType,jdbcType=TINYINT}, #{amount,jdbcType=DECIMAL}, 
+      #{ruleState,jdbcType=TINYINT}, #{limitUpperAmount,jdbcType=DECIMAL}, #{accountEquityAmount,jdbcType=DECIMAL}, 
+      #{accountEquityPercentage,jdbcType=DECIMAL}, #{createDate,jdbcType=TIMESTAMP}, 
+      #{modifyDate,jdbcType=TIMESTAMP}, #{followMaxAmount,jdbcType=DECIMAL}, #{followAlarmAmount,jdbcType=DECIMAL}, 
+      #{followAlarmLose,jdbcType=DECIMAL}, #{followAlarmLevel,jdbcType=DECIMAL})
+  </insert>
+  <insert id="insertSelective" parameterType="com.future.entity.user.FuUserFollowRule">
+    insert into fu_user_follow_rule
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="userServerId != null">
+        user_server_id,
+      </if>
+      <if test="userMtAccId != null">
+        user_mt_acc_id,
+      </if>
+      <if test="ruleType != null">
+        rule_type,
+      </if>
+      <if test="amount != null">
+        amount,
+      </if>
+      <if test="ruleState != null">
+        rule_state,
+      </if>
+      <if test="limitUpperAmount != null">
+        limit_upper_amount,
+      </if>
+      <if test="accountEquityAmount != null">
+        account_equity_amount,
+      </if>
+      <if test="accountEquityPercentage != null">
+        account_equity_percentage,
+      </if>
+      <if test="createDate != null">
+        create_date,
+      </if>
+      <if test="modifyDate != null">
+        modify_date,
+      </if>
+      <if test="followMaxAmount != null">
+        follow_max_amount,
+      </if>
+      <if test="followAlarmAmount != null">
+        follow_alarm_amount,
+      </if>
+      <if test="followAlarmLose != null">
+        follow_alarm_lose,
+      </if>
+      <if test="followAlarmLevel != null">
+        follow_alarm_level,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="userServerId != null">
+        #{userServerId,jdbcType=INTEGER},
+      </if>
+      <if test="userMtAccId != null">
+        #{userMtAccId,jdbcType=VARCHAR},
+      </if>
+      <if test="ruleType != null">
+        #{ruleType,jdbcType=TINYINT},
+      </if>
+      <if test="amount != null">
+        #{amount,jdbcType=DECIMAL},
+      </if>
+      <if test="ruleState != null">
+        #{ruleState,jdbcType=TINYINT},
+      </if>
+      <if test="limitUpperAmount != null">
+        #{limitUpperAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="accountEquityAmount != null">
+        #{accountEquityAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="accountEquityPercentage != null">
+        #{accountEquityPercentage,jdbcType=DECIMAL},
+      </if>
+      <if test="createDate != null">
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyDate != null">
+        #{modifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="followMaxAmount != null">
+        #{followMaxAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="followAlarmAmount != null">
+        #{followAlarmAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="followAlarmLose != null">
+        #{followAlarmLose,jdbcType=DECIMAL},
+      </if>
+      <if test="followAlarmLevel != null">
+        #{followAlarmLevel,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.future.entity.user.FuUserFollowRule">
+    update fu_user_follow_rule
+    <set>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="userServerId != null">
+        user_server_id = #{userServerId,jdbcType=INTEGER},
+      </if>
+      <if test="userMtAccId != null">
+        user_mt_acc_id = #{userMtAccId,jdbcType=VARCHAR},
+      </if>
+      <if test="ruleType != null">
+        rule_type = #{ruleType,jdbcType=TINYINT},
+      </if>
+      <if test="amount != null">
+        amount = #{amount,jdbcType=DECIMAL},
+      </if>
+      <if test="ruleState != null">
+        rule_state = #{ruleState,jdbcType=TINYINT},
+      </if>
+      <if test="limitUpperAmount != null">
+        limit_upper_amount = #{limitUpperAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="accountEquityAmount != null">
+        account_equity_amount = #{accountEquityAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="accountEquityPercentage != null">
+        account_equity_percentage = #{accountEquityPercentage,jdbcType=DECIMAL},
+      </if>
+      <if test="createDate != null">
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyDate != null">
+        modify_date = #{modifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="followMaxAmount != null">
+        follow_max_amount = #{followMaxAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="followAlarmAmount != null">
+        follow_alarm_amount = #{followAlarmAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="followAlarmLose != null">
+        follow_alarm_lose = #{followAlarmLose,jdbcType=DECIMAL},
+      </if>
+      <if test="followAlarmLevel != null">
+        follow_alarm_level = #{followAlarmLevel,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.future.entity.user.FuUserFollowRule">
+    update fu_user_follow_rule
+    set user_id = #{userId,jdbcType=INTEGER},
+      user_server_id = #{userServerId,jdbcType=INTEGER},
+      user_mt_acc_id = #{userMtAccId,jdbcType=VARCHAR},
+      rule_type = #{ruleType,jdbcType=TINYINT},
+      amount = #{amount,jdbcType=DECIMAL},
+      rule_state = #{ruleState,jdbcType=TINYINT},
+      limit_upper_amount = #{limitUpperAmount,jdbcType=DECIMAL},
+      account_equity_amount = #{accountEquityAmount,jdbcType=DECIMAL},
+      account_equity_percentage = #{accountEquityPercentage,jdbcType=DECIMAL},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      modify_date = #{modifyDate,jdbcType=TIMESTAMP},
+      follow_max_amount = #{followMaxAmount,jdbcType=DECIMAL},
+      follow_alarm_amount = #{followAlarmAmount,jdbcType=DECIMAL},
+      follow_alarm_lose = #{followAlarmLose,jdbcType=DECIMAL},
+      follow_alarm_level = #{followAlarmLevel,jdbcType=DECIMAL}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

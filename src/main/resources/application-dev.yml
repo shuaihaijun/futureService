@@ -30,7 +30,7 @@ spring:
     maxOpenPreparedStatements: 20
   # 使用redis
   redis:
-    host: 192.168.88.80
+    host: 127.0.0.1
     port: 6379
     password: foobared
     timeout: 3000 # 连接超时时间（毫秒）

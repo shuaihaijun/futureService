@@ -6,7 +6,7 @@ import com.baomidou.mybatisplus.enums.IdType;
 import java.math.BigDecimal;
 import java.util.Date;
 
-public class FuOrderCustomer {
+public class FuOrderSignal {
     /**
      * 
      */
@@ -132,12 +132,6 @@ public class FuOrderCustomer {
      * 备注
      */
     private String comment;
-
-    public static final String USER_ID = "user_id";
-    public static final String ORDER_ID = "order_id";
-    public static final String ORDER_SYMBOL = "order_symbol";
-    public static final String ORDER_OPEN_DATE = "order_open_date";
-    public static final String ORDER_CLOSE_DATE = "order_close_date";
 
     /**
      * 

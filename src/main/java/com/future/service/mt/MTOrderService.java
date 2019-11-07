@@ -5,7 +5,7 @@ import com.alibaba.druid.util.StringUtils;
 import com.future.common.exception.BusinessException;
 import com.future.common.exception.DataConflictException;
 import com.future.common.util.ConvertUtil;
-import com.future.entity.order.FuOrderInfo;
+import com.future.entity.order.FuOrderFollowInfo;
 import com.jfx.*;
 import com.jfx.strategy.OrderInfo;
 import com.jfx.strategy.Strategy;
@@ -70,7 +70,7 @@ public class MTOrderService {
      * @param symbol
      * @return
      */
-    public List<FuOrderInfo> getAliveOrders(Broker broker, String mtAccId, String password, Date dateFrom, Date dateTo,String symbol){
+    public List<FuOrderFollowInfo> getAliveOrders(Broker broker, String mtAccId, String password, Date dateFrom, Date dateTo,String symbol){
         return getOrders(broker,mtAccId,password,SelectionPool.MODE_TRADES,dateFrom,dateTo,symbol);
     }
 
@@ -84,7 +84,7 @@ public class MTOrderService {
      * @param symbol
      * @return
      */
-    public List<FuOrderInfo> getHistoryOrders(Broker broker, String mtAccId, String password, Date dateFrom,Date dateTo,String symbol){
+    public List<FuOrderFollowInfo> getHistoryOrders(Broker broker, String mtAccId, String password, Date dateFrom,Date dateTo,String symbol){
         return getOrders(broker,mtAccId,password,SelectionPool.MODE_HISTORY,dateFrom,dateTo,symbol);
     }
 
@@ -99,7 +99,7 @@ public class MTOrderService {
      * @param symbol
      * @return
      */
-    public List<FuOrderInfo> getOrders(Broker broker, String mtAccId, String password, SelectionPool selectionPool, Date dateFrom,Date dateTo,String symbol){
+    public List<FuOrderFollowInfo> getOrders(Broker broker, String mtAccId, String password, SelectionPool selectionPool, Date dateFrom,Date dateTo,String symbol){
 
         if(StringUtils.isEmpty(mtAccId)||StringUtils.isEmpty(password)
                 ||ObjectUtils.isEmpty(broker)
@@ -139,7 +139,7 @@ public class MTOrderService {
      * @param index
      * @return
      */
-    public FuOrderInfo getHistoryOrderByIndex(Broker broker, String username, String password,long index){
+    public FuOrderFollowInfo getHistoryOrderByIndex(Broker broker, String username, String password,long index){
         return getOrderByIndex(broker,username,password,index,SelectionType.SELECT_BY_TICKET,SelectionPool.MODE_HISTORY);
     }
 
@@ -152,7 +152,7 @@ public class MTOrderService {
      * @param index
      * @return
      */
-    public FuOrderInfo getAliveOrderByIndex(Broker broker, String username, String password,long index){
+    public FuOrderFollowInfo getAliveOrderByIndex(Broker broker, String username, String password,long index){
         return getOrderByIndex(broker,username,password,index,SelectionType.SELECT_BY_TICKET,SelectionPool.MODE_TRADES);
     }
 
@@ -166,7 +166,7 @@ public class MTOrderService {
      * @param pool
      * @return
      */
-    public FuOrderInfo getOrderByIndex(Broker broker, String username, String password, long index,SelectionType type,SelectionPool pool){
+    public FuOrderFollowInfo getOrderByIndex(Broker broker, String username, String password, long index,SelectionType type,SelectionPool pool){
         if(index==0||ObjectUtils.isEmpty(type)||ObjectUtils.isEmpty(pool)){
             throw new DataConflictException("根据订单序号查询订单信息,传入数据为空！");
         }

@@ -3,7 +3,7 @@ package com.future.order;
 
 import com.future.TestDemoAccount;
 import com.future.common.util.DateUtil;
-import com.future.entity.order.FuOrderInfo;
+import com.future.entity.order.FuOrderFollowInfo;
 import com.future.service.mt.MTOrderService;
 import com.future.service.order.FuOrderInfoService;
 import com.jfx.SelectionPool;
@@ -41,7 +41,7 @@ public class MtOrderTest {
         Date dateFrom= DateUtil.toDateTimeFromString("2019-06-10 10:00:00");
         Date dateTo= DateUtil.toDateTimeFromString("2019-07-15 05:00:00");
         System.out.println("begin========"+new Date().getTime());
-        List<FuOrderInfo> data= fuOrderInfoService.geMTtHistoryOrders(null,username,accountId,dateFrom,dateTo,null);
+        List<FuOrderFollowInfo> data= fuOrderInfoService.geMTtHistoryOrders(null,username,accountId,dateFrom,dateTo,null);
         System.out.println("end  ========"+new Date().getTime());
     }
 }

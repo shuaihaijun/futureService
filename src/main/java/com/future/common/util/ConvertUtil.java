@@ -1,7 +1,7 @@
 package com.future.common.util;
 
 import com.future.entity.order.FuOrderCustomer;
-import com.future.entity.order.FuOrderInfo;
+import com.future.entity.order.FuOrderFollowInfo;
 import com.future.entity.product.FuProductSignal;
 import com.future.entity.product.FuProductSignalApply;
 import com.jfx.strategy.OrderInfo;
@@ -245,9 +245,9 @@ public class ConvertUtil {
      * @param mtOrders
      * @return
      */
-    public static List<FuOrderInfo> convertOrderInfo(Map<Long, OrderInfo> mtOrders ){
+    public static List<FuOrderFollowInfo> convertOrderInfo(Map<Long, OrderInfo> mtOrders ){
 
-        List<FuOrderInfo> orderInfos= new ArrayList<FuOrderInfo>();
+        List<FuOrderFollowInfo> orderInfos= new ArrayList<FuOrderFollowInfo>();
 
         if(ObjectUtils.isEmpty(mtOrders)){
             return null;
@@ -258,7 +258,7 @@ public class ConvertUtil {
             if(++i>1000){
                 break;
             }
-            FuOrderInfo fuOrderInfo=new FuOrderInfo();
+            FuOrderFollowInfo fuOrderInfo=new FuOrderFollowInfo();
 
             fuOrderInfo.setOrderId(String.valueOf(order.ticket()));
             fuOrderInfo.setCreateDate(order.getOpenTime());
@@ -280,7 +280,6 @@ public class ConvertUtil {
             fuOrderInfo.setOrderMagic(new BigDecimal(order.getMagic()).setScale(6,BigDecimal.ROUND_HALF_UP));
             fuOrderInfo.setOrderSwap(new BigDecimal(order.getSwap()).setScale(6,BigDecimal.ROUND_HALF_UP));
             fuOrderInfo.setOrderCommission(new BigDecimal(order.getCommission()));
-
             orderInfos.add(fuOrderInfo);
         }
 
@@ -292,13 +291,13 @@ public class ConvertUtil {
      * @param orderInfo
      * @return
      */
-    public static FuOrderInfo convertOrderInfo(OrderInfo orderInfo){
+    public static FuOrderFollowInfo convertOrderInfo(OrderInfo orderInfo){
 
         if(ObjectUtils.isEmpty(orderInfo)){
             return null;
         }
 
-        FuOrderInfo fuOrderInfo=new FuOrderInfo();
+        FuOrderFollowInfo fuOrderInfo=new FuOrderFollowInfo();
 
         fuOrderInfo.setOrderId(String.valueOf(orderInfo.ticket()));
         fuOrderInfo.setCreateDate(orderInfo.getOpenTime());
@@ -330,7 +329,7 @@ public class ConvertUtil {
      * @param fuOrderInfo
      * @return
      */
-    public static FuOrderCustomer convertOrderCustomer(FuOrderInfo fuOrderInfo){
+    public static FuOrderCustomer convertOrderCustomer(FuOrderFollowInfo fuOrderInfo){
 
 
         if(ObjectUtils.isEmpty(fuOrderInfo)){
@@ -345,7 +344,7 @@ public class ConvertUtil {
         fuOrderCustomer.setOrderId(fuOrderInfo.getOrderId());
         fuOrderCustomer.setOrderLots(fuOrderInfo.getOrderLots().setScale(6,BigDecimal.ROUND_HALF_UP));
         fuOrderCustomer.setOrderType(fuOrderInfo.getOrderType());
-        fuOrderCustomer.setOrderState(fuOrderInfo.getOrderState());
+//        fuOrderCustomer.setOrderState(fuOrderInfo.getOrderState());
 
         /*时间 价格*/
         fuOrderCustomer.setCreateDate(fuOrderInfo.getCreateDate());
@@ -365,8 +364,8 @@ public class ConvertUtil {
 
         /*用户 账户信息*/
         fuOrderCustomer.setUserId(fuOrderInfo.getUserId());
-        fuOrderCustomer.setUserType(fuOrderInfo.getOrderType());
-        fuOrderCustomer.setMtId(fuOrderInfo.getMtId());
+        fuOrderCustomer.setMtServerId(fuOrderInfo.getUserServerId());
+        fuOrderCustomer.setMtAccId(fuOrderInfo.getUserMtAccId());
 
 
         return fuOrderCustomer;
