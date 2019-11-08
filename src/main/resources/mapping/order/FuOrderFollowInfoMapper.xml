@@ -9,9 +9,11 @@
     <result column="user_id" jdbcType="INTEGER" property="userId" />
     <result column="user_mt_acc_id" jdbcType="VARCHAR" property="userMtAccId" />
     <result column="user_server_id" jdbcType="INTEGER" property="userServerId" />
+    <result column="user_server_name" jdbcType="VARCHAR" property="userServerName" />
     <result column="signal_server_id" jdbcType="INTEGER" property="signalServerId" />
-    <result column="signal_order_id" jdbcType="VARCHAR" property="signalOrderId" />
+    <result column="signal_server_name" jdbcType="VARCHAR" property="signalServerName" />
     <result column="signal_mt_acc_id" jdbcType="VARCHAR" property="signalMtAccId" />
+    <result column="signal_order_id" jdbcType="VARCHAR" property="signalOrderId" />
     <result column="order_symbol" jdbcType="VARCHAR" property="orderSymbol" />
     <result column="order_lots" jdbcType="DECIMAL" property="orderLots" />
     <result column="order_stoploss" jdbcType="DECIMAL" property="orderStoploss" />
@@ -34,10 +36,11 @@
   </resultMap>
   <sql id="Base_Column_List">
     id, create_date, modify_date, order_id, user_id, user_mt_acc_id, user_server_id, 
-    signal_server_id, signal_order_id, signal_mt_acc_id, order_symbol, order_lots, order_stoploss, 
-    order_takeprofit, order_source_flag, order_trade_operation, order_type, order_split_type, 
-    order_superior, order_profit, order_swap, order_commission, order_magic, order_open_price, 
-    order_open_date, order_close_price, order_close_date, order_expiration, comment
+    user_server_name, signal_server_id, signal_server_name, signal_mt_acc_id, signal_order_id, 
+    order_symbol, order_lots, order_stoploss, order_takeprofit, order_source_flag, order_trade_operation, 
+    order_type, order_split_type, order_superior, order_profit, order_swap, order_commission, 
+    order_magic, order_open_price, order_open_date, order_close_price, order_close_date, 
+    order_expiration, comment
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -52,24 +55,26 @@
   <insert id="insert" parameterType="com.future.entity.order.FuOrderFollowInfo">
     insert into fu_order_follow_info (id, create_date, modify_date, 
       order_id, user_id, user_mt_acc_id, 
-      user_server_id, signal_server_id, signal_order_id, 
-      signal_mt_acc_id, order_symbol, order_lots, 
-      order_stoploss, order_takeprofit, order_source_flag, 
-      order_trade_operation, order_type, order_split_type, 
-      order_superior, order_profit, order_swap, 
-      order_commission, order_magic, order_open_price, 
-      order_open_date, order_close_price, order_close_date, 
-      order_expiration, comment)
+      user_server_id, user_server_name, signal_server_id, 
+      signal_server_name, signal_mt_acc_id, signal_order_id, 
+      order_symbol, order_lots, order_stoploss, 
+      order_takeprofit, order_source_flag, order_trade_operation, 
+      order_type, order_split_type, order_superior, 
+      order_profit, order_swap, order_commission, 
+      order_magic, order_open_price, order_open_date, 
+      order_close_price, order_close_date, order_expiration, 
+      comment)
     values (#{id,jdbcType=INTEGER}, #{createDate,jdbcType=TIMESTAMP}, #{modifyDate,jdbcType=TIMESTAMP}, 
       #{orderId,jdbcType=VARCHAR}, #{userId,jdbcType=INTEGER}, #{userMtAccId,jdbcType=VARCHAR}, 
-      #{userServerId,jdbcType=INTEGER}, #{signalServerId,jdbcType=INTEGER}, #{signalOrderId,jdbcType=VARCHAR}, 
-      #{signalMtAccId,jdbcType=VARCHAR}, #{orderSymbol,jdbcType=VARCHAR}, #{orderLots,jdbcType=DECIMAL}, 
-      #{orderStoploss,jdbcType=DECIMAL}, #{orderTakeprofit,jdbcType=DECIMAL}, #{orderSourceFlag,jdbcType=TINYINT}, 
-      #{orderTradeOperation,jdbcType=TINYINT}, #{orderType,jdbcType=TINYINT}, #{orderSplitType,jdbcType=TINYINT}, 
-      #{orderSuperior,jdbcType=VARCHAR}, #{orderProfit,jdbcType=DECIMAL}, #{orderSwap,jdbcType=DECIMAL}, 
-      #{orderCommission,jdbcType=DECIMAL}, #{orderMagic,jdbcType=DECIMAL}, #{orderOpenPrice,jdbcType=DECIMAL}, 
-      #{orderOpenDate,jdbcType=TIMESTAMP}, #{orderClosePrice,jdbcType=DECIMAL}, #{orderCloseDate,jdbcType=TIMESTAMP}, 
-      #{orderExpiration,jdbcType=TIMESTAMP}, #{comment,jdbcType=VARCHAR})
+      #{userServerId,jdbcType=INTEGER}, #{userServerName,jdbcType=VARCHAR}, #{signalServerId,jdbcType=INTEGER}, 
+      #{signalServerName,jdbcType=VARCHAR}, #{signalMtAccId,jdbcType=VARCHAR}, #{signalOrderId,jdbcType=VARCHAR}, 
+      #{orderSymbol,jdbcType=VARCHAR}, #{orderLots,jdbcType=DECIMAL}, #{orderStoploss,jdbcType=DECIMAL}, 
+      #{orderTakeprofit,jdbcType=DECIMAL}, #{orderSourceFlag,jdbcType=TINYINT}, #{orderTradeOperation,jdbcType=TINYINT}, 
+      #{orderType,jdbcType=TINYINT}, #{orderSplitType,jdbcType=TINYINT}, #{orderSuperior,jdbcType=VARCHAR}, 
+      #{orderProfit,jdbcType=DECIMAL}, #{orderSwap,jdbcType=DECIMAL}, #{orderCommission,jdbcType=DECIMAL}, 
+      #{orderMagic,jdbcType=DECIMAL}, #{orderOpenPrice,jdbcType=DECIMAL}, #{orderOpenDate,jdbcType=TIMESTAMP}, 
+      #{orderClosePrice,jdbcType=DECIMAL}, #{orderCloseDate,jdbcType=TIMESTAMP}, #{orderExpiration,jdbcType=TIMESTAMP}, 
+      #{comment,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.future.entity.order.FuOrderFollowInfo">
     insert into fu_order_follow_info
@@ -95,14 +100,20 @@
       <if test="userServerId != null">
         user_server_id,
       </if>
+      <if test="userServerName != null">
+        user_server_name,
+      </if>
       <if test="signalServerId != null">
         signal_server_id,
       </if>
-      <if test="signalOrderId != null">
-        signal_order_id,
+      <if test="signalServerName != null">
+        signal_server_name,
       </if>
       <if test="signalMtAccId != null">
         signal_mt_acc_id,
+      </if>
+      <if test="signalOrderId != null">
+        signal_order_id,
       </if>
       <if test="orderSymbol != null">
         order_symbol,
@@ -184,14 +195,20 @@
       <if test="userServerId != null">
         #{userServerId,jdbcType=INTEGER},
       </if>
+      <if test="userServerName != null">
+        #{userServerName,jdbcType=VARCHAR},
+      </if>
       <if test="signalServerId != null">
         #{signalServerId,jdbcType=INTEGER},
       </if>
-      <if test="signalOrderId != null">
-        #{signalOrderId,jdbcType=VARCHAR},
+      <if test="signalServerName != null">
+        #{signalServerName,jdbcType=VARCHAR},
       </if>
       <if test="signalMtAccId != null">
         #{signalMtAccId,jdbcType=VARCHAR},
+      </if>
+      <if test="signalOrderId != null">
+        #{signalOrderId,jdbcType=VARCHAR},
       </if>
       <if test="orderSymbol != null">
         #{orderSymbol,jdbcType=VARCHAR},
@@ -273,14 +290,20 @@
       <if test="userServerId != null">
         user_server_id = #{userServerId,jdbcType=INTEGER},
       </if>
+      <if test="userServerName != null">
+        user_server_name = #{userServerName,jdbcType=VARCHAR},
+      </if>
       <if test="signalServerId != null">
         signal_server_id = #{signalServerId,jdbcType=INTEGER},
       </if>
-      <if test="signalOrderId != null">
-        signal_order_id = #{signalOrderId,jdbcType=VARCHAR},
+      <if test="signalServerName != null">
+        signal_server_name = #{signalServerName,jdbcType=VARCHAR},
       </if>
       <if test="signalMtAccId != null">
         signal_mt_acc_id = #{signalMtAccId,jdbcType=VARCHAR},
+      </if>
+      <if test="signalOrderId != null">
+        signal_order_id = #{signalOrderId,jdbcType=VARCHAR},
       </if>
       <if test="orderSymbol != null">
         order_symbol = #{orderSymbol,jdbcType=VARCHAR},
@@ -350,9 +373,11 @@
       user_id = #{userId,jdbcType=INTEGER},
       user_mt_acc_id = #{userMtAccId,jdbcType=VARCHAR},
       user_server_id = #{userServerId,jdbcType=INTEGER},
+      user_server_name = #{userServerName,jdbcType=VARCHAR},
       signal_server_id = #{signalServerId,jdbcType=INTEGER},
-      signal_order_id = #{signalOrderId,jdbcType=VARCHAR},
+      signal_server_name = #{signalServerName,jdbcType=VARCHAR},
       signal_mt_acc_id = #{signalMtAccId,jdbcType=VARCHAR},
+      signal_order_id = #{signalOrderId,jdbcType=VARCHAR},
       order_symbol = #{orderSymbol,jdbcType=VARCHAR},
       order_lots = #{orderLots,jdbcType=DECIMAL},
       order_stoploss = #{orderStoploss,jdbcType=DECIMAL},

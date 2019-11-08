@@ -1,8 +1,13 @@
 package com.future.service.follow;
 
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.toolkit.MapUtils;
 import com.future.common.constants.FollowConstant;
 import com.future.common.exception.BusinessException;
+import com.future.entity.order.FuOrderSignal;
+import com.future.mapper.order.FuOrderSignalMapper;
+import com.future.pojo.bo.order.UserMTAccountBO;
+import com.future.service.account.FuAccountMtSevice;
 import com.jfx.strategy.Strategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +18,7 @@ import org.zeromq.ZContext;
 import org.zeromq.ZMQ;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -24,7 +30,10 @@ public class SignalService extends Strategy {
     Logger log= LoggerFactory.getLogger(SignalService.class);
     @Autowired
     FollowService followService;
-
+    @Autowired
+    FuOrderSignalMapper fuOrderSignalMapper;
+    @Autowired
+    FuAccountMtSevice fuAccountMtSevice;
 
     /**
      * 初始化信号源(单线程)
@@ -142,12 +151,20 @@ public class SignalService extends Strategy {
         String signalAccount[]=  msgInfo[0].split("&");
         String orderAction=msgInfo[2];
         String orderDetail=msgInfo[3].replace("'","\"");
-        String signalServer=signalAccount[0];
+        String signalServerName=signalAccount[0];
         String signalAccountId=signalAccount[1];
         JSONObject orderJson=JSONObject.parseObject(orderDetail);
 
-        /*保存至 信号源订单表*/
+        //根据serverName + mtaccId 查询user
+        Map conditionMap=new HashMap();
+        conditionMap.put("serverName",signalAccount[0]);
+        conditionMap.put("mtAccId",signalAccount[1]);
+        List<UserMTAccountBO> accountBOS=fuAccountMtSevice.getUserMTAccByCondition(conditionMap);
 
+        /*保存至 信号源订单表*/
+        FuOrderSignal signalOrder=new FuOrderSignal();
+//        signalOrder.setMtServerName(accountBOS.get );
+        fuOrderSignalMapper.insert(signalOrder);
 
     }
 

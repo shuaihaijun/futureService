@@ -5,7 +5,7 @@ import com.future.entity.order.FuOrderCustomer;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface FuOrderCustomerMapper extends BaseMapper<FuOrderCustomer> {
+public interface FuOrderCustomerMapper  extends BaseMapper<FuOrderCustomer> {
     int deleteByPrimaryKey(Integer id);
 
     Integer insert(FuOrderCustomer record);

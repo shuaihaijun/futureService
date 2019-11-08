@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 @Repository
-public interface FuAccountMtMapper  extends BaseMapper<FuAccountMt> {
+public interface FuAccountMtMapper extends BaseMapper<FuAccountMt> {
     int deleteByPrimaryKey(Integer id);
 
     Integer insert(FuAccountMt record);

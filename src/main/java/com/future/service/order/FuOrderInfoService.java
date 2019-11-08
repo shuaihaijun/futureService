@@ -146,7 +146,7 @@ public class FuOrderInfoService extends ServiceImpl<FuOrderFollowInfoMapper,FuOr
 
         /*填充数据*/
         for (FuOrderFollowInfo info:infos){
-            info.setUserMtAccId(mtAccId);
+//            info.setUserMtAccId(mtAccId);
             info.setUserId(Integer.parseInt(userId));
         }
         return infos;

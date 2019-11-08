@@ -16,6 +16,8 @@ public class UserMTAccountBO {
     public int passwordTradeChecked;//交易密码是否已校验（0 否，1是
     public int accountType;//账户类型：0 mt4,1 mt5
     public int isChief;//是否为主账号
+    public String accountUrl;//账户所在位置URL
+    public Integer accountPort;//账户所在位置PORT
     /**
      * 用户账号
      */
@@ -209,5 +211,29 @@ public class UserMTAccountBO {
 
     public void setServerState(int serverState) {
         this.serverState = serverState;
+    }
+
+    public int getIsChief() {
+        return isChief;
+    }
+
+    public void setIsChief(int isChief) {
+        this.isChief = isChief;
+    }
+
+    public String getAccountUrl() {
+        return accountUrl;
+    }
+
+    public void setAccountUrl(String accountUrl) {
+        this.accountUrl = accountUrl;
+    }
+
+    public Integer getAccountPort() {
+        return accountPort;
+    }
+
+    public void setAccountPort(Integer accountPort) {
+        this.accountPort = accountPort;
     }
 }

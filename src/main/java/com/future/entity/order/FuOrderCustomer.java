@@ -34,6 +34,11 @@ public class FuOrderCustomer {
     private Integer mtServerId;
 
     /**
+     * mt服务器名称
+     */
+    private String mtServerName;
+
+    /**
      * 用户mt平台账号
      */
     private String mtAccId;
@@ -138,7 +143,6 @@ public class FuOrderCustomer {
     public static final String ORDER_SYMBOL = "order_symbol";
     public static final String ORDER_OPEN_DATE = "order_open_date";
     public static final String ORDER_CLOSE_DATE = "order_close_date";
-
     /**
      * 
      * @return id 
@@ -217,6 +221,22 @@ public class FuOrderCustomer {
      */
     public void setMtServerId(Integer mtServerId) {
         this.mtServerId = mtServerId;
+    }
+
+    /**
+     * mt服务器名称
+     * @return mt_server_name mt服务器名称
+     */
+    public String getMtServerName() {
+        return mtServerName;
+    }
+
+    /**
+     * mt服务器名称
+     * @param mtServerName mt服务器名称
+     */
+    public void setMtServerName(String mtServerName) {
+        this.mtServerName = mtServerName == null ? null : mtServerName.trim();
     }
 
     /**

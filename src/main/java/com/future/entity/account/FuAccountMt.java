@@ -41,24 +41,34 @@ public class FuAccountMt {
     private String mtPasswordWatch;
 
     /**
+     * 账户服务器地址
+     */
+    private String accountUrl;
+
+    /**
+     * 账户服务器端口
+     */
+    private Integer accountPort;
+
+    /**
      * 交易密码是否已校验（0 否，1是）
      */
-    private Byte passwordTradeChecked;
+    private Integer passwordTradeChecked;
 
     /**
      * 观摩密码是否已校验（0 否，1是）
      */
-    private Byte passwordWatchChecked;
+    private Integer passwordWatchChecked;
 
     /**
      * 是否为主账号(1 是，0 否)
      */
-    private Byte isChief;
+    private Integer isChief;
 
     /**
      * 账户类型：0 mt4,1 mt5
      */
-    private Byte accountType;
+    private Integer accountType;
 
     /**
      * 
@@ -173,10 +183,42 @@ public class FuAccountMt {
     }
 
     /**
+     * 账户服务器地址
+     * @return account_url 账户服务器地址
+     */
+    public String getAccountUrl() {
+        return accountUrl;
+    }
+
+    /**
+     * 账户服务器地址
+     * @param accountUrl 账户服务器地址
+     */
+    public void setAccountUrl(String accountUrl) {
+        this.accountUrl = accountUrl == null ? null : accountUrl.trim();
+    }
+
+    /**
+     * 账户服务器端口
+     * @return account_port 账户服务器端口
+     */
+    public Integer getAccountPort() {
+        return accountPort;
+    }
+
+    /**
+     * 账户服务器端口
+     * @param accountPort 账户服务器端口
+     */
+    public void setAccountPort(Integer accountPort) {
+        this.accountPort = accountPort;
+    }
+
+    /**
      * 交易密码是否已校验（0 否，1是）
      * @return password_trade_checked 交易密码是否已校验（0 否，1是）
      */
-    public Byte getPasswordTradeChecked() {
+    public Integer getPasswordTradeChecked() {
         return passwordTradeChecked;
     }
 
@@ -184,7 +226,7 @@ public class FuAccountMt {
      * 交易密码是否已校验（0 否，1是）
      * @param passwordTradeChecked 交易密码是否已校验（0 否，1是）
      */
-    public void setPasswordTradeChecked(Byte passwordTradeChecked) {
+    public void setPasswordTradeChecked(Integer passwordTradeChecked) {
         this.passwordTradeChecked = passwordTradeChecked;
     }
 
@@ -192,7 +234,7 @@ public class FuAccountMt {
      * 观摩密码是否已校验（0 否，1是）
      * @return password_watch_checked 观摩密码是否已校验（0 否，1是）
      */
-    public Byte getPasswordWatchChecked() {
+    public Integer getPasswordWatchChecked() {
         return passwordWatchChecked;
     }
 
@@ -200,7 +242,7 @@ public class FuAccountMt {
      * 观摩密码是否已校验（0 否，1是）
      * @param passwordWatchChecked 观摩密码是否已校验（0 否，1是）
      */
-    public void setPasswordWatchChecked(Byte passwordWatchChecked) {
+    public void setPasswordWatchChecked(Integer passwordWatchChecked) {
         this.passwordWatchChecked = passwordWatchChecked;
     }
 
@@ -208,7 +250,7 @@ public class FuAccountMt {
      * 是否为主账号(1 是，0 否)
      * @return is_chief 是否为主账号(1 是，0 否)
      */
-    public Byte getIsChief() {
+    public Integer getIsChief() {
         return isChief;
     }
 
@@ -216,7 +258,7 @@ public class FuAccountMt {
      * 是否为主账号(1 是，0 否)
      * @param isChief 是否为主账号(1 是，0 否)
      */
-    public void setIsChief(Byte isChief) {
+    public void setIsChief(Integer isChief) {
         this.isChief = isChief;
     }
 
@@ -224,7 +266,7 @@ public class FuAccountMt {
      * 账户类型：0 mt4,1 mt5
      * @return account_type 账户类型：0 mt4,1 mt5
      */
-    public Byte getAccountType() {
+    public Integer getAccountType() {
         return accountType;
     }
 
@@ -232,7 +274,7 @@ public class FuAccountMt {
      * 账户类型：0 mt4,1 mt5
      * @param accountType 账户类型：0 mt4,1 mt5
      */
-    public void setAccountType(Byte accountType) {
+    public void setAccountType(Integer accountType) {
         this.accountType = accountType;
     }
 }

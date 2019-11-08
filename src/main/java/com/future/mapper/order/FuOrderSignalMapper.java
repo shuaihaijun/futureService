@@ -2,7 +2,9 @@ package com.future.mapper.order;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.future.entity.order.FuOrderSignal;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface FuOrderSignalMapper extends BaseMapper<FuOrderSignal> {
     int deleteByPrimaryKey(Integer id);
 

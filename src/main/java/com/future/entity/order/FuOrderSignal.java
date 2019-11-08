@@ -34,6 +34,11 @@ public class FuOrderSignal {
     private Integer mtServerId;
 
     /**
+     * mt服务器名称
+     */
+    private String mtServerName;
+
+    /**
      * 用户mt平台账号
      */
     private String mtAccId;
@@ -211,6 +216,22 @@ public class FuOrderSignal {
      */
     public void setMtServerId(Integer mtServerId) {
         this.mtServerId = mtServerId;
+    }
+
+    /**
+     * mt服务器名称
+     * @return mt_server_name mt服务器名称
+     */
+    public String getMtServerName() {
+        return mtServerName;
+    }
+
+    /**
+     * mt服务器名称
+     * @param mtServerName mt服务器名称
+     */
+    public void setMtServerName(String mtServerName) {
+        this.mtServerName = mtServerName == null ? null : mtServerName.trim();
     }
 
     /**

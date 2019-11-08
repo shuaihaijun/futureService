@@ -25,7 +25,7 @@ public class FuOrderFollowAction {
     /**
      * 跟随订单号
      */
-    private String userOrderId;
+    private Integer userOrderId;
 
     /**
      * 用户ID
@@ -36,6 +36,11 @@ public class FuOrderFollowAction {
      * 用户服务器ID
      */
     private Integer userServerId;
+
+    /**
+     * 用户mt服务器名称
+     */
+    private String userServerName;
 
     /**
      * 用户mt平台账号
@@ -51,6 +56,11 @@ public class FuOrderFollowAction {
      * 信号源服务器ID
      */
     private Integer signalServerId;
+
+    /**
+     * 信号源mt服务器名称
+     */
+    private String signalServerName;
 
     /**
      * 信号源mt平台账号
@@ -124,7 +134,7 @@ public class FuOrderFollowAction {
      * 跟随订单号
      * @return user_order_id 跟随订单号
      */
-    public String getUserOrderId() {
+    public Integer getUserOrderId() {
         return userOrderId;
     }
 
@@ -132,8 +142,8 @@ public class FuOrderFollowAction {
      * 跟随订单号
      * @param userOrderId 跟随订单号
      */
-    public void setUserOrderId(String userOrderId) {
-        this.userOrderId = userOrderId == null ? null : userOrderId.trim();
+    public void setUserOrderId(Integer userOrderId) {
+        this.userOrderId = userOrderId;
     }
 
     /**
@@ -166,6 +176,22 @@ public class FuOrderFollowAction {
      */
     public void setUserServerId(Integer userServerId) {
         this.userServerId = userServerId;
+    }
+
+    /**
+     * 用户mt服务器名称
+     * @return user_server_name 用户mt服务器名称
+     */
+    public String getUserServerName() {
+        return userServerName;
+    }
+
+    /**
+     * 用户mt服务器名称
+     * @param userServerName 用户mt服务器名称
+     */
+    public void setUserServerName(String userServerName) {
+        this.userServerName = userServerName == null ? null : userServerName.trim();
     }
 
     /**
@@ -214,6 +240,22 @@ public class FuOrderFollowAction {
      */
     public void setSignalServerId(Integer signalServerId) {
         this.signalServerId = signalServerId;
+    }
+
+    /**
+     * 信号源mt服务器名称
+     * @return signal_server_name 信号源mt服务器名称
+     */
+    public String getSignalServerName() {
+        return signalServerName;
+    }
+
+    /**
+     * 信号源mt服务器名称
+     * @param signalServerName 信号源mt服务器名称
+     */
+    public void setSignalServerName(String signalServerName) {
+        this.signalServerName = signalServerName == null ? null : signalServerName.trim();
     }
 
     /**

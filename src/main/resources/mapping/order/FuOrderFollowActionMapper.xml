@@ -5,21 +5,23 @@
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
     <result column="modify_date" jdbcType="TIMESTAMP" property="modifyDate" />
-    <result column="user_order_id" jdbcType="VARCHAR" property="userOrderId" />
+    <result column="user_order_id" jdbcType="INTEGER" property="userOrderId" />
     <result column="user_id" jdbcType="INTEGER" property="userId" />
     <result column="user_server_id" jdbcType="INTEGER" property="userServerId" />
+    <result column="user_server_name" jdbcType="VARCHAR" property="userServerName" />
     <result column="user_mt_acc_id" jdbcType="VARCHAR" property="userMtAccId" />
     <result column="signal_order_id" jdbcType="VARCHAR" property="signalOrderId" />
     <result column="signal_server_id" jdbcType="INTEGER" property="signalServerId" />
+    <result column="signal_server_name" jdbcType="VARCHAR" property="signalServerName" />
     <result column="signal_mt_acc_id" jdbcType="VARCHAR" property="signalMtAccId" />
     <result column="signal_order_superior" jdbcType="VARCHAR" property="signalOrderSuperior" />
     <result column="order_action" jdbcType="TINYINT" property="orderAction" />
     <result column="order_state" jdbcType="TINYINT" property="orderState" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, create_date, modify_date, user_order_id, user_id, user_server_id, user_mt_acc_id, 
-    signal_order_id, signal_server_id, signal_mt_acc_id, signal_order_superior, order_action, 
-    order_state
+    id, create_date, modify_date, user_order_id, user_id, user_server_id, user_server_name, 
+    user_mt_acc_id, signal_order_id, signal_server_id, signal_server_name, signal_mt_acc_id, 
+    signal_order_superior, order_action, order_state
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -34,14 +36,16 @@
   <insert id="insert" parameterType="com.future.entity.order.FuOrderFollowAction">
     insert into fu_order_follow_action (id, create_date, modify_date, 
       user_order_id, user_id, user_server_id, 
-      user_mt_acc_id, signal_order_id, signal_server_id, 
-      signal_mt_acc_id, signal_order_superior, order_action, 
-      order_state)
+      user_server_name, user_mt_acc_id, signal_order_id, 
+      signal_server_id, signal_server_name, signal_mt_acc_id, 
+      signal_order_superior, order_action, order_state
+      )
     values (#{id,jdbcType=INTEGER}, #{createDate,jdbcType=TIMESTAMP}, #{modifyDate,jdbcType=TIMESTAMP}, 
-      #{userOrderId,jdbcType=VARCHAR}, #{userId,jdbcType=INTEGER}, #{userServerId,jdbcType=INTEGER}, 
-      #{userMtAccId,jdbcType=VARCHAR}, #{signalOrderId,jdbcType=VARCHAR}, #{signalServerId,jdbcType=INTEGER}, 
-      #{signalMtAccId,jdbcType=VARCHAR}, #{signalOrderSuperior,jdbcType=VARCHAR}, #{orderAction,jdbcType=TINYINT}, 
-      #{orderState,jdbcType=TINYINT})
+      #{userOrderId,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{userServerId,jdbcType=INTEGER}, 
+      #{userServerName,jdbcType=VARCHAR}, #{userMtAccId,jdbcType=VARCHAR}, #{signalOrderId,jdbcType=VARCHAR}, 
+      #{signalServerId,jdbcType=INTEGER}, #{signalServerName,jdbcType=VARCHAR}, #{signalMtAccId,jdbcType=VARCHAR}, 
+      #{signalOrderSuperior,jdbcType=VARCHAR}, #{orderAction,jdbcType=TINYINT}, #{orderState,jdbcType=TINYINT}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.future.entity.order.FuOrderFollowAction">
     insert into fu_order_follow_action
@@ -64,6 +68,9 @@
       <if test="userServerId != null">
         user_server_id,
       </if>
+      <if test="userServerName != null">
+        user_server_name,
+      </if>
       <if test="userMtAccId != null">
         user_mt_acc_id,
       </if>
@@ -72,6 +79,9 @@
       </if>
       <if test="signalServerId != null">
         signal_server_id,
+      </if>
+      <if test="signalServerName != null">
+        signal_server_name,
       </if>
       <if test="signalMtAccId != null">
         signal_mt_acc_id,
@@ -97,13 +107,16 @@
         #{modifyDate,jdbcType=TIMESTAMP},
       </if>
       <if test="userOrderId != null">
-        #{userOrderId,jdbcType=VARCHAR},
+        #{userOrderId,jdbcType=INTEGER},
       </if>
       <if test="userId != null">
         #{userId,jdbcType=INTEGER},
       </if>
       <if test="userServerId != null">
         #{userServerId,jdbcType=INTEGER},
+      </if>
+      <if test="userServerName != null">
+        #{userServerName,jdbcType=VARCHAR},
       </if>
       <if test="userMtAccId != null">
         #{userMtAccId,jdbcType=VARCHAR},
@@ -113,6 +126,9 @@
       </if>
       <if test="signalServerId != null">
         #{signalServerId,jdbcType=INTEGER},
+      </if>
+      <if test="signalServerName != null">
+        #{signalServerName,jdbcType=VARCHAR},
       </if>
       <if test="signalMtAccId != null">
         #{signalMtAccId,jdbcType=VARCHAR},
@@ -138,13 +154,16 @@
         modify_date = #{modifyDate,jdbcType=TIMESTAMP},
       </if>
       <if test="userOrderId != null">
-        user_order_id = #{userOrderId,jdbcType=VARCHAR},
+        user_order_id = #{userOrderId,jdbcType=INTEGER},
       </if>
       <if test="userId != null">
         user_id = #{userId,jdbcType=INTEGER},
       </if>
       <if test="userServerId != null">
         user_server_id = #{userServerId,jdbcType=INTEGER},
+      </if>
+      <if test="userServerName != null">
+        user_server_name = #{userServerName,jdbcType=VARCHAR},
       </if>
       <if test="userMtAccId != null">
         user_mt_acc_id = #{userMtAccId,jdbcType=VARCHAR},
@@ -154,6 +173,9 @@
       </if>
       <if test="signalServerId != null">
         signal_server_id = #{signalServerId,jdbcType=INTEGER},
+      </if>
+      <if test="signalServerName != null">
+        signal_server_name = #{signalServerName,jdbcType=VARCHAR},
       </if>
       <if test="signalMtAccId != null">
         signal_mt_acc_id = #{signalMtAccId,jdbcType=VARCHAR},
@@ -174,12 +196,14 @@
     update fu_order_follow_action
     set create_date = #{createDate,jdbcType=TIMESTAMP},
       modify_date = #{modifyDate,jdbcType=TIMESTAMP},
-      user_order_id = #{userOrderId,jdbcType=VARCHAR},
+      user_order_id = #{userOrderId,jdbcType=INTEGER},
       user_id = #{userId,jdbcType=INTEGER},
       user_server_id = #{userServerId,jdbcType=INTEGER},
+      user_server_name = #{userServerName,jdbcType=VARCHAR},
       user_mt_acc_id = #{userMtAccId,jdbcType=VARCHAR},
       signal_order_id = #{signalOrderId,jdbcType=VARCHAR},
       signal_server_id = #{signalServerId,jdbcType=INTEGER},
+      signal_server_name = #{signalServerName,jdbcType=VARCHAR},
       signal_mt_acc_id = #{signalMtAccId,jdbcType=VARCHAR},
       signal_order_superior = #{signalOrderSuperior,jdbcType=VARCHAR},
       order_action = #{orderAction,jdbcType=TINYINT},

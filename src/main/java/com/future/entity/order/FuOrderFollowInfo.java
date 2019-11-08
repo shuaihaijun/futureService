@@ -1,5 +1,8 @@
 package com.future.entity.order;
 
+import com.baomidou.mybatisplus.annotations.TableId;
+import com.baomidou.mybatisplus.enums.IdType;
+
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -7,6 +10,7 @@ public class FuOrderFollowInfo {
     /**
      * 
      */
+    @TableId(type = IdType.AUTO)
     private Integer id;
 
     /**
@@ -40,19 +44,29 @@ public class FuOrderFollowInfo {
     private Integer userServerId;
 
     /**
+     * 用户mt服务器名称
+     */
+    private String userServerName;
+
+    /**
      * 信号源服务器ID
      */
     private Integer signalServerId;
 
     /**
-     * 信号源订单号
+     * 信号源mt服务器名称
      */
-    private String signalOrderId;
+    private String signalServerName;
 
     /**
      * 信号源mt平台账号
      */
     private String signalMtAccId;
+
+    /**
+     * 信号源订单号
+     */
+    private String signalOrderId;
 
     /**
      * 外汇产品
@@ -262,6 +276,22 @@ public class FuOrderFollowInfo {
     }
 
     /**
+     * 用户mt服务器名称
+     * @return user_server_name 用户mt服务器名称
+     */
+    public String getUserServerName() {
+        return userServerName;
+    }
+
+    /**
+     * 用户mt服务器名称
+     * @param userServerName 用户mt服务器名称
+     */
+    public void setUserServerName(String userServerName) {
+        this.userServerName = userServerName == null ? null : userServerName.trim();
+    }
+
+    /**
      * 信号源服务器ID
      * @return signal_server_id 信号源服务器ID
      */
@@ -278,19 +308,19 @@ public class FuOrderFollowInfo {
     }
 
     /**
-     * 信号源订单号
-     * @return signal_order_id 信号源订单号
+     * 信号源mt服务器名称
+     * @return signal_server_name 信号源mt服务器名称
      */
-    public String getSignalOrderId() {
-        return signalOrderId;
+    public String getSignalServerName() {
+        return signalServerName;
     }
 
     /**
-     * 信号源订单号
-     * @param signalOrderId 信号源订单号
+     * 信号源mt服务器名称
+     * @param signalServerName 信号源mt服务器名称
      */
-    public void setSignalOrderId(String signalOrderId) {
-        this.signalOrderId = signalOrderId == null ? null : signalOrderId.trim();
+    public void setSignalServerName(String signalServerName) {
+        this.signalServerName = signalServerName == null ? null : signalServerName.trim();
     }
 
     /**
@@ -307,6 +337,22 @@ public class FuOrderFollowInfo {
      */
     public void setSignalMtAccId(String signalMtAccId) {
         this.signalMtAccId = signalMtAccId == null ? null : signalMtAccId.trim();
+    }
+
+    /**
+     * 信号源订单号
+     * @return signal_order_id 信号源订单号
+     */
+    public String getSignalOrderId() {
+        return signalOrderId;
+    }
+
+    /**
+     * 信号源订单号
+     * @param signalOrderId 信号源订单号
+     */
+    public void setSignalOrderId(String signalOrderId) {
+        this.signalOrderId = signalOrderId == null ? null : signalOrderId.trim();
     }
 
     /**

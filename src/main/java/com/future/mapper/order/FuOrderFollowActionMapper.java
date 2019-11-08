@@ -2,8 +2,10 @@ package com.future.mapper.order;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.future.entity.order.FuOrderFollowAction;
+import org.springframework.stereotype.Repository;
 
-public interface FuOrderFollowActionMapper  extends BaseMapper<FuOrderFollowAction> {
+@Repository
+public interface FuOrderFollowActionMapper extends BaseMapper<FuOrderFollowAction> {
     int deleteByPrimaryKey(Integer id);
 
     Integer insert(FuOrderFollowAction record);

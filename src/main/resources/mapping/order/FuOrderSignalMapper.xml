@@ -7,6 +7,7 @@
     <result column="modify_date" jdbcType="TIMESTAMP" property="modifyDate" />
     <result column="user_id" jdbcType="INTEGER" property="userId" />
     <result column="mt_server_id" jdbcType="INTEGER" property="mtServerId" />
+    <result column="mt_server_name" jdbcType="VARCHAR" property="mtServerName" />
     <result column="mt_acc_id" jdbcType="VARCHAR" property="mtAccId" />
     <result column="order_id" jdbcType="VARCHAR" property="orderId" />
     <result column="order_symbol" jdbcType="VARCHAR" property="orderSymbol" />
@@ -29,10 +30,11 @@
     <result column="comment" jdbcType="VARCHAR" property="comment" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, create_date, modify_date, user_id, mt_server_id, mt_acc_id, order_id, order_symbol, 
-    order_lots, order_type, order_state, order_stoploss, order_profit, order_swap, order_commission, 
-    order_superior, order_expiration, order_magic, order_open_price, order_open_date, 
-    order_trade_operation, order_trade_type, order_close_price, order_close_date, comment
+    id, create_date, modify_date, user_id, mt_server_id, mt_server_name, mt_acc_id, order_id, 
+    order_symbol, order_lots, order_type, order_state, order_stoploss, order_profit, 
+    order_swap, order_commission, order_superior, order_expiration, order_magic, order_open_price, 
+    order_open_date, order_trade_operation, order_trade_type, order_close_price, order_close_date, 
+    comment
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -46,23 +48,23 @@
   </delete>
   <insert id="insert" parameterType="com.future.entity.order.FuOrderSignal">
     insert into fu_order_signal (id, create_date, modify_date, 
-      user_id, mt_server_id, mt_acc_id, 
-      order_id, order_symbol, order_lots, 
-      order_type, order_state, order_stoploss, 
-      order_profit, order_swap, order_commission, 
-      order_superior, order_expiration, order_magic, 
-      order_open_price, order_open_date, order_trade_operation, 
-      order_trade_type, order_close_price, order_close_date, 
-      comment)
+      user_id, mt_server_id, mt_server_name, 
+      mt_acc_id, order_id, order_symbol, 
+      order_lots, order_type, order_state, 
+      order_stoploss, order_profit, order_swap, 
+      order_commission, order_superior, order_expiration, 
+      order_magic, order_open_price, order_open_date, 
+      order_trade_operation, order_trade_type, order_close_price, 
+      order_close_date, comment)
     values (#{id,jdbcType=INTEGER}, #{createDate,jdbcType=TIMESTAMP}, #{modifyDate,jdbcType=TIMESTAMP}, 
-      #{userId,jdbcType=INTEGER}, #{mtServerId,jdbcType=INTEGER}, #{mtAccId,jdbcType=VARCHAR}, 
-      #{orderId,jdbcType=VARCHAR}, #{orderSymbol,jdbcType=VARCHAR}, #{orderLots,jdbcType=DECIMAL}, 
-      #{orderType,jdbcType=TINYINT}, #{orderState,jdbcType=TINYINT}, #{orderStoploss,jdbcType=DECIMAL}, 
-      #{orderProfit,jdbcType=DECIMAL}, #{orderSwap,jdbcType=DECIMAL}, #{orderCommission,jdbcType=DECIMAL}, 
-      #{orderSuperior,jdbcType=VARCHAR}, #{orderExpiration,jdbcType=TIMESTAMP}, #{orderMagic,jdbcType=DECIMAL}, 
-      #{orderOpenPrice,jdbcType=DECIMAL}, #{orderOpenDate,jdbcType=TIMESTAMP}, #{orderTradeOperation,jdbcType=TINYINT}, 
-      #{orderTradeType,jdbcType=TINYINT}, #{orderClosePrice,jdbcType=DECIMAL}, #{orderCloseDate,jdbcType=TIMESTAMP}, 
-      #{comment,jdbcType=VARCHAR})
+      #{userId,jdbcType=INTEGER}, #{mtServerId,jdbcType=INTEGER}, #{mtServerName,jdbcType=VARCHAR}, 
+      #{mtAccId,jdbcType=VARCHAR}, #{orderId,jdbcType=VARCHAR}, #{orderSymbol,jdbcType=VARCHAR}, 
+      #{orderLots,jdbcType=DECIMAL}, #{orderType,jdbcType=TINYINT}, #{orderState,jdbcType=TINYINT}, 
+      #{orderStoploss,jdbcType=DECIMAL}, #{orderProfit,jdbcType=DECIMAL}, #{orderSwap,jdbcType=DECIMAL}, 
+      #{orderCommission,jdbcType=DECIMAL}, #{orderSuperior,jdbcType=VARCHAR}, #{orderExpiration,jdbcType=TIMESTAMP}, 
+      #{orderMagic,jdbcType=DECIMAL}, #{orderOpenPrice,jdbcType=DECIMAL}, #{orderOpenDate,jdbcType=TIMESTAMP}, 
+      #{orderTradeOperation,jdbcType=TINYINT}, #{orderTradeType,jdbcType=TINYINT}, #{orderClosePrice,jdbcType=DECIMAL}, 
+      #{orderCloseDate,jdbcType=TIMESTAMP}, #{comment,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.future.entity.order.FuOrderSignal">
     insert into fu_order_signal
@@ -81,6 +83,9 @@
       </if>
       <if test="mtServerId != null">
         mt_server_id,
+      </if>
+      <if test="mtServerName != null">
+        mt_server_name,
       </if>
       <if test="mtAccId != null">
         mt_acc_id,
@@ -159,6 +164,9 @@
       <if test="mtServerId != null">
         #{mtServerId,jdbcType=INTEGER},
       </if>
+      <if test="mtServerName != null">
+        #{mtServerName,jdbcType=VARCHAR},
+      </if>
       <if test="mtAccId != null">
         #{mtAccId,jdbcType=VARCHAR},
       </if>
@@ -236,6 +244,9 @@
       <if test="mtServerId != null">
         mt_server_id = #{mtServerId,jdbcType=INTEGER},
       </if>
+      <if test="mtServerName != null">
+        mt_server_name = #{mtServerName,jdbcType=VARCHAR},
+      </if>
       <if test="mtAccId != null">
         mt_acc_id = #{mtAccId,jdbcType=VARCHAR},
       </if>
@@ -305,6 +316,7 @@
       modify_date = #{modifyDate,jdbcType=TIMESTAMP},
       user_id = #{userId,jdbcType=INTEGER},
       mt_server_id = #{mtServerId,jdbcType=INTEGER},
+      mt_server_name = #{mtServerName,jdbcType=VARCHAR},
       mt_acc_id = #{mtAccId,jdbcType=VARCHAR},
       order_id = #{orderId,jdbcType=VARCHAR},
       order_symbol = #{orderSymbol,jdbcType=VARCHAR},
