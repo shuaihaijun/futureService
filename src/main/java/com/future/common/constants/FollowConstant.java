@@ -17,8 +17,14 @@ public class FollowConstant {
 	public static final String ACTION_TRADE="TRADE";
 	/*订单打开标识符*/
 	public static final String ACTION_OPEN="OPEN";
+	/*订单修改*/
+	public static final String ACTION_MODIFY="MODIFY";
 	/*订单关闭标识符*/
 	public static final String ACTION_CLOSE="CLOSE";
 	/*订单部分关闭标识符*/
-	public static final String ACTION_CLOSEPART="CLOSE_PARTIAL";
+	public static final String ACTION_CLOSE_PARTIAL="CLOSE_PARTIAL";
+	/*订单魔法值关闭*/
+	public static final String ACTION_CLOSE_MAGIC="CLOSE_MAGIC";
+
+
 }

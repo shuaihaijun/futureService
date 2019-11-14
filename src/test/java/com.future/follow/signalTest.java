@@ -27,12 +27,12 @@ public class signalTest {
 
     @Test
     public void testSignalInit(){
-        String hostUrl="127.0.0.1:33777";
+        String siganlHost="127.0.0.1:33777";
         String serverId="MultiBankFXInt-Demo F";
         String accountId="2102272054";
 
         //初始化信号源
-        boolean isInit= signalService.signalInit(hostUrl,serverId,accountId);
+        boolean isInit= signalService.signalInit(siganlHost,serverId,accountId);
 
         if(!isInit){
             System.out.println("signalInit failed!");

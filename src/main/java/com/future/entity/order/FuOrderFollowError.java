@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.enums.IdType;
 
 import java.util.Date;
 
-public class FuOrderFollowAction {
+public class FuOrderFollowError {
     /**
      * 
      */
@@ -73,28 +73,14 @@ public class FuOrderFollowAction {
     private String signalOrderSuperior;
 
     /**
-     * 订单动作（ 0 OPEN ，1 MODIFY,2 CLOSE,3 CLOSE_PARTIAL,4 CLOSE_MAGIC,5 CLOSE_ALL）
+     * 订单错误编码
      */
-    private Integer orderAction;
+    private String errorCode;
 
     /**
-     * 跟单状态（0 已完结，1 进行中）
+     * 订单错误信息
      */
-    private Integer orderState;
-
-
-    public static final String USER_ID = "user_id";
-    public static final String USER_ORDER_ID = "user_order_id";
-    public static final String USER_SERVER_ID = "user_server_id";
-    public static final String USER_SERVER_NAME = "user_server_name";
-    public static final String USER_ACCOUNT_ID = "user_mt_acc_id";
-    public static final String SIGNAL_ORDER_ID = "signal_order_id";
-    public static final String SIGNAL_SERVER_ID = "signal_server_id";
-    public static final String SIGNAL_SERVER_NAME = "signal_server_name";
-    public static final String SIGNAL_ACCOUNT_ID = "signal_mt_acc_id";
-    public static final String SIGNAL_ORDER_SUPERIOR = "signal_order_superior";
-    public static final String ORDER_ACTION = "order_action";
-    public static final String ORDER_STATE = "order_state";
+    private String errorMsg;
 
     /**
      * 
@@ -305,34 +291,34 @@ public class FuOrderFollowAction {
     }
 
     /**
-     * 订单动作（ 0 OPEN ，1 MODIFY,2 CLOSE,3 CLOSE_PARTIAL,4 CLOSE_MAGIC,5 CLOSE_ALL）
-     * @return order_action 订单动作（ 0 OPEN ，1 MODIFY,2 CLOSE,3 CLOSE_PARTIAL,4 CLOSE_MAGIC,5 CLOSE_ALL）
+     * 订单错误编码
+     * @return error_code 订单错误编码
      */
-    public Integer getOrderAction() {
-        return orderAction;
+    public String getErrorCode() {
+        return errorCode;
     }
 
     /**
-     * 订单动作（ 0 OPEN ，1 MODIFY,2 CLOSE,3 CLOSE_PARTIAL,4 CLOSE_MAGIC,5 CLOSE_ALL）
-     * @param orderAction 订单动作（ 0 OPEN ，1 MODIFY,2 CLOSE,3 CLOSE_PARTIAL,4 CLOSE_MAGIC,5 CLOSE_ALL）
+     * 订单错误编码
+     * @param errorCode 订单错误编码
      */
-    public void setOrderAction(Integer orderAction) {
-        this.orderAction = orderAction;
+    public void setErrorCode(String errorCode) {
+        this.errorCode = errorCode == null ? null : errorCode.trim();
     }
 
     /**
-     * 跟单状态（0 已完结，1 进行中）
-     * @return order_state 跟单状态（0 已完结，1 进行中）
+     * 订单错误信息
+     * @return error_msg 订单错误信息
      */
-    public Integer getOrderState() {
-        return orderState;
+    public String getErrorMsg() {
+        return errorMsg;
     }
 
     /**
-     * 跟单状态（0 已完结，1 进行中）
-     * @param orderState 跟单状态（0 已完结，1 进行中）
+     * 订单错误信息
+     * @param errorMsg 订单错误信息
      */
-    public void setOrderState(Integer orderState) {
-        this.orderState = orderState;
+    public void setErrorMsg(String errorMsg) {
+        this.errorMsg = errorMsg == null ? null : errorMsg.trim();
     }
 }

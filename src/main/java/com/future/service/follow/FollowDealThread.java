@@ -46,7 +46,7 @@ public class FollowDealThread extends Thread{
         String orderComment=reciveOrderJson.getString("orderComment");
         Long orderExpiration=Long.parseLong(reciveOrderJson.getString("orderExpiration"));
         int superiorTicket=0;
-        if(action.equalsIgnoreCase(FollowConstant.ACTION_CLOSEPART)&&reciveOrderJson.getString("superiorTicket")!=null){
+        if(action.equalsIgnoreCase(FollowConstant.ACTION_CLOSE_PARTIAL)&&reciveOrderJson.getString("superiorTicket")!=null){
             // 部分平仓！
             superiorTicket=Integer.parseInt(reciveOrderJson.getString("superiorTicket"));
         }
@@ -62,8 +62,8 @@ public class FollowDealThread extends Thread{
                 +";"+orderStopLoss+";"+orderTakeProfit+";"+orderComment+";"+orderLots+";"+orderMagicNumber;
 
         //如果是关闭订单，需要查出源跟随订单
-        if(action.equalsIgnoreCase(FollowConstant.ACTION_CLOSEPART)||action.equalsIgnoreCase(FollowConstant.ACTION_CLOSE)){
-            if(action.equalsIgnoreCase(FollowConstant.ACTION_CLOSEPART)){
+        if(action.equalsIgnoreCase(FollowConstant.ACTION_CLOSE_PARTIAL)||action.equalsIgnoreCase(FollowConstant.ACTION_CLOSE)){
+            if(action.equalsIgnoreCase(FollowConstant.ACTION_CLOSE_PARTIAL)){
                 orderTicket=superiorTicket;
             }
             // 根据 信号源+跟随者+源信号源订单号  查出应该关闭的 followTickt

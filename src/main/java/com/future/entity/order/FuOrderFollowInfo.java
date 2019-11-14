@@ -94,17 +94,17 @@ public class FuOrderFollowInfo {
     private Integer orderSourceFlag;
 
     /**
-     * 交易类别（0 buy，1 sell, 2 buylimit ,3 selllimit, 4 buystop, 5 sellstop,6 deposit, 7 credit，99 close）
+     * 操作类型（0 OPEN ，1 MODIFY，2 CLOSE，3 CLOSE_PARTIAL，4 CLOSE_MAGIC）
      */
     private Integer orderTradeOperation;
 
     /**
-     * 订单类型（ 0 普通订单，1 拆分订单）
+     *  订单类型（ OP_BUY = 0， OP_SELL = 1，OP_BUYLIMIT = 2，OP_SELLLIMIT = 3， OP_BUYSTOP = 4，OP_SELLSTOP = 5）
      */
     private Integer orderType;
 
     /**
-     * 拆单类型 ( 0 拆单平仓，1 拆单键仓)
+     * 拆单类型 ( 0 正常，1拆单平仓，2拆单键仓)
      */
     private Integer orderSplitType;
 
@@ -436,48 +436,42 @@ public class FuOrderFollowInfo {
     }
 
     /**
-     * 交易类别（0 buy，1 sell, 2 buylimit ,3 selllimit, 4 buystop, 5 sellstop,6 deposit, 7 credit，99 close）
-     * @return order_trade_operation 交易类别（0 buy，1 sell, 2 buylimit ,3 selllimit, 4 buystop, 5 sellstop,6 deposit, 7 credit，99 close）
+     * 操作类型（0 OPEN ，1 MODIFY，2 CLOSE，3 CLOSE_PARTIAL，4 CLOSE_MAGIC）
      */
     public Integer getOrderTradeOperation() {
         return orderTradeOperation;
     }
 
     /**
-     * 交易类别（0 buy，1 sell, 2 buylimit ,3 selllimit, 4 buystop, 5 sellstop,6 deposit, 7 credit，99 close）
-     * @param orderTradeOperation 交易类别（0 buy，1 sell, 2 buylimit ,3 selllimit, 4 buystop, 5 sellstop,6 deposit, 7 credit，99 close）
+     * 操作类型（0 OPEN ，1 MODIFY，2 CLOSE，3 CLOSE_PARTIAL，4 CLOSE_MAGIC）
      */
     public void setOrderTradeOperation(Integer orderTradeOperation) {
         this.orderTradeOperation = orderTradeOperation;
     }
 
     /**
-     * 订单类型（ 0 普通订单，1 拆分订单）
-     * @return order_type 订单类型（ 0 普通订单，1 拆分订单）
+     * 订单类型（ OP_BUY = 0， OP_SELL = 1，OP_BUYLIMIT = 2，OP_SELLLIMIT = 3， OP_BUYSTOP = 4，OP_SELLSTOP = 5）
      */
     public Integer getOrderType() {
         return orderType;
     }
 
     /**
-     * 订单类型（ 0 普通订单，1 拆分订单）
-     * @param orderType 订单类型（ 0 普通订单，1 拆分订单）
+     * 订单类型（ OP_BUY = 0， OP_SELL = 1，OP_BUYLIMIT = 2，OP_SELLLIMIT = 3， OP_BUYSTOP = 4，OP_SELLSTOP = 5）
      */
     public void setOrderType(Integer orderType) {
         this.orderType = orderType;
     }
 
     /**
-     * 拆单类型 ( 0 拆单平仓，1 拆单键仓)
-     * @return order_split_type 拆单类型 ( 0 拆单平仓，1 拆单键仓)
+     * 拆单类型 ( 0 正常，1拆单平仓，2拆单键仓)
      */
     public Integer getOrderSplitType() {
         return orderSplitType;
     }
 
     /**
-     * 拆单类型 ( 0 拆单平仓，1 拆单键仓)
-     * @param orderSplitType 拆单类型 ( 0 拆单平仓，1 拆单键仓)
+     * 拆单类型 ( 0 正常，1拆单平仓，2拆单键仓)
      */
     public void setOrderSplitType(Integer orderSplitType) {
         this.orderSplitType = orderSplitType;
@@ -485,7 +479,7 @@ public class FuOrderFollowInfo {
 
     /**
      * 原订单号
-     * @return order_superior 原订单号
+     * @return order_superior 原在仓订单号
      */
     public String getOrderSuperior() {
         return orderSuperior;
@@ -493,7 +487,7 @@ public class FuOrderFollowInfo {
 
     /**
      * 原订单号
-     * @param orderSuperior 原订单号
+     * @param orderSuperior 原在仓订单号
      */
     public void setOrderSuperior(String orderSuperior) {
         this.orderSuperior = orderSuperior == null ? null : orderSuperior.trim();

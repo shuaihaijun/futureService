@@ -2,12 +2,21 @@ package com.future.service.follow;
 
 import com.alibaba.fastjson.JSONObject;
 import com.future.common.constants.FollowConstant;
+import com.future.common.constants.OrderConstant;
 import com.future.common.constants.RedisConstant;
 import com.future.common.exception.BusinessException;
+import com.future.common.util.DateUtil;
 import com.future.common.util.RedisManager;
 import com.future.entity.order.FuOrderFollowAction;
+import com.future.entity.order.FuOrderFollowError;
+import com.future.entity.order.FuOrderFollowInfo;
+import com.future.entity.order.FuOrderSignal;
 import com.future.entity.user.FuUserFollowRule;
 import com.future.entity.user.FuUserFollows;
+import com.future.mapper.order.FuOrderFollowErrorMapper;
+import com.future.mapper.order.FuOrderFollowInfoMapper;
+import com.future.pojo.bo.order.UserMTAccountBO;
+import com.future.service.account.FuAccountMtSevice;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +27,9 @@ import org.zeromq.SocketType;
 import org.zeromq.ZContext;
 import org.zeromq.ZMQ;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -32,7 +43,12 @@ public class FollowService{
 
     @Autowired
     RedisManager redisManager;
-
+    @Autowired
+    FuAccountMtSevice fuAccountMtSevice;
+    @Autowired
+    FuOrderFollowInfoMapper fuOrderFollowInfoMapper;
+    @Autowired
+    FuOrderFollowErrorMapper fuOrderFollowErrorMapper;
 
     /**
      * 跟随者初始化
@@ -170,9 +186,103 @@ public class FollowService{
     /**
      * 处理监听到的 跟随者订单信息
      */
-    public void dealFollowOrder(String followOrder){
-        log.info(followOrder);
-    }
+    public void dealFollowOrder(String followMsg){
+        // 1 初始化信号源  accountInfo|SIGNALINIT|signalHost:signalPort
+        // 2 初始化跟随者  accountInfo|FOLLOWINIT|serverHost:serverPort#followHost:followPort#signalArray#followOrderList|ruleList(signalAccount:ruleType:ruleAmount:limitUpper)
+        // 3 信号源订单  signalAccountInfo|SIGNALFOLLOWORDER|action|tradeOrder
+        // 4 跟随者订单  accountInfo|signalAccount|action|tradeOrder
+        // MultiBankFXInt-Demo F&2102272054|MultiBankFXInt-Demo1 F&2102272054|OPEN|{'_action': 'EXECUTION', '_response': '131', 'response_value': 'invalid trade volume','signalTicket':131623205,'signalAccount':MultiBankFXInt-Demo1 F&2102272054}
+        // MultiBankFXInt-Demo F&2102272054|MultiBankFXInt-Demo1 F&2102272054|OPEN|{'_action': 'EXECUTION', '_magic': 0, '_ticket': 131612110, '_open_time': '2019.11.11 10:39:35', '_open_price': 108.98800000,'_lots':'1','signalTicket':131623205,'signalAccount':MultiBankFXInt-Demo1 F&2102272054}
+        // MultiBankFXInt-Demo F&2102272054|MultiBankFXInt-Demo1 F&2102272054|CLOSE_PARTIAL|{'_action': 'CLOSE', '_ticket': 131623205, '_response': 'CLOSE_PARTIAL', '_close_price': 1.10146000, '_close_lots': 0.01000000,'signalTicket':131623205,'signalAccount':MultiBankFXInt-Demo1 F&2102272054}
+        // MultiBankFXInt-Demo F&2102272054|MultiBankFXInt-Demo1 F&2102272054|CLOSE|{'_action': 'CLOSE', '_ticket': 131623205, '_close_price': 1.10171000, '_close_lots': 1.00000000, '_response': 'CLOSE_MARKET', '_response_value': 'SUCCESS','signalTicket':131623205,'signalAccount':MultiBankFXInt-Demo1 F&2102272054}
 
+        log.info("deal follow ReciveMsg:"+followMsg);
+        String msgInfo[]=followMsg.split("\\|");
+
+        // 解析數據
+        String followAccount[]=  msgInfo[0].split("&");
+        String signalAccount[]=  msgInfo[1].split("&");
+        String orderAction=msgInfo[2];
+        String orderDetail=msgInfo[3].replace("'","\\");
+        JSONObject orderJson=JSONObject.parseObject(orderDetail);
+        String response=orderJson.getString("_response");
+
+        //根据serverName + mtaccId 查询user
+        Map conditionMap=new HashMap();
+        conditionMap.put("serverName",followAccount[0]);
+        conditionMap.put("mtAccId",followAccount[1]);
+        List<UserMTAccountBO> followAccountInfo=fuAccountMtSevice.getUserMTAccByCondition(conditionMap);
+        conditionMap.put("serverName",signalAccount[0]);
+        conditionMap.put("mtAccId",signalAccount[1]);
+        List<UserMTAccountBO> signalAccountInfo=fuAccountMtSevice.getUserMTAccByCondition(conditionMap);
+        if(followAccountInfo.size()<=0||signalAccountInfo.size()<=0){
+            log.error("根据服务器和账号，查询用户错误！");
+            log.error("signalMsg:"+followMsg);
+        }
+
+        if(!StringUtils.isEmpty(response)&& com.alibaba.druid.util.StringUtils.isNumber(response)){
+            //跟单出错！
+            log.error("follow order error,msg is :"+orderJson.toJSONString());
+
+            FuOrderFollowError error=new FuOrderFollowError();
+            error.setUserId(followAccountInfo.get(0).getUserId());
+            error.setUserServerName(followAccountInfo.get(0).getServerName());
+            error.setUserMtAccId(followAccountInfo.get(0).getMtAccId());
+            error.setUserServerId(followAccountInfo.get(0).getServerId());
+
+            error.setErrorCode(response);
+            error.setErrorMsg(orderJson.toJSONString());
+
+            error.setSignalServerId(signalAccountInfo.get(0).getServerId());
+            error.setSignalServerName(signalAccountInfo.get(0).getServerName());
+            error.setSignalMtAccId(signalAccountInfo.get(0).getMtAccId());
+            error.setSignalOrderId(orderJson.getString("signalTicket"));
+            error.setUserOrderId(orderJson.getInteger("_ticket")==null?0:orderJson.getInteger("_ticket"));
+
+            fuOrderFollowErrorMapper.insert(error);
+            return;
+        }
+
+        /*保存至 信号源订单表*/
+        FuOrderFollowInfo followInfo=new FuOrderFollowInfo();
+
+        followInfo.setUserId(followAccountInfo.get(0).getUserId());
+        followInfo.setUserServerName(followAccountInfo.get(0).getServerName());
+        followInfo.setUserMtAccId(followAccountInfo.get(0).getMtAccId());
+        followInfo.setUserServerId(followAccountInfo.get(0).getServerId());
+
+        followInfo.setSignalServerId(signalAccountInfo.get(0).getServerId());
+        followInfo.setSignalServerName(signalAccountInfo.get(0).getServerName());
+        followInfo.setSignalMtAccId(signalAccountInfo.get(0).getMtAccId());
+        followInfo.setSignalOrderId(orderJson.getString("signalTicket"));
+
+        followInfo.setOrderId(orderJson.getString("_ticket"));
+        followInfo.setOrderLots(orderJson.getBigDecimal("_lots"));
+        followInfo.setOrderStoploss(orderJson.getBigDecimal("_SL"));
+        followInfo.setOrderTakeprofit(orderJson.getBigDecimal("_TP"));
+        if(orderAction.equalsIgnoreCase(FollowConstant.ACTION_OPEN)){
+            followInfo.setOrderTradeOperation(OrderConstant.ORDER_OPERATION_OPEN);
+            followInfo.setOrderType(orderJson.getInteger("_orderType"));
+            followInfo.setOrderOpenDate(orderJson.getTimestamp("_open_time"));
+            followInfo.setOrderOpenPrice(orderJson.getBigDecimal("_open_price"));
+        }else if(orderAction.equalsIgnoreCase(FollowConstant.ACTION_CLOSE)){
+            followInfo.setOrderTradeOperation(OrderConstant.ORDER_OPERATION_CLOSE);
+        }else if(orderAction.equalsIgnoreCase(FollowConstant.ACTION_CLOSE_PARTIAL)){
+            followInfo.setOrderTradeOperation(OrderConstant.ORDER_OPERATION_CLOSE_PARTIAL);
+            //            followInfo.setOrderSuperior();
+        }
+        if((orderAction.equalsIgnoreCase(FollowConstant.ACTION_CLOSE)
+                ||orderAction.equalsIgnoreCase(FollowConstant.ACTION_CLOSE_PARTIAL))){
+            followInfo.setOrderSwap(orderJson.getBigDecimal("_orderSwap"));
+            followInfo.setOrderCommission(orderJson.getBigDecimal("_orderCommission"));
+            followInfo.setOrderCloseDate(orderJson.getTimestamp("_orderCloseTime"));
+            followInfo.setOrderClosePrice(orderJson.getBigDecimal("_orderClosePrice"));
+        }
+        followInfo.setOrderMagic(orderJson.getBigDecimal("_magic"));
+
+        /*保存至数据库*/
+        fuOrderFollowInfoMapper.insertSelective(followInfo);
+
+    }
 
 }

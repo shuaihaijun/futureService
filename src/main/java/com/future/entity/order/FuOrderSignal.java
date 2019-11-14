@@ -59,12 +59,12 @@ public class FuOrderSignal {
     private BigDecimal orderLots;
 
     /**
-     * 订单类型（ 0 普通订单，1 拆分订单）
+     * 订单类型（ OP_BUY = 0， OP_SELL = 1，OP_BUYLIMIT = 2，OP_SELLLIMIT = 3， OP_BUYSTOP = 4，OP_SELLSTOP = 5）
      */
     private Integer orderType;
 
     /**
-     * 订单状态（ 0 交易中 ，1 已交易，2 部分平仓，3 关闭）
+     * 订单状态（ 0 正常，1 异常）
      */
     private Integer orderState;
 
@@ -114,12 +114,12 @@ public class FuOrderSignal {
     private Date orderOpenDate;
 
     /**
-     * 交易类别（0 buy，1 sell, 2 buylimit ,3 selllimit, 4 buystop, 5 sellstop,6 deposit, 7 credit，99 close）
+     * 操作类型（0 OPEN ，1 MODIFY，2 CLOSE，3 CLOSE_PARTIAL，4 CLOSE_MAGIC）
      */
     private Integer orderTradeOperation;
 
     /**
-     * 交易类型（0 建仓，1 平仓）
+     * 交易类型
      */
     private Integer orderTradeType;
 
@@ -299,32 +299,28 @@ public class FuOrderSignal {
     }
 
     /**
-     * 订单类型（ 0 普通订单，1 拆分订单）
-     * @return order_type 订单类型（ 0 普通订单，1 拆分订单）
+     * 订单类型（ OP_BUY = 0， OP_SELL = 1，OP_BUYLIMIT = 2，OP_SELLLIMIT = 3， OP_BUYSTOP = 4，OP_SELLSTOP = 5）
      */
     public Integer getOrderType() {
         return orderType;
     }
 
     /**
-     * 订单类型（ 0 普通订单，1 拆分订单）
-     * @param orderType 订单类型（ 0 普通订单，1 拆分订单）
+     * 订单类型（ OP_BUY = 0， OP_SELL = 1，OP_BUYLIMIT = 2，OP_SELLLIMIT = 3， OP_BUYSTOP = 4，OP_SELLSTOP = 5）
      */
     public void setOrderType(Integer orderType) {
         this.orderType = orderType;
     }
 
     /**
-     * 订单状态（ 0 交易中 ，1 已交易，2 部分平仓，3 关闭）
-     * @return order_state 订单状态（ 0 交易中 ，1 已交易，2 部分平仓，3 关闭）
+     * 订单状态（ 0 正常，1 异常）
      */
     public Integer getOrderState() {
         return orderState;
     }
 
     /**
-     * 订单状态（ 0 交易中 ，1 已交易，2 部分平仓，3 关闭）
-     * @param orderState 订单状态（ 0 交易中 ，1 已交易，2 部分平仓，3 关闭）
+     * 订单状态（ 0 正常，1 异常）
      */
     public void setOrderState(Integer orderState) {
         this.orderState = orderState;
@@ -396,7 +392,7 @@ public class FuOrderSignal {
 
     /**
      * 原订单号
-     * @return order_superior 原订单号
+     * @return order_superior 原在仓订单号
      */
     public String getOrderSuperior() {
         return orderSuperior;
@@ -404,7 +400,7 @@ public class FuOrderSignal {
 
     /**
      * 原订单号
-     * @param orderSuperior 原订单号
+     * @param orderSuperior 原在仓订单号
      */
     public void setOrderSuperior(String orderSuperior) {
         this.orderSuperior = orderSuperior == null ? null : orderSuperior.trim();
@@ -475,32 +471,28 @@ public class FuOrderSignal {
     }
 
     /**
-     * 交易类别（0 buy，1 sell, 2 buylimit ,3 selllimit, 4 buystop, 5 sellstop,6 deposit, 7 credit，99 close）
-     * @return order_trade_operation 交易类别（0 buy，1 sell, 2 buylimit ,3 selllimit, 4 buystop, 5 sellstop,6 deposit, 7 credit，99 close）
+     * 操作类型（0 OPEN ，1 MODIFY，2 CLOSE，3 CLOSE_PARTIAL，4 CLOSE_MAGIC）
      */
     public Integer getOrderTradeOperation() {
         return orderTradeOperation;
     }
 
     /**
-     * 交易类别（0 buy，1 sell, 2 buylimit ,3 selllimit, 4 buystop, 5 sellstop,6 deposit, 7 credit，99 close）
-     * @param orderTradeOperation 交易类别（0 buy，1 sell, 2 buylimit ,3 selllimit, 4 buystop, 5 sellstop,6 deposit, 7 credit，99 close）
+     * 操作类型（0 OPEN ，1 MODIFY，2 CLOSE，3 CLOSE_PARTIAL，4 CLOSE_MAGIC）
      */
     public void setOrderTradeOperation(Integer orderTradeOperation) {
         this.orderTradeOperation = orderTradeOperation;
     }
 
     /**
-     * 交易类型（0 建仓，1 平仓）
-     * @return order_trade_type 交易类型（0 建仓，1 平仓）
+     * 交易类型
      */
     public Integer getOrderTradeType() {
         return orderTradeType;
     }
 
     /**
-     * 交易类型（0 建仓，1 平仓）
-     * @param orderTradeType 交易类型（0 建仓，1 平仓）
+     * 交易类型
      */
     public void setOrderTradeType(Integer orderTradeType) {
         this.orderTradeType = orderTradeType;

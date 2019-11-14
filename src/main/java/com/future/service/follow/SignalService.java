@@ -4,22 +4,26 @@ import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.toolkit.MapUtils;
 import com.future.common.constants.FollowConstant;
 import com.future.common.exception.BusinessException;
+import com.future.common.util.BeanUtil;
+import com.future.common.util.DateUtil;
+import com.future.entity.order.FuOrderFollowAction;
 import com.future.entity.order.FuOrderSignal;
+import com.future.mapper.order.FuOrderFollowActionMapper;
 import com.future.mapper.order.FuOrderSignalMapper;
 import com.future.pojo.bo.order.UserMTAccountBO;
 import com.future.service.account.FuAccountMtSevice;
 import com.jfx.strategy.Strategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.zeromq.SocketType;
 import org.zeromq.ZContext;
 import org.zeromq.ZMQ;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.math.BigDecimal;
+import java.util.*;
 
 /**
  * 信号源处理逻辑
@@ -34,6 +38,8 @@ public class SignalService extends Strategy {
     FuOrderSignalMapper fuOrderSignalMapper;
     @Autowired
     FuAccountMtSevice fuAccountMtSevice;
+    @Autowired
+    FuOrderFollowActionMapper fuOrderFollowActionMapper;
 
     /**
      * 初始化信号源(单线程)
@@ -61,7 +67,7 @@ public class SignalService extends Strategy {
             int i=0;
             String reciveMsg="";
             // 请求100*5次
-            while (i<20) {
+            while (i<2) {
                 System.out.println("send init String :"+signalInit);
                 pubSocket.send(signalInit,0);
                 //接收信号源绑定回执信息
@@ -70,14 +76,14 @@ public class SignalService extends Strategy {
                 byte[] reply = pullSocket.recv(0);
                 if(reply!=null && reply.length>0){
                     reciveMsg=new String(reply);
-                    System.out.println(reciveMsg);
+                    System.out.println("recivde signal Confirm msg:"+reciveMsg);
                     if(reciveMsg.equalsIgnoreCase(signalServer+"&"+signalAccount)){
                         //绑定成功
                         return true;
                     }
                 }
                 i++;
-                Thread.sleep(400);
+                Thread.sleep(700);
             }
         }catch (Exception e){
             log.error(e.getMessage(),e);
@@ -131,40 +137,102 @@ public class SignalService extends Strategy {
         // 2 初始化跟随者  accountInfo|FOLLOWINIT|serverHost:serverPort#followHost:followPort#signalArray#followOrderList|ruleList(signalAccount:ruleType:ruleAmount:limitUpper)
         // 3 信号源订单  signalAccountInfo|SIGNALFOLLOWORDER|action|tradeOrder
         // 4 跟随者订单  accountInfo|signalAccount|action|tradeOrder
-
-        /*signalMsg = "MultiBankFXInt-Demo F&2102266149|SIGNALFOLLOWORDER|CLOSE|{'orderType':'0','orderTicket':'131145568','orderSymbol':'EURUSD'," +
-                "'orderLots':'0.01000000','orderCloseTime':'1568882015','orderClosePrice':'1.10591000','orderStopLoss':'0.00000000'," +
-                "'orderTakeProfit':'0.00000000','orderMagicNumber':'0.00000000','orderComment':'comment','orderCommission':'0.00000000','orderExpiration':'0'";*/
-
+        // MultiBankFXInt-Demo F&2102272054|SIGNALFOLLOWORDER|OPEN|1,EURAUD,1.61436000,0.00000000,0.00000000,,0.03000000,0.00000000,131565401,1572512497,0.00000000,0
+        // tradeOrder= type,symbol,closePrice/openPrice,stopLoss,takeProfit,comment,lots,magic,ticket,closeTime/openTime,commission,expiration,superiorTicket
         System.out.println("dealSignalReciveMsg:"+signalMsg);
         String msgInfo[]=signalMsg.split("\\|");
-        for(String signalMsgInfo:msgInfo){
-            System.out.println(signalMsgInfo);
-        }
 
         // 解析數據
-        /*reciveTradeOrder = "{'orderType':'0','orderTicket':'131145568','orderSymbol':'EURUSD'," +
-                "'orderLots':'0.01000000','orderCloseTime':'1568882015','orderClosePrice':'1.10591000','orderStopLoss':'0.00000000'," +
-                "'orderTakeProfit':'0.00000000','orderMagicNumber':'0.00000000','orderComment':'comment','orderCommission':'0.00000000','orderExpiration':'0'}";*/
-
         Map signalOrderMsg = new HashMap();
         String signalAccount[]=  msgInfo[0].split("&");
         String orderAction=msgInfo[2];
-        String orderDetail=msgInfo[3].replace("'","\"");
-        String signalServerName=signalAccount[0];
-        String signalAccountId=signalAccount[1];
-        JSONObject orderJson=JSONObject.parseObject(orderDetail);
+        String orderDetail[]=msgInfo[3].split(",");
+        for(String signalMsgInfo:msgInfo){
+            log.info("recived signalTradeOrder from："+msgInfo[0]);
+            log.info("orderDetail is ："+signalMsg);
+        }
 
         //根据serverName + mtaccId 查询user
         Map conditionMap=new HashMap();
         conditionMap.put("serverName",signalAccount[0]);
         conditionMap.put("mtAccId",signalAccount[1]);
         List<UserMTAccountBO> accountBOS=fuAccountMtSevice.getUserMTAccByCondition(conditionMap);
+        if(accountBOS.size()<=0){
+            log.error("根据服务器和账号，查询用户错误！");
+            log.error("signalMsg:"+signalMsg);
+        }
 
         /*保存至 信号源订单表*/
         FuOrderSignal signalOrder=new FuOrderSignal();
-//        signalOrder.setMtServerName(accountBOS.get );
-        fuOrderSignalMapper.insert(signalOrder);
+        signalOrder.setUserId(accountBOS.get(0).getUserId());
+        signalOrder.setMtServerName(accountBOS.get(0).getServerName());
+//        signalOrder.setMtServerId();
+        signalOrder.setMtAccId(accountBOS.get(0).getMtAccId());
+        signalOrder.setOrderType(Integer.parseInt(orderDetail[0]));
+        signalOrder.setOrderSymbol(orderDetail[1]);
+        //订单状态（0 OPEN ，1 MODIFY，2 CLOSE，3 CLOSE_PARTIAL，4 CLOSE_MAGIC
+        if(orderAction.equalsIgnoreCase(FollowConstant.ACTION_OPEN)){
+            signalOrder.setOrderTradeOperation(0);
+            signalOrder.setOrderOpenDate(DateUtil.toDataFormTimeStamp(Long.parseLong(orderDetail[9])));
+            signalOrder.setOrderOpenPrice(new BigDecimal(orderDetail[2]));
+        }else if(orderAction.equalsIgnoreCase(FollowConstant.ACTION_MODIFY)){
+            signalOrder.setOrderTradeOperation(1);
+        }else if(orderAction.equalsIgnoreCase(FollowConstant.ACTION_CLOSE)){
+            signalOrder.setOrderTradeOperation(2);
+            signalOrder.setOrderCloseDate(DateUtil.toDataFormTimeStamp(Long.parseLong(orderDetail[9])));
+            signalOrder.setOrderClosePrice(new BigDecimal(orderDetail[2]));
+        }else if(orderAction.equalsIgnoreCase(FollowConstant.ACTION_CLOSE_PARTIAL)){
+            signalOrder.setOrderTradeOperation(3);
+            signalOrder.setOrderCloseDate(DateUtil.toDataFormTimeStamp(Long.parseLong(orderDetail[9])));
+            signalOrder.setOrderClosePrice(new BigDecimal(orderDetail[2]));
+            signalOrder.setOrderSuperior(orderDetail[12]);
+        }else if(orderAction.equalsIgnoreCase(FollowConstant.ACTION_CLOSE_MAGIC)){
+            signalOrder.setOrderTradeOperation(4);
+        }
+        signalOrder.setOrderStoploss(new BigDecimal(orderDetail[3]));
+        signalOrder.setOrderProfit(new BigDecimal(orderDetail[4]));
+        signalOrder.setComment(orderDetail[5]);
+        signalOrder.setOrderLots(new BigDecimal(orderDetail[6]));
+        signalOrder.setOrderMagic(new BigDecimal(orderDetail[7]));
+        signalOrder.setOrderId(orderDetail[8]);
+        signalOrder.setOrderCommission(new BigDecimal(orderDetail[10]));
+        signalOrder.setOrderExpiration(DateUtil.toDataFormTimeStamp(Long.parseLong(orderDetail[11])));
+
+        if(orderAction.equalsIgnoreCase(FollowConstant.ACTION_CLOSE)
+            ||orderAction.equalsIgnoreCase(FollowConstant.ACTION_CLOSE_PARTIAL)
+                ||orderAction.equalsIgnoreCase(FollowConstant.ACTION_CLOSE_MAGIC)){
+            // 信号源订单 关闭 变更跟单关系表
+            Map selectMap=new HashMap();
+            selectMap.put(FuOrderFollowAction.SIGNAL_ORDER_ID,signalOrder.getOrderId());
+            selectMap.put(FuOrderFollowAction.ORDER_STATE,"1");
+            List<FuOrderFollowAction> currents= fuOrderFollowActionMapper.selectByMap(selectMap);
+            List<FuOrderFollowAction> newActions=new ArrayList<>();
+            for(FuOrderFollowAction action:currents){
+                if(orderAction.equalsIgnoreCase(FollowConstant.ACTION_CLOSE_PARTIAL)){
+                    //如果是部分关闭，生成一个新的订单跟随任务
+                    FuOrderFollowAction newAction=new FuOrderFollowAction();
+                    BeanUtils.copyProperties(action,newAction);
+                    newAction.setCreateDate(new Date());
+                    newAction.setModifyDate(new Date());
+                    newAction.setSignalOrderId(signalOrder.getOrderSuperior());
+                    newActions.add(newAction);
+                }
+                //关闭当前订单监听任务
+                action.setOrderAction(signalOrder.getOrderTradeOperation());
+                action.setOrderState(0);
+            }
+            if(currents.size()>0){
+                //批量修改 TODO
+//                fuOrderFollowActionMapper.updateByCondition();
+            }
+            if(newActions.size()>0){
+                //批量新增 TODO
+//                fuOrderFollowActionMapper.batchInsert(newActions);
+            }
+        }
+
+        /*保存至数据库*/
+        fuOrderSignalMapper.insertSelective(signalOrder);
 
     }
 

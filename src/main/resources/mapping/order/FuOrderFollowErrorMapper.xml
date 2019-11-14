@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.future.mapper.order.FuOrderFollowErrorMapper">
+  <resultMap id="BaseResultMap" type="com.future.entity.order.FuOrderFollowError">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="modify_date" jdbcType="TIMESTAMP" property="modifyDate" />
+    <result column="user_order_id" jdbcType="INTEGER" property="userOrderId" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="user_server_id" jdbcType="INTEGER" property="userServerId" />
+    <result column="user_server_name" jdbcType="VARCHAR" property="userServerName" />
+    <result column="user_mt_acc_id" jdbcType="VARCHAR" property="userMtAccId" />
+    <result column="signal_order_id" jdbcType="VARCHAR" property="signalOrderId" />
+    <result column="signal_server_id" jdbcType="INTEGER" property="signalServerId" />
+    <result column="signal_server_name" jdbcType="VARCHAR" property="signalServerName" />
+    <result column="signal_mt_acc_id" jdbcType="VARCHAR" property="signalMtAccId" />
+    <result column="signal_order_superior" jdbcType="VARCHAR" property="signalOrderSuperior" />
+    <result column="error_code" jdbcType="VARCHAR" property="errorCode" />
+    <result column="error_msg" jdbcType="VARCHAR" property="errorMsg" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, create_date, modify_date, user_order_id, user_id, user_server_id, user_server_name, 
+    user_mt_acc_id, signal_order_id, signal_server_id, signal_server_name, signal_mt_acc_id, 
+    signal_order_superior, error_code, error_msg
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from fu_order_follow_error
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from fu_order_follow_error
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.future.entity.order.FuOrderFollowError">
+    insert into fu_order_follow_error (id, create_date, modify_date, 
+      user_order_id, user_id, user_server_id, 
+      user_server_name, user_mt_acc_id, signal_order_id, 
+      signal_server_id, signal_server_name, signal_mt_acc_id, 
+      signal_order_superior, error_code, error_msg
+      )
+    values (#{id,jdbcType=INTEGER}, #{createDate,jdbcType=TIMESTAMP}, #{modifyDate,jdbcType=TIMESTAMP}, 
+      #{userOrderId,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{userServerId,jdbcType=INTEGER}, 
+      #{userServerName,jdbcType=VARCHAR}, #{userMtAccId,jdbcType=VARCHAR}, #{signalOrderId,jdbcType=VARCHAR}, 
+      #{signalServerId,jdbcType=INTEGER}, #{signalServerName,jdbcType=VARCHAR}, #{signalMtAccId,jdbcType=VARCHAR}, 
+      #{signalOrderSuperior,jdbcType=VARCHAR}, #{errorCode,jdbcType=VARCHAR}, #{errorMsg,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.future.entity.order.FuOrderFollowError">
+    insert into fu_order_follow_error
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="createDate != null">
+        create_date,
+      </if>
+      <if test="modifyDate != null">
+        modify_date,
+      </if>
+      <if test="userOrderId != null">
+        user_order_id,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="userServerId != null">
+        user_server_id,
+      </if>
+      <if test="userServerName != null">
+        user_server_name,
+      </if>
+      <if test="userMtAccId != null">
+        user_mt_acc_id,
+      </if>
+      <if test="signalOrderId != null">
+        signal_order_id,
+      </if>
+      <if test="signalServerId != null">
+        signal_server_id,
+      </if>
+      <if test="signalServerName != null">
+        signal_server_name,
+      </if>
+      <if test="signalMtAccId != null">
+        signal_mt_acc_id,
+      </if>
+      <if test="signalOrderSuperior != null">
+        signal_order_superior,
+      </if>
+      <if test="errorCode != null">
+        error_code,
+      </if>
+      <if test="errorMsg != null">
+        error_msg,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null">
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyDate != null">
+        #{modifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="userOrderId != null">
+        #{userOrderId,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="userServerId != null">
+        #{userServerId,jdbcType=INTEGER},
+      </if>
+      <if test="userServerName != null">
+        #{userServerName,jdbcType=VARCHAR},
+      </if>
+      <if test="userMtAccId != null">
+        #{userMtAccId,jdbcType=VARCHAR},
+      </if>
+      <if test="signalOrderId != null">
+        #{signalOrderId,jdbcType=VARCHAR},
+      </if>
+      <if test="signalServerId != null">
+        #{signalServerId,jdbcType=INTEGER},
+      </if>
+      <if test="signalServerName != null">
+        #{signalServerName,jdbcType=VARCHAR},
+      </if>
+      <if test="signalMtAccId != null">
+        #{signalMtAccId,jdbcType=VARCHAR},
+      </if>
+      <if test="signalOrderSuperior != null">
+        #{signalOrderSuperior,jdbcType=VARCHAR},
+      </if>
+      <if test="errorCode != null">
+        #{errorCode,jdbcType=VARCHAR},
+      </if>
+      <if test="errorMsg != null">
+        #{errorMsg,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.future.entity.order.FuOrderFollowError">
+    update fu_order_follow_error
+    <set>
+      <if test="createDate != null">
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyDate != null">
+        modify_date = #{modifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="userOrderId != null">
+        user_order_id = #{userOrderId,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="userServerId != null">
+        user_server_id = #{userServerId,jdbcType=INTEGER},
+      </if>
+      <if test="userServerName != null">
+        user_server_name = #{userServerName,jdbcType=VARCHAR},
+      </if>
+      <if test="userMtAccId != null">
+        user_mt_acc_id = #{userMtAccId,jdbcType=VARCHAR},
+      </if>
+      <if test="signalOrderId != null">
+        signal_order_id = #{signalOrderId,jdbcType=VARCHAR},
+      </if>
+      <if test="signalServerId != null">
+        signal_server_id = #{signalServerId,jdbcType=INTEGER},
+      </if>
+      <if test="signalServerName != null">
+        signal_server_name = #{signalServerName,jdbcType=VARCHAR},
+      </if>
+      <if test="signalMtAccId != null">
+        signal_mt_acc_id = #{signalMtAccId,jdbcType=VARCHAR},
+      </if>
+      <if test="signalOrderSuperior != null">
+        signal_order_superior = #{signalOrderSuperior,jdbcType=VARCHAR},
+      </if>
+      <if test="errorCode != null">
+        error_code = #{errorCode,jdbcType=VARCHAR},
+      </if>
+      <if test="errorMsg != null">
+        error_msg = #{errorMsg,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.future.entity.order.FuOrderFollowError">
+    update fu_order_follow_error
+    set create_date = #{createDate,jdbcType=TIMESTAMP},
+      modify_date = #{modifyDate,jdbcType=TIMESTAMP},
+      user_order_id = #{userOrderId,jdbcType=INTEGER},
+      user_id = #{userId,jdbcType=INTEGER},
+      user_server_id = #{userServerId,jdbcType=INTEGER},
+      user_server_name = #{userServerName,jdbcType=VARCHAR},
+      user_mt_acc_id = #{userMtAccId,jdbcType=VARCHAR},
+      signal_order_id = #{signalOrderId,jdbcType=VARCHAR},
+      signal_server_id = #{signalServerId,jdbcType=INTEGER},
+      signal_server_name = #{signalServerName,jdbcType=VARCHAR},
+      signal_mt_acc_id = #{signalMtAccId,jdbcType=VARCHAR},
+      signal_order_superior = #{signalOrderSuperior,jdbcType=VARCHAR},
+      error_code = #{errorCode,jdbcType=VARCHAR},
+      error_msg = #{errorMsg,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

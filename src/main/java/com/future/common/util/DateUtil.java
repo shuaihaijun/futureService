@@ -70,6 +70,24 @@ public class DateUtil {
     }
 
     /**
+     * 将时间戳转化为日期
+     * @param timeStamp
+     * @return
+     */
+    public static Date toDataFormTimeStamp(long timeStamp){
+        try {
+            String s = timeStampFormat.format(timeStamp);
+            if (s.length() <= 10) {
+                return datetimeFormat.parse(s);
+            }
+            return toDate(Timestamp.valueOf(s));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    /**
      * 将字符串转换为日期对象，字符串必须符合yyyy-MM-dd HH:mm:ss.SSS的格式
      *
      * @param s 要转化的字符串

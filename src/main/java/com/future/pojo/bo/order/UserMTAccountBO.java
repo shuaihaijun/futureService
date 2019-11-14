@@ -3,21 +3,21 @@ package com.future.pojo.bo.order;
 /*用户MT账户BO*/
 public class UserMTAccountBO {
 
-    public Integer accountId;//账户id
-    public Integer userId;//用户id
-    public Integer serverId;//服务器ID
-    public Integer brokerId;//经纪人ID
-    public String brokerName;//代理名称
-    public int serverState;//服务器状态
-    public String serverName;//服务器名称
-    public String mtAccId;//mt平台账号
-    public String mtPasswordTrade;//交易密码
-    public String mtPasswordWatch;//观摩密码
-    public int passwordTradeChecked;//交易密码是否已校验（0 否，1是
-    public int accountType;//账户类型：0 mt4,1 mt5
-    public int isChief;//是否为主账号
-    public String accountUrl;//账户所在位置URL
-    public Integer accountPort;//账户所在位置PORT
+    private Integer accountId;//账户id
+    private Integer userId;//用户id
+    private Integer serverId;//服务器ID
+    private Integer brokerId;//经纪人ID
+    private String brokerName;//代理名称
+    private int serverState;//服务器状态
+    private String serverName;//服务器名称
+    private String mtAccId;//mt平台账号
+    private String mtPasswordTrade;//交易密码
+    private String mtPasswordWatch;//观摩密码
+    private int passwordTradeChecked;//交易密码是否已校验（0 否，1是
+    private int accountType;//账户类型：0 mt4,1 mt5
+    private int isChief;//是否为主账号
+    private String accountUrl;//账户所在位置URL
+    private Integer accountPort;//账户所在位置PORT
     /**
      * 用户账号
      */
