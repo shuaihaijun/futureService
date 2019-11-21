@@ -11,7 +11,6 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableTransactionManagement(proxyTargetClass = true)
 @MapperScan("com.future.mapper")
 public class FutureApplication {
-
 	public static void main(String[] args) {
 		SpringApplication.run(FutureApplication.class,args);
 	}

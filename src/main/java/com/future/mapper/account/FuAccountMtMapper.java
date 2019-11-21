@@ -23,4 +23,6 @@ public interface FuAccountMtMapper extends BaseMapper<FuAccountMt> {
     int updateByPrimaryKey(FuAccountMt record);
 
     List<UserMTAccountBO> selectUserMTAccByCondition(Map conditionMap);
+
+    int updateByPrimaryCondition(FuAccountMt record);
 }

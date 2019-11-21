@@ -244,4 +244,54 @@
       </if>
     </trim>
   </select>
+  <update id="updateByPrimaryCondition" parameterType="com.future.entity.account.FuAccountMt">
+    update fu_account_mt
+    <set>
+      <if test="serverId != null">
+        server_id = #{serverId,jdbcType=INTEGER},
+      </if>
+      <if test="brokerId != null">
+        broker_id = #{brokerId,jdbcType=INTEGER},
+      </if>
+      <if test="mtAccId != null">
+        mt_acc_id = #{mtAccId,jdbcType=VARCHAR},
+      </if>
+      <if test="mtPasswordTrade != null">
+        mt_password_trade = #{mtPasswordTrade,jdbcType=VARCHAR},
+      </if>
+      <if test="mtPasswordWatch != null">
+        mt_password_watch = #{mtPasswordWatch,jdbcType=VARCHAR},
+      </if>
+      <if test="accountUrl != null">
+        account_url = #{accountUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="accountPort != null">
+        account_port = #{accountPort,jdbcType=INTEGER},
+      </if>
+      <if test="passwordTradeChecked != null">
+        password_trade_checked = #{passwordTradeChecked,jdbcType=TINYINT},
+      </if>
+      <if test="passwordWatchChecked != null">
+        password_watch_checked = #{passwordWatchChecked,jdbcType=TINYINT},
+      </if>
+      <if test="isChief != null">
+        is_chief = #{isChief,jdbcType=TINYINT},
+      </if>
+      <if test="accountType != null">
+        account_type = #{accountType,jdbcType=TINYINT},
+      </if>
+    </set>
+    where
+    <trim  prefixOverrides="and">
+      <if test="userId != null">
+        and user_id = #{userId,jdbcType=INTEGER}
+      </if>
+      <if test="accountId != null">
+        and id = #{accountId,jdbcType=INTEGER}
+      </if>
+      <if test="mtAccId != null">
+        and mt_acc_id = #{mtAccId,jdbcType=INTEGER}
+      </if>
+    </trim>
+  </update>
 </mapper>

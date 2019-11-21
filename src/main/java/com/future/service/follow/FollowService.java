@@ -52,18 +52,21 @@ public class FollowService{
 
     /**
      * 跟随者初始化
+     * @param userId
+     * @param userServer
+     * @param userAccount
      * @param serverHost
-     * @param customerServer
-     * @param customerAccount
+     * @param followHost
+     * @return
      */
-    public Boolean followInit(String serverHost,String followHost,String customerServer,String customerAccount){
+    public Boolean followInit(String userId,String userServer,String userAccount,String serverHost,String followHost){
         // 1 初始化信号源  accountInfo|SIGNALINIT|signalHost:signalPort
         // 2 初始化跟随者  accountInfo|FOLLOWINIT|serverHost:serverPort#followHost:followPort#signalArray#followOrderList|ruleList(signalAccount:ruleType:ruleAmount:limitUpper)
         // 3 跟随信息  signalAccountInfo|SIGNALFOLLOWORDER|action|tradeOrder
         // 4 跟随者订单  accountInfo|signalAccount|action|tradeOrder
 
 
-        String accountInfo=customerServer+"&"+customerAccount;
+        String accountInfo=userServer+"&"+userAccount;
         // 根据当前账号 查询跟随列表
         // 解析数据 格式为 signalHost1:signalPort1:signalServer1&signalAccountId1;signalHost2:signalPort2:signalServer2&signalAccountId2
         String signalArray="127.0.0.1:30222:MultiBankFXInt-Demo F&2102272054";
@@ -107,7 +110,6 @@ public class FollowService{
             // 请求100*5次
             while (i<10) {
 
-                System.out.println("send times:"+i);
                 pubSocket.send(followInitStr,0);
 
                 //接收信号源绑定回执信息
@@ -119,7 +121,7 @@ public class FollowService{
                     System.out.println(reciveMsg);
                     return true;
                 }
-                if(reciveMsg.equalsIgnoreCase(customerServer+"&"+customerAccount)){
+                if(reciveMsg.equalsIgnoreCase(accountInfo)){
                     //绑定成功
                     return true;
                 }

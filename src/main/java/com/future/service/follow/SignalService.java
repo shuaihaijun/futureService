@@ -12,6 +12,7 @@ import com.future.mapper.order.FuOrderFollowActionMapper;
 import com.future.mapper.order.FuOrderSignalMapper;
 import com.future.pojo.bo.order.UserMTAccountBO;
 import com.future.service.account.FuAccountMtSevice;
+import com.future.service.order.FuOrderFollowActionService;
 import com.jfx.strategy.Strategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,7 +40,7 @@ public class SignalService extends Strategy {
     @Autowired
     FuAccountMtSevice fuAccountMtSevice;
     @Autowired
-    FuOrderFollowActionMapper fuOrderFollowActionMapper;
+    FuOrderFollowActionService fuOrderFollowActionService;
 
     /**
      * 初始化信号源(单线程)
@@ -205,7 +206,7 @@ public class SignalService extends Strategy {
             Map selectMap=new HashMap();
             selectMap.put(FuOrderFollowAction.SIGNAL_ORDER_ID,signalOrder.getOrderId());
             selectMap.put(FuOrderFollowAction.ORDER_STATE,"1");
-            List<FuOrderFollowAction> currents= fuOrderFollowActionMapper.selectByMap(selectMap);
+            List<FuOrderFollowAction> currents= fuOrderFollowActionService.selectByMap(selectMap);
             List<FuOrderFollowAction> newActions=new ArrayList<>();
             for(FuOrderFollowAction action:currents){
                 if(orderAction.equalsIgnoreCase(FollowConstant.ACTION_CLOSE_PARTIAL)){
@@ -222,12 +223,12 @@ public class SignalService extends Strategy {
                 action.setOrderState(0);
             }
             if(currents.size()>0){
-                //批量修改 TODO
-//                fuOrderFollowActionMapper.updateByCondition();
+                //批量修改
+                fuOrderFollowActionService.updateBatchById(currents);
             }
             if(newActions.size()>0){
-                //批量新增 TODO
-//                fuOrderFollowActionMapper.batchInsert(newActions);
+                //批量新增
+                fuOrderFollowActionService.batchInsert(newActions);
             }
         }
 
