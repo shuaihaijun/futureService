@@ -1,14 +1,11 @@
 package com.future.service.follow;
 
-import com.alibaba.fastjson.JSONObject;
-import com.baomidou.mybatisplus.toolkit.MapUtils;
+import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.future.common.constants.FollowConstant;
 import com.future.common.exception.BusinessException;
-import com.future.common.util.BeanUtil;
 import com.future.common.util.DateUtil;
 import com.future.entity.order.FuOrderFollowAction;
 import com.future.entity.order.FuOrderSignal;
-import com.future.mapper.order.FuOrderFollowActionMapper;
 import com.future.mapper.order.FuOrderSignalMapper;
 import com.future.pojo.bo.order.UserMTAccountBO;
 import com.future.service.account.FuAccountMtSevice;
@@ -18,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.zeromq.SocketType;
 import org.zeromq.ZContext;
@@ -30,7 +28,7 @@ import java.util.*;
  * 信号源处理逻辑
  */
 @Service
-public class SignalService extends Strategy {
+public class SignalService extends ServiceImpl<FuOrderSignalMapper,FuOrderSignal> {
 
     Logger log= LoggerFactory.getLogger(SignalService.class);
     @Autowired
@@ -41,6 +39,10 @@ public class SignalService extends Strategy {
     FuAccountMtSevice fuAccountMtSevice;
     @Autowired
     FuOrderFollowActionService fuOrderFollowActionService;
+    @Value("pubServerUrl")
+    String pubServerUrl;
+    @Value("pubServerPort")
+    String pubServerPort;
 
     /**
      * 初始化信号源(单线程)
@@ -64,7 +66,7 @@ public class SignalService extends Strategy {
             ZMQ.Socket pubSocket = context.createSocket(SocketType.PUB);
             ZMQ.Socket pullSocket=context.createSocket(SocketType.PULL);
             //默认 固定 服务器地址！
-            pubSocket.bind("tcp://127.0.0.1:32777");
+            pubSocket.bind("tcp://"+pubServerUrl+":"+pubServerPort);
             int i=0;
             String reciveMsg="";
             // 请求100*5次

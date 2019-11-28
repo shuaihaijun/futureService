@@ -60,9 +60,13 @@ swagger:
   base-package: com.future.controller
 
 # constant
-#baseUrl: 127.0.0.1
-termServerHost: 127.0.0.1
-termServerPort: 7788
+#用户服务器地址
+userTermServerHost: 127.0.0.1
+userTermServerPort: 7788
+#主机服务器地址
+pubServerUrl: 127.0.0.1
+pubServerPort: 6666
+
 #超级管理员id集合 Administrator,使用逗号分隔
 SUPER_ADMINISTRATOR: 11
 

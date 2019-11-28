@@ -148,6 +148,13 @@ public class FuUser {
      */
     private Date modifyDate;
 
+    public static final String USER_ID = "id";
+    public static final String USER_NAME = "username";
+    public static final String USER_TYPE = "user_type";
+    public static final String IS_VERIFIED = "is_verified";
+    public static final String IS_ACCOUNT = "is_account";
+    public static final String INTRODUCER = "introducer";
+
     /**
      * 
      * @return id 

@@ -12,10 +12,10 @@ import org.springframework.util.ObjectUtils;
 public class MTAccountService {
 
     Logger log = LoggerFactory.getLogger(MTAccountService.class);
-    @Value("${termServerHost}")
-    String termServerHost;
-    @Value("${termServerPort}")
-    int termServerPort;
+    @Value("${userTermServerHost}")
+    String userTermServerHost;
+    @Value("${userTermServerPort}")
+    int userTermServerPort;
 
     /**
      * 连接Mt服务器
@@ -31,7 +31,7 @@ public class MTAccountService {
         }
         try {
             log.info(username+" :--- connect begin ---:"+ DateUtil.getCurrDateTime());
-            strategy.connect(termServerHost,termServerPort,broker,username,password);
+            strategy.connect(userTermServerHost,userTermServerPort,broker,username,password);
             log.info(username+" :--- connect end   ---:"+ DateUtil.getCurrDateTime());
         }catch (Exception e){
             log.error(e.getMessage(),e);

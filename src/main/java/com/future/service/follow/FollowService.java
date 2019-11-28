@@ -104,21 +104,21 @@ public class FollowService{
             ZMQ.Socket pullSocket=context.createSocket(SocketType.PULL);
 
             pubSocket.bind("tcp://"+serverHost);
-
+            pubSocket.setSendTimeOut(100);
+            /*需要先发一次 建立连接，mql4中 zeroMq的限制*/
+            pubSocket.send(followInitStr,0);
             int i=0;
             String reciveMsg="";
             // 请求100*5次
-            while (i<10) {
-
+            while (i<10){
                 pubSocket.send(followInitStr,0);
 
                 //接收信号源绑定回执信息
                 pullSocket.connect("tcp://"+followHost);
-                pullSocket.setReceiveTimeOut(100);
+                pullSocket.setReceiveTimeOut(10);
                 byte[] reply = pullSocket.recv(0);
                 if(reply!=null && reply.length>0){
                     reciveMsg=new String(reply);
-                    System.out.println(reciveMsg);
                     return true;
                 }
                 if(reciveMsg.equalsIgnoreCase(accountInfo)){
@@ -126,7 +126,7 @@ public class FollowService{
                     return true;
                 }
                 i++;
-                Thread.sleep(1000);
+                Thread.sleep(100);
             }
         }catch (Exception e){
             log.error(e.getMessage(),e);
@@ -281,6 +281,8 @@ public class FollowService{
             followInfo.setOrderClosePrice(orderJson.getBigDecimal("_orderClosePrice"));
         }
         followInfo.setOrderMagic(orderJson.getBigDecimal("_magic"));
+
+        /*计算佣金*/
 
         /*保存至数据库*/
         fuOrderFollowInfoMapper.insertSelective(followInfo);

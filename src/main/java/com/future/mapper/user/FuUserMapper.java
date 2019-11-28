@@ -1,13 +1,14 @@
 package com.future.mapper.user;
 
+import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.future.entity.user.FuUser;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface FuUserMapper {
+public interface FuUserMapper extends BaseMapper<FuUser> {
     int deleteByPrimaryKey(Integer id);
 
-    int insert(FuUser record);
+    Integer insert(FuUser record);
 
     int insertSelective(FuUser record);
 

@@ -26,10 +26,10 @@ public class MTOrderService {
     Logger log = LoggerFactory.getLogger(MTAccountService.class);
     @Autowired
     MTAccountService mtAccountService;
-    @Value("${termServerHost}")
-    public String termServerHost;
-    @Value("${termServerPort}")
-    public int termServerPort;
+    @Value("${userTermServerHost}")
+    public String userTermServerHost;
+    @Value("${userTermServerPort}")
+    public int userTermServerPort;
 
     Strategy strategy;
 
@@ -111,17 +111,16 @@ public class MTOrderService {
             System.out.println("========="+mtAccId+","+password);
             MTStrategy mtStrategy=new MTStrategy();
             mtStrategy.setMtData(broker,mtAccId,password);
-            mtStrategy.setServerData(termServerHost,termServerPort);
+            mtStrategy.setServerData(userTermServerHost,userTermServerPort);
             /*连接服务器*/
             mtStrategy.init();
             /*连接数据*//*
-            if(!mtStrategy.init(termServerHost,termServerPort,account)){
+            if(!mtStrategy.init(userTermServerHost,userTermServerPort,account)){
                 log.error("user connect failed, username:"+username);
                 throw new RuntimeException("user connect failed!");
             }*/
             Map<Long, OrderInfo> userOrders=mtStrategy.orderGetAll(selectionPool, dateFrom,dateTo,symbol);
-            /*释放连接*/
-            mtStrategy.disconnect();
+
             return ConvertUtil.convertOrderInfo(userOrders);
 
         }catch (Exception e){

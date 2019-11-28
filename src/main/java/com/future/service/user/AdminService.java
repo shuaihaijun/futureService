@@ -3,16 +3,17 @@ package com.future.service.user;
 import com.alibaba.druid.util.StringUtils;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.plugins.Page;
+import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.future.common.enums.GlobalResultCode;
 import com.future.common.enums.ResultCode;
 import com.future.common.enums.UserResultCode;
-import com.future.common.exception.BusinessException;
-import com.future.common.exception.DataNotFoundException;
-import com.future.common.exception.ParameterInvalidException;
-import com.future.common.exception.UserException;
+import com.future.common.exception.*;
 import com.future.common.result.Result;
 import com.future.common.result.ResultMsg;
 import com.future.common.util.CommonUtil;
+import com.future.entity.order.FuOrderCustomer;
 import com.future.entity.user.FuUser;
 import com.future.mapper.user.FuUserMapper;
 import com.github.pagehelper.PageInfo;
@@ -25,10 +26,11 @@ import org.springframework.util.DigestUtils;
 import org.springframework.util.ObjectUtils;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
-public class AdminService {
+public class AdminService extends ServiceImpl<FuUserMapper,FuUser> {
 
     Logger log= LoggerFactory.getLogger(AdminService.class);
 
@@ -81,37 +83,81 @@ public class AdminService {
     }
 
     /**
-     * 保存用户信息
-     * @param fuUser
+     * 注册用户信息
+     * @param userJson
      * @return
      */
-    public void save(FuUser fuUser) throws Exception{
+    public Map registered(JSONObject userJson){
 
-        /*验证*/
-        if(ObjectUtils.isEmpty(fuUser)){
-            throw new ParameterInvalidException(GlobalResultCode.PARAM_NULL_POINTER);
+        if(userJson==null||userJson.toJSONString().equalsIgnoreCase("")){
+            log.error("保存用户信息,获取参数为空！");
+            throw new ParameterInvalidException("保存用户信息,获取参数为空！");
         }
-        if(StringUtils.isEmpty(fuUser.getUsername())
-                ||StringUtils.isEmpty(fuUser.getPassword())
-                ||StringUtils.isEmpty(fuUser.getEmail())
-                ||StringUtils.isEmpty(fuUser.getMobile())
-                ||StringUtils.isEmpty(fuUser.getRealName())){
-            throw new ParameterInvalidException(GlobalResultCode.PARAM_NULL_POINTER);
+        /*校验*/
+        if(!userJson.getString("password").equals(userJson.getString("password2"))){
+            log.error("保存用户信息,两次输入的密码不一致！");
+            throw new ParameterInvalidException("保存用户信息,两次输入的密码不一致！");
         }
 
-        /*此处可从redis中查询*/
-        FuUser eUser=fuUserMapper.selectByUsername(fuUser.getUsername());
-        /*此处还需判断用户状态（123）*/
-        if(!ObjectUtils.isEmpty(eUser)){
-            throw new DataNotFoundException(UserResultCode.USER_NOTEXIST_ERROR);
+        Map registeredInfo=new HashMap();
+        try{
+            FuUser fuUser=JSONObject.parseObject(userJson.toJSONString(),FuUser.class);
+            /*验证*/
+            if(ObjectUtils.isEmpty(fuUser)){
+                throw new ParameterInvalidException(GlobalResultCode.PARAM_NULL_POINTER);
+            }
+            if(StringUtils.isEmpty(fuUser.getUsername())
+                    ||StringUtils.isEmpty(fuUser.getPassword())
+                    ||StringUtils.isEmpty(fuUser.getEmail())
+                    ||StringUtils.isEmpty(fuUser.getMobile())){
+                throw new ParameterInvalidException(GlobalResultCode.PARAM_NULL_POINTER);
+            }
+
+            /*校验改用户是否已存在 此处可从redis中查询*/
+            FuUser eUser=fuUserMapper.selectByUsername(fuUser.getUsername());
+            /*此处还需判断用户状态（123）*/
+            if(!ObjectUtils.isEmpty(eUser)){
+                log.warn("注册用户信息 , 该用户已存在，username:"+fuUser.getUsername());
+                throw new DataConflictException(UserResultCode.LOGINISEXIST);
+            }
+
+            /*校验推荐人是否存在*/
+            FuUser introducer=fuUserMapper.selectByPrimaryKey(fuUser.getIntroducer());
+            if(introducer==null){
+                log.warn("注册用户信息 , 介绍人不存在！");
+                throw new DataConflictException("介绍人不存在！");
+            }
+
+            /*密码加密*/
+            fuUser.setPassword(DigestUtils.md5DigestAsHex(fuUser.getPassword().getBytes()));
+
+            /*保存数据*/
+            int userId= fuUserMapper.insertSelective(fuUser);
+            /*跟新介绍人 信息*/
+            fuUserMapper.updateByPrimaryKeySelective(introducer);
+
+
+            /*更新缓存*/
+
+//            FuUser user=fuUserMapper.selectByUsername(fuUser.getUsername());
+            //*返回数据填充/*
+            Map userMap=new HashMap();
+            userMap.put("userId",userId);
+            /*userMap.put("username",fuUser.getUsername());
+            userMap.put("refName",fuUser.getRefName());
+            userMap.put("realName",fuUser.getRealName());
+            userMap.put("userType",fuUser.getUserType());
+            userMap.put("userState",fuUser.getUserState());*/
+
+            registeredInfo.put("code",GlobalResultCode.SUCCESS.code());
+            registeredInfo.put("msg",GlobalResultCode.SUCCESS.message());
+            registeredInfo.put("data",JSONObject.toJSON(userMap));
+
+        }catch (Exception e){
+            log.error(e.getMessage(),e);
+            throw new BusinessException(e);
         }
-
-        /*密码加密*/
-        fuUser.setPassword(DigestUtils.md5DigestAsHex(fuUser.getPassword().getBytes()));
-
-        /*保存数据*/
-        fuUserMapper.insertSelective(fuUser);
-
+        return registeredInfo;
     }
 
 
@@ -185,6 +231,35 @@ public class AdminService {
     }
 
     /**
+     * 根据用户username 或 id 查找用户信息
+     * @param dataJson
+     * @return
+     */
+    public FuUser getUserByIdOrderName(JSONObject dataJson){
+        /*判断查询条件*/
+        if(dataJson == null || dataJson.toJSONString().equalsIgnoreCase("")){
+            log.error("查找用户信息,获取参数为空！");
+            throw new ParameterInvalidException("查找用户信息,获取参数为空！");
+        }
+
+        String username=dataJson.getString("username");
+        int userId=dataJson.getInteger("id");
+
+        FuUser user=new FuUser();
+        if(userId>0){
+            user=fuUserMapper.selectByPrimaryKey(userId);
+        }else if(!StringUtils.isEmpty(username)){
+            user=fuUserMapper.selectByUsername(username);
+        }else {
+            log.error("查找用户信息,参数错误！");
+            throw new ParameterInvalidException("查找用户信息,参数错误！");
+        }
+
+
+        return user;
+    }
+
+    /**
      * 根据用户账号查询用户信息
      * @param username
      * @return
@@ -204,7 +279,64 @@ public class AdminService {
         return fuUser;
     }
 
+    /**
+     * 查询用户列表
+     * @param condition
+     * @return
+     */
+    public Page<FuUser> queryUserList(JSONObject condition){
+        /*判断查询条件*/
+        if(condition == null || condition.toJSONString().equalsIgnoreCase("")){
+            log.error("查询用户列表,获取参数为空！");
+            throw new ParameterInvalidException("查询用户列表,获取参数为空！");
+        }
+        /*判断权限*/
+        String operUserId=condition.getString("operUserId");
+        if(StringUtils.isEmpty(operUserId)){
+            log.error("查询用户列表,用户未登录！");
+            throw new ParameterInvalidException("查询用户列表,获取参数为空！");
+        }
 
+        int pageSize=0;
+        int pageNum=20;
+        if(!com.future.common.util.StringUtils.isEmpty(condition.getString("pageSize"))){
+            pageSize=Integer.parseInt(condition.getString("pageSize"));
+        }
+        if(!com.future.common.util.StringUtils.isEmpty(condition.getString("pageNum"))){
+            pageNum=Integer.parseInt(condition.getString("pageNum"));
+        }
+        Page page=new Page();
+        page.setSize(pageSize);
+        page.setCurrent(pageNum);
+        EntityWrapper<FuUser> wrapper=new EntityWrapper<FuUser>();
+        if(condition.getString("userId")!=null
+            &&!condition.getString("userId").equals("")){
+            wrapper.eq(FuUser.USER_ID,condition.getString("userId"));
+        }
+        if(condition.getString("username")!=null
+                &&!condition.getString("username").equals("")){
+            wrapper.eq(FuUser.USER_NAME,condition.getString("username"));
+        }
+        if(condition.getString("userType")!=null
+                &&!condition.getString("userType").equals("")){
+            wrapper.eq(FuUser.USER_TYPE,condition.getString("userType"));
+        }
+        if(condition.getString("isVerified")!=null
+                &&!condition.getString("isVerified").equals("")){
+            wrapper.eq(FuUser.IS_VERIFIED,condition.getString("isVerified"));
+        }
+        if(condition.getString("isAccount")!=null
+                &&!condition.getString("isAccount").equals("")){
+            wrapper.eq(FuUser.IS_ACCOUNT,condition.getString("isAccount"));
+        }
+        if(condition.getString("introducer")!=null
+                &&!condition.getString("introducer").equals("")){
+            wrapper.eq(FuUser.INTRODUCER,condition.getString("introducer"));
+        }
+        Page<FuUser> pageInfo=selectPage(page,wrapper);
+
+        return pageInfo;
+    }
     /**
      * 根据状态分页查询用户信息
      * @param userType
