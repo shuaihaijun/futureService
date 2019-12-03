@@ -191,10 +191,11 @@
     acc.id accountId,
     acc.mt_acc_id mtAccId,
     acc.is_chief isChief,
-    acc.id accountId,
     acc.account_type accountType,
     acc.mt_password_trade mtPasswordTrade,
     acc.mt_password_watch mtPasswordWatch,
+    acc.password_watch_checked passwordWatchChecked,
+    acc.password_trade_checked passwordTradeChecked,
     acc.account_url accountUrl,
     acc.account_port accountPort,
     u.id userId,
@@ -207,6 +208,7 @@
     u.mobile,
     s.id serverId,
     s.server_name serverName,
+    s.broker_id brokerId,
     s.broker_name brokerName,
     s.server_state serverState
     FROM

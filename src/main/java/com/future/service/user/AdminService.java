@@ -166,7 +166,7 @@ public class AdminService extends ServiceImpl<FuUserMapper,FuUser> {
      * @param fuUser
      * @return
      */
-    public void updateAdmin(FuUser fuUser) throws Exception{
+    public void updateAdmin(FuUser fuUser){
 
         /*验证*/
         if(ObjectUtils.isEmpty(fuUser)){
@@ -190,7 +190,12 @@ public class AdminService extends ServiceImpl<FuUserMapper,FuUser> {
         /*copy信息*/
         BeanUtils.copyProperties(fuUser,eUser);
         /*修改数据*/
-        fuUserMapper.updateByPrimaryKeySelective(fuUser);
+        try {
+            fuUserMapper.updateByPrimaryKeySelective(fuUser);
+        }catch (Exception e){
+            log.error(e.getMessage(),e);
+            throw new BusinessException(e);
+        }
     }
 
     /**
@@ -235,7 +240,7 @@ public class AdminService extends ServiceImpl<FuUserMapper,FuUser> {
      * @param dataJson
      * @return
      */
-    public FuUser getUserByIdOrderName(JSONObject dataJson){
+    public FuUser getUserByIdOrName(JSONObject dataJson){
         /*判断查询条件*/
         if(dataJson == null || dataJson.toJSONString().equalsIgnoreCase("")){
             log.error("查找用户信息,获取参数为空！");
@@ -291,11 +296,11 @@ public class AdminService extends ServiceImpl<FuUserMapper,FuUser> {
             throw new ParameterInvalidException("查询用户列表,获取参数为空！");
         }
         /*判断权限*/
-        String operUserId=condition.getString("operUserId");
+        /*String operUserId=condition.getString("operUserId");
         if(StringUtils.isEmpty(operUserId)){
             log.error("查询用户列表,用户未登录！");
             throw new ParameterInvalidException("查询用户列表,获取参数为空！");
-        }
+        }*/
 
         int pageSize=0;
         int pageNum=20;

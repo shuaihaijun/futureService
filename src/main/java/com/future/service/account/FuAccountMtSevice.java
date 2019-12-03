@@ -1,5 +1,6 @@
 package com.future.service.account;
 
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.baomidou.mybatisplus.toolkit.MapUtils;
 import com.future.common.exception.BusinessException;
@@ -53,15 +54,21 @@ public class FuAccountMtSevice extends ServiceImpl<FuAccountMtMapper, FuAccountM
 
     /**
      * 保存/绑定用户MT账户信息
-     * @param dataMap
+     * @param jsonData
      */
-    public void saveUserMTAccount(Map dataMap){
-        if(ObjectUtils.isEmpty(dataMap)){
+    public void saveUserMTAccount(JSONObject jsonData){
+        if(ObjectUtils.isEmpty(jsonData)){
             log.error("保存/绑定用户MT账户信息,传入参数为空！");
             throw new ParameterInvalidException("保存/绑定用户MT账户信息,传入参数为空！");
         }
 
-        FuAccountMt fuAccountMt=(FuAccountMt) ConvertUtil.MapToJavaBean((HashMap) dataMap,FuAccountMt.class);
+        FuAccountMt fuAccountMt=JSONObject.toJavaObject(jsonData,FuAccountMt.class);
+
+        log.info(jsonData.toJSONString());
+
+        if(!ObjectUtils.isEmpty(jsonData.get("accountId"))){
+            fuAccountMt.setId(jsonData.getInteger("accountId"));
+        }
 
         /*校验必要参数*/
         if(fuAccountMt.getUserId()==null
@@ -82,7 +89,11 @@ public class FuAccountMtSevice extends ServiceImpl<FuAccountMtMapper, FuAccountM
 
         try {
             /*保存账户信息*/
-            insertOrUpdate(fuAccountMt);
+            if(fuAccountMt.getId()>0){
+                fuAccountMtMapper.updateByPrimaryKeySelective(fuAccountMt);
+            }else {
+                fuAccountMtMapper.insertSelective(fuAccountMt);
+            }
         }catch (Exception e){
             log.error(e.getMessage(),e);
             throw new BusinessException(e.getMessage());

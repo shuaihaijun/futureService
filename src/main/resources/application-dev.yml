@@ -66,6 +66,8 @@ userTermServerPort: 7788
 #主机服务器地址
 pubServerUrl: 127.0.0.1
 pubServerPort: 6666
+#图片保存路径
+imageFilePath: D:\test\
 
 #超级管理员id集合 Administrator,使用逗号分隔
 SUPER_ADMINISTRATOR: 11

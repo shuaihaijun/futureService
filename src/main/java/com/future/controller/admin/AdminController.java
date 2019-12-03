@@ -2,14 +2,15 @@ package com.future.controller.admin;
 
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.plugins.Page;
+import com.future.common.enums.GlobalResultCode;
+import com.future.common.exception.ParameterInvalidException;
 import com.future.common.util.ThreadCache;
 import com.future.entity.user.FuUser;
 import com.future.service.user.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Map;
 
@@ -42,6 +43,19 @@ public class AdminController{
         return resMap;
     }
 
+    //修改操作
+    @RequestMapping(value= "/saveOrUpdateUser",method=RequestMethod.POST)
+    public @ResponseBody void saveOrUpdateUser(){
+        // 获取请求参数
+        String requestJSONStr = ThreadCache.getPostRequestParams();
+        JSONObject requestData = JSONObject.parseObject(requestJSONStr);
+        if(requestData.isEmpty()){
+            throw new ParameterInvalidException(GlobalResultCode.PARAM_NULL_POINTER);
+        }
+        FuUser fuUser=JSONObject.toJavaObject(requestData,FuUser.class);
+        adminService.updateAdmin(fuUser);
+    }
+
     //查询用户列表
     @RequestMapping(value= "/queryUserList",method=RequestMethod.POST)
     public @ResponseBody
@@ -53,11 +67,12 @@ public class AdminController{
     }
 
     //查询用户 by id or name
-    @RequestMapping(value= "/getUserByIdOrderName",method=RequestMethod.POST)
-    public @ResponseBody FuUser getUserByIdOrderName(){
+    @RequestMapping(value= "/getUserByIdOrName",method=RequestMethod.POST)
+    public @ResponseBody FuUser getUserByIdOrName(){
         // 获取请求参数
         String requestJSONStr = ThreadCache.getPostRequestParams();
         JSONObject requestMap = JSONObject.parseObject(requestJSONStr);
-        return adminService.getUserByIdOrderName(requestMap);
+        return adminService.getUserByIdOrName(requestMap);
     }
+
 }
