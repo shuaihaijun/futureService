@@ -75,4 +75,21 @@ public class AdminController{
         return adminService.getUserByIdOrName(requestMap);
     }
 
+    //提交审核申请 by id or name
+    @RequestMapping(value= "/submitUserBinding",method=RequestMethod.POST)
+    public @ResponseBody FuUser submitUserBinding(){
+        // 获取请求参数
+        String requestJSONStr = ThreadCache.getPostRequestParams();
+        JSONObject requestMap = JSONObject.parseObject(requestJSONStr);
+        return adminService.submitUserBinding(requestMap);
+    }
+
+    //审核 by id or name
+    @RequestMapping(value= "/checkUserBinding",method=RequestMethod.POST)
+    public @ResponseBody FuUser checkUserBinding(){
+        // 获取请求参数
+        String requestJSONStr = ThreadCache.getPostRequestParams();
+        JSONObject requestMap = JSONObject.parseObject(requestJSONStr);
+        return adminService.checkUserBinding(requestMap);
+    }
 }

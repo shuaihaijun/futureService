@@ -6,6 +6,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.future.common.constants.UserConstant;
 import com.future.common.enums.GlobalResultCode;
 import com.future.common.enums.ResultCode;
 import com.future.common.enums.UserResultCode;
@@ -16,6 +17,8 @@ import com.future.common.util.CommonUtil;
 import com.future.entity.order.FuOrderCustomer;
 import com.future.entity.user.FuUser;
 import com.future.mapper.user.FuUserMapper;
+import com.future.pojo.bo.order.UserMTAccountBO;
+import com.future.service.account.FuAccountMtSevice;
 import com.github.pagehelper.PageInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,6 +39,8 @@ public class AdminService extends ServiceImpl<FuUserMapper,FuUser> {
 
     @Autowired
     FuUserMapper fuUserMapper;
+    @Autowired
+    FuAccountMtSevice fuAccountMtSevice;
 
     /**
      * 通过用户名密码登录
@@ -62,7 +67,7 @@ public class AdminService extends ServiceImpl<FuUserMapper,FuUser> {
             /*"用户名或密码错误！")*/
             throw new BusinessException(UserResultCode.USER_PASSWORD_ERROR);
         }
-        //(0 未审核，1 正常，2 冻结，3 删除）
+        //(0 未审核，1 正常，2 待审核，3 删除）
         if(fuUser.getUserState()>1){
             /*用户状态异常*/
             throw new BusinessException(UserResultCode.USER_STATE_EXCEPTION);
@@ -259,8 +264,6 @@ public class AdminService extends ServiceImpl<FuUserMapper,FuUser> {
             log.error("查找用户信息,参数错误！");
             throw new ParameterInvalidException("查找用户信息,参数错误！");
         }
-
-
         return user;
     }
 
@@ -326,6 +329,10 @@ public class AdminService extends ServiceImpl<FuUserMapper,FuUser> {
                 &&!condition.getString("userType").equals("")){
             wrapper.eq(FuUser.USER_TYPE,condition.getString("userType"));
         }
+        if(condition.getString("userState")!=null
+                &&!condition.getString("userState").equals("")){
+            wrapper.eq(FuUser.USER_STATE,condition.getInteger("userState"));
+        }
         if(condition.getString("isVerified")!=null
                 &&!condition.getString("isVerified").equals("")){
             wrapper.eq(FuUser.IS_VERIFIED,condition.getString("isVerified"));
@@ -354,4 +361,106 @@ public class AdminService extends ServiceImpl<FuUserMapper,FuUser> {
         return null;
     }
 
+
+    /**
+     *  用户绑定申请审核
+     * @param dataJson
+     * @return
+     */
+    public FuUser checkUserBinding(JSONObject dataJson){
+        /*判断查询条件*/
+        if(dataJson == null || dataJson.toJSONString().equalsIgnoreCase("")){
+            log.error("查找用户信息,获取参数为空！");
+            throw new ParameterInvalidException("查找用户信息,获取参数为空！");
+        }
+
+        String username=dataJson.getString("username");
+        int userId=dataJson.getInteger("userId");
+        String oper=dataJson.getString("oper");
+        if(StringUtils.isEmpty(oper)){
+            log.error("查找用户信息,参数错误！");
+            throw new ParameterInvalidException("查找用户信息,参数错误！");
+        }
+
+        FuUser user=new FuUser();
+        if(userId>0){
+            user=fuUserMapper.selectByPrimaryKey(userId);
+        }else if(!StringUtils.isEmpty(username)){
+            user=fuUserMapper.selectByUsername(username);
+        }else {
+            log.error("查找用户信息,参数错误！");
+            throw new ParameterInvalidException("查找用户信息,参数错误！");
+        }
+
+        if(oper.equals("1")){
+            //通过
+            user.setUserState(UserConstant.USER_STATE_NORMAL);
+            user.setIsAccount(1);
+            user.setIsVerified(1);
+        }else {
+            //未通过
+            user.setUserState(UserConstant.USER_STATE_UNCHECK);
+        }
+
+        fuUserMapper.updateByPrimaryKeySelective(user);
+
+        return user;
+    }
+
+    /**
+     * 提交用户绑定申请
+     * @param dataJson
+     * @return
+     */
+    public FuUser submitUserBinding(JSONObject dataJson){
+        /*判断查询条件*/
+        if(dataJson == null || dataJson.toJSONString().equalsIgnoreCase("")){
+            log.error("提交用户绑定申请,获取参数为空！");
+            throw new ParameterInvalidException("提交用户绑定申请,获取参数为空！");
+        }
+
+        String username=dataJson.getString("username");
+        int userId=dataJson.getInteger("userId");
+
+        /*校验证件*/
+        FuUser user=new FuUser();
+        if(userId>0){
+            user=fuUserMapper.selectByPrimaryKey(userId);
+        }else if(!StringUtils.isEmpty(username)){
+            user=fuUserMapper.selectByUsername(username);
+        }else {
+            log.error("提交用户绑定申请,参数错误！");
+            throw new ParameterInvalidException("提交用户绑定申请,参数错误！");
+        }
+        if(StringUtils.isEmpty(user.getIdFront())||StringUtils.isEmpty(user.getIdFront())){
+            //未上传用户证件信息
+            log.error("提交用户绑定申请,证件信息未上传，请先保存！");
+            throw new ParameterInvalidException("提交用户绑定申请,证件信息未上传，请先保存！");
+        }
+
+        /*校验MT账户*/
+        Map conditonMap=new HashMap();
+        /*默认查询主账户号*/
+        conditonMap.put("username",username);
+        conditonMap.put("isChief",1);
+        List<UserMTAccountBO> accouts=  fuAccountMtSevice.getUserMTAccByCondition(conditonMap);
+        if(accouts==null || accouts.size()==0){
+            //未查找用户MT账户信息
+            log.error("提交用户绑定申请,MT账户信息未上传，请先保存！");
+            throw new ParameterInvalidException("提交用户绑定申请,MT账户信息未上传，请先保存！");
+        }
+
+        /*非管理用户需要填写交易密码*/
+        if(user.getUserType()<4 && StringUtils.isEmpty(accouts.get(0).getMtPasswordTrade())){
+            //未查找用户MT账户交易密码信息
+            log.error("提交用户绑定申请,MT账户交易密码未找到，请先保存！");
+            throw new ParameterInvalidException("提交用户绑定申请,MT账户交易密码未找到，请先保存！");
+        }
+
+        user.setUserState(UserConstant.USER_STATE_PENDING);
+
+        fuUserMapper.updateByPrimaryKeySelective(user);
+
+        return user;
+    }
 }

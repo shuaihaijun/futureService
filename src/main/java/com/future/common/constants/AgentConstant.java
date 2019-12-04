@@ -17,7 +17,7 @@ public class AgentConstant {
 	public static final int AGENT_APPLY_STATE_CHECK = 2;
 	public static final int AGENT_APPLY_STATE_FAIL = 3;
 
-	//代理人状态(0 正常，1 冻结，2 隐藏，3 删除)
+	//代理人状态(0 正常，1 待审核，2 隐藏，3 删除)
 	public static final int AGENT_STATE_NORMAL = 0;
 	public static final int AGENT_STATE_FREEZE = 1;
 	public static final int AGENT_STATE_HIDE = 2;

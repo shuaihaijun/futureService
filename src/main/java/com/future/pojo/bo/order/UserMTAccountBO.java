@@ -38,7 +38,7 @@ public class UserMTAccountBO {
      */
     private int userType;
     /**
-     * 用户状态(0 未审核，1 正常，2 冻结，2 删除）
+     * 用户状态(0 未审核，1 正常，2 待审核，2 删除）
      */
     private int userState;
     /**
