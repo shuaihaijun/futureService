@@ -40,4 +40,29 @@ public class MTAccountService {
         return true;
     }
 
+    /**
+     * 断开MT连接
+     * @param strategy
+     * @param broker
+     * @param username
+     * @param password
+     * @return
+     */
+    public boolean disConnect(Strategy strategy,Broker broker,String username,String password){
+        if(ObjectUtils.isEmpty(strategy)){
+            strategy=new Strategy();
+        }
+        try {
+            log.info(username+" :--- connect begin ---:"+ DateUtil.getCurrDateTime());
+            strategy.connect(userTermServerHost,userTermServerPort,broker,username,password);
+            log.info(username+" :--- connect end   ---:"+ DateUtil.getCurrDateTime());
+            strategy.close(true);
+            log.info(username+" :--- disconnect end   ---:"+ DateUtil.getCurrDateTime());
+        }catch (Exception e){
+            log.error(e.getMessage(),e);
+            return false;
+        }
+        return true;
+    }
+
 }

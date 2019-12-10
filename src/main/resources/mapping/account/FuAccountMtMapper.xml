@@ -217,6 +217,7 @@
     LEFT JOIN fu_com_server s on acc.server_id=s.id
     where
     <trim  prefixOverrides="and">
+        1 = 1
       <if test="username != null">
         and u.username = #{username,jdbcType=VARCHAR}
       </if>

@@ -1,5 +1,8 @@
 package com.future.entity.user;
 
+import com.baomidou.mybatisplus.annotations.TableId;
+import com.baomidou.mybatisplus.enums.IdType;
+
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -7,6 +10,7 @@ public class FuUserFollows {
     /**
      * 
      */
+    @TableId(type = IdType.AUTO)
     private Integer id;
 
     /**
@@ -20,9 +24,9 @@ public class FuUserFollows {
     private Integer signalId;
 
     /**
-     * 用户服务器ID
+     * 用户服务器
      */
-    private Integer userServerId;
+    private String userServerName;
 
     /**
      * 用户mt平台账号
@@ -30,9 +34,9 @@ public class FuUserFollows {
     private String userMtAccId;
 
     /**
-     * 信号源服务器ID
+     * 信号源服务器
      */
-    private Integer signalServerId;
+    private String signalServerName;
 
     /**
      * 信号源mt平台账号
@@ -99,6 +103,11 @@ public class FuUserFollows {
      */
     private BigDecimal followAlarmLevel;
 
+    public static String USER_ID="user_id";
+    public static String USER_MT_ACC_ID="user_mt_acc_id";
+    public static String SIGNAL_ID="signal_id";
+    public static String SIGNAL_MT_ACC_ID="signal_mt_acc_id";
+    public static String RULE_STATE="rule_state";
     /**
      * 
      * @return id 
@@ -148,19 +157,19 @@ public class FuUserFollows {
     }
 
     /**
-     * 用户服务器ID
-     * @return user_server_id 用户服务器ID
+     * 用户服务器
+     * @return user_server_name 用户服务器
      */
-    public Integer getUserServerId() {
-        return userServerId;
+    public String getUserServerName() {
+        return userServerName;
     }
 
     /**
-     * 用户服务器ID
-     * @param userServerId 用户服务器ID
+     * 用户服务器
+     * @param userServerName 用户服务器
      */
-    public void setUserServerId(Integer userServerId) {
-        this.userServerId = userServerId;
+    public void setUserServerName(String userServerName) {
+        this.userServerName = userServerName == null ? null : userServerName.trim();
     }
 
     /**
@@ -180,19 +189,19 @@ public class FuUserFollows {
     }
 
     /**
-     * 信号源服务器ID
-     * @return signal_server_id 信号源服务器ID
+     * 信号源服务器
+     * @return signal_server_name 信号源服务器
      */
-    public Integer getSignalServerId() {
-        return signalServerId;
+    public String getSignalServerName() {
+        return signalServerName;
     }
 
     /**
-     * 信号源服务器ID
-     * @param signalServerId 信号源服务器ID
+     * 信号源服务器
+     * @param signalServerName 信号源服务器
      */
-    public void setSignalServerId(Integer signalServerId) {
-        this.signalServerId = signalServerId;
+    public void setSignalServerName(String signalServerName) {
+        this.signalServerName = signalServerName == null ? null : signalServerName.trim();
     }
 
     /**

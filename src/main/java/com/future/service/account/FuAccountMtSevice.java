@@ -9,8 +9,10 @@ import com.future.common.exception.ParameterInvalidException;
 import com.future.common.util.ConvertUtil;
 import com.future.common.util.StringUtils;
 import com.future.entity.account.FuAccountMt;
+import com.future.entity.product.FuProductSignal;
 import com.future.entity.user.FuUser;
 import com.future.mapper.account.FuAccountMtMapper;
+import com.future.mapper.product.FuProductSignalMapper;
 import com.future.mapper.user.FuUserMapper;
 import com.future.pojo.bo.order.UserMTAccountBO;
 import com.future.service.mt.MTAccountService;
@@ -38,6 +40,8 @@ public class FuAccountMtSevice extends ServiceImpl<FuAccountMtMapper, FuAccountM
     FuUserMapper fuUserMapper;
     @Autowired
     MTAccountService mtAccountService;
+    @Autowired
+    FuProductSignalMapper fuProductSignalMapper;
     /**
      * 根据条件查询用户MT账户信息
      * @param condition
@@ -49,6 +53,15 @@ public class FuAccountMtSevice extends ServiceImpl<FuAccountMtMapper, FuAccountM
             log.warn("根据条件查询用户MT账户信息，查询条件为空！");
             return null;
         }
+        return fuAccountMtMapper.selectUserMTAccByCondition(condition);
+    }
+
+    /**
+     * 查询用户MT账户列表
+     * @param condition
+     * @return
+     */
+    public List<UserMTAccountBO> queryUsersMtAccount(Map condition){
         return fuAccountMtMapper.selectUserMTAccByCondition(condition);
     }
 
@@ -128,13 +141,15 @@ public class FuAccountMtSevice extends ServiceImpl<FuAccountMtMapper, FuAccountM
      * 登录/连接MT账户
      * @param userId
      * @param mtAccId
+     * @param username
+     * @param serverName
      * @return
      */
-    public Boolean connectUserMTAccount(Integer userId,String mtAccId){
+    public Boolean connectUserMTAccount(Integer userId,String mtAccId,String username,String serverName){
 
         /*校验参数*/
-        if(userId ==0 ||StringUtils.isEmpty(mtAccId)){
-            log.error("登录/连接MT账户,传入参数为空！");
+        if(((userId ==null ||userId==0 )&& StringUtils.isEmpty(username)) ||StringUtils.isEmpty(mtAccId)){
+            log.error("登录/连接MT账户,传入参数不完整！");
         }
 
         /*查出用户MT账户*/
@@ -142,8 +157,18 @@ public class FuAccountMtSevice extends ServiceImpl<FuAccountMtMapper, FuAccountM
         String password="";
 
         Map condition=new HashMap();
-        condition.put("userId",userId);
-        condition.put("mtAccId",mtAccId);
+        if(userId>0){
+            condition.put("userId",userId);
+        }
+        if(!StringUtils.isEmpty(mtAccId)){
+            condition.put("mtAccId",mtAccId);
+        }
+        if(!StringUtils.isEmpty(username)){
+            condition.put("username",username);
+        }
+        if(!StringUtils.isEmpty(serverName)){
+            condition.put("serverName",serverName);
+        }
         List<UserMTAccountBO> accountMts=fuAccountMtMapper.selectUserMTAccByCondition(condition);
         if(accountMts==null || accountMts.size()==0){
             log.error("登录/连接MT账户,根据条件查询用户MT账户失败！");
@@ -176,11 +201,154 @@ public class FuAccountMtSevice extends ServiceImpl<FuAccountMtMapper, FuAccountM
             log.error(e.getMessage(),e);
             throw new BusinessException(e);
         }
+        return true;
+    }
 
+    /**
+     * 断开连接-MT账户
+     * @param userId
+     * @param mtAccId
+     * @param username
+     * @param serverName
+     * @return
+     */
+    public Boolean disConnectUserMTAccount(Integer userId,String mtAccId,String username,String serverName){
 
+        /*校验参数*/
+        if(((userId ==null ||userId==0 )&& StringUtils.isEmpty(username)) ||StringUtils.isEmpty(mtAccId)){
+            log.error("登录/连接MT账户,传入参数不完整！");
+        }
+
+        /*查出用户MT账户*/
+        String mtServer="";
+        String password="";
+
+        Map condition=new HashMap();
+        if(userId>0){
+            condition.put("userId",userId);
+        }
+        if(!StringUtils.isEmpty(mtAccId)){
+            condition.put("mtAccId",mtAccId);
+        }
+        if(!StringUtils.isEmpty(username)){
+            condition.put("username",username);
+        }
+        if(!StringUtils.isEmpty(serverName)){
+            condition.put("serverName",serverName);
+        }
+        List<UserMTAccountBO> accountMts=fuAccountMtMapper.selectUserMTAccByCondition(condition);
+        if(accountMts==null || accountMts.size()==0){
+            log.error("登录/连接MT账户,根据条件查询用户MT账户失败！");
+            return false;
+        }
+        mtServer=accountMts.get(0).getServerName();
+
+        /*判断是否为信号源*/
+        FuUser fuUser=fuUserMapper.selectByPrimaryKey(userId);
+        if(ObjectUtils.isEmpty(fuUser)){
+            log.error("登录/连接MT账户,根据账户号查询用户信息为空！");
+            return false;
+        }
+        if(fuUser.getUserType()==11){
+            //信号源用观摩密码验证
+            password=accountMts.get(0).getMtPasswordWatch();
+        }
+        password=accountMts.get(0).getMtPasswordTrade();
+
+        /*登录MT账号*/
+        try {
+            Strategy strategy=new Strategy();
+            Broker broker = new Broker(mtServer);
+            /*连接数据*/
+            if(!mtAccountService.disConnect(strategy,broker,mtAccId,password)){
+                log.error("user disconnect failed");
+                return false;
+            }
+        }catch (Exception e){
+            log.error(e.getMessage(),e);
+            throw new BusinessException(e);
+        }
         return true;
     }
 
 
+    /**
+     * 登录/连接信号源MT账户
+     * @param signalId
+     * @return
+     */
+    public Boolean connectSignalMTAccount(Integer signalId){
 
+        /*校验参数*/
+        if(signalId ==null ||signalId==0 ){
+            log.error("登录/连接MT账户,传入参数不完整！");
+        }
+
+        /*查出用户MT账户*/
+        String mtServer="";
+        String password="";
+        String mtAccId="";
+
+        FuProductSignal signal=fuProductSignalMapper.selectByPrimaryKey(signalId);
+        if(ObjectUtils.isEmpty(signal)){
+            log.error("根据信号源ID 查询信号源信息失败！");
+            throw new BusinessException("根据信号源ID 查询信号源信息失败！");
+        }
+        mtServer=signal.getServerName();
+        password=signal.getMtPasswordWatch();
+        mtAccId=signal.getMtAccId();
+        /*登录MT账号*/
+        try {
+            Strategy strategy=new Strategy();
+            Broker broker = new Broker(mtServer);
+            /*连接数据*/
+            if(!mtAccountService.getConnect(strategy,broker,mtAccId,password)){
+                log.error("user connect failed");
+                return false;
+            }
+        }catch (Exception e){
+            log.error(e.getMessage(),e);
+            throw new BusinessException(e);
+        }
+        return true;
+    }
+
+    /**
+     * 断开信号源MT账户
+     * @param signalId
+     * @return
+     */
+    public Boolean disConnectSignalMTAccount(Integer signalId){
+        /*校验参数*/
+        if(signalId ==null ||signalId==0 ){
+            log.error("登录/连接MT账户,传入参数不完整！");
+        }
+        /*查出用户MT账户*/
+        String mtServer="";
+        String password="";
+        String mtAccId="";
+
+        FuProductSignal signal=fuProductSignalMapper.selectByPrimaryKey(signalId);
+        if(ObjectUtils.isEmpty(signal)){
+            log.error("根据信号源ID 查询信号源信息失败！");
+            throw new BusinessException("根据信号源ID 查询信号源信息失败！");
+        }
+        mtServer=signal.getServerName();
+        password=signal.getMtPasswordWatch();
+        mtAccId=signal.getMtAccId();
+        /*登录MT账号*/
+        try {
+            Strategy strategy=new Strategy();
+            Broker broker = new Broker(mtServer);
+            /*连接数据*/
+            if(!mtAccountService.disConnect(strategy,broker,mtAccId,password)){
+                log.error("user connect failed");
+                return false;
+            }
+        }catch (Exception e){
+            log.error(e.getMessage(),e);
+            throw new BusinessException(e);
+        }
+        return true;
+    }
 }

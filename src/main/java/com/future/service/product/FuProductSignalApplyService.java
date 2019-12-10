@@ -196,7 +196,7 @@ public class FuProductSignalApplyService extends ServiceImpl<FuProductSignalAppl
 
         /*默认数据填充*/
         signal.setCreateDate(new Date());
-        signal.setApplyState(0);
+        signal.setApplyState(SignalConstant.SIGNAL_APPLY_STATE_SAVE);
         signal.setModifyDate(new Date());
 
         return fuProductSignalApplyMapper.insertSelective(signal);
@@ -240,7 +240,7 @@ public class FuProductSignalApplyService extends ServiceImpl<FuProductSignalAppl
         FuProductSignalApply signalApply=new FuProductSignalApply();
         signalApply.setId(signalId);
         /*状态：待审核*/
-        signalApply.setApplyState(1);
+        signalApply.setApplyState(SignalConstant.SIGNAL_APPLY_STATE_SUBMIT);
         signalApply.setRemarks(mesage);
 
         return fuProductSignalApplyMapper.updateByPrimaryKeySelective(signalApply);
@@ -255,7 +255,7 @@ public class FuProductSignalApplyService extends ServiceImpl<FuProductSignalAppl
     @Transactional(propagation=Propagation.REQUIRED)
     public void reviewProductSignal(int signalId,int state, String mesage){
         /**校验信息*/
-        if(signalId<1||state<1){
+        if(signalId<1){
             log.error("传入数据为空！");
             throw new DataConflictException(GlobalResultCode.PARAM_NULL_POINTER,"传入数据为空!");
         }

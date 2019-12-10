@@ -5,9 +5,9 @@
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="user_id" jdbcType="INTEGER" property="userId" />
     <result column="signal_id" jdbcType="INTEGER" property="signalId" />
-    <result column="user_server_id" jdbcType="INTEGER" property="userServerId" />
+    <result column="user_server_name" jdbcType="VARCHAR" property="userServerName" />
     <result column="user_mt_acc_id" jdbcType="VARCHAR" property="userMtAccId" />
-    <result column="signal_server_id" jdbcType="INTEGER" property="signalServerId" />
+    <result column="signal_server_name" jdbcType="VARCHAR" property="signalServerName" />
     <result column="signal_mt_acc_id" jdbcType="VARCHAR" property="signalMtAccId" />
     <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
     <result column="modify_date" jdbcType="TIMESTAMP" property="modifyDate" />
@@ -23,7 +23,7 @@
     <result column="follow_alarm_level" jdbcType="DECIMAL" property="followAlarmLevel" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, user_id, signal_id, user_server_id, user_mt_acc_id, signal_server_id, signal_mt_acc_id, 
+    id, user_id, signal_id, user_server_name, user_mt_acc_id, signal_server_name, signal_mt_acc_id, 
     create_date, modify_date, rule_type, amount, rule_state, limit_upper_amount, account_equity_amount, 
     account_equity_percentage, follow_max_amount, follow_alarm_amount, follow_alarm_lose, 
     follow_alarm_level
@@ -40,7 +40,7 @@
   </delete>
   <insert id="insert" parameterType="com.future.entity.user.FuUserFollows">
     insert into fu_user_follows (id, user_id, signal_id, 
-      user_server_id, user_mt_acc_id, signal_server_id, 
+      user_server_name, user_mt_acc_id, signal_server_name, 
       signal_mt_acc_id, create_date, modify_date, 
       rule_type, amount, rule_state, 
       limit_upper_amount, account_equity_amount, 
@@ -48,7 +48,7 @@
       follow_alarm_amount, follow_alarm_lose, follow_alarm_level
       )
     values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{signalId,jdbcType=INTEGER}, 
-      #{userServerId,jdbcType=INTEGER}, #{userMtAccId,jdbcType=VARCHAR}, #{signalServerId,jdbcType=INTEGER}, 
+      #{userServerName,jdbcType=VARCHAR}, #{userMtAccId,jdbcType=VARCHAR}, #{signalServerName,jdbcType=VARCHAR}, 
       #{signalMtAccId,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, #{modifyDate,jdbcType=TIMESTAMP}, 
       #{ruleType,jdbcType=TINYINT}, #{amount,jdbcType=DECIMAL}, #{ruleState,jdbcType=TINYINT}, 
       #{limitUpperAmount,jdbcType=DECIMAL}, #{accountEquityAmount,jdbcType=DECIMAL}, 
@@ -68,14 +68,14 @@
       <if test="signalId != null">
         signal_id,
       </if>
-      <if test="userServerId != null">
-        user_server_id,
+      <if test="userServerName != null">
+        user_server_name,
       </if>
       <if test="userMtAccId != null">
         user_mt_acc_id,
       </if>
-      <if test="signalServerId != null">
-        signal_server_id,
+      <if test="signalServerName != null">
+        signal_server_name,
       </if>
       <if test="signalMtAccId != null">
         signal_mt_acc_id,
@@ -127,14 +127,14 @@
       <if test="signalId != null">
         #{signalId,jdbcType=INTEGER},
       </if>
-      <if test="userServerId != null">
-        #{userServerId,jdbcType=INTEGER},
+      <if test="userServerName != null">
+        #{userServerName,jdbcType=VARCHAR},
       </if>
       <if test="userMtAccId != null">
         #{userMtAccId,jdbcType=VARCHAR},
       </if>
-      <if test="signalServerId != null">
-        #{signalServerId,jdbcType=INTEGER},
+      <if test="signalServerName != null">
+        #{signalServerName,jdbcType=VARCHAR},
       </if>
       <if test="signalMtAccId != null">
         #{signalMtAccId,jdbcType=VARCHAR},
@@ -186,14 +186,14 @@
       <if test="signalId != null">
         signal_id = #{signalId,jdbcType=INTEGER},
       </if>
-      <if test="userServerId != null">
-        user_server_id = #{userServerId,jdbcType=INTEGER},
+      <if test="userServerName != null">
+        user_server_name = #{userServerName,jdbcType=VARCHAR},
       </if>
       <if test="userMtAccId != null">
         user_mt_acc_id = #{userMtAccId,jdbcType=VARCHAR},
       </if>
-      <if test="signalServerId != null">
-        signal_server_id = #{signalServerId,jdbcType=INTEGER},
+      <if test="signalServerName != null">
+        signal_server_name = #{signalServerName,jdbcType=VARCHAR},
       </if>
       <if test="signalMtAccId != null">
         signal_mt_acc_id = #{signalMtAccId,jdbcType=VARCHAR},
@@ -241,9 +241,9 @@
     update fu_user_follows
     set user_id = #{userId,jdbcType=INTEGER},
       signal_id = #{signalId,jdbcType=INTEGER},
-      user_server_id = #{userServerId,jdbcType=INTEGER},
+      user_server_name = #{userServerName,jdbcType=VARCHAR},
       user_mt_acc_id = #{userMtAccId,jdbcType=VARCHAR},
-      signal_server_id = #{signalServerId,jdbcType=INTEGER},
+      signal_server_name = #{signalServerName,jdbcType=VARCHAR},
       signal_mt_acc_id = #{signalMtAccId,jdbcType=VARCHAR},
       create_date = #{createDate,jdbcType=TIMESTAMP},
       modify_date = #{modifyDate,jdbcType=TIMESTAMP},
