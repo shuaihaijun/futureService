@@ -6,7 +6,9 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.future.common.exception.DataConflictException;
 import com.future.common.util.StringUtils;
 import com.future.common.util.ThreadCache;
+import com.future.entity.com.FuComBroker;
 import com.future.entity.com.FuComServer;
+import com.future.service.com.FuComBrokerService;
 import com.future.service.com.FuComServerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/comServer")
 public class FuComServerController {
@@ -24,6 +28,8 @@ public class FuComServerController {
 
     @Autowired
     FuComServerService fuComServerService;
+    @Autowired
+    FuComBrokerService fuComBrokerService;
 
 
     @RequestMapping("/saveComServer")
@@ -110,4 +116,17 @@ public class FuComServerController {
         return fuComServerService.updateComServer(requestMap);
     }
 
+    @RequestMapping("/queryBroker")
+    public @ResponseBody
+    List<FuComBroker> queryBroker(){
+        // 获取请求参数
+        String requestJSONStr = ThreadCache.getPostRequestParams();
+        JSONObject requestMap = JSONObject.parseObject(requestJSONStr);
+        if(ObjectUtils.isEmpty(requestJSONStr)){
+            log.error("数据为空！");
+            throw new DataConflictException("数据为空！");
+        }
+        return fuComBrokerService.selectByMap(null);
+
+    }
 }

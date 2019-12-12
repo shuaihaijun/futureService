@@ -1,6 +1,8 @@
 package com.future.service.com;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.Page;
@@ -9,6 +11,7 @@ import com.future.common.exception.BusinessException;
 import com.future.common.exception.DataConflictException;
 import com.future.common.util.CommonUtil;
 import com.future.common.util.ConvertUtil;
+import com.future.common.util.JsonUtils;
 import com.future.common.util.PageBean;
 import com.future.entity.com.FuComDictionary;
 import com.future.entity.product.FuProductSignalApply;
@@ -21,6 +24,7 @@ import org.springframework.util.ObjectUtils;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -30,6 +34,38 @@ public class FuComDictionaryService extends ServiceImpl<FuComDictionaryMapper, F
 
     @Autowired
     FuComDictionaryMapper fuComDictionaryMapper;
+
+    /**
+     * 查找所有数据
+     * @return
+     */
+    public String queryDictionaryAll() {
+        try {
+            List<FuComDictionary> dictionaries= selectByMap(null);
+            JSONObject json=new JSONObject();
+            JSONArray midJson=new JSONArray();
+            for(int i=0;i< dictionaries.size();i++){
+                if(json.get(dictionaries.get(i).getDicSign())!=null){
+                    // 多个
+                    if(JSONArray.isValidArray(json.getJSONObject(dictionaries.get(i).getDicSign()).toJSONString())){
+                        midJson = json.getJSONArray(dictionaries.get(i).getDicSign());
+                    }else {
+                        midJson.add(json.getJSONObject(dictionaries.get(i).getDicSign()));
+                    }
+                    midJson.add(JSONObject.toJSON(dictionaries.get(i)));
+                    json.put(dictionaries.get(i).getDicSign(),midJson);
+                }else {
+                    json.put(dictionaries.get(i).getDicSign(),JSONObject.toJSON(dictionaries.get(i)));
+                }
+            }
+            log.info(json.toJSONString());
+            return json.toJSONString();
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            throw new BusinessException(e);
+        }
+    }
+
 
     /**
      * 根据服务器名称 查询服务器信息

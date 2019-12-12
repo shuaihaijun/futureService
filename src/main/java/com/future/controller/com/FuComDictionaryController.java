@@ -16,6 +16,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 @RestController
 @RequestMapping("/dictionary")
 public class FuComDictionaryController {
@@ -54,6 +58,16 @@ public class FuComDictionaryController {
             throw new DataConflictException("数据为空！");
         }
         return dictionaryService.findByCondition(requestMap);
+    }
+
+    @RequestMapping("/queryDictionaryAll")
+    public @ResponseBody Map queryDictionaryAll(){
+        // 获取请求参数
+        String requestJSONStr = ThreadCache.getPostRequestParams();
+        JSONObject requestMap = JSONObject.parseObject(requestJSONStr);
+        Map dataMap = new HashMap();
+        dataMap.put("data",dictionaryService.queryDictionaryAll());
+        return dataMap;
     }
 
     @RequestMapping("/getDictionaryById")
