@@ -85,7 +85,7 @@ public class FuComAgentApply {
     private String agentName;
 
     /**
-     * IB类型（IB ,MIB,PIB）
+     * IB类型(0 IB ,1 MIB, 2 PIB)
      */
     private String agentType;
 
@@ -314,16 +314,16 @@ public class FuComAgentApply {
     }
 
     /**
-     * IB类型（IB ,MIB,PIB）
-     * @return agent_type IB类型（IB ,MIB,PIB）
+     * IB类型(0 IB ,1 MIB, 2 PIB)
+     * @return agent_type IB类型(0 IB ,1 MIB, 2 PIB)
      */
     public String getAgentType() {
         return agentType;
     }
 
     /**
-     * IB类型（IB ,MIB,PIB）
-     * @param agentType IB类型（IB ,MIB,PIB）
+     * IB类型(0 IB ,1 MIB, 2 PIB)
+     * @param agentType IB类型(0 IB ,1 MIB, 2 PIB)
      */
     public void setAgentType(String agentType) {
         this.agentType = agentType == null ? null : agentType.trim();

@@ -39,7 +39,7 @@ public class FuUser {
     private Integer userType;
 
     /**
-     * 用户状态(0 未审核，1 正常，2 待审核，2 删除）
+     * 用户状态(0 正常，1 未审核，2 待审核，2 删除）
      */
     private Integer userState;
 
@@ -253,16 +253,16 @@ public class FuUser {
     }
 
     /**
-     * 用户状态(0 未审核，1 正常，2 待审核，2 删除）
-     * @return user_state 用户状态(0 未审核，1 正常，2 待审核，2 删除）
+     * 用户状态(0 正常，1 未审核，2 待审核，2 删除）
+     * @return user_state 用户状态(0 正常，1 未审核，2 待审核，2 删除）
      */
     public Integer getUserState() {
         return userState;
     }
 
     /**
-     * 用户状态(0 未审核，1 正常，2 待审核，2 删除）
-     * @param userState 用户状态(0 未审核，1 正常，2 待审核，2 删除）
+     * 用户状态(0 正常，1 未审核，2 待审核，2 删除）
+     * @param userState 用户状态(0 正常，1 未审核，2 待审核，2 删除）
      */
     public void setUserState(Integer userState) {
         this.userState = userState;

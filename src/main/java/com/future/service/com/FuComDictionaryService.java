@@ -1,5 +1,6 @@
 package com.future.service.com;
 
+import com.alibaba.druid.support.json.JSONUtils;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -43,19 +44,24 @@ public class FuComDictionaryService extends ServiceImpl<FuComDictionaryMapper, F
         try {
             List<FuComDictionary> dictionaries= selectByMap(null);
             JSONObject json=new JSONObject();
-            JSONArray midJson=new JSONArray();
+            String sign="";
             for(int i=0;i< dictionaries.size();i++){
-                if(json.get(dictionaries.get(i).getDicSign())!=null){
+
+                sign=dictionaries.get(i).getDicSign();
+                Object midJson=JSONObject.toJSON(dictionaries.get(i));
+
+                if(json.get(sign)!=null){
+                    JSONArray midArray=new JSONArray();
                     // 多个
-                    if(JSONArray.isValidArray(json.getJSONObject(dictionaries.get(i).getDicSign()).toJSONString())){
-                        midJson = json.getJSONArray(dictionaries.get(i).getDicSign());
+                    if(JsonUtils.isThisJSONArray(json,sign)){
+                        midArray = json.getJSONArray(sign);
                     }else {
-                        midJson.add(json.getJSONObject(dictionaries.get(i).getDicSign()));
+                        midArray.add(json.getJSONObject(sign));
                     }
-                    midJson.add(JSONObject.toJSON(dictionaries.get(i)));
-                    json.put(dictionaries.get(i).getDicSign(),midJson);
+                    midArray.add(midJson);
+                    json.put(sign,midArray);
                 }else {
-                    json.put(dictionaries.get(i).getDicSign(),JSONObject.toJSON(dictionaries.get(i)));
+                    json.put(sign,midJson);
                 }
             }
             log.info(json.toJSONString());

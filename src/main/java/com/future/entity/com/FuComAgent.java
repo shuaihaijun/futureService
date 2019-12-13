@@ -25,12 +25,12 @@ public class FuComAgent {
     private String agentName;
 
     /**
-     * IB类型（IB ,MIB,PIB）
+     * IB类型(0 IB ,1 MIB, 2 PIB)
      */
     private String agentType;
 
     /**
-     * 代理人等级(0 IB ,1 MIB, 2 PIB)
+     * 代理人等级(0 普通 ,1 中级, 2 高级)
      */
     private Integer agentLevel;
 
@@ -112,32 +112,32 @@ public class FuComAgent {
     }
 
     /**
-     * IB类型（IB ,MIB,PIB）
-     * @return agent_type IB类型（IB ,MIB,PIB）
+     * IB类型(0 IB ,1 MIB, 2 PIB)
+     * @return agent_type IB类型(0 IB ,1 MIB, 2 PIB)
      */
     public String getAgentType() {
         return agentType;
     }
 
     /**
-     * IB类型（IB ,MIB,PIB）
-     * @param agentType IB类型（IB ,MIB,PIB）
+     * IB类型(0 IB ,1 MIB, 2 PIB)
+     * @param agentType IB类型(0 IB ,1 MIB, 2 PIB)
      */
     public void setAgentType(String agentType) {
         this.agentType = agentType == null ? null : agentType.trim();
     }
 
     /**
-     * 代理人等级(0 IB ,1 MIB, 2 PIB)
-     * @return agent_level 代理人等级(0 IB ,1 MIB, 2 PIB)
+     * 代理人等级(0 普通 ,1 中级, 2 高级)
+     * @return agent_level 代理人等级(0 普通 ,1 中级, 2 高级)
      */
     public Integer getAgentLevel() {
         return agentLevel;
     }
 
     /**
-     * 代理人等级(0 IB ,1 MIB, 2 PIB)
-     * @param agentLevel 代理人等级(0 IB ,1 MIB, 2 PIB)
+     * 代理人等级(0 普通 ,1 中级, 2 高级)
+     * @param agentLevel 代理人等级(0 普通 ,1 中级, 2 高级)
      */
     public void setAgentLevel(Integer agentLevel) {
         this.agentLevel = agentLevel;

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
 
@@ -32,6 +33,25 @@ public class JsonUtils {
             }
         }
         return true;
+    }
+
+    /**
+     * 判断json对象中保存的ke 是 JSONArray 还是 JSONObject
+     * @param jsonObject
+     * @param key
+     * @return
+     */
+    public final static boolean isThisJSONArray(JSONObject jsonObject,String key) {
+        try {
+            Object object=jsonObject.get(key);
+            if(object instanceof JSONArray){
+                return true;
+            }else {
+                return false;
+            }
+        } catch (JSONException ex) {
+            return false;
+        }
     }
 
     /**

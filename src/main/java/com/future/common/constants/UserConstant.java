@@ -22,10 +22,10 @@ public class UserConstant {
 	public static final int USER_TYPE_SIGNAL = 11;
 
 	/**
-	 * 用户状态(0 未审核，1 正常，2 待审核，2 删除）
+	 * 用户状态(0 正常，1 未审核，2 待审核，2 删除）
 	 */
-	public static final int USER_STATE_UNCHECK = 0;
-	public static final int USER_STATE_NORMAL = 1;
+	public static final int USER_STATE_NORMAL = 0;
+	public static final int USER_STATE_UNCHECK = 1;
 	public static final int USER_STATE_PENDING = 2;
 	public static final int USER_STATE_DELETE = 3;
 
