@@ -3,12 +3,11 @@ package com.future.mapper.account;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.future.entity.account.FuAccountMt;
 import com.future.pojo.bo.order.UserMTAccountBO;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Map;
-
-@Repository
+@Component
 public interface FuAccountMtMapper extends BaseMapper<FuAccountMt> {
     int deleteByPrimaryKey(Integer id);
 

@@ -32,7 +32,7 @@ spring:
   redis:
     host: 127.0.0.1
     port: 6379
-    password: foobared
+    password:
     timeout: 3000 # 连接超时时间（毫秒）
     jedis:
       pool:
@@ -66,6 +66,9 @@ userTermServerPort: 7788
 #主机服务器地址
 pubServerUrl: 127.0.0.1
 pubServerPort: 6666
+#用户服务器地址
+pubUserServerUrl1: 127.0.0.1
+pubUserServerUrl2: 127.0.0.1
 #图片保存路径
 imageFilePath: D:\test\
 

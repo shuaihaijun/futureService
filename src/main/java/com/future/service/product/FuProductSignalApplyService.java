@@ -5,16 +5,19 @@ import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.future.common.constants.CommonConstant;
 import com.future.common.constants.SignalConstant;
 import com.future.common.enums.GlobalResultCode;
 import com.future.common.exception.BusinessException;
 import com.future.common.exception.DataConflictException;
 import com.future.common.util.ConvertUtil;
 import com.future.common.util.StringUtils;
+import com.future.entity.account.FuAccountMt;
 import com.future.entity.product.FuProductSignal;
 import com.future.entity.product.FuProductSignalApply;
 import com.future.mapper.product.FuProductSignalApplyMapper;
 import com.future.mapper.product.FuProductSignalMapper;
+import com.future.service.account.FuAccountMtSevice;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +29,8 @@ import org.springframework.util.ObjectUtils;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -38,6 +43,8 @@ public class FuProductSignalApplyService extends ServiceImpl<FuProductSignalAppl
     FuProductSignalApplyMapper fuProductSignalApplyMapper;
     @Autowired
     FuProductSignalMapper fuProductSignalMapper;
+    @Autowired
+    FuAccountMtSevice fuAccountMtSevice;
 
     /**
      * 根据条件查找信号源信息
@@ -271,10 +278,13 @@ public class FuProductSignalApplyService extends ServiceImpl<FuProductSignalAppl
                     throw new BusinessException("查询申请信息错误！");
                 }
                 FuProductSignal signal=ConvertUtil.convertSignal(apply);
-
                 signal.setCheckDate(new Date());
                 signal.setCreateDate(new Date());
                 signal.setModifyDate(new Date());
+
+                /*修改绑定MT账号状态  isSignal=1、 设置端口等 */
+                fuAccountMtSevice.checkSignalMtAccount(apply.getUserId(),apply.getServerName(),apply.getMtAccId());
+
                 /*保存信号源*/
                 fuProductSignalMapper.insertSelective(signal);
                 signalApply.setApplyState(SignalConstant.SIGNAL_APPLY_STATE_NORMAL);

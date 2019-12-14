@@ -6,10 +6,12 @@ import com.future.common.exception.BusinessException;
 import com.future.common.util.DateUtil;
 import com.future.entity.order.FuOrderFollowAction;
 import com.future.entity.order.FuOrderSignal;
+import com.future.entity.product.FuProductSignal;
 import com.future.mapper.order.FuOrderSignalMapper;
 import com.future.pojo.bo.order.UserMTAccountBO;
 import com.future.service.account.FuAccountMtSevice;
 import com.future.service.order.FuOrderFollowActionService;
+import com.future.service.product.FuProductSignalService;
 import com.jfx.strategy.Strategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,6 +41,9 @@ public class SignalService extends ServiceImpl<FuOrderSignalMapper,FuOrderSignal
     FuAccountMtSevice fuAccountMtSevice;
     @Autowired
     FuOrderFollowActionService fuOrderFollowActionService;
+    @Autowired
+    FuProductSignalService fuProductSignalService;
+
     @Value("pubServerUrl")
     String pubServerUrl;
     @Value("pubServerPort")
@@ -160,15 +165,26 @@ public class SignalService extends ServiceImpl<FuOrderSignalMapper,FuOrderSignal
         conditionMap.put("serverName",signalAccount[0]);
         conditionMap.put("mtAccId",signalAccount[1]);
         List<UserMTAccountBO> accountBOS=fuAccountMtSevice.getUserMTAccByCondition(conditionMap);
-        if(accountBOS.size()<=0){
+        if(accountBOS==null||accountBOS.size()<=0){
             log.error("根据服务器和账号，查询用户错误！");
             log.error("signalMsg:"+signalMsg);
+            // TODO 保存錯誤數據
         }
-
+        conditionMap.clear();
+        conditionMap.put(FuProductSignal.USER_ID,accountBOS.get(0).getUserId());
+        conditionMap.put(FuProductSignal.SERVER_NAME,accountBOS.get(0).getServerName());
+        conditionMap.put(FuProductSignal.MT_ACC_ID,accountBOS.get(0).getMtAccId());
+        List<FuProductSignal> signals=fuProductSignalService.selectByMap(conditionMap);
+        if(accountBOS.size()<=0){
+            log.error("根据服务器和账号，查询信号源错误！");
+            log.error("signalMsg:"+signalMsg);
+            // TODO 保存錯誤數據
+        }
         /*保存至 信号源订单表*/
         FuOrderSignal signalOrder=new FuOrderSignal();
         signalOrder.setUserId(accountBOS.get(0).getUserId());
         signalOrder.setMtServerName(accountBOS.get(0).getServerName());
+        signalOrder.setSignalId(signals.get(0).getId());
 //        signalOrder.setMtServerId();
         signalOrder.setMtAccId(accountBOS.get(0).getMtAccId());
         signalOrder.setOrderType(Integer.parseInt(orderDetail[0]));

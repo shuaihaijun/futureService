@@ -6,6 +6,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.future.common.constants.CommonConstant;
 import com.future.common.constants.UserConstant;
 import com.future.common.enums.GlobalResultCode;
 import com.future.common.enums.ResultCode;
@@ -392,11 +393,15 @@ public class AdminService extends ServiceImpl<FuUserMapper,FuUser> {
             throw new ParameterInvalidException("查找用户信息,参数错误！");
         }
 
-        if(oper.equals("1")){
+        if(oper.equals(CommonConstant.CHECK_YES)){
             //通过
             user.setUserState(UserConstant.USER_STATE_NORMAL);
-            user.setIsAccount(1);
-            user.setIsVerified(1);
+            user.setIsAccount(CommonConstant.COMMON_YES);
+            user.setIsVerified(CommonConstant.COMMON_YES);
+
+            /*给MT账户 分配 URL和 端口*/
+            fuAccountMtSevice.checkUserMtAccount(user.getId());
+
         }else {
             //未通过
             user.setUserState(UserConstant.USER_STATE_UNCHECK);

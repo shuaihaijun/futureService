@@ -7,6 +7,11 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 public class FuUserFollows {
+    public static String USER_ID="user_id";
+    public static String USER_MT_ACC_ID="user_mt_acc_id";
+    public static String SIGNAL_ID="signal_id";
+    public static String SIGNAL_MT_ACC_ID="signal_mt_acc_id";
+    public static String RULE_STATE="rule_state";
     /**
      * 
      */
@@ -103,11 +108,7 @@ public class FuUserFollows {
      */
     private BigDecimal followAlarmLevel;
 
-    public static String USER_ID="user_id";
-    public static String USER_MT_ACC_ID="user_mt_acc_id";
-    public static String SIGNAL_ID="signal_id";
-    public static String SIGNAL_MT_ACC_ID="signal_mt_acc_id";
-    public static String RULE_STATE="rule_state";
+
     /**
      * 
      * @return id 

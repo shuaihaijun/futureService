@@ -3,10 +3,15 @@ package com.future.service.account;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.baomidou.mybatisplus.toolkit.MapUtils;
+import com.future.common.constants.CommonConstant;
+import com.future.common.constants.RedisConstant;
+import com.future.common.constants.UserConstant;
+import com.future.common.enums.GlobalResultCode;
 import com.future.common.exception.BusinessException;
 import com.future.common.exception.DataConflictException;
 import com.future.common.exception.ParameterInvalidException;
 import com.future.common.util.ConvertUtil;
+import com.future.common.util.RedisManager;
 import com.future.common.util.StringUtils;
 import com.future.entity.account.FuAccountMt;
 import com.future.entity.product.FuProductSignal;
@@ -22,6 +27,7 @@ import com.jfx.strategy.Strategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
@@ -42,6 +48,12 @@ public class FuAccountMtSevice extends ServiceImpl<FuAccountMtMapper, FuAccountM
     MTAccountService mtAccountService;
     @Autowired
     FuProductSignalMapper fuProductSignalMapper;
+    @Autowired
+    RedisManager redisManager;
+    @Value("pubUserServerUrl1")
+    String pubUserServerUrl1;
+    @Value("pubUserServerUrl2")
+    String pubUserServerUrl2;
     /**
      * 根据条件查询用户MT账户信息
      * @param condition
@@ -62,7 +74,18 @@ public class FuAccountMtSevice extends ServiceImpl<FuAccountMtMapper, FuAccountM
      * @return
      */
     public List<UserMTAccountBO> queryUsersMtAccount(Map condition){
-        return fuAccountMtMapper.selectUserMTAccByCondition(condition);
+        /*查询账户值*/
+        List<UserMTAccountBO> accounts= fuAccountMtMapper.selectUserMTAccByCondition(condition);
+
+        String userAccout="";
+        Integer accountState=0;
+        /*循环设置状态*/
+        for(int i=0;i<accounts.size();i++){
+            userAccout=accounts.get(i).getServerName()+"&"+accounts.get(i).getMtAccId();
+            accountState=(Integer) redisManager.hget(RedisConstant.ACCOUNT_CONNECT_STATE,userAccout);
+            accounts.get(i).setConnectState(accountState==null?0:accountState);
+        }
+        return accounts;
     }
 
     /**
@@ -177,26 +200,29 @@ public class FuAccountMtSevice extends ServiceImpl<FuAccountMtMapper, FuAccountM
         mtServer=accountMts.get(0).getServerName();
 
         /*判断是否为信号源*/
-        FuUser fuUser=fuUserMapper.selectByPrimaryKey(userId);
-        if(ObjectUtils.isEmpty(fuUser)){
-            log.error("登录/连接MT账户,根据账户号查询用户信息为空！");
-            return false;
-        }
-        if(fuUser.getUserType()==11){
+        password=accountMts.get(0).getMtPasswordTrade();
+        if(accountMts.get(0).getUserType()== UserConstant.USER_TYPE_SIGNAL){
             //信号源用观摩密码验证
             password=accountMts.get(0).getMtPasswordWatch();
         }
-        password=accountMts.get(0).getMtPasswordTrade();
 
         /*登录MT账号*/
         try {
             Strategy strategy=new Strategy();
             Broker broker = new Broker(mtServer);
-            /*连接数据*/
+            /*1 、连接数据*/
             if(!mtAccountService.getConnect(strategy,broker,mtAccId,password)){
                 log.error("user connect failed");
                 return false;
             }
+            /*2 、监听初始化*/
+            if(accountMts.get(0).getUserType()== UserConstant.USER_TYPE_SIGNAL){
+
+            }
+
+            /*3、修改缓存中的状态*/
+            String stateKey=mtServer+"&"+mtAccId;
+            redisManager.hset(RedisConstant.ACCOUNT_CONNECT_STATE,stateKey, CommonConstant.COMMON_YES);
         }catch (Exception e){
             log.error(e.getMessage(),e);
             throw new BusinessException(e);
@@ -244,16 +270,11 @@ public class FuAccountMtSevice extends ServiceImpl<FuAccountMtMapper, FuAccountM
         mtServer=accountMts.get(0).getServerName();
 
         /*判断是否为信号源*/
-        FuUser fuUser=fuUserMapper.selectByPrimaryKey(userId);
-        if(ObjectUtils.isEmpty(fuUser)){
-            log.error("登录/连接MT账户,根据账户号查询用户信息为空！");
-            return false;
-        }
-        if(fuUser.getUserType()==11){
+        password=accountMts.get(0).getMtPasswordTrade();
+        if(accountMts.get(0).getUserType()== UserConstant.USER_TYPE_SIGNAL){
             //信号源用观摩密码验证
             password=accountMts.get(0).getMtPasswordWatch();
         }
-        password=accountMts.get(0).getMtPasswordTrade();
 
         /*登录MT账号*/
         try {
@@ -264,6 +285,9 @@ public class FuAccountMtSevice extends ServiceImpl<FuAccountMtMapper, FuAccountM
                 log.error("user disconnect failed");
                 return false;
             }
+            /*修改缓存中的状态*/
+            String stateKey=mtServer+"&"+mtAccId;
+            redisManager.hset(RedisConstant.ACCOUNT_CONNECT_STATE,stateKey, CommonConstant.COMMON_NO);
         }catch (Exception e){
             log.error(e.getMessage(),e);
             throw new BusinessException(e);
@@ -306,6 +330,9 @@ public class FuAccountMtSevice extends ServiceImpl<FuAccountMtMapper, FuAccountM
                 log.error("user connect failed");
                 return false;
             }
+            /*修改缓存中的状态*/
+            String stateKey=mtServer+"&"+mtAccId;
+            redisManager.hset(RedisConstant.ACCOUNT_CONNECT_STATE,stateKey, CommonConstant.COMMON_YES);
         }catch (Exception e){
             log.error(e.getMessage(),e);
             throw new BusinessException(e);
@@ -345,10 +372,83 @@ public class FuAccountMtSevice extends ServiceImpl<FuAccountMtMapper, FuAccountM
                 log.error("user connect failed");
                 return false;
             }
+            /*修改缓存中的状态*/
+            String stateKey=mtServer+"&"+mtAccId;
+            redisManager.hset(RedisConstant.ACCOUNT_CONNECT_STATE,stateKey, CommonConstant.COMMON_NO);
         }catch (Exception e){
             log.error(e.getMessage(),e);
             throw new BusinessException(e);
         }
         return true;
     }
+
+    /**
+     * 审核用户MT账户（设置状态和端口）
+     * @param userId
+     */
+    public void checkUserMtAccount(Integer userId){
+        Map conditionMap=new HashMap();
+        conditionMap.put(FuAccountMt.USER_ID,userId);
+        List<FuAccountMt> accountMts=fuAccountMtMapper.selectByMap(conditionMap);
+        for(FuAccountMt account:accountMts){
+            if(account.getPasswordTradeChecked()>CommonConstant.COMMON_NO && account.getPasswordWatchChecked()>CommonConstant.COMMON_NO){
+                //. 该账号已校验
+                continue;
+            }
+            Integer accountPort=getUserAccountPort(account.getUserId(),account.getId());
+            String accountUrl=getUserAccountUrl(accountPort);
+            account.setPasswordTradeChecked(CommonConstant.COMMON_YES);
+            account.setPasswordWatchChecked(CommonConstant.COMMON_YES);
+            account.setAccountPort(accountPort);
+            account.setAccountUrl(accountUrl);
+            fuAccountMtMapper.updateByPrimaryKeySelective(account);
+        }
+    }
+
+    /**
+     * 审核用户MT账户（设置状态和端口）
+     * @param userId
+     */
+    public void checkSignalMtAccount(Integer userId,String serverName,String mtAccId){
+        Map conditionMap=new HashMap();
+        conditionMap.put(FuAccountMt.USER_ID,userId);
+        conditionMap.put(FuAccountMt.MT_ACC_ID,mtAccId);
+        List<FuAccountMt> accountMts=fuAccountMtMapper.selectByMap(conditionMap);
+        if(accountMts==null || accountMts.isEmpty()){
+            log.error("未找到相关用户MT账户信息！");
+            throw new BusinessException(GlobalResultCode.RESULE_DATA_NONE,"未找到相关用户MT账户信息！");
+        }
+        accountMts.get(0).setIsSignal(CommonConstant.COMMON_YES);
+        if(accountMts.get(0).getPasswordWatchChecked()==CommonConstant.COMMON_NO
+            ||accountMts.get(0).getPasswordWatchChecked()==CommonConstant.COMMON_NO){
+            Integer accountPort=getUserAccountPort(accountMts.get(0).getUserId(),accountMts.get(0).getId());
+            String accountUrl=getUserAccountUrl(accountPort);
+            accountMts.get(0).setPasswordTradeChecked(CommonConstant.COMMON_YES);
+            accountMts.get(0).setPasswordWatchChecked(CommonConstant.COMMON_YES);
+            accountMts.get(0).setAccountPort(accountPort);
+            accountMts.get(0).setAccountUrl(accountUrl);
+        }
+        fuAccountMtMapper.updateByPrimaryKeySelective(accountMts.get(0));
+    }
+
+    /**
+     * 根据端口号 判断初始服务地址
+     * @param accountPort
+     * @return
+     */
+    private String getUserAccountUrl(Integer accountPort){
+        /*判断 服务器1是否满*/
+        return pubUserServerUrl1;
+    }
+
+    /**
+     * 根據用户ID 账户初始端口
+     * @param userId
+     * @return
+     */
+    private Integer getUserAccountPort(Integer userId,Integer accountId){
+        return 10000+accountId;
+    }
+
+
 }

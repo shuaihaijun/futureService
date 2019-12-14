@@ -62,6 +62,9 @@ public class OrderCustomerController {
         if(!StringUtils.isEmpty(requestMap.getString("orderSymbol"))){
             wrapper.eq(FuOrderCustomer.ORDER_SYMBOL,requestMap.getString("orderSymbol"));
         }
+        if(!StringUtils.isEmpty(requestMap.getString("orderType"))){
+            wrapper.eq(FuOrderCustomer.ORDER_TYPE,requestMap.getString("orderType"));
+        }
         if(!StringUtils.isEmpty(requestMap.getString("orderOpenDate"))){
             if(requestMap.getString("orderOpenDate").indexOf(",")<0){
                 wrapper.eq(FuOrderCustomer.ORDER_OPEN_DATE,requestMap.getString("orderOpenDate"));

@@ -1,33 +1,33 @@
 package com.future.service.follow;
 
 import com.alibaba.fastjson.JSONObject;
+import com.future.common.constants.CommonConstant;
 import com.future.common.constants.FollowConstant;
 import com.future.common.constants.OrderConstant;
 import com.future.common.constants.RedisConstant;
+import com.future.common.enums.GlobalResultCode;
 import com.future.common.exception.BusinessException;
-import com.future.common.util.DateUtil;
 import com.future.common.util.RedisManager;
+import com.future.entity.account.FuAccountMt;
 import com.future.entity.order.FuOrderFollowAction;
 import com.future.entity.order.FuOrderFollowError;
 import com.future.entity.order.FuOrderFollowInfo;
-import com.future.entity.order.FuOrderSignal;
-import com.future.entity.user.FuUserFollowRule;
 import com.future.entity.user.FuUserFollows;
 import com.future.mapper.order.FuOrderFollowErrorMapper;
 import com.future.mapper.order.FuOrderFollowInfoMapper;
+import com.future.mapper.user.FuUserFollowsMapper;
 import com.future.pojo.bo.order.UserMTAccountBO;
 import com.future.service.account.FuAccountMtSevice;
+import com.future.service.order.FuOrderFollowActionService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 import org.zeromq.SocketType;
 import org.zeromq.ZContext;
 import org.zeromq.ZMQ;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -49,6 +49,10 @@ public class FollowService{
     FuOrderFollowInfoMapper fuOrderFollowInfoMapper;
     @Autowired
     FuOrderFollowErrorMapper fuOrderFollowErrorMapper;
+    @Autowired
+    FuUserFollowsMapper fuUserFollowsMapper;
+    @Autowired
+    FuOrderFollowActionService fuOrderFollowActionService;
 
     /**
      * 跟随者初始化
@@ -69,30 +73,61 @@ public class FollowService{
         String accountInfo=userServer+"&"+userAccount;
         // 根据当前账号 查询跟随列表
         // 解析数据 格式为 signalHost1:signalPort1:signalServer1&signalAccountId1;signalHost2:signalPort2:signalServer2&signalAccountId2
-        String signalArray="127.0.0.1:30222:MultiBankFXInt-Demo F&2102272054";
-        String ruleList="MultiBankFXInt-Demo F&2102272054:0:0.2";
-        List<Map> follows=new ArrayList<>();
-        for(Map follow:follows){
-            signalArray=signalArray+follow.get("signalHost")+":"+follow.get("signalPort")+":"+follow.get("signalServerId")+"&"+follow.get("signalMtAccId")+";";
-            ruleList=ruleList+follow.get("signalServerId")+"&"+follow.get("signalMtAccId")+":"+follow.get("ruleType")+":"+follow.get("amount")+";";
+        // String signalArray="127.0.0.1:30222:MultiBankFXInt-Demo F&2102272054";
+        // String ruleList="MultiBankFXInt-Demo F&2102272054:0:0.2";
+
+        /*查询用户订阅信息*/
+        String signalArray="";
+        String ruleList="";
+        Map followInfo=new HashMap();
+        followInfo.put(FuUserFollows.USER_ID,userId);
+        followInfo.put(FuUserFollows.USER_MT_ACC_ID,userAccount);
+        List<FuUserFollows> userFollows= fuUserFollowsMapper.selectByMap(followInfo);
+        /*判斷跟随者列表*/
+        if(userFollows==null ||userFollows.size()==0){
+            log.error("连接MT账户信息, 用户无订阅信息!");
+            throw new BusinessException("连接MT账户信息, 用户无订阅信息!");
         }
-        if(signalArray.length()>0 && follows.size()>0){
+
+        /*拼接用户账户信息*/
+        Map userMtAccMap=new HashMap();
+        List<UserMTAccountBO> fuAccountMts;
+        String signalAccountInfo="";
+        for(FuUserFollows follow:userFollows){
+            /*查询信号源账户*/
+            userMtAccMap.put(FuAccountMt.MT_ACC_ID,follow.getSignalMtAccId());
+            userMtAccMap.put(FuAccountMt.IS_SIGNAL, CommonConstant.COMMON_YES);
+            fuAccountMts=fuAccountMtSevice.getUserMTAccByCondition(userMtAccMap);
+            if(fuAccountMts==null ||fuAccountMts.isEmpty()){
+                log.error("跟随信号源账户信息查询失败! signalId:"+follow.getSignalId());
+                throw new BusinessException(GlobalResultCode.RESULE_DATA_NONE,"跟随信号源账户信息查询失败! signalId:"+follow.getSignalId());
+            }
+            signalAccountInfo=fuAccountMts.get(0).getServerName()+"&"+fuAccountMts.get(0).getMtAccId();
+            /*拼接信号源信息*/
+            signalArray=signalArray+fuAccountMts.get(0).getAccountUrl()+":"+fuAccountMts.get(0).getAccountPort()+":"+signalAccountInfo+";";
+            /*拼接跟随规则信息*/
+            ruleList=ruleList+signalAccountInfo+":"+follow.getRuleType()+":"+follow.getAmount()+";";
+            userMtAccMap.clear();
+        }
+        if(signalArray.length()>0 && userFollows.size()>0){
             signalArray=signalArray.substring(0,signalArray.length()-2);
         }
-        if(ruleList.length()>0 && follows.size()>0){
+        if(ruleList.length()>0 && userFollows.size()>0){
             ruleList=ruleList.substring(0,ruleList.length()-2);
         }
 
-        /*查询客户跟随列表*/
-        List<FuOrderFollowAction> actions=new ArrayList<>();
-        String followOrderList="131565349:131565350";
+        /*查询客户订单跟随列表*/
+        Map followOrderMap =new HashMap();
+        followOrderMap.put(FuOrderFollowAction.USER_ID,userId);
+        followOrderMap.put(FuOrderFollowAction.ORDER_STATE,OrderConstant.ORDER_FOLLOW_ORDERS_STATE_ING);
+        List<FuOrderFollowAction> actions=fuOrderFollowActionService.selectByMap(followOrderMap);
+        String followOrderList="";
         for(FuOrderFollowAction action:actions){
             followOrderList=action.getUserOrderId()+":"+action.getSignalMtAccId()+";";
         }
         if(followOrderList.length()>0 && actions.size()>0){
             followOrderList=followOrderList.substring(0,followOrderList.length()-2);
         }
-
         String followInitStr = accountInfo+"|"+ FollowConstant.FOLLOW_INIT+"|"+serverHost+"#"+followHost+"#"+signalArray+"#"+followOrderList+"|"+ruleList;
 
         System.out.println(followInitStr);

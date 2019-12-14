@@ -10,6 +10,7 @@ public class FuProductSignal {
 
     public static final String APPLY_ID = "id";
     public static final String USER_ID = "user_id";
+    public static final String SIGNAL_ID = "signal_id";
     public static final String SIGNAL_NAME = "signal_name";
     public static final String SIGNAL_STATE = "signal_state";
     public static final String SERVER_NAME = "server_name";

@@ -2,7 +2,10 @@ package com.future.service.order;
 
 import com.alibaba.druid.util.StringUtils;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.future.common.constants.RedisConstant;
+import com.future.common.constants.UserConstant;
 import com.future.common.exception.BusinessException;
+import com.future.common.util.RedisManager;
 import com.future.entity.order.FuOrderCustomer;
 import com.future.entity.order.FuOrderFollowInfo;
 import com.future.mapper.order.FuOrderFollowInfoMapper;
@@ -36,6 +39,8 @@ public class FuOrderInfoService extends ServiceImpl<FuOrderFollowInfoMapper,FuOr
     FuAccountMtSevice fuAccountMtSevice;
     @Autowired
     FuOrderCustomerService fuOrderCustomerService;
+    @Autowired
+    RedisManager redisManager;
 
     /**
      * 根据时间段 查询用户历史订单
@@ -104,15 +109,6 @@ public class FuOrderInfoService extends ServiceImpl<FuOrderFollowInfoMapper,FuOr
             log.error("根据时间段 查询用户历史订单，用户信息为空！");
             return null;
         }
-        /*根据用户名 验证用户信息*/
-        /*FuUser fuUser=adminService.findByUsername(username);
-        if(ObjectUtils.isEmpty(fuUser)){
-            log.error("根据时间段 查询用户历史订单，用户信息不存在！");
-            return null;
-        }*/
-
-        /*验证用户登录状态*/
-
 
         /*查询用户历史订单*/
         Map acountMap=new HashMap();
@@ -120,6 +116,7 @@ public class FuOrderInfoService extends ServiceImpl<FuOrderFollowInfoMapper,FuOr
             acountMap.put("accountId",accountId);
         }else {
             /*默认查询主账户号*/
+            acountMap.put("userId",userId);
             acountMap.put("username",username);
             acountMap.put("isChief",1);
         }
@@ -128,9 +125,17 @@ public class FuOrderInfoService extends ServiceImpl<FuOrderFollowInfoMapper,FuOr
             log.error("根据时间段查询用户历史订单|用户MT4账户未绑定！");
             throw new BusinessException("根据时间段查询用户历史订单|用户MT4账户未绑定！");
         }
+        Integer userType=mts.get(0).getUserType();
         String server=String.valueOf(mts.get(0).getServerName());
         String mtAccId=String.valueOf(mts.get(0).getMtAccId());
         String mtPassword=String.valueOf(mts.get(0).getMtPasswordTrade());
+
+        /*验证用户链接状态*/
+        Integer connectSate=(Integer) redisManager.hget(RedisConstant.ACCOUNT_CONNECT_STATE,server+"&"+mtAccId);
+        if(connectSate==null || connectSate==0){
+            log.error("根据时间段查询用户历史订单,用户MT4账户未登录！");
+            throw new BusinessException("根据时间段查询用户历史订单,用户MT4账户未登录！");
+        }
 
         if(StringUtils.isEmpty(server)){
             log.error("根据时间段 查询用户历史订单，用户MT4账户信息有误！");
@@ -146,8 +151,16 @@ public class FuOrderInfoService extends ServiceImpl<FuOrderFollowInfoMapper,FuOr
 
         /*填充数据*/
         for (FuOrderFollowInfo info:infos){
-//            info.setUserMtAccId(mtAccId);
+            // 是不是普通用户 都填充用户信息，方便前端展示
+            info.setUserMtAccId(mtAccId);
             info.setUserId(Integer.parseInt(userId));
+            info.setUserServerName(server);
+            if(userType==UserConstant.USER_TYPE_SIGNAL){
+                // 信号源 填充信号源信息
+                info.setSignalOrderId(info.getOrderId());
+                info.setSignalMtAccId(mtAccId);
+                info.setSignalServerName(server);
+            }
         }
         return infos;
     }

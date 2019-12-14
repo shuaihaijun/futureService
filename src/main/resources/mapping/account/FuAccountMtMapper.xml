@@ -9,17 +9,20 @@
     <result column="mt_acc_id" jdbcType="VARCHAR" property="mtAccId" />
     <result column="mt_password_trade" jdbcType="VARCHAR" property="mtPasswordTrade" />
     <result column="mt_password_watch" jdbcType="VARCHAR" property="mtPasswordWatch" />
+    <result column="mt_acc_url" jdbcType="VARCHAR" property="mtAccUrl" />
+    <result column="mt_acc_port" jdbcType="VARCHAR" property="mtAccPort" />
     <result column="account_url" jdbcType="VARCHAR" property="accountUrl" />
     <result column="account_port" jdbcType="INTEGER" property="accountPort" />
     <result column="password_trade_checked" jdbcType="TINYINT" property="passwordTradeChecked" />
     <result column="password_watch_checked" jdbcType="TINYINT" property="passwordWatchChecked" />
+    <result column="is_signal" jdbcType="TINYINT" property="isSignal" />
     <result column="is_chief" jdbcType="TINYINT" property="isChief" />
     <result column="account_type" jdbcType="TINYINT" property="accountType" />
   </resultMap>
   <sql id="Base_Column_List">
     id, user_id, server_id, broker_id, mt_acc_id, mt_password_trade, mt_password_watch, 
-    account_url, account_port, password_trade_checked, password_watch_checked, is_chief, 
-    account_type
+    mt_acc_url, mt_acc_port, account_url, account_port, password_trade_checked, password_watch_checked, 
+    is_signal, is_chief, account_type
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -34,14 +37,16 @@
   <insert id="insert" parameterType="com.future.entity.account.FuAccountMt">
     insert into fu_account_mt (id, user_id, server_id, 
       broker_id, mt_acc_id, mt_password_trade, 
-      mt_password_watch, account_url, account_port, 
-      password_trade_checked, password_watch_checked, 
-      is_chief, account_type)
+      mt_password_watch, mt_acc_url, mt_acc_port, 
+      account_url, account_port, password_trade_checked, 
+      password_watch_checked, is_signal, is_chief, 
+      account_type)
     values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{serverId,jdbcType=INTEGER}, 
       #{brokerId,jdbcType=INTEGER}, #{mtAccId,jdbcType=VARCHAR}, #{mtPasswordTrade,jdbcType=VARCHAR}, 
-      #{mtPasswordWatch,jdbcType=VARCHAR}, #{accountUrl,jdbcType=VARCHAR}, #{accountPort,jdbcType=INTEGER}, 
-      #{passwordTradeChecked,jdbcType=TINYINT}, #{passwordWatchChecked,jdbcType=TINYINT}, 
-      #{isChief,jdbcType=TINYINT}, #{accountType,jdbcType=TINYINT})
+      #{mtPasswordWatch,jdbcType=VARCHAR}, #{mtAccUrl,jdbcType=VARCHAR}, #{mtAccPort,jdbcType=VARCHAR}, 
+      #{accountUrl,jdbcType=VARCHAR}, #{accountPort,jdbcType=INTEGER}, #{passwordTradeChecked,jdbcType=TINYINT}, 
+      #{passwordWatchChecked,jdbcType=TINYINT}, #{isSignal,jdbcType=TINYINT}, #{isChief,jdbcType=TINYINT}, 
+      #{accountType,jdbcType=TINYINT})
   </insert>
   <insert id="insertSelective" parameterType="com.future.entity.account.FuAccountMt">
     insert into fu_account_mt
@@ -67,6 +72,12 @@
       <if test="mtPasswordWatch != null">
         mt_password_watch,
       </if>
+      <if test="mtAccUrl != null">
+        mt_acc_url,
+      </if>
+      <if test="mtAccPort != null">
+        mt_acc_port,
+      </if>
       <if test="accountUrl != null">
         account_url,
       </if>
@@ -78,6 +89,9 @@
       </if>
       <if test="passwordWatchChecked != null">
         password_watch_checked,
+      </if>
+      <if test="isSignal != null">
+        is_signal,
       </if>
       <if test="isChief != null">
         is_chief,
@@ -108,6 +122,12 @@
       <if test="mtPasswordWatch != null">
         #{mtPasswordWatch,jdbcType=VARCHAR},
       </if>
+      <if test="mtAccUrl != null">
+        #{mtAccUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="mtAccPort != null">
+        #{mtAccPort,jdbcType=VARCHAR},
+      </if>
       <if test="accountUrl != null">
         #{accountUrl,jdbcType=VARCHAR},
       </if>
@@ -119,6 +139,9 @@
       </if>
       <if test="passwordWatchChecked != null">
         #{passwordWatchChecked,jdbcType=TINYINT},
+      </if>
+      <if test="isSignal != null">
+        #{isSignal,jdbcType=TINYINT},
       </if>
       <if test="isChief != null">
         #{isChief,jdbcType=TINYINT},
@@ -149,6 +172,12 @@
       <if test="mtPasswordWatch != null">
         mt_password_watch = #{mtPasswordWatch,jdbcType=VARCHAR},
       </if>
+      <if test="mtAccUrl != null">
+        mt_acc_url = #{mtAccUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="mtAccPort != null">
+        mt_acc_port = #{mtAccPort,jdbcType=VARCHAR},
+      </if>
       <if test="accountUrl != null">
         account_url = #{accountUrl,jdbcType=VARCHAR},
       </if>
@@ -160,6 +189,9 @@
       </if>
       <if test="passwordWatchChecked != null">
         password_watch_checked = #{passwordWatchChecked,jdbcType=TINYINT},
+      </if>
+      <if test="isSignal != null">
+        is_signal = #{isSignal,jdbcType=TINYINT},
       </if>
       <if test="isChief != null">
         is_chief = #{isChief,jdbcType=TINYINT},
@@ -178,10 +210,13 @@
       mt_acc_id = #{mtAccId,jdbcType=VARCHAR},
       mt_password_trade = #{mtPasswordTrade,jdbcType=VARCHAR},
       mt_password_watch = #{mtPasswordWatch,jdbcType=VARCHAR},
+      mt_acc_url = #{mtAccUrl,jdbcType=VARCHAR},
+      mt_acc_port = #{mtAccPort,jdbcType=VARCHAR},
       account_url = #{accountUrl,jdbcType=VARCHAR},
       account_port = #{accountPort,jdbcType=INTEGER},
       password_trade_checked = #{passwordTradeChecked,jdbcType=TINYINT},
       password_watch_checked = #{passwordWatchChecked,jdbcType=TINYINT},
+      is_signal = #{isSignal,jdbcType=TINYINT},
       is_chief = #{isChief,jdbcType=TINYINT},
       account_type = #{accountType,jdbcType=TINYINT}
     where id = #{id,jdbcType=INTEGER}
@@ -190,12 +225,15 @@
     SELECT
     acc.id accountId,
     acc.mt_acc_id mtAccId,
+    acc.is_signal isSignal,
     acc.is_chief isChief,
     acc.account_type accountType,
     acc.mt_password_trade mtPasswordTrade,
     acc.mt_password_watch mtPasswordWatch,
     acc.password_watch_checked passwordWatchChecked,
     acc.password_trade_checked passwordTradeChecked,
+    acc.mt_acc_url mtAccUrl,
+    acc.mt_acc_port mtAccPort,
     acc.account_url accountUrl,
     acc.account_port accountPort,
     u.id userId,
@@ -216,8 +254,8 @@
     LEFT JOIN fu_user u on u.id=acc.user_id
     LEFT JOIN fu_com_server s on acc.server_id=s.id
     where
-    <trim  prefixOverrides="and">
-        1 = 1
+    <trim prefixOverrides="and">
+      1 = 1
       <if test="username != null">
         and u.username = #{username,jdbcType=VARCHAR}
       </if>
@@ -235,6 +273,9 @@
       </if>
       <if test="isChief != null">
         and acc.is_chief = #{isChief,jdbcType=TINYINT}
+      </if>
+      <if test="isSignal != null">
+        and acc.is_signal = #{isSignal,jdbcType=TINYINT}
       </if>
       <if test="accountType != null">
         and acc.account_type = #{accountType,jdbcType=TINYINT}
@@ -265,6 +306,12 @@
       <if test="mtPasswordWatch != null">
         mt_password_watch = #{mtPasswordWatch,jdbcType=VARCHAR},
       </if>
+      <if test="mtAccUrl != null">
+        mt_acc_url = #{mtAccUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="mtAccPort != null">
+        mt_acc_port = #{mtAccPort,jdbcType=INTEGER},
+      </if>
       <if test="accountUrl != null">
         account_url = #{accountUrl,jdbcType=VARCHAR},
       </if>
@@ -277,6 +324,9 @@
       <if test="passwordWatchChecked != null">
         password_watch_checked = #{passwordWatchChecked,jdbcType=TINYINT},
       </if>
+      <if test="isSignal != null">
+        is_signal = #{isSignal,jdbcType=TINYINT}
+      </if>
       <if test="isChief != null">
         is_chief = #{isChief,jdbcType=TINYINT},
       </if>
@@ -285,7 +335,7 @@
       </if>
     </set>
     where
-    <trim  prefixOverrides="and">
+    <trim prefixOverrides="and">
       <if test="userId != null">
         and user_id = #{userId,jdbcType=INTEGER}
       </if>

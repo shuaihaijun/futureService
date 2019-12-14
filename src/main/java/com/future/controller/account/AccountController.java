@@ -38,16 +38,20 @@ public class AccountController {
         JSONObject requestMap = JSONObject.parseObject(requestJSONStr);
         String username=requestMap.getString("username");
         String serverName=requestMap.getString("serverName");
+        String userId=requestMap.getString("userId");
         String mtAccId=requestMap.getString("mtAccId");
         String accountId=requestMap.getString("accountId");
         Map conditonMap=new HashMap();
         if(!StringUtils.isEmpty(accountId)){
             conditonMap.put("accountId",accountId);
-        }else if(!StringUtils.isEmpty(username)){
+        }else if(!StringUtils.isEmpty(username) || !StringUtils.isEmpty(userId)){
             /*默认查询主账户号*/
+            conditonMap.put("userId",userId);
             conditonMap.put("username",username);
             conditonMap.put("isChief",1);
-        }else if(!StringUtils.isEmpty(serverName)&& !StringUtils.isEmpty(mtAccId)){
+        }else if(!StringUtils.isEmpty(mtAccId)){
+            conditonMap.put("userId",userId);
+            conditonMap.put("username",username);
             conditonMap.put("serverName",serverName);
             conditonMap.put("mtAccId",mtAccId);
         }else {
@@ -72,16 +76,20 @@ public class AccountController {
         JSONObject requestMap = JSONObject.parseObject(requestJSONStr);
         String username=requestMap.getString("username");
         String serverName=requestMap.getString("serverName");
+        String userId=requestMap.getString("userId");
         String mtAccId=requestMap.getString("mtAccId");
         String accountId=requestMap.getString("accountId");
         Map conditonMap=new HashMap();
         if(!StringUtils.isEmpty(accountId)){
             conditonMap.put("accountId",accountId);
-        }else if(!StringUtils.isEmpty(username)){
+        }else if(!StringUtils.isEmpty(username) || !StringUtils.isEmpty(userId)){
             /*默认查询主账户号*/
+            conditonMap.put("userId",userId);
             conditonMap.put("username",username);
             conditonMap.put("isChief",1);
-        }else if(!StringUtils.isEmpty(serverName)&& !StringUtils.isEmpty(mtAccId)){
+        }else if(!StringUtils.isEmpty(mtAccId)){
+            conditonMap.put("userId",userId);
+            conditonMap.put("username",username);
             conditonMap.put("serverName",serverName);
             conditonMap.put("mtAccId",mtAccId);
         }else {

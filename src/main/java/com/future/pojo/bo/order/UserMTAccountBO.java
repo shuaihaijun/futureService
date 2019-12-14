@@ -17,8 +17,12 @@ public class UserMTAccountBO {
     private int passwordWatchChecked;//观摩密码是否已校验（0 否，1是
     private int accountType;//账户类型：0 mt4,1 mt5
     private int isChief;//是否为主账号
+    private Integer isSignal;//是否为信号源账号(1 是，0 否)
     private String accountUrl;//账户所在位置URL
     private Integer accountPort;//账户所在位置PORT
+    private String mtAccUrl;//MT账户所在位置URL
+    private Integer mtAccPort;//MT账户所在位置PORT
+    private Integer connectState;//账号链接状态
 
     /**
      * 用户账号
@@ -245,5 +249,37 @@ public class UserMTAccountBO {
 
     public void setPasswordWatchChecked(int passwordWatchChecked) {
         this.passwordWatchChecked = passwordWatchChecked;
+    }
+
+    public Integer getConnectState() {
+        return connectState;
+    }
+
+    public void setConnectState(Integer connectState) {
+        this.connectState = connectState;
+    }
+
+    public Integer getIsSignal() {
+        return isSignal;
+    }
+
+    public void setIsSignal(Integer isSignal) {
+        this.isSignal = isSignal;
+    }
+
+    public String getMtAccUrl() {
+        return mtAccUrl;
+    }
+
+    public void setMtAccUrl(String mtAccUrl) {
+        this.mtAccUrl = mtAccUrl;
+    }
+
+    public Integer getMtAccPort() {
+        return mtAccPort;
+    }
+
+    public void setMtAccPort(Integer mtAccPort) {
+        this.mtAccPort = mtAccPort;
     }
 }

@@ -16,5 +16,12 @@ public class CommonConstant {
 	/**信号源状态*/
 
 
+	/*是否*/
+	public static final int COMMON_YES = 1;
+	public static final int COMMON_NO = 0;
 
+
+	/*审核 （1 通过，0 不通过）*/
+	public static final int CHECK_YES = 1;
+	public static final int CHECK__NO = 0;
 }

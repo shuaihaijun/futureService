@@ -7,6 +7,11 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 public class FuOrderSignal {
+
+
+    public static final String USER_ID = "user_id";
+    public static final String SIGNAL_ID = "signal_id";
+
     /**
      * 
      */
@@ -27,6 +32,11 @@ public class FuOrderSignal {
      * 用户ID
      */
     private Integer userId;
+
+    /**
+     * 信号源ID
+     */
+    private Integer signalId;
 
     /**
      * 用户服务器ID
@@ -89,7 +99,7 @@ public class FuOrderSignal {
     private BigDecimal orderCommission;
 
     /**
-     * 原订单号
+     * 原在仓订单号
      */
     private String orderSuperior;
 
@@ -203,6 +213,22 @@ public class FuOrderSignal {
     }
 
     /**
+     * 信号源ID
+     * @return signal_id 信号源ID
+     */
+    public Integer getSignalId() {
+        return signalId;
+    }
+
+    /**
+     * 信号源ID
+     * @param signalId 信号源ID
+     */
+    public void setSignalId(Integer signalId) {
+        this.signalId = signalId;
+    }
+
+    /**
      * 用户服务器ID
      * @return mt_server_id 用户服务器ID
      */
@@ -300,6 +326,7 @@ public class FuOrderSignal {
 
     /**
      * 订单类型（ OP_BUY = 0， OP_SELL = 1，OP_BUYLIMIT = 2，OP_SELLLIMIT = 3， OP_BUYSTOP = 4，OP_SELLSTOP = 5）
+     * @return order_type 订单类型（ OP_BUY = 0， OP_SELL = 1，OP_BUYLIMIT = 2，OP_SELLLIMIT = 3， OP_BUYSTOP = 4，OP_SELLSTOP = 5）
      */
     public Integer getOrderType() {
         return orderType;
@@ -307,6 +334,7 @@ public class FuOrderSignal {
 
     /**
      * 订单类型（ OP_BUY = 0， OP_SELL = 1，OP_BUYLIMIT = 2，OP_SELLLIMIT = 3， OP_BUYSTOP = 4，OP_SELLSTOP = 5）
+     * @param orderType 订单类型（ OP_BUY = 0， OP_SELL = 1，OP_BUYLIMIT = 2，OP_SELLLIMIT = 3， OP_BUYSTOP = 4，OP_SELLSTOP = 5）
      */
     public void setOrderType(Integer orderType) {
         this.orderType = orderType;
@@ -314,6 +342,7 @@ public class FuOrderSignal {
 
     /**
      * 订单状态（ 0 正常，1 异常）
+     * @return order_state 订单状态（ 0 正常，1 异常）
      */
     public Integer getOrderState() {
         return orderState;
@@ -321,6 +350,7 @@ public class FuOrderSignal {
 
     /**
      * 订单状态（ 0 正常，1 异常）
+     * @param orderState 订单状态（ 0 正常，1 异常）
      */
     public void setOrderState(Integer orderState) {
         this.orderState = orderState;
@@ -391,7 +421,7 @@ public class FuOrderSignal {
     }
 
     /**
-     * 原订单号
+     * 原在仓订单号
      * @return order_superior 原在仓订单号
      */
     public String getOrderSuperior() {
@@ -399,7 +429,7 @@ public class FuOrderSignal {
     }
 
     /**
-     * 原订单号
+     * 原在仓订单号
      * @param orderSuperior 原在仓订单号
      */
     public void setOrderSuperior(String orderSuperior) {
@@ -472,6 +502,7 @@ public class FuOrderSignal {
 
     /**
      * 操作类型（0 OPEN ，1 MODIFY，2 CLOSE，3 CLOSE_PARTIAL，4 CLOSE_MAGIC）
+     * @return order_trade_operation 操作类型（0 OPEN ，1 MODIFY，2 CLOSE，3 CLOSE_PARTIAL，4 CLOSE_MAGIC）
      */
     public Integer getOrderTradeOperation() {
         return orderTradeOperation;
@@ -479,6 +510,7 @@ public class FuOrderSignal {
 
     /**
      * 操作类型（0 OPEN ，1 MODIFY，2 CLOSE，3 CLOSE_PARTIAL，4 CLOSE_MAGIC）
+     * @param orderTradeOperation 操作类型（0 OPEN ，1 MODIFY，2 CLOSE，3 CLOSE_PARTIAL，4 CLOSE_MAGIC）
      */
     public void setOrderTradeOperation(Integer orderTradeOperation) {
         this.orderTradeOperation = orderTradeOperation;
@@ -486,6 +518,7 @@ public class FuOrderSignal {
 
     /**
      * 交易类型
+     * @return order_trade_type 交易类型
      */
     public Integer getOrderTradeType() {
         return orderTradeType;
@@ -493,6 +526,7 @@ public class FuOrderSignal {
 
     /**
      * 交易类型
+     * @param orderTradeType 交易类型
      */
     public void setOrderTradeType(Integer orderTradeType) {
         this.orderTradeType = orderTradeType;

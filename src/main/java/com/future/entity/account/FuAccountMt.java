@@ -4,8 +4,13 @@ import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.enums.IdType;
 
 public class FuAccountMt {
+    public static String USER_ID="user_id";
+    public static String MT_ACC_ID="mt_acc_id";
+    public static String IS_SIGNAL="is_signal";
+    public static String ACCOUNT_TYPE="account_type";
+
     /**
-     * 
+     *
      */
     @TableId(type = IdType.AUTO)
     private Integer id;
@@ -41,6 +46,16 @@ public class FuAccountMt {
     private String mtPasswordWatch;
 
     /**
+     * mt服务器url
+     */
+    private String mtAccUrl;
+
+    /**
+     * mt服务器port
+     */
+    private String mtAccPort;
+
+    /**
      * 账户服务器地址
      */
     private String accountUrl;
@@ -59,6 +74,11 @@ public class FuAccountMt {
      * 观摩密码是否已校验（0 否，1是）
      */
     private Integer passwordWatchChecked;
+
+    /**
+     * 是否为信号源账号(1 是，0 否)
+     */
+    private Integer isSignal;
 
     /**
      * 是否为主账号(1 是，0 否)
@@ -183,6 +203,38 @@ public class FuAccountMt {
     }
 
     /**
+     * mt服务器url
+     * @return mt_acc_url mt服务器url
+     */
+    public String getMtAccUrl() {
+        return mtAccUrl;
+    }
+
+    /**
+     * mt服务器url
+     * @param mtAccUrl mt服务器url
+     */
+    public void setMtAccUrl(String mtAccUrl) {
+        this.mtAccUrl = mtAccUrl == null ? null : mtAccUrl.trim();
+    }
+
+    /**
+     * mt服务器port
+     * @return mt_acc_port mt服务器port
+     */
+    public String getMtAccPort() {
+        return mtAccPort;
+    }
+
+    /**
+     * mt服务器port
+     * @param mtAccPort mt服务器port
+     */
+    public void setMtAccPort(String mtAccPort) {
+        this.mtAccPort = mtAccPort == null ? null : mtAccPort.trim();
+    }
+
+    /**
      * 账户服务器地址
      * @return account_url 账户服务器地址
      */
@@ -244,6 +296,22 @@ public class FuAccountMt {
      */
     public void setPasswordWatchChecked(Integer passwordWatchChecked) {
         this.passwordWatchChecked = passwordWatchChecked;
+    }
+
+    /**
+     * 是否为信号源账号(1 是，0 否)
+     * @return is_signal 是否为信号源账号(1 是，0 否)
+     */
+    public Integer getIsSignal() {
+        return isSignal;
+    }
+
+    /**
+     * 是否为信号源账号(1 是，0 否)
+     * @param isSignal 是否为信号源账号(1 是，0 否)
+     */
+    public void setIsSignal(Integer isSignal) {
+        this.isSignal = isSignal;
     }
 
     /**

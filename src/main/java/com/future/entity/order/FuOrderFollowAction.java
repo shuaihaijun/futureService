@@ -6,8 +6,23 @@ import com.baomidou.mybatisplus.enums.IdType;
 import java.util.Date;
 
 public class FuOrderFollowAction {
+
+    public static final String USER_ID = "user_id";
+    public static final String USER_ORDER_ID = "user_order_id";
+    public static final String USER_SERVER_ID = "user_server_id";
+    public static final String USER_SERVER_NAME = "user_server_name";
+    public static final String USER_ACCOUNT_ID = "user_mt_acc_id";
+    public static final String SIGNAL_ID = "signal_id";
+    public static final String SIGNAL_ORDER_ID = "signal_order_id";
+    public static final String SIGNAL_SERVER_ID = "signal_server_id";
+    public static final String SIGNAL_SERVER_NAME = "signal_server_name";
+    public static final String SIGNAL_ACCOUNT_ID = "signal_mt_acc_id";
+    public static final String SIGNAL_ORDER_SUPERIOR = "signal_order_superior";
+    public static final String ORDER_ACTION = "order_action";
+    public static final String ORDER_STATE = "order_state";
+
     /**
-     * 
+     *
      */
     @TableId(type = IdType.AUTO)
     private Integer id;
@@ -46,6 +61,10 @@ public class FuOrderFollowAction {
      * 用户mt平台账号
      */
     private String userMtAccId;
+    /**
+     * 信号源ID
+     */
+    private Integer signalId;
 
     /**
      * 信号源订单号
@@ -83,30 +102,17 @@ public class FuOrderFollowAction {
     private Integer orderState;
 
 
-    public static final String USER_ID = "user_id";
-    public static final String USER_ORDER_ID = "user_order_id";
-    public static final String USER_SERVER_ID = "user_server_id";
-    public static final String USER_SERVER_NAME = "user_server_name";
-    public static final String USER_ACCOUNT_ID = "user_mt_acc_id";
-    public static final String SIGNAL_ORDER_ID = "signal_order_id";
-    public static final String SIGNAL_SERVER_ID = "signal_server_id";
-    public static final String SIGNAL_SERVER_NAME = "signal_server_name";
-    public static final String SIGNAL_ACCOUNT_ID = "signal_mt_acc_id";
-    public static final String SIGNAL_ORDER_SUPERIOR = "signal_order_superior";
-    public static final String ORDER_ACTION = "order_action";
-    public static final String ORDER_STATE = "order_state";
-
     /**
-     * 
-     * @return id 
+     *
+     * @return id
      */
     public Integer getId() {
         return id;
     }
 
     /**
-     * 
-     * @param id 
+     *
+     * @param id
      */
     public void setId(Integer id) {
         this.id = id;
@@ -326,6 +332,14 @@ public class FuOrderFollowAction {
      */
     public Integer getOrderState() {
         return orderState;
+    }
+
+    public Integer getSignalId() {
+        return signalId;
+    }
+
+    public void setSignalId(Integer signalId) {
+        this.signalId = signalId;
     }
 
     /**
