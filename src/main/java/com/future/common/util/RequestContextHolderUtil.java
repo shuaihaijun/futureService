@@ -63,7 +63,7 @@ public class RequestContextHolderUtil {
      * @return
      */
     public static AdminInfo getAdminInfo() {
-        return (AdminInfo) getRequest().getAttribute(RequestKey.loginAdminInfo.name());
+        return (AdminInfo) getSession().getAttribute(RequestKey.loginAdminInfo.name());
     }
 
     /**
@@ -72,6 +72,43 @@ public class RequestContextHolderUtil {
      * @return
      */
     public static String getAdmintoken() {
-        return (String) getRequest().getAttribute(RequestKey.admintoken.name());
+        return (String) getSession().getAttribute(RequestKey.admintoken.name());
+    }
+
+
+    /**
+     * 设置登录人信息
+     *
+     * @return
+     */
+    public static void setAdminInfo(AdminInfo adminInfo) {
+        getSession().setAttribute(RequestKey.loginAdminInfo.name(),adminInfo);
+    }
+
+    /**
+     * 设置登录token
+     *
+     * @return
+     */
+    public static void setAdmintoken(String token) {
+        getSession().setAttribute(RequestKey.admintoken.name(),token);
+    }
+
+    /**
+     * 移除登录人信息
+     *
+     * @return
+     */
+    public static void removeAdminInfo() {
+        getSession().removeAttribute(RequestKey.loginAdminInfo.name());
+    }
+
+    /**
+     * 移除登录token
+     *
+     * @return
+     */
+    public static void removeAdmintoken() {
+        getSession().removeAttribute(RequestKey.admintoken.name());
     }
 }

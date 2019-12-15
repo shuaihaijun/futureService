@@ -25,9 +25,9 @@ import org.springframework.util.ObjectUtils;
 import java.util.*;
 
 @Service
-public class FuOrderInfoService extends ServiceImpl<FuOrderFollowInfoMapper,FuOrderFollowInfo> {
+public class FuOrderFollowInfoService extends ServiceImpl<FuOrderFollowInfoMapper,FuOrderFollowInfo> {
 
-    Logger log = LoggerFactory.getLogger(FuOrderInfoService.class);
+    Logger log = LoggerFactory.getLogger(FuOrderFollowInfoService.class);
 
     @Autowired
     AdminService adminService;
@@ -39,6 +39,8 @@ public class FuOrderInfoService extends ServiceImpl<FuOrderFollowInfoMapper,FuOr
     FuAccountMtSevice fuAccountMtSevice;
     @Autowired
     FuOrderCustomerService fuOrderCustomerService;
+    @Autowired
+    FuOrderFollowInfoMapper fuOrderFollowInfoMapper;
     @Autowired
     RedisManager redisManager;
 
@@ -222,6 +224,14 @@ public class FuOrderInfoService extends ServiceImpl<FuOrderFollowInfoMapper,FuOr
         }
     }
 
+    /**
+     * 插入数据
+     * @param record
+     * @return
+     */
+    public int insertSelective(FuOrderFollowInfo record){
+       return fuOrderFollowInfoMapper.insertSelective(record);
+    }
 
     /**
      * 查询 用户社区内最后的自如交易订单

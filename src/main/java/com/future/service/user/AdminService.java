@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.future.common.constants.CommonConstant;
+import com.future.common.constants.RedisConstant;
 import com.future.common.constants.UserConstant;
 import com.future.common.enums.GlobalResultCode;
 import com.future.common.enums.ResultCode;
@@ -15,12 +16,16 @@ import com.future.common.exception.*;
 import com.future.common.result.Result;
 import com.future.common.result.ResultMsg;
 import com.future.common.util.CommonUtil;
+import com.future.common.util.RedisManager;
+import com.future.common.util.RequestContextHolderUtil;
 import com.future.entity.order.FuOrderCustomer;
 import com.future.entity.user.FuUser;
 import com.future.mapper.user.FuUserMapper;
+import com.future.pojo.bo.AdminInfo;
 import com.future.pojo.bo.order.UserMTAccountBO;
 import com.future.service.account.FuAccountMtSevice;
 import com.github.pagehelper.PageInfo;
+import org.apache.tomcat.util.security.MD5Encoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -32,6 +37,7 @@ import org.springframework.util.ObjectUtils;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @Service
 public class AdminService extends ServiceImpl<FuUserMapper,FuUser> {
@@ -42,6 +48,8 @@ public class AdminService extends ServiceImpl<FuUserMapper,FuUser> {
     FuUserMapper fuUserMapper;
     @Autowired
     FuAccountMtSevice fuAccountMtSevice;
+    @Autowired
+    RedisManager redisManager;
 
     /**
      * 通过用户名密码登录
@@ -61,6 +69,7 @@ public class AdminService extends ServiceImpl<FuUserMapper,FuUser> {
         FuUser fuUser=fuUserMapper.selectByUsername(username);
         if(ObjectUtils.isEmpty(fuUser)){
             /*用户不存在*/
+            log.error("用户不存在!");
             throw new BusinessException(UserResultCode.USER_NOTEXIST_ERROR);
         }
 
@@ -73,6 +82,22 @@ public class AdminService extends ServiceImpl<FuUserMapper,FuUser> {
             /*用户状态异常*/
             throw new BusinessException(UserResultCode.USER_STATE_EXCEPTION);
         }
+
+        /*设置session 用户+token,回头价格session共享*/
+        String token=UUID.randomUUID().toString();
+        AdminInfo adminInfo = new AdminInfo();
+        adminInfo.setAdminId(fuUser.getId());
+        adminInfo.setAdminLogin(fuUser.getUsername());
+        adminInfo.setAdminName(fuUser.getRefName());
+        adminInfo.setAdminPassword(fuUser.getPassword());
+        /*adminInfo.setR_id();
+        adminInfo.setR_name();*/
+        // TODO session 放置/获取失败
+        RequestContextHolderUtil.setAdminInfo(adminInfo);
+        RequestContextHolderUtil.setAdmintoken(token);
+        /*为了解决跨域问题，把token放到redis中*/
+        redisManager.hset(RedisConstant.USER_LOGIN_TOKEN,fuUser.getId().toString(),token);
+
         /*返回数据填充*/
         Map userMap=new HashMap();
         userMap.put("userId",fuUser.getId());
@@ -86,6 +111,30 @@ public class AdminService extends ServiceImpl<FuUserMapper,FuUser> {
         resultMap.put("msg",GlobalResultCode.SUCCESS.message());
         resultMap.put("data",JSONObject.toJSON(userMap));
         return resultMap;
+    }
+
+
+    /**
+     * 用户注销
+     * @param username
+     * @param password
+     * @return
+     */
+    public void logout(String username){
+
+        Map resultMap=new HashMap();
+        FuUser fuUser=fuUserMapper.selectByUsername(username);
+        if(ObjectUtils.isEmpty(fuUser)){
+            /*用户不存在*/
+            log.error("用户不存在!");
+            throw new BusinessException(UserResultCode.USER_NOTEXIST_ERROR);
+        }
+
+        /*设置session 用户+token,回头价格session共享*/
+        RequestContextHolderUtil.removeAdminInfo();
+        RequestContextHolderUtil.removeAdmintoken();
+        /*为了解决跨域问题，把token放到redis中*/
+        redisManager.hdel(RedisConstant.USER_LOGIN_TOKEN,fuUser.getId().toString());
     }
 
     /**

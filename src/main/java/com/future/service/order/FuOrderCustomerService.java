@@ -34,7 +34,7 @@ public class FuOrderCustomerService extends ServiceImpl<FuOrderCustomerMapper, F
     @Autowired
     FuAccountMtSevice fuAccountMtSevice;
     @Autowired
-    FuOrderInfoService fuOrderInfoService;
+    FuOrderFollowInfoService fuOrderInfoService;
     @Autowired
     MTOrderService mtOrderService;
     @Autowired

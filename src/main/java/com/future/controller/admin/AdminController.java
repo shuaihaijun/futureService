@@ -34,6 +34,16 @@ public class AdminController{
         return resMap;
     }
 
+    //登出操作
+    @RequestMapping(value= "/logout",method=RequestMethod.POST)
+    public @ResponseBody void logout(){
+        // 获取请求参数
+        String requestJSONStr = ThreadCache.getPostRequestParams();
+        JSONObject requestMap = JSONObject.parseObject(requestJSONStr);
+        String username=requestMap.getString("username");
+        adminService.logout(username);
+    }
+
     //注册操作
     @RequestMapping(value= "/registered",method=RequestMethod.POST)
     public @ResponseBody Map registered(){

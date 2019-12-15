@@ -10,4 +10,8 @@ public class RedisConstant {
 
 	/*mtAccount connect state*/
 	public static final String ACCOUNT_CONNECT_STATE="accountConnectState";
+
+	/*user login token*/
+	public static final String USER_LOGIN_TOKEN="userLoginToken";
+
 }

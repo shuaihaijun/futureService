@@ -42,9 +42,10 @@ public class PermissionRoleController {
      */
     @ApiOperation(value = "新增角色信息", notes = "新增角色信息")
     @PostMapping(value = "/save")
-    public void save(@RequestBody RequestParams<FuPermissionRoleBO> requestParams) {
+    public boolean save(@RequestBody RequestParams<FuPermissionRoleBO> requestParams) {
         FuPermissionRoleBO permissionRoleBO = requestParams.getParams();
         permissionRoleService.save(permissionRoleBO);
+        return true;
     }
 
     /**
@@ -54,9 +55,10 @@ public class PermissionRoleController {
      */
     @ApiOperation(value = "角色信息更新", notes = "角色信息更新")
     @PostMapping(value = "/modify")
-    public void modify(@RequestBody RequestParams<FuPermissionRoleBO> requestParams) {
+    public boolean modify(@RequestBody RequestParams<FuPermissionRoleBO> requestParams) {
         FuPermissionRoleBO permissionRoleBO = requestParams.getParams();
         permissionRoleService.modify(permissionRoleBO);
+        return true;
     }
 
     /**
@@ -66,9 +68,10 @@ public class PermissionRoleController {
      */
     @ApiOperation(value = "角色信息删除", notes = "角色信息删除")
     @PostMapping(value = "/remove")
-    public void remove(@RequestBody RequestParams<BasicBO> requestParams) {
+    public boolean remove(@RequestBody RequestParams<BasicBO> requestParams) {
         String ids = requestParams.getParams().getDelIds();
         permissionRoleService.remove(ids);
+        return true;
     }
 
     /**

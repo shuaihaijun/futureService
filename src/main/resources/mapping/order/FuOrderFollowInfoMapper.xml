@@ -7,6 +7,7 @@
     <result column="modify_date" jdbcType="TIMESTAMP" property="modifyDate" />
     <result column="order_id" jdbcType="VARCHAR" property="orderId" />
     <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="signal_id" jdbcType="INTEGER" property="signalId" />
     <result column="user_mt_acc_id" jdbcType="VARCHAR" property="userMtAccId" />
     <result column="user_server_id" jdbcType="INTEGER" property="userServerId" />
     <result column="user_server_name" jdbcType="VARCHAR" property="userServerName" />
@@ -35,7 +36,7 @@
     <result column="comment" jdbcType="VARCHAR" property="comment" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, create_date, modify_date, order_id, user_id, user_mt_acc_id, user_server_id, 
+    id, create_date, modify_date, order_id, user_id, signal_id, user_mt_acc_id, user_server_id, 
     user_server_name, signal_server_id, signal_server_name, signal_mt_acc_id, signal_order_id, 
     order_symbol, order_lots, order_stoploss, order_takeprofit, order_source_flag, order_trade_operation, 
     order_type, order_split_type, order_superior, order_profit, order_swap, order_commission, 
@@ -54,27 +55,27 @@
   </delete>
   <insert id="insert" parameterType="com.future.entity.order.FuOrderFollowInfo">
     insert into fu_order_follow_info (id, create_date, modify_date, 
-      order_id, user_id, user_mt_acc_id, 
-      user_server_id, user_server_name, signal_server_id, 
-      signal_server_name, signal_mt_acc_id, signal_order_id, 
-      order_symbol, order_lots, order_stoploss, 
-      order_takeprofit, order_source_flag, order_trade_operation, 
-      order_type, order_split_type, order_superior, 
-      order_profit, order_swap, order_commission, 
-      order_magic, order_open_price, order_open_date, 
-      order_close_price, order_close_date, order_expiration, 
-      comment)
+      order_id, user_id, signal_id, 
+      user_mt_acc_id, user_server_id, user_server_name, 
+      signal_server_id, signal_server_name, signal_mt_acc_id, 
+      signal_order_id, order_symbol, order_lots, 
+      order_stoploss, order_takeprofit, order_source_flag, 
+      order_trade_operation, order_type, order_split_type, 
+      order_superior, order_profit, order_swap, 
+      order_commission, order_magic, order_open_price, 
+      order_open_date, order_close_price, order_close_date, 
+      order_expiration, comment)
     values (#{id,jdbcType=INTEGER}, #{createDate,jdbcType=TIMESTAMP}, #{modifyDate,jdbcType=TIMESTAMP}, 
-      #{orderId,jdbcType=VARCHAR}, #{userId,jdbcType=INTEGER}, #{userMtAccId,jdbcType=VARCHAR}, 
-      #{userServerId,jdbcType=INTEGER}, #{userServerName,jdbcType=VARCHAR}, #{signalServerId,jdbcType=INTEGER}, 
-      #{signalServerName,jdbcType=VARCHAR}, #{signalMtAccId,jdbcType=VARCHAR}, #{signalOrderId,jdbcType=VARCHAR}, 
-      #{orderSymbol,jdbcType=VARCHAR}, #{orderLots,jdbcType=DECIMAL}, #{orderStoploss,jdbcType=DECIMAL}, 
-      #{orderTakeprofit,jdbcType=DECIMAL}, #{orderSourceFlag,jdbcType=TINYINT}, #{orderTradeOperation,jdbcType=TINYINT}, 
-      #{orderType,jdbcType=TINYINT}, #{orderSplitType,jdbcType=TINYINT}, #{orderSuperior,jdbcType=VARCHAR}, 
-      #{orderProfit,jdbcType=DECIMAL}, #{orderSwap,jdbcType=DECIMAL}, #{orderCommission,jdbcType=DECIMAL}, 
-      #{orderMagic,jdbcType=DECIMAL}, #{orderOpenPrice,jdbcType=DECIMAL}, #{orderOpenDate,jdbcType=TIMESTAMP}, 
-      #{orderClosePrice,jdbcType=DECIMAL}, #{orderCloseDate,jdbcType=TIMESTAMP}, #{orderExpiration,jdbcType=TIMESTAMP}, 
-      #{comment,jdbcType=VARCHAR})
+      #{orderId,jdbcType=VARCHAR}, #{userId,jdbcType=INTEGER}, #{signalId,jdbcType=INTEGER}, 
+      #{userMtAccId,jdbcType=VARCHAR}, #{userServerId,jdbcType=INTEGER}, #{userServerName,jdbcType=VARCHAR}, 
+      #{signalServerId,jdbcType=INTEGER}, #{signalServerName,jdbcType=VARCHAR}, #{signalMtAccId,jdbcType=VARCHAR}, 
+      #{signalOrderId,jdbcType=VARCHAR}, #{orderSymbol,jdbcType=VARCHAR}, #{orderLots,jdbcType=DECIMAL}, 
+      #{orderStoploss,jdbcType=DECIMAL}, #{orderTakeprofit,jdbcType=DECIMAL}, #{orderSourceFlag,jdbcType=TINYINT}, 
+      #{orderTradeOperation,jdbcType=TINYINT}, #{orderType,jdbcType=TINYINT}, #{orderSplitType,jdbcType=TINYINT}, 
+      #{orderSuperior,jdbcType=VARCHAR}, #{orderProfit,jdbcType=DECIMAL}, #{orderSwap,jdbcType=DECIMAL}, 
+      #{orderCommission,jdbcType=DECIMAL}, #{orderMagic,jdbcType=DECIMAL}, #{orderOpenPrice,jdbcType=DECIMAL}, 
+      #{orderOpenDate,jdbcType=TIMESTAMP}, #{orderClosePrice,jdbcType=DECIMAL}, #{orderCloseDate,jdbcType=TIMESTAMP}, 
+      #{orderExpiration,jdbcType=TIMESTAMP}, #{comment,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.future.entity.order.FuOrderFollowInfo">
     insert into fu_order_follow_info
@@ -93,6 +94,9 @@
       </if>
       <if test="userId != null">
         user_id,
+      </if>
+      <if test="signalId != null">
+        signal_id,
       </if>
       <if test="userMtAccId != null">
         user_mt_acc_id,
@@ -189,6 +193,9 @@
       <if test="userId != null">
         #{userId,jdbcType=INTEGER},
       </if>
+      <if test="signalId != null">
+        #{signalId,jdbcType=INTEGER},
+      </if>
       <if test="userMtAccId != null">
         #{userMtAccId,jdbcType=VARCHAR},
       </if>
@@ -284,6 +291,9 @@
       <if test="userId != null">
         user_id = #{userId,jdbcType=INTEGER},
       </if>
+      <if test="signalId != null">
+        signal_id = #{signalId,jdbcType=INTEGER},
+      </if>
       <if test="userMtAccId != null">
         user_mt_acc_id = #{userMtAccId,jdbcType=VARCHAR},
       </if>
@@ -371,6 +381,7 @@
       modify_date = #{modifyDate,jdbcType=TIMESTAMP},
       order_id = #{orderId,jdbcType=VARCHAR},
       user_id = #{userId,jdbcType=INTEGER},
+      signal_id = #{signalId,jdbcType=INTEGER},
       user_mt_acc_id = #{userMtAccId,jdbcType=VARCHAR},
       user_server_id = #{userServerId,jdbcType=INTEGER},
       user_server_name = #{userServerName,jdbcType=VARCHAR},

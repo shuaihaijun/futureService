@@ -12,13 +12,15 @@ import com.future.entity.account.FuAccountMt;
 import com.future.entity.order.FuOrderFollowAction;
 import com.future.entity.order.FuOrderFollowError;
 import com.future.entity.order.FuOrderFollowInfo;
+import com.future.entity.product.FuProductSignal;
 import com.future.entity.user.FuUserFollows;
 import com.future.mapper.order.FuOrderFollowErrorMapper;
-import com.future.mapper.order.FuOrderFollowInfoMapper;
 import com.future.mapper.user.FuUserFollowsMapper;
 import com.future.pojo.bo.order.UserMTAccountBO;
 import com.future.service.account.FuAccountMtSevice;
 import com.future.service.order.FuOrderFollowActionService;
+import com.future.service.order.FuOrderFollowInfoService;
+import com.future.service.product.FuProductSignalService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,13 +48,15 @@ public class FollowService{
     @Autowired
     FuAccountMtSevice fuAccountMtSevice;
     @Autowired
-    FuOrderFollowInfoMapper fuOrderFollowInfoMapper;
+    FuOrderFollowInfoService fuOrderFollowInfoService;
     @Autowired
     FuOrderFollowErrorMapper fuOrderFollowErrorMapper;
     @Autowired
     FuUserFollowsMapper fuUserFollowsMapper;
     @Autowired
     FuOrderFollowActionService fuOrderFollowActionService;
+    @Autowired
+    FuProductSignalService fuProductSignalService;
 
     /**
      * 跟随者初始化
@@ -249,12 +253,34 @@ public class FollowService{
         conditionMap.put("serverName",followAccount[0]);
         conditionMap.put("mtAccId",followAccount[1]);
         List<UserMTAccountBO> followAccountInfo=fuAccountMtSevice.getUserMTAccByCondition(conditionMap);
+
+        /*根据信号源servername+mtAccId 查询信号源账户*/
         conditionMap.put("serverName",signalAccount[0]);
         conditionMap.put("mtAccId",signalAccount[1]);
+        conditionMap.put("isSignal",CommonConstant.COMMON_YES);
         List<UserMTAccountBO> signalAccountInfo=fuAccountMtSevice.getUserMTAccByCondition(conditionMap);
-        if(followAccountInfo.size()<=0||signalAccountInfo.size()<=0){
-            log.error("根据服务器和账号，查询用户错误！");
+
+        /*根据信号源servername+mtAccId 查询信号源*/
+        conditionMap.clear();
+        conditionMap.put(FuProductSignal.SERVER_NAME,signalAccount[0]);
+        conditionMap.put(FuProductSignal.MT_ACC_ID,signalAccount[1]);
+        List<FuProductSignal> signals= fuProductSignalService.selectByMap(conditionMap);
+
+        /*判断数据*/
+        if(followAccountInfo==null||followAccountInfo.size()<=0){
+            log.error("根据服务器和账号，查询用户账户信息错误！");
             log.error("signalMsg:"+followMsg);
+            return;
+        }
+        if(signalAccountInfo==null||signalAccountInfo.size()<=0){
+            log.error("根据服务器和账号，查询信号源账户信息错误！");
+            log.error("signalMsg:"+followMsg);
+            return;
+        }
+        if(signals==null||signals.size()<=0){
+            log.error("根据服务器和账号，查询信号源信息错误！");
+            log.error("signalMsg:"+followMsg);
+            return;
         }
 
         if(!StringUtils.isEmpty(response)&& com.alibaba.druid.util.StringUtils.isNumber(response)){
@@ -282,6 +308,7 @@ public class FollowService{
 
         /*保存至 信号源订单表*/
         FuOrderFollowInfo followInfo=new FuOrderFollowInfo();
+        followInfo.setSignalId(signals.get(0).getId());
 
         followInfo.setUserId(followAccountInfo.get(0).getUserId());
         followInfo.setUserServerName(followAccountInfo.get(0).getServerName());
@@ -320,7 +347,7 @@ public class FollowService{
         /*计算佣金*/
 
         /*保存至数据库*/
-        fuOrderFollowInfoMapper.insertSelective(followInfo);
+        fuOrderFollowInfoService.insertSelective(followInfo);
 
     }
 

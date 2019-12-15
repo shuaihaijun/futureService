@@ -9,10 +9,8 @@ import com.future.common.exception.DataConflictException;
 import com.future.common.util.DateUtil;
 import com.future.common.util.StringUtils;
 import com.future.common.util.ThreadCache;
-import com.future.entity.order.FuOrderCustomer;
 import com.future.entity.order.FuOrderFollowInfo;
-import com.future.entity.order.FuOrderSignal;
-import com.future.service.order.FuOrderInfoService;
+import com.future.service.order.FuOrderFollowInfoService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,12 +23,12 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/order")
-public class OrderController {
-    Logger log= LoggerFactory.getLogger(OrderController.class);
+@RequestMapping("/orderFollowInfo")
+public class OrderFollowInfoController {
+    Logger log= LoggerFactory.getLogger(OrderFollowInfoController.class);
 
     @Autowired
-    FuOrderInfoService orderService;
+    FuOrderFollowInfoService orderService;
 
     //获得Mt历史订单操作
     @RequestMapping(value= "/getMTtHistoryOrders",method=RequestMethod.POST)
@@ -97,7 +95,7 @@ public class OrderController {
     //获得社区跟随订单
     @RequestMapping(value= "/getOrderFollows",method=RequestMethod.POST)
     public @ResponseBody
-    Page<FuOrderCustomer> getOrderFollows(){
+    Page<FuOrderFollowInfo> getOrderFollows(){
         // 获取请求参数
         String requestJSONStr = ThreadCache.getPostRequestParams();
         JSONObject requestMap = JSONObject.parseObject(requestJSONStr);
@@ -120,20 +118,26 @@ public class OrderController {
         page.setCurrent(pageNum);
         EntityWrapper<FuOrderFollowInfo> wrapper=new EntityWrapper<FuOrderFollowInfo>();
         if(!StringUtils.isEmpty(requestMap.getString("userId"))){
-            wrapper.eq(FuOrderCustomer.USER_ID,requestMap.getString("userId"));
+            wrapper.eq(FuOrderFollowInfo.USER_ID,requestMap.getString("userId"));
+        }
+        if(!StringUtils.isEmpty(requestMap.getString("signalId"))){
+            wrapper.eq(FuOrderFollowInfo.SIGNAL_ID,requestMap.getString("signalId"));
         }
         if(!StringUtils.isEmpty(requestMap.getString("orderId"))){
-            wrapper.eq(FuOrderCustomer.ORDER_ID,requestMap.getString("orderId"));
+            wrapper.eq(FuOrderFollowInfo.ORDER_ID,requestMap.getString("orderId"));
+        }
+        if(!StringUtils.isEmpty(requestMap.getString("signalOrderId"))){
+            wrapper.eq(FuOrderFollowInfo.SIGNAL_ORDER_ID,requestMap.getString("signalOrderId"));
         }
         if(!StringUtils.isEmpty(requestMap.getString("orderSymbol"))){
-            wrapper.eq(FuOrderCustomer.ORDER_SYMBOL,requestMap.getString("orderSymbol"));
+            wrapper.eq(FuOrderFollowInfo.ORDER_SYMBOL,requestMap.getString("orderSymbol"));
         }
         if(!StringUtils.isEmpty(requestMap.getString("orderType"))){
-            wrapper.eq(FuOrderCustomer.ORDER_TYPE,requestMap.getString("orderType"));
+            wrapper.eq(FuOrderFollowInfo.ORDER_TYPE,requestMap.getString("orderType"));
         }
         if(!StringUtils.isEmpty(requestMap.getString("orderOpenDate"))){
             if(requestMap.getString("orderOpenDate").indexOf(",")<0){
-                wrapper.eq(FuOrderCustomer.ORDER_OPEN_DATE,requestMap.getString("orderOpenDate"));
+                wrapper.eq(FuOrderFollowInfo.ORDER_OPEN_DATE,requestMap.getString("orderOpenDate"));
             }else {
                 //时间段
                 JSONArray dateOpen=requestMap.getJSONArray("orderOpenDate");
@@ -141,13 +145,13 @@ public class OrderController {
                     log.error("建仓时间段数据传入错误！"+requestMap.getString("orderOpenDate"));
                     throw new DataConflictException(GlobalResultCode.PARAM_VERIFY_ERROR,"建仓时间段数据传入错误！"+requestMap.getString("orderOpenDate"));
                 }
-                wrapper.gt(FuOrderCustomer.ORDER_OPEN_DATE,dateOpen.getString(0));
-                wrapper.lt(FuOrderCustomer.ORDER_OPEN_DATE,dateOpen.getString(1));
+                wrapper.gt(FuOrderFollowInfo.ORDER_OPEN_DATE,dateOpen.getString(0));
+                wrapper.lt(FuOrderFollowInfo.ORDER_OPEN_DATE,dateOpen.getString(1));
             }
         }
         if(!StringUtils.isEmpty(requestMap.getString("orderCloseDate"))){
             if(requestMap.getString("orderCloseDate").indexOf(",")<0){
-                wrapper.eq(FuOrderCustomer.ORDER_OPEN_DATE,requestMap.getString("orderCloseDate"));
+                wrapper.eq(FuOrderFollowInfo.ORDER_OPEN_DATE,requestMap.getString("orderCloseDate"));
             }else {
                 //时间段
                 JSONArray dateClose=requestMap.getJSONArray("orderCloseDate");
@@ -155,8 +159,8 @@ public class OrderController {
                     log.error("平仓时间段数据传入错误！"+requestMap.getString("orderCloseDate"));
                     throw new DataConflictException(GlobalResultCode.PARAM_VERIFY_ERROR,"平仓时间段数据传入错误！"+requestMap.getString("orderCloseDate"));
                 }
-                wrapper.gt(FuOrderCustomer.ORDER_CLOSE_DATE,dateClose.getString(0));
-                wrapper.lt(FuOrderCustomer.ORDER_CLOSE_DATE,dateClose.getString(1));
+                wrapper.gt(FuOrderFollowInfo.ORDER_CLOSE_DATE,dateClose.getString(0));
+                wrapper.lt(FuOrderFollowInfo.ORDER_CLOSE_DATE,dateClose.getString(1));
             }
         }
         return orderService.selectPage(page, wrapper);

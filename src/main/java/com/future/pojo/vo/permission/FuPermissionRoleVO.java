@@ -1,5 +1,6 @@
 package com.future.pojo.vo.permission;
 
+import com.baomidou.mybatisplus.annotations.TableField;
 import com.future.common.util.BeanUtil;
 import com.future.entity.permission.FuPermissionRole;
 import io.swagger.annotations.ApiModel;
@@ -54,6 +55,11 @@ public class FuPermissionRoleVO implements Serializable {
      */
     @ApiModelProperty(value = "角色描述")
     private String roleDesc;
+    /**
+     * 角色 0、无效 1、有效
+     */
+    @ApiModelProperty(value = "角色状态  0：无效  1：有效")
+    private Integer roleStatus;
     /**
      * 角色标识  1：特殊角色  2：普通角色
      */

@@ -169,9 +169,10 @@ public class PermissionResourceService extends ServiceImpl<FuPermissionResourceM
         if (contains) {
             result = fuPermissionResourceMapper.selectPageList(fuPermissionResourceBO, null);
         } else {
-            if (porjKeys != null && porjKeys.size() > 0) {
+            /*if (porjKeys != null && porjKeys.size() > 0) {
                 result = fuPermissionResourceMapper.selectPageList(fuPermissionResourceBO, porjKeys);
-            }
+            }*/
+            result = fuPermissionResourceMapper.selectPageList(fuPermissionResourceBO, porjKeys);
         }
         return new PageInfo(result);
     }

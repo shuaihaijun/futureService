@@ -7,6 +7,16 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 public class FuOrderFollowInfo {
+
+    public static final String USER_ID = "user_id";
+    public static final String SIGNAL_ID = "signal_id";
+    public static final String ORDER_ID = "order_id";
+    public static final String SIGNAL_ORDER_ID = "signal_order_id";
+    public static final String ORDER_SYMBOL = "order_symbol";
+    public static final String ORDER_TYPE = "order_type";
+    public static final String ORDER_OPEN_DATE = "order_open_date";
+    public static final String ORDER_CLOSE_DATE = "order_close_date";
+
     /**
      * 
      */
@@ -32,6 +42,11 @@ public class FuOrderFollowInfo {
      * 用户ID
      */
     private Integer userId;
+
+    /**
+     * 信号源ID
+     */
+    private Integer signalId;
 
     /**
      * 交易账号ID
@@ -99,7 +114,7 @@ public class FuOrderFollowInfo {
     private Integer orderTradeOperation;
 
     /**
-     *  订单交易类型（ OP_BUY = 0， OP_SELL = 1，OP_BUYLIMIT = 2，OP_SELLLIMIT = 3， OP_BUYSTOP = 4，OP_SELLSTOP = 5）
+     * 订单交易类型（ OP_BUY = 0， OP_SELL = 1，OP_BUYLIMIT = 2，OP_SELLLIMIT = 3， OP_BUYSTOP = 4，OP_SELLSTOP = 5）
      */
     private Integer orderType;
 
@@ -109,7 +124,7 @@ public class FuOrderFollowInfo {
     private Integer orderSplitType;
 
     /**
-     * 原订单号
+     * 原在仓订单号
      */
     private String orderSuperior;
 
@@ -241,6 +256,22 @@ public class FuOrderFollowInfo {
      */
     public void setUserId(Integer userId) {
         this.userId = userId;
+    }
+
+    /**
+     * 信号源ID
+     * @return signal_id 信号源ID
+     */
+    public Integer getSignalId() {
+        return signalId;
+    }
+
+    /**
+     * 信号源ID
+     * @param signalId 信号源ID
+     */
+    public void setSignalId(Integer signalId) {
+        this.signalId = signalId;
     }
 
     /**
@@ -437,6 +468,7 @@ public class FuOrderFollowInfo {
 
     /**
      * 订单交易操作（0 OPEN ，1 MODIFY，2 CLOSE，3 CLOSE_PARTIAL，4 CLOSE_MAGIC）
+     * @return order_trade_operation 订单交易操作（0 OPEN ，1 MODIFY，2 CLOSE，3 CLOSE_PARTIAL，4 CLOSE_MAGIC）
      */
     public Integer getOrderTradeOperation() {
         return orderTradeOperation;
@@ -444,6 +476,7 @@ public class FuOrderFollowInfo {
 
     /**
      * 订单交易操作（0 OPEN ，1 MODIFY，2 CLOSE，3 CLOSE_PARTIAL，4 CLOSE_MAGIC）
+     * @param orderTradeOperation 订单交易操作（0 OPEN ，1 MODIFY，2 CLOSE，3 CLOSE_PARTIAL，4 CLOSE_MAGIC）
      */
     public void setOrderTradeOperation(Integer orderTradeOperation) {
         this.orderTradeOperation = orderTradeOperation;
@@ -451,6 +484,7 @@ public class FuOrderFollowInfo {
 
     /**
      * 订单交易类型（ OP_BUY = 0， OP_SELL = 1，OP_BUYLIMIT = 2，OP_SELLLIMIT = 3， OP_BUYSTOP = 4，OP_SELLSTOP = 5）
+     * @return order_type 订单交易类型（ OP_BUY = 0， OP_SELL = 1，OP_BUYLIMIT = 2，OP_SELLLIMIT = 3， OP_BUYSTOP = 4，OP_SELLSTOP = 5）
      */
     public Integer getOrderType() {
         return orderType;
@@ -458,6 +492,7 @@ public class FuOrderFollowInfo {
 
     /**
      * 订单交易类型（ OP_BUY = 0， OP_SELL = 1，OP_BUYLIMIT = 2，OP_SELLLIMIT = 3， OP_BUYSTOP = 4，OP_SELLSTOP = 5）
+     * @param orderType 订单交易类型（ OP_BUY = 0， OP_SELL = 1，OP_BUYLIMIT = 2，OP_SELLLIMIT = 3， OP_BUYSTOP = 4，OP_SELLSTOP = 5）
      */
     public void setOrderType(Integer orderType) {
         this.orderType = orderType;
@@ -465,6 +500,7 @@ public class FuOrderFollowInfo {
 
     /**
      * 拆单类型 ( 0 正常，1拆单平仓，2拆单键仓)
+     * @return order_split_type 拆单类型 ( 0 正常，1拆单平仓，2拆单键仓)
      */
     public Integer getOrderSplitType() {
         return orderSplitType;
@@ -472,13 +508,14 @@ public class FuOrderFollowInfo {
 
     /**
      * 拆单类型 ( 0 正常，1拆单平仓，2拆单键仓)
+     * @param orderSplitType 拆单类型 ( 0 正常，1拆单平仓，2拆单键仓)
      */
     public void setOrderSplitType(Integer orderSplitType) {
         this.orderSplitType = orderSplitType;
     }
 
     /**
-     * 原订单号
+     * 原在仓订单号
      * @return order_superior 原在仓订单号
      */
     public String getOrderSuperior() {
@@ -486,7 +523,7 @@ public class FuOrderFollowInfo {
     }
 
     /**
-     * 原订单号
+     * 原在仓订单号
      * @param orderSuperior 原在仓订单号
      */
     public void setOrderSuperior(String orderSuperior) {

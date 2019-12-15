@@ -90,7 +90,14 @@ public class PermissionRoleService extends ServiceImpl<FuPermissionRoleMapper, F
         //TODO:
         user = new AdminInfo();
         permissionRole.setCreater(user.getAdminName());
-        boolean isSuccess = insert(permissionRole);
+        boolean isSuccess = true;
+        if (permissionRole.getId()>0) {
+            /*修改*/
+            isSuccess = updateById(permissionRole);
+        }else {
+            // 保存
+            isSuccess = insert(permissionRole);
+        }
         if (!isSuccess) {
             throw new BusinessException(RmsResultCode.PERMISSION_ROLE_DATA_SAVE_FAILURE);
         }
@@ -195,9 +202,6 @@ public class PermissionRoleService extends ServiceImpl<FuPermissionRoleMapper, F
         }
         //获取当前登录用户信息
         AdminInfo user = RequestContextHolderUtil.getAdminInfo();
-        //TODO
-        user = new AdminInfo();
-        user.setAdminId(1);
         //获取配置文件中超级管理员，判断当前登录用户是否为超级管理员,true为超管
         String[] superAdministrators = superAdministrator.split(",");
         boolean contains = false;
@@ -209,7 +213,7 @@ public class PermissionRoleService extends ServiceImpl<FuPermissionRoleMapper, F
         List<Integer> porjKeys = null;
         if (!contains) {
             //获取用户所管理的工程项目KEY集合
-            porjKeys = permissionUserProjectService.findPorjKeysByUserId(user.getAdminId());
+            //porjKeys = permissionUserProjectService.findPorjKeysByUserId(user.getAdminId());
         }
 
         // 设置分页信息
@@ -222,9 +226,10 @@ public class PermissionRoleService extends ServiceImpl<FuPermissionRoleMapper, F
         if (contains) {
             result = fuPermissionRoleMapper.selectAllPageList(fuPermissionRoleBO);
         } else {
-            if (StringUtils.isNotEmpty(porjKeys)) {
+            result = fuPermissionRoleMapper.selectPageList(fuPermissionRoleBO, porjKeys);
+            /*if (StringUtils.isNotEmpty(porjKeys)) {
                 result = fuPermissionRoleMapper.selectPageList(fuPermissionRoleBO, porjKeys);
-            }
+            }*/
         }
 
         return new PageInfo(result);
