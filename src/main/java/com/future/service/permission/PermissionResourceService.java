@@ -4,7 +4,9 @@ package com.future.service.permission;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.future.common.constants.CommonConstant;
 import com.future.common.enums.GlobalResultCode;
 import com.future.common.enums.RmsResultCode;
 import com.future.common.exception.BusinessException;
@@ -12,6 +14,7 @@ import com.future.common.helper.PageInfoHelper;
 import com.future.common.util.RequestContextHolderUtil;
 import com.future.common.util.StringUtils;
 import com.future.common.util.TreeBuilder;
+import com.future.entity.permission.FuPermissionProject;
 import com.future.entity.permission.FuPermissionResource;
 import com.future.entity.permission.FuPermissionRoleResource;
 import com.future.mapper.permission.FuPermissionResourceMapper;
@@ -24,15 +27,13 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 /**
@@ -178,6 +179,17 @@ public class PermissionResourceService extends ServiceImpl<FuPermissionResourceM
     }
 
     /**
+     * 查詢所有权限资源信息
+     * @return
+     */
+    public List<FuPermissionResource> findAll(){
+        /*查找所有可用的资源情况*/
+        List<FuPermissionResource> result = selectList(new EntityWrapper<FuPermissionResource>()
+                .eq(FuPermissionResource.RES_STATUS, CommonConstant.COMMON_STATE_USABLE));
+        return result;
+    }
+
+    /**
      * 通过主键获取权限资源信息
      *
      * @param id 主键ID
@@ -274,8 +286,6 @@ public class PermissionResourceService extends ServiceImpl<FuPermissionResourceM
                 nodes = fuPermissionResourceMapper.selectTreeNodeByProjKeys(projKeys);
             }
         }
-        Node root = new Node("0", "-1", "权限结构");
-        nodes.add(root);
         //构建树形结构
         String jsonTree;
         jsonTree = new TreeBuilder().buildTree(nodes);
@@ -304,7 +314,6 @@ public class PermissionResourceService extends ServiceImpl<FuPermissionResourceM
 
         //声明权限结构树
         List<Node> permenuList;
-        Node root = new Node("0", "-1", "权限结构");
 
         //权限菜单树字符串
         String menuStr = "";
@@ -318,7 +327,6 @@ public class PermissionResourceService extends ServiceImpl<FuPermissionResourceM
         }
         //通过工程项目KEY集合查询树形节点集合
         permenuList = fuPermissionResourceMapper.selectTreeNodeByProjKeysSort(projKeys);
-        permenuList.add(root);
         //构建树形结构
         menuStr = new TreeBuilder().buildTree(permenuList);
         JSONArray array = JSONArray.parseArray(menuStr);
@@ -333,6 +341,7 @@ public class PermissionResourceService extends ServiceImpl<FuPermissionResourceM
         result.put("resIds", resIds);
         return result;
     }
+
 
     /**
      * 通过工程项目KEY集合查询权限资源信息集合
@@ -379,4 +388,32 @@ public class PermissionResourceService extends ServiceImpl<FuPermissionResourceM
         return result;
     }
 
+
+    /**
+     * 查找权限树
+     * <p>menu:</p>
+     * @return 权限树数据
+     */
+    public String findResourceTree() {
+        //声明权限结构树
+        List<Node> permenuList=new ArrayList<>();
+
+        /*获取所有权限信息*/
+        List<FuPermissionResource> resources=findAll();
+        /*根据角色权限 筛选 角色资源*/
+        for(FuPermissionResource res:resources){
+            Node node = new Node();
+            BeanUtils.copyProperties(res,node);
+            node.setId(res.getId().toString());
+            node.setResPid(res.getResPid().toString());
+            node.setResStatus(res.getResStatus().toString());
+            permenuList.add(node);
+        }
+
+        //构建树形结构
+        String menuStr = new TreeBuilder().buildTree(permenuList);
+        JSONArray array = JSONArray.parseArray(menuStr);
+
+        return array.toJSONString();
+    }
 }

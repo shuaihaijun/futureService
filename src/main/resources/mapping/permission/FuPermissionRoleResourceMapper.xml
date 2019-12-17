@@ -21,11 +21,31 @@
 
     <!-- 通过角色ID查询所关联的权限资源ID拼接的字符串 -->
     <select id="selectResIdsByRoleId" parameterType="java.lang.Integer" resultType="java.lang.String">
-         SELECT DISTINCT concat_ws(',',Res_id,Role_id)
+         SELECT DISTINCT Res_id
         FROM fu_permission_roleresource
         WHERE Role_id = #{roleId, jdbcType=INTEGER}
     </select>
 
+    <!-- 通过角色ID查询所关联的权限资源 -->
+    <select id="findResByRoleId" parameterType="java.lang.Integer" resultType="com.future.pojo.bo.permission.FuPermissionResourceBO">
+         SELECT DISTINCT
+            r.Id id,
+            r.Res_pid resPid,
+            r.Res_name resName,
+            r.Res_action resAction,
+            r.Res_desc resDesc,
+            r.Res_ico resIco,
+            r.Proj_key projKey,
+            r.Res_switchBut resSwitchBut,
+            r.Res_status resStatus,
+            r.Res_sort resSort,
+            r.Creater creater,
+            r.create_date createDate,
+            r.modify_date modifyDate
+        FROM
+        fu_permission_roleresource rs INNER  JOIN fu_permission_resource r ON rs.res_id=r.id
+        WHERE Role_id = #{roleId, jdbcType=INTEGER}
+    </select>
     <!--  通过工程项目KEY以及角色ID删除角色权限资源关系数据 -->
     <delete id="deleteByRoleIdProjKeys">
         DELETE fu_permission_roleresource

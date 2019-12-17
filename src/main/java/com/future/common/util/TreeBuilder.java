@@ -80,7 +80,7 @@ public class TreeBuilder {
     public List<Node> getChildNodes(Node pnode) {
         List<Node> childNodes = new ArrayList<>();
         for (Node n : nodes) {
-            if (pnode.getId().equals(n.getPid())) {
+            if (pnode.getId().equals(n.getResPid())) {
                 childNodes.add(n);
             }
         }
@@ -98,8 +98,8 @@ public class TreeBuilder {
         for (String pid : pids) {
             if (parentNode(pid)) {
                 for (Node n : nodes) {
-                    System.out.println("该节点的ID是：" + n.getId() + "该节点的父节点是：" + n.getPid() + "====" + "与参数节点比较真假：" + pid.equals(n.getPid()));
-                    if (pid.equals(n.getPid())) {
+                    System.out.println("该节点的ID是：" + n.getId() + "该节点的父节点是：" + n.getResPid() + "====" + "与参数节点比较真假：" + pid.equals(n.getResPid()));
+                    if (pid.equals(n.getResPid())) {
                         chileNodes.add(n.getId());
                     }
                 }
@@ -119,8 +119,8 @@ public class TreeBuilder {
     public boolean parentNode(String id) {
         boolean isRootNode = false;
         for (Node n : nodes) {
-            System.out.println("该节点的ID是：" + n.getId() + "====" + "父ID是：" + n.getPid());
-            if (id.equals(n.getPid())) {
+            System.out.println("该节点的ID是：" + n.getId() + "====" + "父ID是：" + n.getResPid());
+            if (id.equals(n.getResPid())) {
                 isRootNode = true;
                 break;
             }
@@ -137,7 +137,7 @@ public class TreeBuilder {
     public boolean rootNode(Node node) {
         boolean isRootNode = true;
         for (Node n : nodes) {
-            if (node.getPid().equals(n.getId())) {
+            if (node.getResPid().equals(n.getId())) {
                 isRootNode = false;
                 break;
             }

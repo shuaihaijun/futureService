@@ -105,4 +105,5 @@ public class FuPermissionResource implements Serializable {
 
     public static final String RES_NAME = "Res_name";
     public static final String RES_PID = "Res_pid";
+    public static final String RES_STATUS = "res_status";
 }

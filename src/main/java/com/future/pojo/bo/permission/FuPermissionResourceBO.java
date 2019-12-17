@@ -7,6 +7,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * 权限资源信息BO类
@@ -59,6 +60,11 @@ public class FuPermissionResourceBO implements Serializable {
     @ApiModelProperty(value = "响应式图标")
     private String resIco;
     /**
+     * 创建人
+     */
+    @ApiModelProperty(value = "创建人")
+    private String creater;
+    /**
      * 所属工程项目KEY
      */
     @ApiModelProperty(value = "所属工程项目KEY")
@@ -68,6 +74,16 @@ public class FuPermissionResourceBO implements Serializable {
      */
     @ApiModelProperty(value = "权限资源功能类型 1：菜单  2：按钮")
     private Integer resSwitchBut;
+    /**
+     * 标示菜单按钮1菜单 2 按钮
+     */
+    @ApiModelProperty(value = "创建时间")
+    private Date createDate;
+    /**
+     * 标示菜单按钮1菜单 2 按钮
+     */
+    @ApiModelProperty(value = "修改时间")
+    private Date modifyDate;
 
     /**
      * 将业务层对象转换为数据访问实体对象

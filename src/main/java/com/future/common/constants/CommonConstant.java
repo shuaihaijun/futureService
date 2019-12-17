@@ -15,13 +15,16 @@ public class CommonConstant {
 	public static final int COMMON_SERVER_STATE_INVALID = 2;
 	/**信号源状态*/
 
-
 	/*是否*/
 	public static final int COMMON_YES = 1;
 	public static final int COMMON_NO = 0;
 
-
 	/*审核 （1 通过，0 不通过）*/
 	public static final int CHECK_YES = 1;
 	public static final int CHECK__NO = 0;
+
+
+	/*状态 （1 有效，0 无效）*/
+	public static final int COMMON_STATE_USABLE = 1;
+	public static final int COMMON_STATE_INVALID = 0;
 }

@@ -2,13 +2,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.future.mapper.permission.FuPermissionResourceMapper">
 
-    <resultMap id="Node" type="com.future.pojo.bo.Node">
-        <id column="Id" property="id" jdbcType="INTEGER"/>
-        <result column="Id" property="id" jdbcType="INTEGER"/>
-        <result column="res_Pid" property="pid" jdbcType="VARCHAR"/>
-        <result column="res_Name" property="name" jdbcType="VARCHAR"/>
-    </resultMap>
-
     <sql id="baseColumnList">
         Id,
         Res_pid,
@@ -26,10 +19,19 @@
     </sql>
 
     <sql id="sampleColumnList">
-        Id,
-        Res_pid,
-        Res_name,
-        Res_sort
+        Id id,
+        Res_pid resPid,
+        Res_name resName,
+        Res_action resAction,
+        Res_desc resDesc,
+        Res_ico resIco,
+        Proj_key projKey,
+        Res_switchBut resSwitchBut,
+        Res_status resStatus,
+        Res_sort resSort,
+        Creater creater,
+        create_date createDate,
+        modify_date modifyDate
     </sql>
 
     <!-- 通过权限资源BO以及KEY集合查询 -->
@@ -84,7 +86,7 @@
     </select>
 
     <!-- 通过工程项目KEY集合查询树形节点 -->
-    <select id="selectTreeNodeByProjKeysSort" parameterType="list" resultMap="Node">
+    <select id="selectTreeNodeByProjKeysSort" parameterType="list" resultType="com.future.pojo.bo.Node">
         SELECT
         <include refid="sampleColumnList"/>
         FROM fu_permission_resource
@@ -99,7 +101,7 @@
     </select>
 
     <!-- 通过工程项目KEY集合查询树形节点 -->
-    <select id="selectTreeNodeByProjKeys" resultMap="Node">
+    <select id="selectTreeNodeByProjKeys" parameterType="list" resultType="com.future.pojo.bo.Node">
         SELECT
         <include refid="sampleColumnList"/>
         FROM fu_permission_resource

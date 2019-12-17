@@ -1,23 +1,32 @@
 package com.future.service.permission;
 
+import com.alibaba.fastjson.JSONArray;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.future.common.enums.GlobalResultCode;
 import com.future.common.exception.BusinessException;
 import com.future.common.util.RequestContextHolderUtil;
 import com.future.common.util.StringUtils;
+import com.future.common.util.TreeBuilder;
+import com.future.entity.permission.FuPermissionResource;
 import com.future.entity.permission.FuPermissionRoleResource;
+import com.future.entity.user.FuUser;
 import com.future.mapper.permission.FuPermissionRoleResourceMapper;
 import com.future.pojo.bo.AdminInfo;
 import com.future.pojo.bo.BasicBO;
+import com.future.pojo.bo.Node;
+import com.future.pojo.bo.permission.FuPermissionResourceBO;
 import com.future.pojo.bo.permission.FuPermissionRoleResourceBO;
+import com.future.service.user.AdminService;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -35,6 +44,11 @@ public class PermissionRoleResourceService extends ServiceImpl<FuPermissionRoleR
     private FuPermissionRoleResourceMapper fuPermissionRoleResourceMapper;
     @Autowired
     private PermissionUserProjectService permissionUserProjectService;
+    @Autowired
+    PermissionUserRoleService permissionUserRoleService;
+    @Autowired
+    PermissionResourceService permissionResourceService;
+
     /**
      * 注入超级管理员数据
      */
@@ -60,16 +74,13 @@ public class PermissionRoleResourceService extends ServiceImpl<FuPermissionRoleR
         }
 
         // 获取当前用户信息
-        AdminInfo user = RequestContextHolderUtil.getAdminInfo();
-        //TODO:测试数据
-        user = new AdminInfo();
-        user.setAdminId(11);
+        /*AdminInfo user = RequestContextHolderUtil.getAdminInfo();
         //获取配置文件中超级管理员，判断当前登录用户是否为超级管理员,true为超管
         String[] superAdministrators = superAdministrator.split(",");
         boolean contains = false;
         if (user != null && superAdministrators != null) {
             contains = Arrays.asList(superAdministrators).contains(user.getAdminId().toString());
-        }
+        }*/
 
         //组装批量插入对象
         List<FuPermissionRoleResource> param = null;
@@ -85,15 +96,16 @@ public class PermissionRoleResourceService extends ServiceImpl<FuPermissionRoleR
 
         //超级管理员无工程项目KEY约束
         //先通过角色ID删除再保存
-        if (contains) {
-            delete(new EntityWrapper<FuPermissionRoleResource>().eq(FuPermissionRoleResource.ROLE_ID, roleId));
+        delete(new EntityWrapper<FuPermissionRoleResource>().eq(FuPermissionRoleResource.ROLE_ID, roleId));
+
+        /*if (contains) {
         } else {
             //获取用户所管理的工程项目KEY列表
             List<Integer> porjKeys = permissionUserProjectService.findPorjKeysByUserId(user.getAdminId());
             if (StringUtils.isNotEmpty(porjKeys)) {
                 fuPermissionRoleResourceMapper.deleteByRoleIdProjKeys(roleId.toString(), porjKeys);
             }
-        }
+        }*/
         if (StringUtils.isNotEmpty(param)) {
             // 保存权限
             boolean isSuccess = insertBatch(param);
@@ -179,4 +191,83 @@ public class PermissionRoleResourceService extends ServiceImpl<FuPermissionRoleR
         return list;
     }
 
+    /**
+     * 通过角色ID查询所关联的权限资源ID拼接的字符串
+     *
+     * @param roleId 角色ID
+     * @return 权限ID集合
+     */
+    public List<FuPermissionResourceBO> findResByRoleId(Integer roleId) {
+        //验证必要参数值是否为空
+        if (roleId == null) {
+            throw new BusinessException(GlobalResultCode.PARAM_NULL_POINTER);
+        }
+        List<FuPermissionResourceBO> list = fuPermissionRoleResourceMapper.findResByRoleId(roleId);
+        return list;
+    }
+
+
+    /**
+     * 查找角色权限树
+     * <p>menu:</p>
+     * @param userId 当前登录用户ID
+     * @return 权限树数据
+     */
+    public JSONArray findRoleResourceTree(Integer userId) {
+
+        //验证参数对象是否为空
+        if (userId == null) {
+            throw new BusinessException(GlobalResultCode.PARAM_NULL_POINTER);
+        }
+        /*查询用户信息*/
+        List<Integer> roles= permissionUserRoleService.findRoleIdsByUserId(userId);
+
+        //获取配置文件中超级管理员，判断当前登录用户是否为超级管理员,true为超管
+        String[] superAdministrators = superAdministrator.split(",");
+        boolean contains = false;
+        if (userId != null && superAdministrators != null) {
+            contains = Arrays.asList(superAdministrators).contains(userId.toString());
+        }
+
+        //声明权限结构树
+        List<Node> permenuList=new ArrayList<>();
+
+        //获取当前角色权限
+        List<FuPermissionResourceBO> resourceBOS = new ArrayList<>();
+
+        if(contains){
+            /*超级管理员 获取所有权限信息*/
+            List<FuPermissionResource> resources=permissionResourceService.findAll();
+            /*根据角色权限 筛选 角色资源*/
+            for(FuPermissionResource res:resources){
+                Node node = new Node();
+                BeanUtils.copyProperties(res,node);
+                node.setId(res.getId().toString());
+                node.setResPid(res.getResPid().toString());
+                node.setResStatus(res.getResStatus().toString());
+                permenuList.add(node);
+            }
+        }else {
+            // 普通用户 根据权限查询
+            for(Integer roleId:roles){
+                List<FuPermissionResourceBO> resource=findResByRoleId(roleId);
+                resourceBOS.addAll(resource);
+            }
+            /*根据角色权限 筛选 角色资源*/
+            for(FuPermissionResourceBO res:resourceBOS){
+                Node node = new Node();
+                BeanUtils.copyProperties(res,node);
+                node.setId(res.getId().toString());
+                node.setResPid(res.getResPid().toString());
+                node.setResStatus(res.getResStatus().toString());
+                permenuList.add(node);
+            }
+        }
+
+        //构建树形结构
+        String menuStr = new TreeBuilder().buildTree(permenuList);
+        JSONArray array = JSONArray.parseArray(menuStr);
+
+        return array;
+    }
 }

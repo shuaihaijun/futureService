@@ -1,8 +1,13 @@
 package com.future.controller.permission;
 
 
+import com.alibaba.fastjson.JSONObject;
+import com.future.common.enums.GlobalResultCode;
+import com.future.common.exception.ParameterInvalidException;
 import com.future.common.helper.PageInfoHelper;
 import com.future.common.result.RequestParams;
+import com.future.common.util.StringUtils;
+import com.future.common.util.ThreadCache;
 import com.future.pojo.bo.BasicBO;
 import com.future.pojo.bo.permission.FuPermissionResourceBO;
 import com.future.pojo.vo.permission.FuPermissionResourceVO;
@@ -15,6 +20,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -99,5 +107,15 @@ public class PermissionResourceController {
     public void remove(@RequestBody RequestParams<BasicBO> requestParams) {
         String ids = requestParams.getParams().getDelIds();
         permissionResourceService.remove(ids);
+    }
+
+    @ApiOperation(value = "查询资源树", notes = "查询角色权限树")
+    @PostMapping(value = "/findResourceTree")
+    public Map findResourceTree(@RequestBody RequestParams<BasicBO> requestParams) throws Exception {
+        String treeJson= permissionResourceService.findResourceTree();
+        System.out.println(treeJson);
+        Map dataMap= new HashMap();
+        dataMap.put("data",treeJson);
+        return dataMap;
     }
 }

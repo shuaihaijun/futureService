@@ -2,6 +2,7 @@ package com.future.mapper.permission;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.future.entity.permission.FuPermissionRoleResource;
+import com.future.pojo.bo.permission.FuPermissionResourceBO;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -31,6 +32,13 @@ public interface FuPermissionRoleResourceMapper extends BaseMapper<FuPermissionR
      * @return 权限ID集合
      */
     List<String> selectResIdsByRoleId(@Param("roleId") Integer roleId);
+
+    /**
+     * 通过角色ID查询所关联的权限资源
+     * @param roleId
+     * @return
+     */
+    List<FuPermissionResourceBO> findResByRoleId(@Param("roleId") Integer roleId);
 
     /**
      * 通过角色ID集合查询角色所关联的权限资源ID集合并去重
