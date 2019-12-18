@@ -1,21 +1,28 @@
 package com.future.service.permission;
 
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.future.common.enums.GlobalResultCode;
 import com.future.common.enums.RmsResultCode;
 import com.future.common.exception.BusinessException;
+import com.future.common.exception.DataConflictException;
 import com.future.common.util.StringUtils;
 import com.future.entity.permission.FuPermissionUserRole;
 import com.future.mapper.permission.FuPermissionUserRoleMapper;
 import com.future.pojo.bo.permission.FuPermissionUserRoleBO;
+import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ObjectUtils;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -133,13 +140,13 @@ public class PermissionUserRoleService extends ServiceImpl<FuPermissionUserRoleM
         }
 
         //避免重复保存已有的关系
-        List<Integer> uRoleIds = findRoleIdsByUserId(userId);
+        /*List<Integer> uRoleIds = findRoleIdsByUserId(userId);
         if (StringUtils.isNotEmpty(uRoleIds)) {
             roleIds.removeAll(uRoleIds);
         }
         if (StringUtils.isEmpty(roleIds)) {
             throw new BusinessException(RmsResultCode.PERMISSION_USER_ROLE_BIND);
-        }
+        }*/
 
         //组装批量插入对象
         List<FuPermissionUserRole> param = Lists.newArrayList();
@@ -149,10 +156,60 @@ public class PermissionUserRoleService extends ServiceImpl<FuPermissionUserRoleM
             permissionUserRole.setRoleId(roleId);
             param.add(permissionUserRole);
         }
+        /*清除该用户 原来角色*/
+        delete(new EntityWrapper<FuPermissionUserRole>().eq(FuPermissionUserRole.USER_ID, userId));
+
+        /*新增角色*/
         boolean isSuccess = insertBatch(param);
         if (!isSuccess) {
             throw new BusinessException(RmsResultCode.PERMISSION_USER_PROJECT_DATA_SAVE_FAILURE);
         }
+    }
+
+
+    /**
+     * 查询人员角色关系
+     * @param requestMap 查询人员角色关系
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public PageInfo<FuPermissionUserRoleBO> queryUserRole(JSONObject requestMap) {
+        //验证参数对象是否为空
+        if (requestMap == null) {
+            throw new BusinessException(GlobalResultCode.PARAM_NULL_POINTER);
+        }
+
+        int pageSize=20;
+        int pageNum=1;
+        if(StringUtils.isEmpty(pageSize)||StringUtils.isEmpty(pageNum)){
+            log.warn("分页数据为空！");
+        }else {
+            if(!StringUtils.isEmpty(requestMap.getString("pageSize"))){
+                pageSize=Integer.parseInt(requestMap.getString("pageSize"));
+            }
+            if(!StringUtils.isEmpty(requestMap.getString("pageNum"))){
+                pageNum=Integer.parseInt(requestMap.getString("pageNum"));
+            }
+        }
+
+        Map conditionMap =new HashMap();
+        if(!ObjectUtils.isEmpty(requestMap.getString("userId"))){
+            conditionMap.put("userId",requestMap.getString("userId"));
+        }
+        if(!ObjectUtils.isEmpty(requestMap.getString("username"))){
+            conditionMap.put("username",requestMap.getString("username"));
+        }
+        if(!ObjectUtils.isEmpty(requestMap.getString("roleId"))){
+            conditionMap.put("roleId",requestMap.getString("roleId"));
+        }
+        if(!ObjectUtils.isEmpty(requestMap.getString("roleName"))){
+            conditionMap.put("roleName",requestMap.getString("roleName"));
+        }
+        if(!ObjectUtils.isEmpty(requestMap.getString("refName"))){
+            conditionMap.put("refName",requestMap.getString("refName"));
+        }
+        List<FuPermissionUserRoleBO> userRole = fuPermissionUserRoleMapper.queryUserRole(conditionMap);
+
+        return new PageInfo(userRole);
     }
 
 }
