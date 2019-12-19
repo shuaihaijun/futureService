@@ -1,6 +1,7 @@
 package com.future.service.product;
 
 
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.Page;
@@ -11,16 +12,21 @@ import com.future.common.util.StringUtils;
 import com.future.entity.product.FuProductSignal;
 import com.future.entity.product.FuProductSignalApply;
 import com.future.mapper.product.FuProductSignalMapper;
+import com.future.pojo.vo.signal.FuUserSignalVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @Service
 public class FuProductSignalService extends ServiceImpl<FuProductSignalMapper,FuProductSignal> {
+    @Autowired
+    FuProductSignalMapper fuProductSignalMapper;
 
     Logger log= LoggerFactory.getLogger(FuProductSignalService.class);
 
@@ -132,14 +138,36 @@ public class FuProductSignalService extends ServiceImpl<FuProductSignalMapper,Fu
     }
 
     /**
-     * 修改信号源信息
-     * @param signalMap
+     * 查询用户信号源信息
+     * @param requestMap
      */
-    public Boolean updateProductSignal(int signalId, Map signalMap){
+    public Page<FuUserSignalVO> querySignalUsers(JSONObject requestMap){
         /*校验信息*/
+        /*String signalId=requestMap.getString("signalId");
+        String userId=requestMap.getString("userId");
+        String brokerName=requestMap.getString("brokerName");
+        String level=requestMap.getString("level");
+        String profitRate=requestMap.getString("profitRate");*/
         /*组装信息*/
-        FuProductSignal signal=new FuProductSignal();
-        return updateById(signal);
+        Map conditionMap =requestMap.getInnerMap();
+        List<FuUserSignalVO> signals= fuProductSignalMapper.querySignalUsers(conditionMap);
+        int pageSize=20;
+        int pageNum=1;
+
+        if(StringUtils.isEmpty(pageSize)||StringUtils.isEmpty(pageNum)){
+            log.error("分页数据为空！");
+            new DataConflictException("分页数据为空！");
+        }
+        if(!StringUtils.isEmpty(requestMap.getString("pageSize"))){
+            pageSize=Integer.parseInt(requestMap.getString("pageSize"));
+        }
+        if(!StringUtils.isEmpty(requestMap.getString("pageNum"))){
+            pageNum=Integer.parseInt(requestMap.getString("pageNum"));
+        }
+        Page page=new Page();
+        page.setSize(pageSize);
+        page.setCurrent(pageNum);
+        return page.setRecords(signals);
     }
 
     /**

@@ -7,6 +7,14 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 public class FuUser {
+
+    public static final String USER_ID = "id";
+    public static final String USER_NAME = "username";
+    public static final String USER_TYPE = "user_type";
+    public static final String USER_STATE = "user_state";
+    public static final String IS_VERIFIED = "is_verified";
+    public static final String IS_ACCOUNT = "is_account";
+    public static final String INTRODUCER = "introducer";
     /**
      * 
      */
@@ -139,6 +147,16 @@ public class FuUser {
     private String idFront;
 
     /**
+     * 头像地址
+     */
+    private String avatarUrl;
+
+    /**
+     * 加密盐
+     */
+    private String salt;
+
+    /**
      * 创建时间
      */
     private Date createDate;
@@ -147,14 +165,6 @@ public class FuUser {
      * 修改时间
      */
     private Date modifyDate;
-
-    public static final String USER_ID = "id";
-    public static final String USER_NAME = "username";
-    public static final String USER_TYPE = "user_type";
-    public static final String USER_STATE = "user_state";
-    public static final String IS_VERIFIED = "is_verified";
-    public static final String IS_ACCOUNT = "is_account";
-    public static final String INTRODUCER = "introducer";
 
     /**
      * 
@@ -237,16 +247,16 @@ public class FuUser {
     }
 
     /**
-     * 用户类型（总经理、总监、业务员、PIB、MIB、IB、VIP会员、普通会员、试用会员、分析师、信号源）
-     * @return user_type 用户类型（总经理、总监、业务员、PIB、MIB、IB、VIP会员、普通会员、试用会员、分析师、信号源）
+     * 用户类型（0 普通用户、1 试用会员、2 普通会员、3 VIP会员、4 业务员、5 PIB、6 MIB、7 IB、8 分析师、9 总监、10 总经理、11 信号源）
+     * @return user_type 用户类型（0 普通用户、1 试用会员、2 普通会员、3 VIP会员、4 业务员、5 PIB、6 MIB、7 IB、8 分析师、9 总监、10 总经理、11 信号源）
      */
     public Integer getUserType() {
         return userType;
     }
 
     /**
-     * 用户类型（总经理、总监、业务员、PIB、MIB、IB、VIP会员、普通会员、试用会员、分析师、信号源）
-     * @param userType 用户类型（总经理、总监、业务员、PIB、MIB、IB、VIP会员、普通会员、试用会员、分析师、信号源）
+     * 用户类型（0 普通用户、1 试用会员、2 普通会员、3 VIP会员、4 业务员、5 PIB、6 MIB、7 IB、8 分析师、9 总监、10 总经理、11 信号源）
+     * @param userType 用户类型（0 普通用户、1 试用会员、2 普通会员、3 VIP会员、4 业务员、5 PIB、6 MIB、7 IB、8 分析师、9 总监、10 总经理、11 信号源）
      */
     public void setUserType(Integer userType) {
         this.userType = userType;
@@ -570,6 +580,38 @@ public class FuUser {
      */
     public void setIdFront(String idFront) {
         this.idFront = idFront == null ? null : idFront.trim();
+    }
+
+    /**
+     * 头像地址
+     * @return avatar_url 头像地址
+     */
+    public String getAvatarUrl() {
+        return avatarUrl;
+    }
+
+    /**
+     * 头像地址
+     * @param avatarUrl 头像地址
+     */
+    public void setAvatarUrl(String avatarUrl) {
+        this.avatarUrl = avatarUrl == null ? null : avatarUrl.trim();
+    }
+
+    /**
+     * 加密盐
+     * @return salt 加密盐
+     */
+    public String getSalt() {
+        return salt;
+    }
+
+    /**
+     * 加密盐
+     * @param salt 加密盐
+     */
+    public void setSalt(String salt) {
+        this.salt = salt == null ? null : salt.trim();
     }
 
     /**

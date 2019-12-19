@@ -32,4 +32,14 @@ public class FuComController {
         log.info(file.getOriginalFilename());
         return resultMap;
     }
+
+    @RequestMapping(value = "/getActive")
+    public @ResponseBody Map getActive(@RequestPart(value = "picture") MultipartFile file) {
+        Map resultMap = new HashMap();
+        resultMap.put("userTotel",76734);
+        resultMap.put("userActive",5334);
+        resultMap.put("orderTotel",83212);
+        resultMap.put("orderAmount",1175676.86);
+        return resultMap;
+    }
 }

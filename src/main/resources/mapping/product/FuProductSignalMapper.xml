@@ -410,4 +410,76 @@
       remarks = #{remarks,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  <select id="querySignalUsers" parameterType="java.util.Map" resultType="com.future.pojo.vo.signal.FuUserSignalVO">
+    SELECT
+      s.id signalId,
+      s.create_date createDate,
+      s.modify_date modifyDate,
+      s.user_id userId,
+      s.signal_name signalName,
+      s.signal_level signalLevel,
+      s.signal_desc signalDesc,
+      s.check_date checkDate,
+      s.signal_tem signalTem,
+      s.signal_lots signalLots,
+      s.signal_lots_profit signalLotsProfit,
+      s.signal_currency signalCurrency,
+      s.signal_follows signalFollows,
+      s.monthly_average_income monthlyAverageIncome,
+      s.history_withdraw historyWithdraw,
+      s.email,
+      s.server_name serverName,
+      s.mt_acc_id mtAccId,
+      s.minimum,
+      s.annualized_expected_return annualizedExpectedReturn,
+      s.historical_return historicalReturn,
+      s.suggest_cycle suggestCycle,
+      s.remarks,
+      v.valuation_date valuationDate,
+      v.LEVEL,
+      v.steady_score steadyScore,
+      v.profit_score profitScore,
+      v.risk_control_score riskControlScore,
+      v.fund_size_score fundSizeScore,
+      v.non_fluke_profit_score nonFlukeProfitScore,
+      v.score,
+      u.username,
+      u.real_name realName,
+      u.ref_name refName,
+      u.introducer,
+      u.recommend,
+      u.sex,
+      u.follow_level followLevel,
+      u.avatar_url avatarUrl,
+      m.broker_name brokerName,
+      m.balance balance,
+      m.leverage leverage,
+      m.credit,
+      m.profit,
+      m.equity,
+      m.margin
+    FROM
+        fu_product_signal s
+    LEFT JOIN fu_product_signal_valuation v ON s.id = v.signalId
+    LEFT JOIN fu_user u ON s.user_id = u.id
+    LEFT JOIN fu_account_mt m ON s.user_id=m.user_id and s.mt_acc_id=m.mt_acc_id
+    where 1=1
+    <trim prefixOverrides="and">
+      <if test="userId != null">
+        and s.user_id = #{userId,jdbcType=INTEGER}
+      </if>
+      <if test="signalId != null">
+        and s.id = #{signalId,jdbcType=INTEGER}
+      </if>
+      <if test="mtAccId != null">
+        and s.mt_acc_id = #{mtAccId,jdbcType=INTEGER}
+      </if>
+      <if test="brokerName != null">
+        and m.broker_name = #{brokerName,jdbcType=INTEGER}
+      </if>
+      <if test="level != null">
+        and v.LEVEL = #{level,jdbcType=INTEGER}
+      </if>
+    </trim>
+  </select>
 </mapper>

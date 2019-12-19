@@ -18,19 +18,20 @@
             <property name="forceBigDecimals" value="false"/>
         </javaTypeResolver>
         <!-- 生成模型的包名和位置-->
-        <javaModelGenerator targetPackage="com.future.entity.order" targetProject="src/main/java">
+        <javaModelGenerator targetPackage="com.future.entity.user" targetProject="src/main/java">
             <property name="enableSubPackages" value="true"/>
             <property name="trimStrings" value="true"/>
         </javaModelGenerator>
         <!-- 生成映射文件的包名和位置-->
-        <sqlMapGenerator targetPackage="mapping.order" targetProject="src/main/resources">
+        <sqlMapGenerator targetPackage="mapping.user" targetProject="src/main/resources">
             <property name="enableSubPackages" value="true"/>
         </sqlMapGenerator>
         <!-- 生成DAO的包名和位置-->
-        <javaClientGenerator type="XMLMAPPER" targetPackage="com.future.mapper.order" targetProject="src/main/java">
+        <javaClientGenerator type="XMLMAPPER" targetPackage="com.future.mapper.user" targetProject="src/main/java">
             <property name="enableSubPackages" value="true"/>
         </javaClientGenerator>
+        <!--fu_account_mt  fu_account_withdraw fu_commission_customer fu_commission_level fu_user_order_day fu_product_signal_valuation-->
         <!-- 要生成的表 tableName是数据库中的表名或视图名 domainObjectName是实体类名-->
-        <table tableName="fu_order_follow_info" domainObjectName="FuOrderFollowInfo" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>
+        <table tableName="fu_user" domainObjectName="FuUser" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>
     </context>
 </generatorConfiguration>

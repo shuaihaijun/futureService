@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.future.mapper.product.FuProductSignalValuationMapper">
+  <resultMap id="BaseResultMap" type="com.future.entity.product.FuProductSignalValuation">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="signalId" jdbcType="INTEGER" property="signalid" />
+    <result column="valuation_date" jdbcType="TIMESTAMP" property="valuationDate" />
+    <result column="level" jdbcType="TINYINT" property="level" />
+    <result column="steady_score" jdbcType="DECIMAL" property="steadyScore" />
+    <result column="profit_score" jdbcType="DECIMAL" property="profitScore" />
+    <result column="risk_control_score" jdbcType="DECIMAL" property="riskControlScore" />
+    <result column="fund_size_score" jdbcType="DECIMAL" property="fundSizeScore" />
+    <result column="non_fluke_profit_score" jdbcType="DECIMAL" property="nonFlukeProfitScore" />
+    <result column="score" jdbcType="DECIMAL" property="score" />
+    <result column="meno" jdbcType="VARCHAR" property="meno" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, signalId, valuation_date, level, steady_score, profit_score, risk_control_score, 
+    fund_size_score, non_fluke_profit_score, score, meno
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from fu_product_signal_valuation
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from fu_product_signal_valuation
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.future.entity.product.FuProductSignalValuation">
+    insert into fu_product_signal_valuation (id, signalId, valuation_date, 
+      level, steady_score, profit_score, 
+      risk_control_score, fund_size_score, non_fluke_profit_score, 
+      score, meno)
+    values (#{id,jdbcType=INTEGER}, #{signalid,jdbcType=INTEGER}, #{valuationDate,jdbcType=TIMESTAMP}, 
+      #{level,jdbcType=TINYINT}, #{steadyScore,jdbcType=DECIMAL}, #{profitScore,jdbcType=DECIMAL}, 
+      #{riskControlScore,jdbcType=DECIMAL}, #{fundSizeScore,jdbcType=DECIMAL}, #{nonFlukeProfitScore,jdbcType=DECIMAL}, 
+      #{score,jdbcType=DECIMAL}, #{meno,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.future.entity.product.FuProductSignalValuation">
+    insert into fu_product_signal_valuation
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="signalid != null">
+        signalId,
+      </if>
+      <if test="valuationDate != null">
+        valuation_date,
+      </if>
+      <if test="level != null">
+        level,
+      </if>
+      <if test="steadyScore != null">
+        steady_score,
+      </if>
+      <if test="profitScore != null">
+        profit_score,
+      </if>
+      <if test="riskControlScore != null">
+        risk_control_score,
+      </if>
+      <if test="fundSizeScore != null">
+        fund_size_score,
+      </if>
+      <if test="nonFlukeProfitScore != null">
+        non_fluke_profit_score,
+      </if>
+      <if test="score != null">
+        score,
+      </if>
+      <if test="meno != null">
+        meno,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="signalid != null">
+        #{signalid,jdbcType=INTEGER},
+      </if>
+      <if test="valuationDate != null">
+        #{valuationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="level != null">
+        #{level,jdbcType=TINYINT},
+      </if>
+      <if test="steadyScore != null">
+        #{steadyScore,jdbcType=DECIMAL},
+      </if>
+      <if test="profitScore != null">
+        #{profitScore,jdbcType=DECIMAL},
+      </if>
+      <if test="riskControlScore != null">
+        #{riskControlScore,jdbcType=DECIMAL},
+      </if>
+      <if test="fundSizeScore != null">
+        #{fundSizeScore,jdbcType=DECIMAL},
+      </if>
+      <if test="nonFlukeProfitScore != null">
+        #{nonFlukeProfitScore,jdbcType=DECIMAL},
+      </if>
+      <if test="score != null">
+        #{score,jdbcType=DECIMAL},
+      </if>
+      <if test="meno != null">
+        #{meno,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.future.entity.product.FuProductSignalValuation">
+    update fu_product_signal_valuation
+    <set>
+      <if test="signalid != null">
+        signalId = #{signalid,jdbcType=INTEGER},
+      </if>
+      <if test="valuationDate != null">
+        valuation_date = #{valuationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="level != null">
+        level = #{level,jdbcType=TINYINT},
+      </if>
+      <if test="steadyScore != null">
+        steady_score = #{steadyScore,jdbcType=DECIMAL},
+      </if>
+      <if test="profitScore != null">
+        profit_score = #{profitScore,jdbcType=DECIMAL},
+      </if>
+      <if test="riskControlScore != null">
+        risk_control_score = #{riskControlScore,jdbcType=DECIMAL},
+      </if>
+      <if test="fundSizeScore != null">
+        fund_size_score = #{fundSizeScore,jdbcType=DECIMAL},
+      </if>
+      <if test="nonFlukeProfitScore != null">
+        non_fluke_profit_score = #{nonFlukeProfitScore,jdbcType=DECIMAL},
+      </if>
+      <if test="score != null">
+        score = #{score,jdbcType=DECIMAL},
+      </if>
+      <if test="meno != null">
+        meno = #{meno,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.future.entity.product.FuProductSignalValuation">
+    update fu_product_signal_valuation
+    set signalId = #{signalid,jdbcType=INTEGER},
+      valuation_date = #{valuationDate,jdbcType=TIMESTAMP},
+      level = #{level,jdbcType=TINYINT},
+      steady_score = #{steadyScore,jdbcType=DECIMAL},
+      profit_score = #{profitScore,jdbcType=DECIMAL},
+      risk_control_score = #{riskControlScore,jdbcType=DECIMAL},
+      fund_size_score = #{fundSizeScore,jdbcType=DECIMAL},
+      non_fluke_profit_score = #{nonFlukeProfitScore,jdbcType=DECIMAL},
+      score = #{score,jdbcType=DECIMAL},
+      meno = #{meno,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

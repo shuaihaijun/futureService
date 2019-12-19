@@ -47,7 +47,7 @@ public class FuProductSignal {
     /**
      * 信号源等级
      */
-    private Byte signalLevel;
+    private Integer signalLevel;
 
     /**
      * 信号源描述
@@ -57,12 +57,12 @@ public class FuProductSignal {
     /**
      * 信号源综合评分
      */
-    private Byte signalRatings;
+    private Integer signalRatings;
 
     /**
      * 信号源状态（0 正常，1 隐藏，2 删除）
      */
-    private Byte signalState;
+    private Integer signalState;
 
     /**
      * 申请时间
@@ -263,7 +263,7 @@ public class FuProductSignal {
      * 信号源等级
      * @return signal_level 信号源等级
      */
-    public Byte getSignalLevel() {
+    public Integer getSignalLevel() {
         return signalLevel;
     }
 
@@ -271,7 +271,7 @@ public class FuProductSignal {
      * 信号源等级
      * @param signalLevel 信号源等级
      */
-    public void setSignalLevel(Byte signalLevel) {
+    public void setSignalLevel(Integer signalLevel) {
         this.signalLevel = signalLevel;
     }
 
@@ -295,7 +295,7 @@ public class FuProductSignal {
      * 信号源综合评分
      * @return signal_ratings 信号源综合评分
      */
-    public Byte getSignalRatings() {
+    public Integer getSignalRatings() {
         return signalRatings;
     }
 
@@ -303,7 +303,7 @@ public class FuProductSignal {
      * 信号源综合评分
      * @param signalRatings 信号源综合评分
      */
-    public void setSignalRatings(Byte signalRatings) {
+    public void setSignalRatings(Integer signalRatings) {
         this.signalRatings = signalRatings;
     }
 
@@ -311,7 +311,7 @@ public class FuProductSignal {
      * 信号源状态（0 正常，1 隐藏，2 删除）
      * @return signal_state 信号源状态（0 正常，1 隐藏，2 删除）
      */
-    public Byte getSignalState() {
+    public Integer getSignalState() {
         return signalState;
     }
 
@@ -319,7 +319,7 @@ public class FuProductSignal {
      * 信号源状态（0 正常，1 隐藏，2 删除）
      * @param signalState 信号源状态（0 正常，1 隐藏，2 删除）
      */
-    public void setSignalState(Byte signalState) {
+    public void setSignalState(Integer signalState) {
         this.signalState = signalState;
     }
 

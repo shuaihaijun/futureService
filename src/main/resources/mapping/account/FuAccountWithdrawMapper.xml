@@ -7,6 +7,7 @@
     <result column="user_id" jdbcType="INTEGER" property="userId" />
     <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="account_id" jdbcType="INTEGER" property="accountId" />
+    <result column="withdraw_type" jdbcType="TINYINT" property="withdrawType" />
     <result column="withdraw_amount" jdbcType="DECIMAL" property="withdrawAmount" />
     <result column="bank_name" jdbcType="VARCHAR" property="bankName" />
     <result column="bank_code" jdbcType="VARCHAR" property="bankCode" />
@@ -19,9 +20,9 @@
     <result column="comment" jdbcType="VARCHAR" property="comment" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, create_date, user_id, name, account_id, withdraw_amount, bank_name, bank_code, 
-    bank_area, account_before, account_after, withdraw_time, withdraw_rmb, withdraw_state, 
-    comment
+    id, create_date, user_id, name, account_id, withdraw_type, withdraw_amount, bank_name, 
+    bank_code, bank_area, account_before, account_after, withdraw_time, withdraw_rmb, 
+    withdraw_state, comment
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -35,17 +36,17 @@
   </delete>
   <insert id="insert" parameterType="com.future.entity.account.FuAccountWithdraw">
     insert into fu_account_withdraw (id, create_date, user_id, 
-      name, account_id, withdraw_amount, 
-      bank_name, bank_code, bank_area, 
-      account_before, account_after, withdraw_time, 
-      withdraw_rmb, withdraw_state, comment
-      )
+      name, account_id, withdraw_type, 
+      withdraw_amount, bank_name, bank_code, 
+      bank_area, account_before, account_after, 
+      withdraw_time, withdraw_rmb, withdraw_state, 
+      comment)
     values (#{id,jdbcType=INTEGER}, #{createDate,jdbcType=TIMESTAMP}, #{userId,jdbcType=INTEGER}, 
-      #{name,jdbcType=VARCHAR}, #{accountId,jdbcType=INTEGER}, #{withdrawAmount,jdbcType=DECIMAL}, 
-      #{bankName,jdbcType=VARCHAR}, #{bankCode,jdbcType=VARCHAR}, #{bankArea,jdbcType=VARCHAR}, 
-      #{accountBefore,jdbcType=DECIMAL}, #{accountAfter,jdbcType=DECIMAL}, #{withdrawTime,jdbcType=TIMESTAMP}, 
-      #{withdrawRmb,jdbcType=DECIMAL}, #{withdrawState,jdbcType=TINYINT}, #{comment,jdbcType=VARCHAR}
-      )
+      #{name,jdbcType=VARCHAR}, #{accountId,jdbcType=INTEGER}, #{withdrawType,jdbcType=TINYINT}, 
+      #{withdrawAmount,jdbcType=DECIMAL}, #{bankName,jdbcType=VARCHAR}, #{bankCode,jdbcType=VARCHAR}, 
+      #{bankArea,jdbcType=VARCHAR}, #{accountBefore,jdbcType=DECIMAL}, #{accountAfter,jdbcType=DECIMAL}, 
+      #{withdrawTime,jdbcType=TIMESTAMP}, #{withdrawRmb,jdbcType=DECIMAL}, #{withdrawState,jdbcType=TINYINT}, 
+      #{comment,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.future.entity.account.FuAccountWithdraw">
     insert into fu_account_withdraw
@@ -64,6 +65,9 @@
       </if>
       <if test="accountId != null">
         account_id,
+      </if>
+      <if test="withdrawType != null">
+        withdraw_type,
       </if>
       <if test="withdrawAmount != null">
         withdraw_amount,
@@ -112,6 +116,9 @@
       <if test="accountId != null">
         #{accountId,jdbcType=INTEGER},
       </if>
+      <if test="withdrawType != null">
+        #{withdrawType,jdbcType=TINYINT},
+      </if>
       <if test="withdrawAmount != null">
         #{withdrawAmount,jdbcType=DECIMAL},
       </if>
@@ -159,6 +166,9 @@
       <if test="accountId != null">
         account_id = #{accountId,jdbcType=INTEGER},
       </if>
+      <if test="withdrawType != null">
+        withdraw_type = #{withdrawType,jdbcType=TINYINT},
+      </if>
       <if test="withdrawAmount != null">
         withdraw_amount = #{withdrawAmount,jdbcType=DECIMAL},
       </if>
@@ -198,6 +208,7 @@
       user_id = #{userId,jdbcType=INTEGER},
       name = #{name,jdbcType=VARCHAR},
       account_id = #{accountId,jdbcType=INTEGER},
+      withdraw_type = #{withdrawType,jdbcType=TINYINT},
       withdraw_amount = #{withdrawAmount,jdbcType=DECIMAL},
       bank_name = #{bankName,jdbcType=VARCHAR},
       bank_code = #{bankCode,jdbcType=VARCHAR},

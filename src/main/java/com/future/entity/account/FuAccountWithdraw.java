@@ -34,6 +34,11 @@ public class FuAccountWithdraw {
     private Integer accountId;
 
     /**
+     * 回撤类型（0 佣金提取，1 余额提取）
+     */
+    private Integer withdrawType;
+
+    /**
      * 回撤金额
      */
     private BigDecimal withdrawAmount;
@@ -161,6 +166,22 @@ public class FuAccountWithdraw {
      */
     public void setAccountId(Integer accountId) {
         this.accountId = accountId;
+    }
+
+    /**
+     * 回撤类型（0 佣金提取，1 余额提取）
+     * @return withdraw_type 回撤类型（0 佣金提取，1 余额提取）
+     */
+    public Integer getWithdrawType() {
+        return withdrawType;
+    }
+
+    /**
+     * 回撤类型（0 佣金提取，1 余额提取）
+     * @param withdrawType 回撤类型（0 佣金提取，1 余额提取）
+     */
+    public void setWithdrawType(Integer withdrawType) {
+        this.withdrawType = withdrawType;
     }
 
     /**

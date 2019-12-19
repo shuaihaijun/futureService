@@ -3,14 +3,15 @@ package com.future.entity.account;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.enums.IdType;
 
+import java.math.BigDecimal;
+
 public class FuAccountMt {
     public static String USER_ID="user_id";
     public static String MT_ACC_ID="mt_acc_id";
     public static String IS_SIGNAL="is_signal";
     public static String ACCOUNT_TYPE="account_type";
-
     /**
-     *
+     * 
      */
     @TableId(type = IdType.AUTO)
     private Integer id;
@@ -24,6 +25,16 @@ public class FuAccountMt {
      * 服务器ID
      */
     private Integer serverId;
+
+    /**
+     * 服务器名称
+     */
+    private String serverName;
+
+    /**
+     * 经纪人名称
+     */
+    private String brokerName;
 
     /**
      * 经纪人ID
@@ -91,6 +102,36 @@ public class FuAccountMt {
     private Integer accountType;
 
     /**
+     * 杠杆
+     */
+    private BigDecimal leverage;
+
+    /**
+     * 余额
+     */
+    private BigDecimal balance;
+
+    /**
+     * 信用额
+     */
+    private BigDecimal credit;
+
+    /**
+     * 收益
+     */
+    private BigDecimal profit;
+
+    /**
+     * 净值
+     */
+    private BigDecimal equity;
+
+    /**
+     * 保证金
+     */
+    private BigDecimal margin;
+
+    /**
      * 
      * @return id 
      */
@@ -136,6 +177,38 @@ public class FuAccountMt {
      */
     public void setServerId(Integer serverId) {
         this.serverId = serverId;
+    }
+
+    /**
+     * 服务器名称
+     * @return server_name 服务器名称
+     */
+    public String getServerName() {
+        return serverName;
+    }
+
+    /**
+     * 服务器名称
+     * @param serverName 服务器名称
+     */
+    public void setServerName(String serverName) {
+        this.serverName = serverName == null ? null : serverName.trim();
+    }
+
+    /**
+     * 经纪人名称
+     * @return broker_name 经纪人名称
+     */
+    public String getBrokerName() {
+        return brokerName;
+    }
+
+    /**
+     * 经纪人名称
+     * @param brokerName 经纪人名称
+     */
+    public void setBrokerName(String brokerName) {
+        this.brokerName = brokerName == null ? null : brokerName.trim();
     }
 
     /**
@@ -344,5 +417,101 @@ public class FuAccountMt {
      */
     public void setAccountType(Integer accountType) {
         this.accountType = accountType;
+    }
+
+    /**
+     * 杠杆
+     * @return leverage 杠杆
+     */
+    public BigDecimal getLeverage() {
+        return leverage;
+    }
+
+    /**
+     * 杠杆
+     * @param leverage 杠杆
+     */
+    public void setLeverage(BigDecimal leverage) {
+        this.leverage = leverage;
+    }
+
+    /**
+     * 余额
+     * @return balance 余额
+     */
+    public BigDecimal getBalance() {
+        return balance;
+    }
+
+    /**
+     * 余额
+     * @param balance 余额
+     */
+    public void setBalance(BigDecimal balance) {
+        this.balance = balance;
+    }
+
+    /**
+     * 信用额
+     * @return credit 信用额
+     */
+    public BigDecimal getCredit() {
+        return credit;
+    }
+
+    /**
+     * 信用额
+     * @param credit 信用额
+     */
+    public void setCredit(BigDecimal credit) {
+        this.credit = credit;
+    }
+
+    /**
+     * 收益
+     * @return profit 收益
+     */
+    public BigDecimal getProfit() {
+        return profit;
+    }
+
+    /**
+     * 收益
+     * @param profit 收益
+     */
+    public void setProfit(BigDecimal profit) {
+        this.profit = profit;
+    }
+
+    /**
+     * 净值
+     * @return equity 净值
+     */
+    public BigDecimal getEquity() {
+        return equity;
+    }
+
+    /**
+     * 净值
+     * @param equity 净值
+     */
+    public void setEquity(BigDecimal equity) {
+        this.equity = equity;
+    }
+
+    /**
+     * 保证金
+     * @return margin 保证金
+     */
+    public BigDecimal getMargin() {
+        return margin;
+    }
+
+    /**
+     * 保证金
+     * @param margin 保证金
+     */
+    public void setMargin(BigDecimal margin) {
+        this.margin = margin;
     }
 }

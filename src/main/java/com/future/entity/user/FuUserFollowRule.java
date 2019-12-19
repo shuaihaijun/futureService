@@ -31,7 +31,7 @@ public class FuUserFollowRule {
     /**
      * 规则类型（0 按手数比例，1 按净值金额，2 按固定手数）
      */
-    private Byte ruleType;
+    private Integer ruleType;
 
     /**
      * 数量
@@ -41,7 +41,7 @@ public class FuUserFollowRule {
     /**
      * 规则状态（0 正常，1  删除）
      */
-    private Byte ruleState;
+    private Integer ruleState;
 
     /**
      * 单笔上限金额
@@ -156,7 +156,7 @@ public class FuUserFollowRule {
      * 规则类型（0 按手数比例，1 按净值金额，2 按固定手数）
      * @return rule_type 规则类型（0 按手数比例，1 按净值金额，2 按固定手数）
      */
-    public Byte getRuleType() {
+    public Integer getRuleType() {
         return ruleType;
     }
 
@@ -164,7 +164,7 @@ public class FuUserFollowRule {
      * 规则类型（0 按手数比例，1 按净值金额，2 按固定手数）
      * @param ruleType 规则类型（0 按手数比例，1 按净值金额，2 按固定手数）
      */
-    public void setRuleType(Byte ruleType) {
+    public void setRuleType(Integer ruleType) {
         this.ruleType = ruleType;
     }
 
@@ -188,7 +188,7 @@ public class FuUserFollowRule {
      * 规则状态（0 正常，1  删除）
      * @return rule_state 规则状态（0 正常，1  删除）
      */
-    public Byte getRuleState() {
+    public Integer getRuleState() {
         return ruleState;
     }
 
@@ -196,7 +196,7 @@ public class FuUserFollowRule {
      * 规则状态（0 正常，1  删除）
      * @param ruleState 规则状态（0 正常，1  删除）
      */
-    public void setRuleState(Byte ruleState) {
+    public void setRuleState(Integer ruleState) {
         this.ruleState = ruleState;
     }
 

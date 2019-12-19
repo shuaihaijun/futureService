@@ -5,6 +5,8 @@
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="user_id" jdbcType="INTEGER" property="userId" />
     <result column="server_id" jdbcType="INTEGER" property="serverId" />
+    <result column="server_name" jdbcType="VARCHAR" property="serverName" />
+    <result column="broker_name" jdbcType="VARCHAR" property="brokerName" />
     <result column="broker_id" jdbcType="INTEGER" property="brokerId" />
     <result column="mt_acc_id" jdbcType="VARCHAR" property="mtAccId" />
     <result column="mt_password_trade" jdbcType="VARCHAR" property="mtPasswordTrade" />
@@ -18,11 +20,18 @@
     <result column="is_signal" jdbcType="TINYINT" property="isSignal" />
     <result column="is_chief" jdbcType="TINYINT" property="isChief" />
     <result column="account_type" jdbcType="TINYINT" property="accountType" />
+    <result column="leverage" jdbcType="DECIMAL" property="leverage" />
+    <result column="balance" jdbcType="DECIMAL" property="balance" />
+    <result column="credit" jdbcType="DECIMAL" property="credit" />
+    <result column="profit" jdbcType="DECIMAL" property="profit" />
+    <result column="equity" jdbcType="DECIMAL" property="equity" />
+    <result column="margin" jdbcType="DECIMAL" property="margin" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, user_id, server_id, broker_id, mt_acc_id, mt_password_trade, mt_password_watch, 
-    mt_acc_url, mt_acc_port, account_url, account_port, password_trade_checked, password_watch_checked, 
-    is_signal, is_chief, account_type
+    id, user_id, server_id, server_name, broker_name, broker_id, mt_acc_id, mt_password_trade, 
+    mt_password_watch, mt_acc_url, mt_acc_port, account_url, account_port, password_trade_checked, 
+    password_watch_checked, is_signal, is_chief, account_type, leverage, balance, credit, 
+    profit, equity, margin
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -36,17 +45,23 @@
   </delete>
   <insert id="insert" parameterType="com.future.entity.account.FuAccountMt">
     insert into fu_account_mt (id, user_id, server_id, 
-      broker_id, mt_acc_id, mt_password_trade, 
-      mt_password_watch, mt_acc_url, mt_acc_port, 
-      account_url, account_port, password_trade_checked, 
-      password_watch_checked, is_signal, is_chief, 
-      account_type)
+      server_name, broker_name, broker_id, 
+      mt_acc_id, mt_password_trade, mt_password_watch, 
+      mt_acc_url, mt_acc_port, account_url, 
+      account_port, password_trade_checked, password_watch_checked, 
+      is_signal, is_chief, account_type, 
+      leverage, balance, credit, 
+      profit, equity, margin
+      )
     values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{serverId,jdbcType=INTEGER}, 
-      #{brokerId,jdbcType=INTEGER}, #{mtAccId,jdbcType=VARCHAR}, #{mtPasswordTrade,jdbcType=VARCHAR}, 
-      #{mtPasswordWatch,jdbcType=VARCHAR}, #{mtAccUrl,jdbcType=VARCHAR}, #{mtAccPort,jdbcType=VARCHAR}, 
-      #{accountUrl,jdbcType=VARCHAR}, #{accountPort,jdbcType=INTEGER}, #{passwordTradeChecked,jdbcType=TINYINT}, 
-      #{passwordWatchChecked,jdbcType=TINYINT}, #{isSignal,jdbcType=TINYINT}, #{isChief,jdbcType=TINYINT}, 
-      #{accountType,jdbcType=TINYINT})
+      #{serverName,jdbcType=VARCHAR}, #{brokerName,jdbcType=VARCHAR}, #{brokerId,jdbcType=INTEGER}, 
+      #{mtAccId,jdbcType=VARCHAR}, #{mtPasswordTrade,jdbcType=VARCHAR}, #{mtPasswordWatch,jdbcType=VARCHAR}, 
+      #{mtAccUrl,jdbcType=VARCHAR}, #{mtAccPort,jdbcType=VARCHAR}, #{accountUrl,jdbcType=VARCHAR}, 
+      #{accountPort,jdbcType=INTEGER}, #{passwordTradeChecked,jdbcType=TINYINT}, #{passwordWatchChecked,jdbcType=TINYINT}, 
+      #{isSignal,jdbcType=TINYINT}, #{isChief,jdbcType=TINYINT}, #{accountType,jdbcType=TINYINT}, 
+      #{leverage,jdbcType=DECIMAL}, #{balance,jdbcType=DECIMAL}, #{credit,jdbcType=DECIMAL}, 
+      #{profit,jdbcType=DECIMAL}, #{equity,jdbcType=DECIMAL}, #{margin,jdbcType=DECIMAL}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.future.entity.account.FuAccountMt">
     insert into fu_account_mt
@@ -59,6 +74,12 @@
       </if>
       <if test="serverId != null">
         server_id,
+      </if>
+      <if test="serverName != null">
+        server_name,
+      </if>
+      <if test="brokerName != null">
+        broker_name,
       </if>
       <if test="brokerId != null">
         broker_id,
@@ -99,6 +120,24 @@
       <if test="accountType != null">
         account_type,
       </if>
+      <if test="leverage != null">
+        leverage,
+      </if>
+      <if test="balance != null">
+        balance,
+      </if>
+      <if test="credit != null">
+        credit,
+      </if>
+      <if test="profit != null">
+        profit,
+      </if>
+      <if test="equity != null">
+        equity,
+      </if>
+      <if test="margin != null">
+        margin,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -109,6 +148,12 @@
       </if>
       <if test="serverId != null">
         #{serverId,jdbcType=INTEGER},
+      </if>
+      <if test="serverName != null">
+        #{serverName,jdbcType=VARCHAR},
+      </if>
+      <if test="brokerName != null">
+        #{brokerName,jdbcType=VARCHAR},
       </if>
       <if test="brokerId != null">
         #{brokerId,jdbcType=INTEGER},
@@ -149,6 +194,24 @@
       <if test="accountType != null">
         #{accountType,jdbcType=TINYINT},
       </if>
+      <if test="leverage != null">
+        #{leverage,jdbcType=DECIMAL},
+      </if>
+      <if test="balance != null">
+        #{balance,jdbcType=DECIMAL},
+      </if>
+      <if test="credit != null">
+        #{credit,jdbcType=DECIMAL},
+      </if>
+      <if test="profit != null">
+        #{profit,jdbcType=DECIMAL},
+      </if>
+      <if test="equity != null">
+        #{equity,jdbcType=DECIMAL},
+      </if>
+      <if test="margin != null">
+        #{margin,jdbcType=DECIMAL},
+      </if>
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.future.entity.account.FuAccountMt">
@@ -159,6 +222,12 @@
       </if>
       <if test="serverId != null">
         server_id = #{serverId,jdbcType=INTEGER},
+      </if>
+      <if test="serverName != null">
+        server_name = #{serverName,jdbcType=VARCHAR},
+      </if>
+      <if test="brokerName != null">
+        broker_name = #{brokerName,jdbcType=VARCHAR},
       </if>
       <if test="brokerId != null">
         broker_id = #{brokerId,jdbcType=INTEGER},
@@ -199,6 +268,24 @@
       <if test="accountType != null">
         account_type = #{accountType,jdbcType=TINYINT},
       </if>
+      <if test="leverage != null">
+        leverage = #{leverage,jdbcType=DECIMAL},
+      </if>
+      <if test="balance != null">
+        balance = #{balance,jdbcType=DECIMAL},
+      </if>
+      <if test="credit != null">
+        credit = #{credit,jdbcType=DECIMAL},
+      </if>
+      <if test="profit != null">
+        profit = #{profit,jdbcType=DECIMAL},
+      </if>
+      <if test="equity != null">
+        equity = #{equity,jdbcType=DECIMAL},
+      </if>
+      <if test="margin != null">
+        margin = #{margin,jdbcType=DECIMAL},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -206,6 +293,8 @@
     update fu_account_mt
     set user_id = #{userId,jdbcType=INTEGER},
       server_id = #{serverId,jdbcType=INTEGER},
+      server_name = #{serverName,jdbcType=VARCHAR},
+      broker_name = #{brokerName,jdbcType=VARCHAR},
       broker_id = #{brokerId,jdbcType=INTEGER},
       mt_acc_id = #{mtAccId,jdbcType=VARCHAR},
       mt_password_trade = #{mtPasswordTrade,jdbcType=VARCHAR},
@@ -218,7 +307,13 @@
       password_watch_checked = #{passwordWatchChecked,jdbcType=TINYINT},
       is_signal = #{isSignal,jdbcType=TINYINT},
       is_chief = #{isChief,jdbcType=TINYINT},
-      account_type = #{accountType,jdbcType=TINYINT}
+      account_type = #{accountType,jdbcType=TINYINT},
+      leverage = #{leverage,jdbcType=DECIMAL},
+      balance = #{balance,jdbcType=DECIMAL},
+      credit = #{credit,jdbcType=DECIMAL},
+      profit = #{profit,jdbcType=DECIMAL},
+      equity = #{equity,jdbcType=DECIMAL},
+      margin = #{margin,jdbcType=DECIMAL}
     where id = #{id,jdbcType=INTEGER}
   </update>
   <select id="selectUserMTAccByCondition" parameterType="java.util.Map" resultType="com.future.pojo.bo.order.UserMTAccountBO">
@@ -297,6 +392,12 @@
       <if test="brokerId != null">
         broker_id = #{brokerId,jdbcType=INTEGER},
       </if>
+      <if test="serverName != null">
+        server_name = #{serverName,jdbcType=VARCHAR},
+      </if>
+      <if test="brokerName != null">
+        broker_name = #{brokerName,jdbcType=VARCHAR},
+      </if>
       <if test="mtAccId != null">
         mt_acc_id = #{mtAccId,jdbcType=VARCHAR},
       </if>
@@ -325,13 +426,31 @@
         password_watch_checked = #{passwordWatchChecked,jdbcType=TINYINT},
       </if>
       <if test="isSignal != null">
-        is_signal = #{isSignal,jdbcType=TINYINT}
+        is_signal = #{isSignal,jdbcType=TINYINT},
       </if>
       <if test="isChief != null">
         is_chief = #{isChief,jdbcType=TINYINT},
       </if>
       <if test="accountType != null">
         account_type = #{accountType,jdbcType=TINYINT},
+      </if>
+      <if test="leverage != null">
+        leverage = #{leverage,jdbcType=DECIMAL},
+      </if>
+      <if test="balance != null">
+        balance = #{balance,jdbcType=DECIMAL},
+      </if>
+      <if test="credit != null">
+        credit = #{credit,jdbcType=DECIMAL},
+      </if>
+      <if test="profit != null">
+        profit = #{profit,jdbcType=DECIMAL},
+      </if>
+      <if test="equity != null">
+        equity = #{equity,jdbcType=DECIMAL},
+      </if>
+      <if test="margin != null">
+        margin = #{margin,jdbcType=DECIMAL},
       </if>
     </set>
     where

@@ -28,6 +28,8 @@
     <result column="follow_level" jdbcType="DECIMAL" property="followLevel" />
     <result column="id_obverse" jdbcType="VARCHAR" property="idObverse" />
     <result column="id_Front" jdbcType="VARCHAR" property="idFront" />
+    <result column="avatar_url" jdbcType="VARCHAR" property="avatarUrl" />
+    <result column="salt" jdbcType="VARCHAR" property="salt" />
     <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
     <result column="modify_date" jdbcType="TIMESTAMP" property="modifyDate" />
   </resultMap>
@@ -35,19 +37,13 @@
     id, username, password, real_name, ref_name, user_type, user_state, email, phone, 
     mobile, reg_time, last_login, login_ip, reg_ip, is_verified, is_account, introducer, 
     recommend, sex, country, province, city, address, follow_level, id_obverse, id_Front, 
-    create_date, modify_date
+    avatar_url, salt, create_date, modify_date
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
     from fu_user
     where id = #{id,jdbcType=INTEGER}
-  </select>
-  <select id="selectByUsername" parameterType="java.lang.String" resultType="com.future.entity.user.FuUser">
-    select
-    <include refid="Base_Column_List" />
-    from fu_user
-    where username = #{userName,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from fu_user
@@ -62,8 +58,9 @@
       is_account, introducer, recommend, 
       sex, country, province, 
       city, address, follow_level, 
-      id_obverse, id_Front, create_date, 
-      modify_date)
+      id_obverse, id_Front, avatar_url, 
+      salt, create_date, modify_date
+      )
     values (#{id,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
       #{realName,jdbcType=VARCHAR}, #{refName,jdbcType=VARCHAR}, #{userType,jdbcType=TINYINT}, 
       #{userState,jdbcType=TINYINT}, #{email,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, 
@@ -72,8 +69,9 @@
       #{isAccount,jdbcType=TINYINT}, #{introducer,jdbcType=INTEGER}, #{recommend,jdbcType=INTEGER}, 
       #{sex,jdbcType=VARCHAR}, #{country,jdbcType=VARCHAR}, #{province,jdbcType=VARCHAR}, 
       #{city,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, #{followLevel,jdbcType=DECIMAL}, 
-      #{idObverse,jdbcType=VARCHAR}, #{idFront,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, 
-      #{modifyDate,jdbcType=TIMESTAMP})
+      #{idObverse,jdbcType=VARCHAR}, #{idFront,jdbcType=VARCHAR}, #{avatarUrl,jdbcType=VARCHAR}, 
+      #{salt,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, #{modifyDate,jdbcType=TIMESTAMP}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.future.entity.user.FuUser">
     insert into fu_user
@@ -155,6 +153,12 @@
       </if>
       <if test="idFront != null">
         id_Front,
+      </if>
+      <if test="avatarUrl != null">
+        avatar_url,
+      </if>
+      <if test="salt != null">
+        salt,
       </if>
       <if test="createDate != null">
         create_date,
@@ -242,6 +246,12 @@
       <if test="idFront != null">
         #{idFront,jdbcType=VARCHAR},
       </if>
+      <if test="avatarUrl != null">
+        #{avatarUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="salt != null">
+        #{salt,jdbcType=VARCHAR},
+      </if>
       <if test="createDate != null">
         #{createDate,jdbcType=TIMESTAMP},
       </if>
@@ -328,6 +338,12 @@
       <if test="idFront != null">
         id_Front = #{idFront,jdbcType=VARCHAR},
       </if>
+      <if test="avatarUrl != null">
+        avatar_url = #{avatarUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="salt != null">
+        salt = #{salt,jdbcType=VARCHAR},
+      </if>
       <if test="createDate != null">
         create_date = #{createDate,jdbcType=TIMESTAMP},
       </if>
@@ -364,8 +380,16 @@
       follow_level = #{followLevel,jdbcType=DECIMAL},
       id_obverse = #{idObverse,jdbcType=VARCHAR},
       id_Front = #{idFront,jdbcType=VARCHAR},
+      avatar_url = #{avatarUrl,jdbcType=VARCHAR},
+      salt = #{salt,jdbcType=VARCHAR},
       create_date = #{createDate,jdbcType=TIMESTAMP},
       modify_date = #{modifyDate,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  <select id="selectByUsername" parameterType="java.lang.String" resultType="com.future.entity.user.FuUser">
+    select
+    <include refid="Base_Column_List" />
+    from fu_user
+    where username = #{userName,jdbcType=INTEGER}
+  </select>
 </mapper>

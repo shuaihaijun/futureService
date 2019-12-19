@@ -120,7 +120,6 @@ public class MTOrderService {
                 throw new RuntimeException("user connect failed!");
             }*/
             Map<Long, OrderInfo> userOrders=mtStrategy.orderGetAll(selectionPool, dateFrom,dateTo,symbol);
-
             return ConvertUtil.convertOrderInfo(userOrders);
 
         }catch (Exception e){

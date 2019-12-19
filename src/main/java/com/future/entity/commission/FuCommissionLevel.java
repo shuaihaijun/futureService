@@ -24,7 +24,7 @@ public class FuCommissionLevel {
     private Date modifyDate;
 
     /**
-     * 佣金发生来源 ( 0 订单返佣，1 其他返佣)
+     * 佣金发生来源 佣金类型（0 信号源返佣，1 多级返佣，2 社区返佣，3 其他）
      */
     private Integer commissionType;
 
@@ -34,17 +34,17 @@ public class FuCommissionLevel {
     private Integer orderType;
 
     /**
-     * 返佣用户类型（0 社区，1 信号源，2 多级返佣，3 IB）
+     * 用户类型（0 普通用户、1 试用会员、2 普通会员、3 VIP会员、4 业务员、5 PIB、6 MIB、7 IB、8 分析师、9 总监、10 总经理、11 信号源）
      */
     private Integer commissionUserType;
 
     /**
-     * 返佣角色等级
+     * 返佣用户等级（0级、1级、2级、3级）
      */
     private Integer commissionUserLevel;
 
     /**
-     * 比率计算类型（0 按原金额，1 按返佣金额）
+     * 比率计算类型（0 交易手数，1 按原金额，2 按返佣金额）
      */
     private Integer rateType;
 
@@ -102,16 +102,16 @@ public class FuCommissionLevel {
     }
 
     /**
-     * 佣金发生来源 ( 0 订单返佣，1 其他返佣)
-     * @return commission_type 佣金发生来源 ( 0 订单返佣，1 其他返佣)
+     * 佣金发生来源 佣金类型（0 信号源返佣，1 多级返佣，2 社区返佣，3 其他）
+     * @return commission_type 佣金发生来源 佣金类型（0 信号源返佣，1 多级返佣，2 社区返佣，3 其他）
      */
     public Integer getCommissionType() {
         return commissionType;
     }
 
     /**
-     * 佣金发生来源 ( 0 订单返佣，1 其他返佣)
-     * @param commissionType 佣金发生来源 ( 0 订单返佣，1 其他返佣)
+     * 佣金发生来源 佣金类型（0 信号源返佣，1 多级返佣，2 社区返佣，3 其他）
+     * @param commissionType 佣金发生来源 佣金类型（0 信号源返佣，1 多级返佣，2 社区返佣，3 其他）
      */
     public void setCommissionType(Integer commissionType) {
         this.commissionType = commissionType;
@@ -134,48 +134,48 @@ public class FuCommissionLevel {
     }
 
     /**
-     * 返佣用户类型（0 社区，1 信号源，2 多级返佣，3 IB）
-     * @return commission_user_type 返佣用户类型（0 社区，1 信号源，2 多级返佣，3 IB）
+     * 用户类型（0 普通用户、1 试用会员、2 普通会员、3 VIP会员、4 业务员、5 PIB、6 MIB、7 IB、8 分析师、9 总监、10 总经理、11 信号源）
+     * @return commission_user_type 用户类型（0 普通用户、1 试用会员、2 普通会员、3 VIP会员、4 业务员、5 PIB、6 MIB、7 IB、8 分析师、9 总监、10 总经理、11 信号源）
      */
     public Integer getCommissionUserType() {
         return commissionUserType;
     }
 
     /**
-     * 返佣用户类型（0 社区，1 信号源，2 多级返佣，3 IB）
-     * @param commissionUserType 返佣用户类型（0 社区，1 信号源，2 多级返佣，3 IB）
+     * 用户类型（0 普通用户、1 试用会员、2 普通会员、3 VIP会员、4 业务员、5 PIB、6 MIB、7 IB、8 分析师、9 总监、10 总经理、11 信号源）
+     * @param commissionUserType 用户类型（0 普通用户、1 试用会员、2 普通会员、3 VIP会员、4 业务员、5 PIB、6 MIB、7 IB、8 分析师、9 总监、10 总经理、11 信号源）
      */
     public void setCommissionUserType(Integer commissionUserType) {
         this.commissionUserType = commissionUserType;
     }
 
     /**
-     * 返佣角色等级
-     * @return commission_user_level 返佣角色等级
+     * 返佣用户等级（0级、1级、2级、3级）
+     * @return commission_user_level 返佣用户等级（0级、1级、2级、3级）
      */
     public Integer getCommissionUserLevel() {
         return commissionUserLevel;
     }
 
     /**
-     * 返佣角色等级
-     * @param commissionUserLevel 返佣角色等级
+     * 返佣用户等级（0级、1级、2级、3级）
+     * @param commissionUserLevel 返佣用户等级（0级、1级、2级、3级）
      */
     public void setCommissionUserLevel(Integer commissionUserLevel) {
         this.commissionUserLevel = commissionUserLevel;
     }
 
     /**
-     * 比率计算类型（0 按原金额，1 按返佣金额）
-     * @return rate_type 比率计算类型（0 按原金额，1 按返佣金额）
+     * 比率计算类型（0 交易手数，1 按原金额，2 按返佣金额）
+     * @return rate_type 比率计算类型（0 交易手数，1 按原金额，2 按返佣金额）
      */
     public Integer getRateType() {
         return rateType;
     }
 
     /**
-     * 比率计算类型（0 按原金额，1 按返佣金额）
-     * @param rateType 比率计算类型（0 按原金额，1 按返佣金额）
+     * 比率计算类型（0 交易手数，1 按原金额，2 按返佣金额）
+     * @param rateType 比率计算类型（0 交易手数，1 按原金额，2 按返佣金额）
      */
     public void setRateType(Integer rateType) {
         this.rateType = rateType;

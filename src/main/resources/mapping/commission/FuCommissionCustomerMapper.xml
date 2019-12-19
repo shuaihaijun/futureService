@@ -12,6 +12,7 @@
     <result column="source_order_state" jdbcType="TINYINT" property="sourceOrderState" />
     <result column="source_order_oper" jdbcType="TINYINT" property="sourceOrderOper" />
     <result column="source_order_money" jdbcType="DECIMAL" property="sourceOrderMoney" />
+    <result column="source_order_lots" jdbcType="DECIMAL" property="sourceOrderLots" />
     <result column="commission_type" jdbcType="TINYINT" property="commissionType" />
     <result column="commission_user_id" jdbcType="INTEGER" property="commissionUserId" />
     <result column="commission_user_type" jdbcType="TINYINT" property="commissionUserType" />
@@ -24,9 +25,9 @@
   </resultMap>
   <sql id="Base_Column_List">
     id, create_date, modify_date, oper_date, source_user_id, source_account_id, source_order_id, 
-    source_order_state, source_order_oper, source_order_money, commission_type, commission_user_id, 
-    commission_user_type, commission_user_level, commission_account_id, commission_rate, 
-    commission_money, commission_date, commission_state
+    source_order_state, source_order_oper, source_order_money, source_order_lots, commission_type, 
+    commission_user_id, commission_user_type, commission_user_level, commission_account_id, 
+    commission_rate, commission_money, commission_date, commission_state
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -42,15 +43,15 @@
     insert into fu_commission_customer (id, create_date, modify_date, 
       oper_date, source_user_id, source_account_id, 
       source_order_id, source_order_state, source_order_oper, 
-      source_order_money, commission_type, commission_user_id, 
-      commission_user_type, commission_user_level, 
+      source_order_money, source_order_lots, commission_type, 
+      commission_user_id, commission_user_type, commission_user_level, 
       commission_account_id, commission_rate, commission_money, 
       commission_date, commission_state)
     values (#{id,jdbcType=INTEGER}, #{createDate,jdbcType=TIMESTAMP}, #{modifyDate,jdbcType=TIMESTAMP}, 
       #{operDate,jdbcType=TIMESTAMP}, #{sourceUserId,jdbcType=INTEGER}, #{sourceAccountId,jdbcType=INTEGER}, 
       #{sourceOrderId,jdbcType=INTEGER}, #{sourceOrderState,jdbcType=TINYINT}, #{sourceOrderOper,jdbcType=TINYINT}, 
-      #{sourceOrderMoney,jdbcType=DECIMAL}, #{commissionType,jdbcType=TINYINT}, #{commissionUserId,jdbcType=INTEGER}, 
-      #{commissionUserType,jdbcType=TINYINT}, #{commissionUserLevel,jdbcType=TINYINT}, 
+      #{sourceOrderMoney,jdbcType=DECIMAL}, #{sourceOrderLots,jdbcType=DECIMAL}, #{commissionType,jdbcType=TINYINT}, 
+      #{commissionUserId,jdbcType=INTEGER}, #{commissionUserType,jdbcType=TINYINT}, #{commissionUserLevel,jdbcType=TINYINT}, 
       #{commissionAccountId,jdbcType=INTEGER}, #{commissionRate,jdbcType=DECIMAL}, #{commissionMoney,jdbcType=DECIMAL}, 
       #{commissionDate,jdbcType=TIMESTAMP}, #{commissionState,jdbcType=TINYINT})
   </insert>
@@ -86,6 +87,9 @@
       </if>
       <if test="sourceOrderMoney != null">
         source_order_money,
+      </if>
+      <if test="sourceOrderLots != null">
+        source_order_lots,
       </if>
       <if test="commissionType != null">
         commission_type,
@@ -146,6 +150,9 @@
       <if test="sourceOrderMoney != null">
         #{sourceOrderMoney,jdbcType=DECIMAL},
       </if>
+      <if test="sourceOrderLots != null">
+        #{sourceOrderLots,jdbcType=DECIMAL},
+      </if>
       <if test="commissionType != null">
         #{commissionType,jdbcType=TINYINT},
       </if>
@@ -205,6 +212,9 @@
       <if test="sourceOrderMoney != null">
         source_order_money = #{sourceOrderMoney,jdbcType=DECIMAL},
       </if>
+      <if test="sourceOrderLots != null">
+        source_order_lots = #{sourceOrderLots,jdbcType=DECIMAL},
+      </if>
       <if test="commissionType != null">
         commission_type = #{commissionType,jdbcType=TINYINT},
       </if>
@@ -246,6 +256,7 @@
       source_order_state = #{sourceOrderState,jdbcType=TINYINT},
       source_order_oper = #{sourceOrderOper,jdbcType=TINYINT},
       source_order_money = #{sourceOrderMoney,jdbcType=DECIMAL},
+      source_order_lots = #{sourceOrderLots,jdbcType=DECIMAL},
       commission_type = #{commissionType,jdbcType=TINYINT},
       commission_user_id = #{commissionUserId,jdbcType=INTEGER},
       commission_user_type = #{commissionUserType,jdbcType=TINYINT},

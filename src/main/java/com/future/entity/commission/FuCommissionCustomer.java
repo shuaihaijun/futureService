@@ -59,6 +59,11 @@ public class FuCommissionCustomer {
     private BigDecimal sourceOrderMoney;
 
     /**
+     * 订单手数
+     */
+    private BigDecimal sourceOrderLots;
+
+    /**
      * 佣金类型（0 信号源返佣，1 多级返佣，2 社区返佣，3 其他）
      */
     private Integer commissionType;
@@ -74,7 +79,7 @@ public class FuCommissionCustomer {
     private Integer commissionUserType;
 
     /**
-     * 收佣用户等级
+     * 收佣等级（0级、1级、2级、3级）
      */
     private Integer commissionUserLevel;
 
@@ -264,6 +269,22 @@ public class FuCommissionCustomer {
     }
 
     /**
+     * 订单手数
+     * @return source_order_lots 订单手数
+     */
+    public BigDecimal getSourceOrderLots() {
+        return sourceOrderLots;
+    }
+
+    /**
+     * 订单手数
+     * @param sourceOrderLots 订单手数
+     */
+    public void setSourceOrderLots(BigDecimal sourceOrderLots) {
+        this.sourceOrderLots = sourceOrderLots;
+    }
+
+    /**
      * 佣金类型（0 信号源返佣，1 多级返佣，2 社区返佣，3 其他）
      * @return commission_type 佣金类型（0 信号源返佣，1 多级返佣，2 社区返佣，3 其他）
      */
@@ -312,16 +333,16 @@ public class FuCommissionCustomer {
     }
 
     /**
-     * 收佣用户等级
-     * @return commission_user_level 收佣用户等级
+     * 收佣等级（0级、1级、2级、3级）
+     * @return commission_user_level 收佣等级（0级、1级、2级、3级）
      */
     public Integer getCommissionUserLevel() {
         return commissionUserLevel;
     }
 
     /**
-     * 收佣用户等级
-     * @param commissionUserLevel 收佣用户等级
+     * 收佣等级（0级、1级、2级、3级）
+     * @param commissionUserLevel 收佣等级（0级、1级、2级、3级）
      */
     public void setCommissionUserLevel(Integer commissionUserLevel) {
         this.commissionUserLevel = commissionUserLevel;

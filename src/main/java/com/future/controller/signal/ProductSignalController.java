@@ -6,6 +6,7 @@ import com.future.common.util.ThreadCache;
 import com.future.entity.product.FuProductSignal;
 import com.future.entity.product.FuProductSignalApply;
 import com.future.entity.user.FuUserFollows;
+import com.future.pojo.vo.signal.FuUserSignalVO;
 import com.future.service.product.FollowsService;
 import com.future.service.product.FuProductSignalService;
 import org.slf4j.Logger;
@@ -30,9 +31,9 @@ public class ProductSignalController {
     FollowsService followsService;
 
     //查找申请信息
-    @RequestMapping(value= "/findApplyById",method=RequestMethod.POST)
+    @RequestMapping(value= "/findSignalById",method=RequestMethod.POST)
     public @ResponseBody
-    FuProductSignal findApplyById(){
+    FuProductSignal findSignalById(){
         // 获取请求参数
         String requestJSONStr = ThreadCache.getPostRequestParams();
         JSONObject requestMap = JSONObject.parseObject(requestJSONStr);
@@ -44,9 +45,9 @@ public class ProductSignalController {
     }
 
     //查找申请信息
-    @RequestMapping(value= "/findApply",method=RequestMethod.POST)
+    @RequestMapping(value= "/getSignalInfos",method=RequestMethod.POST)
     public @ResponseBody
-    Page<FuProductSignal>findApply(){
+    Page<FuProductSignal>getSignalInfos(){
         // 获取请求参数
         String requestJSONStr = ThreadCache.getPostRequestParams();
         JSONObject requestMap = JSONObject.parseObject(requestJSONStr);
@@ -67,16 +68,13 @@ public class ProductSignalController {
         /*条件查询日期不能超过1周*/
         return fuProductSignalService.saveProductSignal(requestMap);
     }
-    //修改申请信息
-    @RequestMapping(value= "/updateApply",method=RequestMethod.POST)
-    public @ResponseBody Boolean updateApply(){
+    //查询信号源用户信息
+    @RequestMapping(value= "/querySignalUsers",method=RequestMethod.POST)
+    public @ResponseBody Page<FuUserSignalVO> querySignalUsers(){
         // 获取请求参数
         String requestJSONStr = ThreadCache.getPostRequestParams();
         JSONObject requestMap = JSONObject.parseObject(requestJSONStr);
-        String signalId=requestMap.getString("signalId");
-        String username=requestMap.getString("username");
-        /*校验参数*/
-        return fuProductSignalService.updateProductSignal(Integer.parseInt(signalId),requestMap);
+        return fuProductSignalService.querySignalUsers(requestMap);
     }
 
     //删除申请信息
