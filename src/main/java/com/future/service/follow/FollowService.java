@@ -344,7 +344,9 @@ public class FollowService{
         }
         followInfo.setOrderMagic(orderJson.getBigDecimal("_magic"));
 
-        /*计算佣金*/
+        /*计算信号源佣金*/
+
+        /*计算代理佣金*/
 
         /*保存至数据库*/
         fuOrderFollowInfoService.insertSelective(followInfo);

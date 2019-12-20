@@ -7,6 +7,8 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 public class FuAccountInfo {
+
+    public static String USER_ID ="user_id";
     /**
      * 
      */

@@ -5,16 +5,18 @@ import com.jfx.MT4Exception;
 import com.jfx.MarketInfo;
 import com.jfx.TradeOperation;
 import com.jfx.strategy.Strategy;
+import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 
 import java.io.IOException;
 
 public class MTStrategy extends Strategy {
 
-    public Broker MT_4_SERVER = new Broker("AETOS-Demo F");
-    public String MT_4_USER = "2102261700";
-    public String MT_4_PASSWORD = "jxg3vvd";
-    public String HOST_URL="127.0.0.1";//"127.0.0.1"
-    public int HOST_PORT=7788;//"127.0.0.1"
+    public Broker MT_4_SERVER ;//= new Broker("AETOS-Demo F");
+    public String MT_4_USER;// = "2102261700";
+    public String MT_4_PASSWORD ;//= "jxg3vvd";
+    public String HOST_URL;//="127.0.0.1";//"127.0.0.1"
+    public int HOST_PORT=0;//=7788;//"127.0.0.1"
 
     public void setMtData(Broker broker,String username,String password){
         MT_4_SERVER =broker;
@@ -27,6 +29,16 @@ public class MTStrategy extends Strategy {
         HOST_PORT=hostPort;
     }
 
+    public Boolean checkData(){
+        if(StringUtils.isEmpty(MT_4_USER)
+            ||StringUtils.isEmpty(MT_4_PASSWORD)
+                ||StringUtils.isEmpty(HOST_URL)
+                || ObjectUtils.isEmpty(MT_4_SERVER)
+                || HOST_PORT ==0){
+            return false;
+        }
+        return true;
+    }
     /**
      * 初始化连接
      * @return

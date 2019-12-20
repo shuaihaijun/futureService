@@ -7,6 +7,13 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 public class FuCommissionLevel {
+
+    public static String COMMISSION_TYPE ="commission_type";
+    public static String ORDER_TYPE ="order_type";
+    public static String COMMISSION_USER_TYPE ="commission_user_type";
+    public static String COMMISSION_USER_LEVEL ="commission_user_level";
+    public static String RATE_TYPE ="rate_type";
+
     /**
      * 
      */
@@ -39,12 +46,12 @@ public class FuCommissionLevel {
     private Integer commissionUserType;
 
     /**
-     * 返佣用户等级（0级、1级、2级、3级）
+     * 收佣等级（1级、2级、3级）
      */
     private Integer commissionUserLevel;
 
     /**
-     * 比率计算类型（0 交易手数，1 按原金额，2 按返佣金额）
+     * 比率计算类型（0 交易手数，1 按原金额，2 按返佣金额, 3 指定金额）
      */
     private Integer rateType;
 
@@ -150,32 +157,32 @@ public class FuCommissionLevel {
     }
 
     /**
-     * 返佣用户等级（0级、1级、2级、3级）
-     * @return commission_user_level 返佣用户等级（0级、1级、2级、3级）
+     * 收佣等级（1级、2级、3级）
+     * @return commission_user_level 收佣等级（1级、2级、3级）
      */
     public Integer getCommissionUserLevel() {
         return commissionUserLevel;
     }
 
     /**
-     * 返佣用户等级（0级、1级、2级、3级）
-     * @param commissionUserLevel 返佣用户等级（0级、1级、2级、3级）
+     * 收佣等级（1级、2级、3级）
+     * @param commissionUserLevel 收佣等级（1级、2级、3级）
      */
     public void setCommissionUserLevel(Integer commissionUserLevel) {
         this.commissionUserLevel = commissionUserLevel;
     }
 
     /**
-     * 比率计算类型（0 交易手数，1 按原金额，2 按返佣金额）
-     * @return rate_type 比率计算类型（0 交易手数，1 按原金额，2 按返佣金额）
+     * 比率计算类型（0 交易手数，1 按原金额，2 按返佣金额, 3 指定金额）
+     * @return rate_type 比率计算类型（0 交易手数，1 按原金额，2 按返佣金额, 3 指定金额）
      */
     public Integer getRateType() {
         return rateType;
     }
 
     /**
-     * 比率计算类型（0 交易手数，1 按原金额，2 按返佣金额）
-     * @param rateType 比率计算类型（0 交易手数，1 按原金额，2 按返佣金额）
+     * 比率计算类型（0 交易手数，1 按原金额，2 按返佣金额, 3 指定金额）
+     * @param rateType 比率计算类型（0 交易手数，1 按原金额，2 按返佣金额, 3 指定金额）
      */
     public void setRateType(Integer rateType) {
         this.rateType = rateType;

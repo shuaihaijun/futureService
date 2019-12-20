@@ -13,11 +13,16 @@ import com.future.mapper.order.FuOrderCustomerMapper;
 import com.future.pojo.bo.order.UserMTAccountBO;
 import com.future.service.account.FuAccountMtSevice;
 import com.future.service.account.FuAccoutInfoService;
+import com.future.service.commission.FuCommissionCustomerService;
 import com.future.service.mt.MTOrderService;
+import com.future.service.mt.MTStrategy;
+import com.jfx.AccountInfo;
 import com.jfx.Broker;
+import com.jfx.SelectionPool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
@@ -34,11 +39,14 @@ public class FuOrderCustomerService extends ServiceImpl<FuOrderCustomerMapper, F
     @Autowired
     FuAccountMtSevice fuAccountMtSevice;
     @Autowired
-    FuOrderFollowInfoService fuOrderInfoService;
+    FuOrderFollowInfoService fuOrderFollowInfoService;
     @Autowired
     MTOrderService mtOrderService;
     @Autowired
+    FuCommissionCustomerService fuCommissionCustomerService;
+    @Autowired
     FuOrderCustomerMapper fuOrderCustomerMapper;
+
 
     /**
      * 查询 用户已同步最后的自如交易订单
@@ -94,16 +102,13 @@ public class FuOrderCustomerService extends ServiceImpl<FuOrderCustomerMapper, F
         String password;
         String mtAccountId;
         Map selectMap=new HashMap();
-
+        selectMap.put(FuOrderCustomer.USER_ID,userId);
         try {
             for(UserMTAccountBO userMTAccountBO:accounts){
-                if(!userMTAccountBO.getMtAccId().equalsIgnoreCase("2102261700")){
-                    continue;
-                }
                 customers.clear();
                 fuOrderInfos.clear();
                 server=String.valueOf(userMTAccountBO.getServerName());
-                password=String.valueOf(userMTAccountBO.getMtPasswordTrade());
+                password=String.valueOf(userMTAccountBO.getMtPasswordWatch());
                 userId=Integer.valueOf(userMTAccountBO.getUserId());
                 mtAccountId=String.valueOf(userMTAccountBO.getMtAccId());
 
@@ -112,20 +117,31 @@ public class FuOrderCustomerService extends ServiceImpl<FuOrderCustomerMapper, F
                     continue;
                 }
                 broker=new Broker(server);
-
+                MTStrategy strategy=new MTStrategy();
+                strategy.setMtData(broker,mtAccountId,password);
+                strategy.setServerData(userMTAccountBO.getAccountUrl(),userMTAccountBO.getAccountPort());
                 /*只同步已完成的订单*/
-                fuOrderInfos=mtOrderService.getHistoryOrders(broker,mtAccountId,password,lastCLostTime,new Date(),null);
+                fuOrderInfos=mtOrderService.getOrders(strategy, SelectionPool.MODE_HISTORY,lastCLostTime,new Date(),null);
 
+                /*跟新 userId 的 mtAccId 账户信息*/
+                AccountInfo accountInfo=mtOrderService.getAccountInfo(strategy);
+                fuAccountMtSevice.updateAccFromMt(userId,mtAccountId,accountInfo);
+
+                /*处理订单*/
                 if(!ObjectUtils.isEmpty(fuOrderInfos)){
                     for(FuOrderFollowInfo fuOrderInfo:fuOrderInfos){
                         /*与社区订单查重，已有订单无需操作*/
-                        selectMap.put("order_id",fuOrderInfo.getOrderId());
+                        selectMap.put(FuOrderCustomer.ORDER_ID,fuOrderInfo.getOrderId());
                         List<FuOrderCustomer> infos=fuOrderCustomerMapper.selectByMap(selectMap);
-                        selectMap.clear();
                         if(infos!=null&&infos.size()>0){
-                            /*数据已存在*/
+                            /*数据已存在=*/
                             continue;
                         }
+                        FuOrderFollowInfo followInfo= fuOrderFollowInfoService.getOrderByCondition(userId,fuOrderInfo.getOrderId());
+                        if(followInfo!=null){
+                            /*跟单时 已处理过的数据=*/
+                            continue;
+                        };
                         /*转换订单*/
                         FuOrderCustomer customerInfo= ConvertUtil.convertOrderCustomer(fuOrderInfo);
                         customerInfo.setUserId(userId);
@@ -134,8 +150,11 @@ public class FuOrderCustomerService extends ServiceImpl<FuOrderCustomerMapper, F
                         fuOrderCustomerMapper.insertSelective(customerInfo);
                         customers.add(customerInfo);
                     }
+                    /*用户自交易订单 计算代理佣金*/
+                    fuCommissionCustomerService.dealUserOrderCommission(userId,customers);
+
                     /*批量保存用户自交易订单*/
-//                    insertBatch(customers);
+                    insertBatch(customers);
                 }
             }
         }catch (Exception e){
@@ -144,7 +163,6 @@ public class FuOrderCustomerService extends ServiceImpl<FuOrderCustomerMapper, F
         }
 
     }
-
 
     /**
      * 根据条件查询用户自主交易订单

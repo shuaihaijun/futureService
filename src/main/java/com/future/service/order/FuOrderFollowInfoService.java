@@ -4,7 +4,9 @@ import com.alibaba.druid.util.StringUtils;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.future.common.constants.RedisConstant;
 import com.future.common.constants.UserConstant;
+import com.future.common.enums.GlobalResultCode;
 import com.future.common.exception.BusinessException;
+import com.future.common.exception.ParameterInvalidException;
 import com.future.common.util.RedisManager;
 import com.future.entity.order.FuOrderCustomer;
 import com.future.entity.order.FuOrderFollowInfo;
@@ -120,7 +122,6 @@ public class FuOrderFollowInfoService extends ServiceImpl<FuOrderFollowInfoMappe
             /*默认查询主账户号*/
             acountMap.put("userId",userId);
             acountMap.put("username",username);
-            acountMap.put("isChief",1);
         }
         List<UserMTAccountBO> mts=fuAccountMtSevice.getUserMTAccByCondition(acountMap);
         if(ObjectUtils.isEmpty(mts)||mts.isEmpty()){
@@ -196,7 +197,6 @@ public class FuOrderFollowInfoService extends ServiceImpl<FuOrderFollowInfoMappe
         if(StringUtils.isEmpty(accountId)){
             /*默认查询主账户号*/
             acountMap.put("username",username);
-            acountMap.put("isChief",1);
         }else {
             acountMap.put("accountId",accountId);
         }
@@ -245,14 +245,24 @@ public class FuOrderFollowInfoService extends ServiceImpl<FuOrderFollowInfoMappe
     }
 
     /**
-     * 根据orderId查询订单信息
+     * 根据orderId+userId查询订单信息
      * @param orderId
      * @return
      */
-    public FuOrderFollowInfo getOrderById(String orderId){
-
-        FuOrderFollowInfo fuOrderInfo=new FuOrderFollowInfo();
+    public FuOrderFollowInfo getOrderByCondition(Integer userId,String orderId){
+        if(userId==0
+            ||StringUtils.isEmpty(orderId)){
+            log.error("根据orderId+userId查询订单信息,参数为空！");
+            throw new ParameterInvalidException("根据orderId+userId查询订单信息,参数为空！");
+        }
         /*redis 或 数据库*/
+        Map conditionMap =new HashMap();
+        conditionMap.put(FuOrderFollowInfo.USER_ID,userId);
+        conditionMap.put(FuOrderFollowInfo.ORDER_ID,orderId);
+        List<FuOrderFollowInfo> infos=fuOrderFollowInfoMapper.selectByMap(conditionMap);
+        if (infos!=null){
+            return infos.get(0);
+        }
         return null;
     }
 

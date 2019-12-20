@@ -21,6 +21,7 @@ import com.future.mapper.product.FuProductSignalMapper;
 import com.future.mapper.user.FuUserMapper;
 import com.future.pojo.bo.order.UserMTAccountBO;
 import com.future.service.mt.MTAccountService;
+import com.jfx.AccountInfo;
 import com.jfx.Broker;
 import com.jfx.strategy.OrderInfo;
 import com.jfx.strategy.Strategy;
@@ -31,6 +32,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -430,6 +432,39 @@ public class FuAccountMtSevice extends ServiceImpl<FuAccountMtMapper, FuAccountM
         }
         fuAccountMtMapper.updateByPrimaryKeySelective(accountMts.get(0));
     }
+
+    /**
+     * 根据MT账户信息 更新
+     * @param userId
+     * @param mtAccId
+     * @param accountInfo
+     */
+    public void updateAccFromMt(Integer userId,String mtAccId, AccountInfo accountInfo){
+        if (userId==0
+            ||StringUtils.isEmpty(mtAccId)
+                ||ObjectUtils.isEmpty(accountInfo)){
+            log.error("传入参数为空！");
+            throw new RuntimeException("根据MT账户信息更新；传入参数为空！");
+        }
+        Map conditionMap=new HashMap();
+        conditionMap.put(FuAccountMt.USER_ID,userId);
+        conditionMap.put(FuAccountMt.MT_ACC_ID,mtAccId);
+        List<FuAccountMt> accountMts= fuAccountMtMapper.selectByMap(conditionMap);
+        if(accountMts==null||accountMts.size()==0){
+            log.error("根据传入参数，查询结果为空！");
+            throw new RuntimeException("根据MT账户信息更新；根据传入参数，查询结果为空！");
+        }
+        FuAccountMt accountMt=accountMts.get(0);
+        accountMt.setBalance(new BigDecimal(accountInfo.getBalance()));
+        accountMt.setLeverage(new BigDecimal(accountInfo.getLeverage()));
+        accountMt.setCredit(new BigDecimal(accountInfo.getCredit()));
+        accountMt.setProfit(new BigDecimal(accountInfo.getProfit()));
+        accountMt.setEquity(new BigDecimal(accountInfo.getEquity()));
+        accountMt.setMargin(new BigDecimal(accountInfo.getMargin()));
+        fuAccountMtMapper.updateByPrimaryKey(accountMt);
+    }
+
+
 
     /**
      * 根据端口号 判断初始服务地址

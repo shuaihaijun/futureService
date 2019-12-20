@@ -130,6 +130,62 @@ public class MTOrderService {
     }
 
     /**
+     * 获取订单信息(在仓/历史)
+     * @param selectionPool
+     * @param dateFrom
+     * @param dateTo
+     * @param symbol
+     * @return
+     */
+    public List<FuOrderFollowInfo> getOrders(MTStrategy mtStrategy, SelectionPool selectionPool, Date dateFrom,Date dateTo,String symbol){
+
+        if(ObjectUtils.isEmpty(selectionPool)){
+            selectionPool= SelectionPool.MODE_HISTORY;
+        }
+
+        try {
+            if(!mtStrategy.checkData()){
+                log.error("获取MT账户信息 参数信息不全！");
+                throw new BusinessException("获取MT账户信息 参数信息不全！");
+            }
+            /*连接服务器*/
+            mtStrategy.init();
+            Map<Long, OrderInfo> userOrders=mtStrategy.orderGetAll(selectionPool, dateFrom,dateTo,symbol);
+            return ConvertUtil.convertOrderInfo(userOrders);
+
+        }catch (Exception e){
+            log.error(e.getMessage(),e);
+            throw new BusinessException(e);
+        }
+    }
+
+    /**
+     * 获取MT账户信息
+     * @return
+     */
+    public AccountInfo getAccountInfo(MTStrategy mtStrategy){
+
+        try {
+            if(!mtStrategy.checkData()){
+                log.error("获取MT账户信息 参数信息不全！");
+                throw new BusinessException("获取MT账户信息 参数信息不全！");
+            }
+            /*连接服务器*/
+            mtStrategy.init();
+            /*连接数据*//*
+            if(!mtStrategy.init(userTermServerHost,userTermServerPort,account)){
+                log.error("user connect failed, username:"+username);
+                throw new RuntimeException("user connect failed!");
+            }*/
+            return mtStrategy.accountInfo();
+
+        }catch (Exception e){
+            log.error(e.getMessage(),e);
+            throw new BusinessException(e);
+        }
+    }
+
+    /**
      * 根据订单序号查询历史订单信息
      * @param broker
      * @param username

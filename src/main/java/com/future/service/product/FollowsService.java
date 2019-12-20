@@ -85,7 +85,6 @@ public class FollowsService extends ServiceImpl<FuUserFollowsMapper, FuUserFollo
 
         Map conMap=new HashMap();
         conMap.put("userId",userId);
-        conMap.put("isChief",1); // 账号
         FuProductSignal signal=fuProductSignalMapper.selectByPrimaryKey(Integer.parseInt(signalId));
         List<UserMTAccountBO> userAccounts= fuAccountMtSevice.getUserMTAccByCondition(conMap);
         if(ObjectUtils.isEmpty(signal)){

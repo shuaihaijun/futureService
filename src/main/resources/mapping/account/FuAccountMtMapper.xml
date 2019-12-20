@@ -381,6 +381,9 @@
       <if test="brokerName != null">
         and s.broker_name = #{brokerName,jdbcType=VARCHAR}
       </if>
+      <if test="isAccount != null">
+        and u.is_account = #{isAccount,jdbcType=VARCHAR}
+      </if>
     </trim>
   </select>
   <update id="updateByPrimaryCondition" parameterType="com.future.entity.account.FuAccountMt">

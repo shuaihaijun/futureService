@@ -19,4 +19,6 @@ public interface FuUserMapper extends BaseMapper<FuUser> {
     int updateByPrimaryKey(FuUser record);
 
     FuUser selectByUsername(String name);
+
+    FuUser findUserIntroducer(Integer id);
 }

@@ -386,10 +386,46 @@
       modify_date = #{modifyDate,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <select id="selectByUsername" parameterType="java.lang.String" resultType="com.future.entity.user.FuUser">
+  <select id="selectByUsername" parameterType="java.lang.String" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
     from fu_user
     where username = #{userName,jdbcType=INTEGER}
+  </select>
+  <select id="findUserIntroducer" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+      b.id,
+      b.username,
+      b.PASSWORD,
+      b.real_name,
+      b.ref_name,
+      b.user_type,
+      b.user_state,
+      b.email,
+      b.phone,
+      b.mobile,
+      b.reg_time,
+      b.last_login,
+      b.login_ip,
+      b.reg_ip,
+      b.is_verified,
+      b.is_account,
+      b.introducer,
+      b.recommend,
+      b.sex,
+      b.country,
+      b.province,
+      b.city,
+      b.address,
+      b.follow_level,
+      b.id_obverse,
+      b.id_Front,
+      b.avatar_url,
+      b.salt,
+      b.create_date,
+      b.modify_date
+    FROM
+	fu_user a INNER JOIN fu_user b ON a.introducer = b.id
+    where a.id = #{id,jdbcType=INTEGER}
   </select>
 </mapper>

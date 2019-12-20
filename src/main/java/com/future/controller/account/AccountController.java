@@ -48,7 +48,6 @@ public class AccountController {
             /*默认查询主账户号*/
             conditonMap.put("userId",userId);
             conditonMap.put("username",username);
-            conditonMap.put("isChief",1);
         }else if(!StringUtils.isEmpty(mtAccId)){
             conditonMap.put("userId",userId);
             conditonMap.put("username",username);
@@ -86,7 +85,6 @@ public class AccountController {
             /*默认查询主账户号*/
             conditonMap.put("userId",userId);
             conditonMap.put("username",username);
-            conditonMap.put("isChief",1);
         }else if(!StringUtils.isEmpty(mtAccId)){
             conditonMap.put("userId",userId);
             conditonMap.put("username",username);

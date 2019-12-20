@@ -13,10 +13,14 @@ import com.future.common.exception.DataConflictException;
 import com.future.common.util.BeanUtil;
 import com.future.common.util.ConvertUtil;
 import com.future.common.util.StringUtils;
+import com.future.entity.account.FuAccountInfo;
 import com.future.entity.com.FuComAgent;
 import com.future.entity.com.FuComAgentApply;
+import com.future.entity.product.FuProductSignalApply;
 import com.future.mapper.com.FuComAgentApplyMapper;
 import com.future.mapper.com.FuComAgentMapper;
+import com.future.service.account.FuAccountCommissionSevice;
+import com.future.service.account.FuAccountInfoSevice;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +30,7 @@ import org.springframework.util.ObjectUtils;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -34,6 +39,10 @@ public class FuComAgentApplyService extends ServiceImpl<FuComAgentApplyMapper,Fu
 
     Logger log= LoggerFactory.getLogger(FuComAgentApplyService.class);
 
+    @Autowired
+    FuAccountInfoSevice fuAccountInfoSevice;
+    @Autowired
+    FuAccountCommissionSevice fuAccountCommissionSevice;
     @Autowired
     FuComAgentApplyMapper agentApplyMapper;
     @Autowired
@@ -233,9 +242,19 @@ public class FuComAgentApplyService extends ServiceImpl<FuComAgentApplyMapper,Fu
 
                 FuComAgent agent= new FuComAgent();
                 BeanUtil.copyProperties(agentApply,agent);
-
                 /*初始化代理数据*/
                 agent.setId(null);
+
+                /*建立社区佣金账户*/
+                Map conditionMap =new HashMap();
+                conditionMap.put(FuProductSignalApply.USER_ID,agent.getUserId());
+                List<FuAccountInfo> accountInfos= fuAccountInfoSevice.selectByMap(conditionMap);
+                if(accountInfos==null || accountInfos.size()==0){
+                    log.error("查询社区账户信息错误！");
+                    throw new BusinessException("查询社区账户信息错误！");
+                }
+                fuAccountCommissionSevice.initAccountCommission(agent.getUserId(),accountInfos.get(0).getId());
+
                 /*保存信号源*/
                 agentMapper.insertSelective(agent);
             }else if(state==SignalConstant.SIGNAL_APPLY_STATE_UNPASS){

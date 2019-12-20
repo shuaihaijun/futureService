@@ -79,7 +79,7 @@ public class FuCommissionCustomer {
     private Integer commissionUserType;
 
     /**
-     * 收佣等级（0级、1级、2级、3级）
+     * 收佣等级（1级、2级、3级）
      */
     private Integer commissionUserLevel;
 
@@ -333,16 +333,16 @@ public class FuCommissionCustomer {
     }
 
     /**
-     * 收佣等级（0级、1级、2级、3级）
-     * @return commission_user_level 收佣等级（0级、1级、2级、3级）
+     * 收佣等级（1级、2级、3级）
+     * @return commission_user_level 收佣等级（1级、2级、3级）
      */
     public Integer getCommissionUserLevel() {
         return commissionUserLevel;
     }
 
     /**
-     * 收佣等级（0级、1级、2级、3级）
-     * @param commissionUserLevel 收佣等级（0级、1级、2级、3级）
+     * 收佣等级（1级、2级、3级）
+     * @param commissionUserLevel 收佣等级（1级、2级、3级）
      */
     public void setCommissionUserLevel(Integer commissionUserLevel) {
         this.commissionUserLevel = commissionUserLevel;

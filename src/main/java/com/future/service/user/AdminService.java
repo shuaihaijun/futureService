@@ -18,11 +18,13 @@ import com.future.common.result.ResultMsg;
 import com.future.common.util.CommonUtil;
 import com.future.common.util.RedisManager;
 import com.future.common.util.RequestContextHolderUtil;
+import com.future.entity.account.FuAccountInfo;
 import com.future.entity.order.FuOrderCustomer;
 import com.future.entity.user.FuUser;
 import com.future.mapper.user.FuUserMapper;
 import com.future.pojo.bo.AdminInfo;
 import com.future.pojo.bo.order.UserMTAccountBO;
+import com.future.service.account.FuAccountInfoSevice;
 import com.future.service.account.FuAccountMtSevice;
 import com.github.pagehelper.PageInfo;
 import org.apache.tomcat.util.security.MD5Encoder;
@@ -48,6 +50,8 @@ public class AdminService extends ServiceImpl<FuUserMapper,FuUser> {
     FuUserMapper fuUserMapper;
     @Autowired
     FuAccountMtSevice fuAccountMtSevice;
+    @Autowired
+    FuAccountInfoSevice fuAccountInfoSevice;
     @Autowired
     RedisManager redisManager;
 
@@ -188,12 +192,14 @@ public class AdminService extends ServiceImpl<FuUserMapper,FuUser> {
 
             /*保存数据*/
             int userId= fuUserMapper.insertSelective(fuUser);
+
+            /*设置社区账户*/
+            fuAccountInfoSevice.initAccountInfo(userId,fuUser.getPassword());
+
             /*跟新介绍人 信息*/
             fuUserMapper.updateByPrimaryKeySelective(introducer);
 
-
             /*更新缓存*/
-
 //            FuUser user=fuUserMapper.selectByUsername(fuUser.getUsername());
             //*返回数据填充/*
             Map userMap=new HashMap();
@@ -496,7 +502,6 @@ public class AdminService extends ServiceImpl<FuUserMapper,FuUser> {
         Map conditonMap=new HashMap();
         /*默认查询主账户号*/
         conditonMap.put("username",username);
-        conditonMap.put("isChief",1);
         List<UserMTAccountBO> accouts=  fuAccountMtSevice.getUserMTAccByCondition(conditonMap);
         if(accouts==null || accouts.size()==0){
             //未查找用户MT账户信息
@@ -516,5 +521,19 @@ public class AdminService extends ServiceImpl<FuUserMapper,FuUser> {
         fuUserMapper.updateByPrimaryKeySelective(user);
 
         return user;
+    }
+
+    /**
+     * 根据用户ID 查询用户介绍人信息
+     * @param userId
+     * @return
+     */
+    public FuUser findUserIntroducer(Integer userId){
+        /*判断查询条件*/
+        if(userId==0){
+            log.error(" 查询用户介绍人信息 参数为空！");
+            throw new ParameterInvalidException("查询用户介绍人信息 参数为空！");
+        }
+        return fuUserMapper.findUserIntroducer(userId);
     }
 }

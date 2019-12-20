@@ -16,7 +16,7 @@ public class UserMTAccountBO {
     private int passwordTradeChecked;//交易密码是否已校验（0 否，1是
     private int passwordWatchChecked;//观摩密码是否已校验（0 否，1是
     private int accountType;//账户类型：0 mt4,1 mt5
-    private int isChief;//是否为主账号
+    private int isChief;//是否为社区账号
     private Integer isSignal;//是否为信号源账号(1 是，0 否)
     private String accountUrl;//账户所在位置URL
     private Integer accountPort;//账户所在位置PORT

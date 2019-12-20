@@ -12,11 +12,14 @@ import com.future.common.exception.BusinessException;
 import com.future.common.exception.DataConflictException;
 import com.future.common.util.ConvertUtil;
 import com.future.common.util.StringUtils;
+import com.future.entity.account.FuAccountInfo;
 import com.future.entity.account.FuAccountMt;
 import com.future.entity.product.FuProductSignal;
 import com.future.entity.product.FuProductSignalApply;
 import com.future.mapper.product.FuProductSignalApplyMapper;
 import com.future.mapper.product.FuProductSignalMapper;
+import com.future.service.account.FuAccountCommissionSevice;
+import com.future.service.account.FuAccountInfoSevice;
 import com.future.service.account.FuAccountMtSevice;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,6 +48,10 @@ public class FuProductSignalApplyService extends ServiceImpl<FuProductSignalAppl
     FuProductSignalMapper fuProductSignalMapper;
     @Autowired
     FuAccountMtSevice fuAccountMtSevice;
+    @Autowired
+    FuAccountInfoSevice fuAccountInfoSevice;
+    @Autowired
+    FuAccountCommissionSevice fuAccountCommissionSevice;
 
     /**
      * 根据条件查找信号源信息
@@ -282,12 +289,22 @@ public class FuProductSignalApplyService extends ServiceImpl<FuProductSignalAppl
                 signal.setCreateDate(new Date());
                 signal.setModifyDate(new Date());
 
+                /*建立社区佣金账户*/
+                Map conditionMap =new HashMap();
+                conditionMap.put(FuProductSignalApply.USER_ID,signal.getUserId());
+                List<FuAccountInfo> accountInfos= fuAccountInfoSevice.selectByMap(conditionMap);
+                if(accountInfos==null || accountInfos.size()==0){
+                    log.error("查询社区账户信息错误！");
+                    throw new BusinessException("查询社区账户信息错误！");
+                }
+                fuAccountCommissionSevice.initAccountCommission(signal.getUserId(),accountInfos.get(0).getId());
+
                 /*修改绑定MT账号状态  isSignal=1、 设置端口等 */
                 fuAccountMtSevice.checkSignalMtAccount(apply.getUserId(),apply.getServerName(),apply.getMtAccId());
-
                 /*保存信号源*/
                 fuProductSignalMapper.insertSelective(signal);
                 signalApply.setApplyState(SignalConstant.SIGNAL_APPLY_STATE_NORMAL);
+
             }else if(state==SignalConstant.SIGNAL_APPLY_STATE_UNPASS){
                 /*审核未通过*/
                 signalApply.setApplyState(SignalConstant.SIGNAL_APPLY_STATE_UNPASS);

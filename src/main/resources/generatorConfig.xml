@@ -30,7 +30,7 @@
         <javaClientGenerator type="XMLMAPPER" targetPackage="com.future.mapper.user" targetProject="src/main/java">
             <property name="enableSubPackages" value="true"/>
         </javaClientGenerator>
-        <!--fu_account_mt  fu_account_withdraw fu_commission_customer fu_commission_level fu_user_order_day fu_product_signal_valuation-->
+        <!--fu_commission_customer source_order_id commission_rate_type->
         <!-- 要生成的表 tableName是数据库中的表名或视图名 domainObjectName是实体类名-->
         <table tableName="fu_user" domainObjectName="FuUser" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>
     </context>
