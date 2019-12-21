@@ -11,6 +11,7 @@
     <result column="commission_paid" jdbcType="DECIMAL" property="commissionPaid" />
     <result column="commission_total" jdbcType="DECIMAL" property="commissionTotal" />
     <result column="commission_source_money" jdbcType="DECIMAL" property="commissionSourceMoney" />
+    <result column="commission_source_lots" jdbcType="DECIMAL" property="commissionSourceLots" />
     <result column="commission_level" jdbcType="TINYINT" property="commissionLevel" />
     <result column="commission_rate" jdbcType="DECIMAL" property="commissionRate" />
     <result column="commission_debt_amt" jdbcType="DECIMAL" property="commissionDebtAmt" />
@@ -18,8 +19,8 @@
   </resultMap>
   <sql id="Base_Column_List">
     id, create_date, modify_date, user_id, account_id, commission_money, commission_paid, 
-    commission_total, commission_source_money, commission_level, commission_rate, commission_debt_amt, 
-    account_state
+    commission_total, commission_source_money, commission_source_lots, commission_level, 
+    commission_rate, commission_debt_amt, account_state
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -35,13 +36,15 @@
     insert into fu_account_commission (id, create_date, modify_date, 
       user_id, account_id, commission_money, 
       commission_paid, commission_total, commission_source_money, 
-      commission_level, commission_rate, commission_debt_amt, 
-      account_state)
+      commission_source_lots, commission_level, 
+      commission_rate, commission_debt_amt, account_state
+      )
     values (#{id,jdbcType=INTEGER}, #{createDate,jdbcType=TIMESTAMP}, #{modifyDate,jdbcType=TIMESTAMP}, 
       #{userId,jdbcType=INTEGER}, #{accountId,jdbcType=INTEGER}, #{commissionMoney,jdbcType=DECIMAL}, 
       #{commissionPaid,jdbcType=DECIMAL}, #{commissionTotal,jdbcType=DECIMAL}, #{commissionSourceMoney,jdbcType=DECIMAL}, 
-      #{commissionLevel,jdbcType=TINYINT}, #{commissionRate,jdbcType=DECIMAL}, #{commissionDebtAmt,jdbcType=DECIMAL}, 
-      #{accountState,jdbcType=TINYINT})
+      #{commissionSourceLots,jdbcType=DECIMAL}, #{commissionLevel,jdbcType=TINYINT}, 
+      #{commissionRate,jdbcType=DECIMAL}, #{commissionDebtAmt,jdbcType=DECIMAL}, #{accountState,jdbcType=TINYINT}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.future.entity.account.FuAccountCommission">
     insert into fu_account_commission
@@ -72,6 +75,9 @@
       </if>
       <if test="commissionSourceMoney != null">
         commission_source_money,
+      </if>
+      <if test="commissionSourceLots != null">
+        commission_source_lots,
       </if>
       <if test="commissionLevel != null">
         commission_level,
@@ -114,6 +120,9 @@
       <if test="commissionSourceMoney != null">
         #{commissionSourceMoney,jdbcType=DECIMAL},
       </if>
+      <if test="commissionSourceLots != null">
+        #{commissionSourceLots,jdbcType=DECIMAL},
+      </if>
       <if test="commissionLevel != null">
         #{commissionLevel,jdbcType=TINYINT},
       </if>
@@ -155,6 +164,9 @@
       <if test="commissionSourceMoney != null">
         commission_source_money = #{commissionSourceMoney,jdbcType=DECIMAL},
       </if>
+      <if test="commissionSourceLots != null">
+        commission_source_lots = #{commissionSourceLots,jdbcType=DECIMAL},
+      </if>
       <if test="commissionLevel != null">
         commission_level = #{commissionLevel,jdbcType=TINYINT},
       </if>
@@ -180,6 +192,7 @@
       commission_paid = #{commissionPaid,jdbcType=DECIMAL},
       commission_total = #{commissionTotal,jdbcType=DECIMAL},
       commission_source_money = #{commissionSourceMoney,jdbcType=DECIMAL},
+      commission_source_lots = #{commissionSourceLots,jdbcType=DECIMAL},
       commission_level = #{commissionLevel,jdbcType=TINYINT},
       commission_rate = #{commissionRate,jdbcType=DECIMAL},
       commission_debt_amt = #{commissionDebtAmt,jdbcType=DECIMAL},

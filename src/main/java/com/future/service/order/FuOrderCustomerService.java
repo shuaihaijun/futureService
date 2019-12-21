@@ -11,7 +11,7 @@ import com.future.entity.order.FuOrderCustomer;
 import com.future.entity.order.FuOrderFollowInfo;
 import com.future.mapper.order.FuOrderCustomerMapper;
 import com.future.pojo.bo.order.UserMTAccountBO;
-import com.future.service.account.FuAccountMtSevice;
+import com.future.service.account.FuAccountMtService;
 import com.future.service.account.FuAccoutInfoService;
 import com.future.service.commission.FuCommissionCustomerService;
 import com.future.service.mt.MTOrderService;
@@ -22,7 +22,6 @@ import com.jfx.SelectionPool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
@@ -37,7 +36,7 @@ public class FuOrderCustomerService extends ServiceImpl<FuOrderCustomerMapper, F
     @Autowired
     FuAccoutInfoService fuAccoutInfoService;
     @Autowired
-    FuAccountMtSevice fuAccountMtSevice;
+    FuAccountMtService fuAccountMtService;
     @Autowired
     FuOrderFollowInfoService fuOrderFollowInfoService;
     @Autowired
@@ -82,7 +81,7 @@ public class FuOrderCustomerService extends ServiceImpl<FuOrderCustomerMapper, F
             conditionMap.put("username",username);
         }
         /*查询用户账户信息*/
-        List<UserMTAccountBO> accounts=fuAccountMtSevice.getUserMTAccByCondition(conditionMap);
+        List<UserMTAccountBO> accounts= fuAccountMtService.getUserMTAccByCondition(conditionMap);
         if(accounts==null||accounts.size()<1){
             log.error("用户"+username+"信息未绑定");
         }
@@ -125,7 +124,7 @@ public class FuOrderCustomerService extends ServiceImpl<FuOrderCustomerMapper, F
 
                 /*跟新 userId 的 mtAccId 账户信息*/
                 AccountInfo accountInfo=mtOrderService.getAccountInfo(strategy);
-                fuAccountMtSevice.updateAccFromMt(userId,mtAccountId,accountInfo);
+                fuAccountMtService.updateAccFromMt(userId,mtAccountId,accountInfo);
 
                 /*处理订单*/
                 if(!ObjectUtils.isEmpty(fuOrderInfos)){

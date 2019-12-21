@@ -19,8 +19,8 @@ import com.future.entity.com.FuComAgentApply;
 import com.future.entity.product.FuProductSignalApply;
 import com.future.mapper.com.FuComAgentApplyMapper;
 import com.future.mapper.com.FuComAgentMapper;
-import com.future.service.account.FuAccountCommissionSevice;
-import com.future.service.account.FuAccountInfoSevice;
+import com.future.service.account.FuAccountCommissionService;
+import com.future.service.account.FuAccountInfoService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,9 +40,9 @@ public class FuComAgentApplyService extends ServiceImpl<FuComAgentApplyMapper,Fu
     Logger log= LoggerFactory.getLogger(FuComAgentApplyService.class);
 
     @Autowired
-    FuAccountInfoSevice fuAccountInfoSevice;
+    FuAccountInfoService fuAccountInfoService;
     @Autowired
-    FuAccountCommissionSevice fuAccountCommissionSevice;
+    FuAccountCommissionService fuAccountCommissionService;
     @Autowired
     FuComAgentApplyMapper agentApplyMapper;
     @Autowired
@@ -248,12 +248,12 @@ public class FuComAgentApplyService extends ServiceImpl<FuComAgentApplyMapper,Fu
                 /*建立社区佣金账户*/
                 Map conditionMap =new HashMap();
                 conditionMap.put(FuProductSignalApply.USER_ID,agent.getUserId());
-                List<FuAccountInfo> accountInfos= fuAccountInfoSevice.selectByMap(conditionMap);
+                List<FuAccountInfo> accountInfos= fuAccountInfoService.selectByMap(conditionMap);
                 if(accountInfos==null || accountInfos.size()==0){
                     log.error("查询社区账户信息错误！");
                     throw new BusinessException("查询社区账户信息错误！");
                 }
-                fuAccountCommissionSevice.initAccountCommission(agent.getUserId(),accountInfos.get(0).getId());
+                fuAccountCommissionService.initAccountCommission(agent.getUserId(),accountInfos.get(0).getId());
 
                 /*保存信号源*/
                 agentMapper.insertSelective(agent);

@@ -9,10 +9,9 @@ import com.future.entity.order.FuOrderSignal;
 import com.future.entity.product.FuProductSignal;
 import com.future.mapper.order.FuOrderSignalMapper;
 import com.future.pojo.bo.order.UserMTAccountBO;
-import com.future.service.account.FuAccountMtSevice;
+import com.future.service.account.FuAccountMtService;
 import com.future.service.order.FuOrderFollowActionService;
 import com.future.service.product.FuProductSignalService;
-import com.jfx.strategy.Strategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -38,7 +37,7 @@ public class SignalService extends ServiceImpl<FuOrderSignalMapper,FuOrderSignal
     @Autowired
     FuOrderSignalMapper fuOrderSignalMapper;
     @Autowired
-    FuAccountMtSevice fuAccountMtSevice;
+    FuAccountMtService fuAccountMtService;
     @Autowired
     FuOrderFollowActionService fuOrderFollowActionService;
     @Autowired
@@ -164,7 +163,7 @@ public class SignalService extends ServiceImpl<FuOrderSignalMapper,FuOrderSignal
         Map conditionMap=new HashMap();
         conditionMap.put("serverName",signalAccount[0]);
         conditionMap.put("mtAccId",signalAccount[1]);
-        List<UserMTAccountBO> accountBOS=fuAccountMtSevice.getUserMTAccByCondition(conditionMap);
+        List<UserMTAccountBO> accountBOS= fuAccountMtService.getUserMTAccByCondition(conditionMap);
         if(accountBOS==null||accountBOS.size()<=0){
             log.error("根据服务器和账号，查询用户错误！");
             log.error("signalMsg:"+signalMsg);

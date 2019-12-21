@@ -26,12 +26,12 @@ public class FuAccountCommissionFlow {
     /**
      * 收佣用户ID
      */
-    private Integer commissionUserId;
+    private Integer userId;
 
     /**
      * 收佣账户ID
      */
-    private Integer commissionAccountId;
+    private Integer accountId;
 
     /**
      * 返佣日期
@@ -44,19 +44,34 @@ public class FuAccountCommissionFlow {
     private Integer commissionType;
 
     /**
-     * 返佣等级
+     * 收佣用户类型（0 普通用户、1 试用会员、2 普通会员、3 VIP会员、4 业务员、5 PIB、6 MIB、7 IB、8 分析师、9 总监、10 总经理、11 信号源）
+     */
+    private Integer commissionUserType;
+
+    /**
+     * 收佣等级（1级、2级、3级）
      */
     private Integer commissionLevel;
 
     /**
+     * 比率计算类型（0 交易手数，1 按原金额，2 按返佣金额, 3 指定金额）
+     */
+    private Integer commissionRateType;
+
+    /**
      * 返佣比率
      */
-    private Integer commissionRate;
+    private BigDecimal commissionRate;
 
     /**
      * 源金额
      */
     private BigDecimal sourceMoney;
+
+    /**
+     * 源手数
+     */
+    private BigDecimal sourceLots;
 
     /**
      * 返佣佣金
@@ -123,34 +138,34 @@ public class FuAccountCommissionFlow {
 
     /**
      * 收佣用户ID
-     * @return commission_user_id 收佣用户ID
+     * @return user_id 收佣用户ID
      */
-    public Integer getCommissionUserId() {
-        return commissionUserId;
+    public Integer getUserId() {
+        return userId;
     }
 
     /**
      * 收佣用户ID
-     * @param commissionUserId 收佣用户ID
+     * @param userId 收佣用户ID
      */
-    public void setCommissionUserId(Integer commissionUserId) {
-        this.commissionUserId = commissionUserId;
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 
     /**
      * 收佣账户ID
-     * @return commission_account_id 收佣账户ID
+     * @return account_id 收佣账户ID
      */
-    public Integer getCommissionAccountId() {
-        return commissionAccountId;
+    public Integer getAccountId() {
+        return accountId;
     }
 
     /**
      * 收佣账户ID
-     * @param commissionAccountId 收佣账户ID
+     * @param accountId 收佣账户ID
      */
-    public void setCommissionAccountId(Integer commissionAccountId) {
-        this.commissionAccountId = commissionAccountId;
+    public void setAccountId(Integer accountId) {
+        this.accountId = accountId;
     }
 
     /**
@@ -186,26 +201,58 @@ public class FuAccountCommissionFlow {
     }
 
     /**
-     * 返佣等级
-     * @return commission_level 返佣等级
+     * 收佣用户类型（0 普通用户、1 试用会员、2 普通会员、3 VIP会员、4 业务员、5 PIB、6 MIB、7 IB、8 分析师、9 总监、10 总经理、11 信号源）
+     * @return commission_user_type 收佣用户类型（0 普通用户、1 试用会员、2 普通会员、3 VIP会员、4 业务员、5 PIB、6 MIB、7 IB、8 分析师、9 总监、10 总经理、11 信号源）
+     */
+    public Integer getCommissionUserType() {
+        return commissionUserType;
+    }
+
+    /**
+     * 收佣用户类型（0 普通用户、1 试用会员、2 普通会员、3 VIP会员、4 业务员、5 PIB、6 MIB、7 IB、8 分析师、9 总监、10 总经理、11 信号源）
+     * @param commissionUserType 收佣用户类型（0 普通用户、1 试用会员、2 普通会员、3 VIP会员、4 业务员、5 PIB、6 MIB、7 IB、8 分析师、9 总监、10 总经理、11 信号源）
+     */
+    public void setCommissionUserType(Integer commissionUserType) {
+        this.commissionUserType = commissionUserType;
+    }
+
+    /**
+     * 收佣等级（1级、2级、3级）
+     * @return commission_level 收佣等级（1级、2级、3级）
      */
     public Integer getCommissionLevel() {
         return commissionLevel;
     }
 
     /**
-     * 返佣等级
-     * @param commissionLevel 返佣等级
+     * 收佣等级（1级、2级、3级）
+     * @param commissionLevel 收佣等级（1级、2级、3级）
      */
     public void setCommissionLevel(Integer commissionLevel) {
         this.commissionLevel = commissionLevel;
     }
 
     /**
+     * 比率计算类型（0 交易手数，1 按原金额，2 按返佣金额, 3 指定金额）
+     * @return commission_rate_type 比率计算类型（0 交易手数，1 按原金额，2 按返佣金额, 3 指定金额）
+     */
+    public Integer getCommissionRateType() {
+        return commissionRateType;
+    }
+
+    /**
+     * 比率计算类型（0 交易手数，1 按原金额，2 按返佣金额, 3 指定金额）
+     * @param commissionRateType 比率计算类型（0 交易手数，1 按原金额，2 按返佣金额, 3 指定金额）
+     */
+    public void setCommissionRateType(Integer commissionRateType) {
+        this.commissionRateType = commissionRateType;
+    }
+
+    /**
      * 返佣比率
      * @return commission_rate 返佣比率
      */
-    public Integer getCommissionRate() {
+    public BigDecimal getCommissionRate() {
         return commissionRate;
     }
 
@@ -213,7 +260,7 @@ public class FuAccountCommissionFlow {
      * 返佣比率
      * @param commissionRate 返佣比率
      */
-    public void setCommissionRate(Integer commissionRate) {
+    public void setCommissionRate(BigDecimal commissionRate) {
         this.commissionRate = commissionRate;
     }
 
@@ -231,6 +278,22 @@ public class FuAccountCommissionFlow {
      */
     public void setSourceMoney(BigDecimal sourceMoney) {
         this.sourceMoney = sourceMoney;
+    }
+
+    /**
+     * 源手数
+     * @return source_lots 源手数
+     */
+    public BigDecimal getSourceLots() {
+        return sourceLots;
+    }
+
+    /**
+     * 源手数
+     * @param sourceLots 源手数
+     */
+    public void setSourceLots(BigDecimal sourceLots) {
+        this.sourceLots = sourceLots;
     }
 
     /**

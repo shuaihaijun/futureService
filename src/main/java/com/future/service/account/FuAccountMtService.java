@@ -8,14 +8,12 @@ import com.future.common.constants.RedisConstant;
 import com.future.common.constants.UserConstant;
 import com.future.common.enums.GlobalResultCode;
 import com.future.common.exception.BusinessException;
-import com.future.common.exception.DataConflictException;
 import com.future.common.exception.ParameterInvalidException;
 import com.future.common.util.ConvertUtil;
 import com.future.common.util.RedisManager;
 import com.future.common.util.StringUtils;
 import com.future.entity.account.FuAccountMt;
 import com.future.entity.product.FuProductSignal;
-import com.future.entity.user.FuUser;
 import com.future.mapper.account.FuAccountMtMapper;
 import com.future.mapper.product.FuProductSignalMapper;
 import com.future.mapper.user.FuUserMapper;
@@ -23,7 +21,6 @@ import com.future.pojo.bo.order.UserMTAccountBO;
 import com.future.service.mt.MTAccountService;
 import com.jfx.AccountInfo;
 import com.jfx.Broker;
-import com.jfx.strategy.OrderInfo;
 import com.jfx.strategy.Strategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,9 +35,9 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public class FuAccountMtSevice extends ServiceImpl<FuAccountMtMapper, FuAccountMt> {
+public class FuAccountMtService extends ServiceImpl<FuAccountMtMapper, FuAccountMt> {
 
-    Logger log= LoggerFactory.getLogger(FuAccountMtSevice.class);
+    Logger log= LoggerFactory.getLogger(FuAccountMtService.class);
 
     @Autowired
     FuAccountMtMapper fuAccountMtMapper;

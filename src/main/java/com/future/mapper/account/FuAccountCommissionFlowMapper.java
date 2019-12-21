@@ -1,11 +1,14 @@
 package com.future.mapper.account;
 
+import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.future.entity.account.FuAccountCommissionFlow;
+import org.springframework.stereotype.Component;
 
-public interface FuAccountCommissionFlowMapper {
+@Component
+public interface FuAccountCommissionFlowMapper extends BaseMapper<FuAccountCommissionFlow> {
     int deleteByPrimaryKey(Integer id);
 
-    int insert(FuAccountCommissionFlow record);
+    Integer insert(FuAccountCommissionFlow record);
 
     int insertSelective(FuAccountCommissionFlow record);
 

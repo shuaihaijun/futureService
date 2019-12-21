@@ -4,10 +4,9 @@ import com.alibaba.druid.util.StringUtils;
 import com.alibaba.fastjson.JSONObject;
 import com.future.common.enums.GlobalResultCode;
 import com.future.common.exception.ParameterInvalidException;
-import com.future.common.result.Page;
 import com.future.common.util.ThreadCache;
 import com.future.pojo.bo.order.UserMTAccountBO;
-import com.future.service.account.FuAccountMtSevice;
+import com.future.service.account.FuAccountMtService;
 import com.github.pagehelper.PageInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,7 +27,7 @@ public class AccountController {
     Logger log= LoggerFactory.getLogger(AccountController.class);
 
     @Autowired
-    FuAccountMtSevice fuAccountMtSevice;
+    FuAccountMtService fuAccountMtService;
 
     //获取MT账户信息
     @RequestMapping(value= "/getUserMtAccountByCondition",method=RequestMethod.POST)
@@ -56,7 +55,7 @@ public class AccountController {
         }else {
             throw new ParameterInvalidException(GlobalResultCode.PARAM_NOT_COMPLETE);
         }
-        List<UserMTAccountBO> accouts=  fuAccountMtSevice.getUserMTAccByCondition(conditonMap);
+        List<UserMTAccountBO> accouts=  fuAccountMtService.getUserMTAccByCondition(conditonMap);
 
         log.info(accouts.size()+"");
 
@@ -93,7 +92,7 @@ public class AccountController {
         }else {
             throw new ParameterInvalidException(GlobalResultCode.PARAM_NOT_COMPLETE);
         }
-        List<UserMTAccountBO> accouts=  fuAccountMtSevice.getUserMTAccByCondition(conditonMap);
+        List<UserMTAccountBO> accouts=  fuAccountMtService.getUserMTAccByCondition(conditonMap);
 
         return  accouts;
     }
@@ -130,7 +129,7 @@ public class AccountController {
         if(!StringUtils.isEmpty(accountId)){
             conditonMap.put("accountId",accountId);
         }
-        List<UserMTAccountBO> accouts=  fuAccountMtSevice.queryUsersMtAccount(conditonMap);
+        List<UserMTAccountBO> accouts=  fuAccountMtService.queryUsersMtAccount(conditonMap);
 
         return  new PageInfo<UserMTAccountBO>(accouts);
     }
@@ -144,7 +143,7 @@ public class AccountController {
         if(requestData.isEmpty()||requestData.getJSONObject("mtAccInfo").isEmpty()){
             throw new ParameterInvalidException(GlobalResultCode.PARAM_NULL_POINTER);
         }
-        fuAccountMtSevice.saveUserMTAccount(requestData.getJSONObject("mtAccInfo"));
+        fuAccountMtService.saveUserMTAccount(requestData.getJSONObject("mtAccInfo"));
     }
 
     //连接MT账户信息
@@ -164,7 +163,7 @@ public class AccountController {
             log.warn("连接MT账户信息,用户信息 和 账户信息 同时为空!");
             throw new ParameterInvalidException(GlobalResultCode.PARAM_NULL_POINTER);
         }
-        return fuAccountMtSevice.connectUserMTAccount(userId,mtAccId,username,serverName);
+        return fuAccountMtService.connectUserMTAccount(userId,mtAccId,username,serverName);
     }
     //断开连接MT账户信息
     @RequestMapping(value= "/disConnectUserMTAccount",method=RequestMethod.POST)
@@ -183,7 +182,7 @@ public class AccountController {
             log.warn("连接MT账户信息,用户信息 和 账户信息 同时为空!");
             throw new ParameterInvalidException(GlobalResultCode.PARAM_NULL_POINTER);
         }
-        return fuAccountMtSevice.disConnectUserMTAccount(userId,mtAccId,username,serverName);
+        return fuAccountMtService.disConnectUserMTAccount(userId,mtAccId,username,serverName);
     }
 
 
@@ -199,7 +198,7 @@ public class AccountController {
             log.warn("连接MT账户信息,数据为空!");
             throw new ParameterInvalidException(GlobalResultCode.PARAM_NULL_POINTER);
         }
-        return fuAccountMtSevice.connectSignalMTAccount(signalId);
+        return fuAccountMtService.connectSignalMTAccount(signalId);
     }
     //断开信号源连接MT账户信息
     @RequestMapping(value= "/disConnectSignalMTAccount",method=RequestMethod.POST)
@@ -213,7 +212,7 @@ public class AccountController {
             log.warn("连接MT账户信息,数据为空!");
             throw new ParameterInvalidException(GlobalResultCode.PARAM_NULL_POINTER);
         }
-        return fuAccountMtSevice.disConnectSignalMTAccount(signalId);
+        return fuAccountMtService.disConnectSignalMTAccount(signalId);
     }
 
 }

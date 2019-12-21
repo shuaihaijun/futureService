@@ -7,6 +7,15 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 public class FuCommissionCustomer {
+    public static String SOURCE_USER_ID ="source_user_id";
+    public static String SOURCE_ACCOUNT_ID ="source_account_id";
+    public static String SOURCE_ORDER_ID ="source_order_id";
+    public static String COMMISSION_USER_ID ="commission_user_id";
+    public static String COMMISSION_DATE ="commission_date";
+    public static String COMMISSION_TYPE ="commission_type";
+    public static String COMMISSION_USER_LEVEL ="commission_user_level";
+    public static String COMMISSION_ACCOUNT_ID ="commission_account_id";
+
     /**
      * 
      */
@@ -41,7 +50,7 @@ public class FuCommissionCustomer {
     /**
      * 源订单号
      */
-    private Integer sourceOrderId;
+    private String sourceOrderId;
 
     /**
      * 原订单状态
@@ -74,7 +83,7 @@ public class FuCommissionCustomer {
     private Integer commissionUserId;
 
     /**
-     * 收佣用户类型
+     * 收佣用户类型（0 普通用户、1 试用会员、2 普通会员、3 VIP会员、4 业务员、5 PIB、6 MIB、7 IB、8 分析师、9 总监、10 总经理、11 信号源）
      */
     private Integer commissionUserType;
 
@@ -87,6 +96,11 @@ public class FuCommissionCustomer {
      * 收佣账户ID
      */
     private Integer commissionAccountId;
+
+    /**
+     * 比率计算类型（0 交易手数，1 按原金额，2 按返佣金额, 3 指定金额）
+     */
+    private Integer commissionRateType;
 
     /**
      * 佣金比例
@@ -208,7 +222,7 @@ public class FuCommissionCustomer {
      * 源订单号
      * @return source_order_id 源订单号
      */
-    public Integer getSourceOrderId() {
+    public String getSourceOrderId() {
         return sourceOrderId;
     }
 
@@ -216,8 +230,8 @@ public class FuCommissionCustomer {
      * 源订单号
      * @param sourceOrderId 源订单号
      */
-    public void setSourceOrderId(Integer sourceOrderId) {
-        this.sourceOrderId = sourceOrderId;
+    public void setSourceOrderId(String sourceOrderId) {
+        this.sourceOrderId = sourceOrderId == null ? null : sourceOrderId.trim();
     }
 
     /**
@@ -317,16 +331,16 @@ public class FuCommissionCustomer {
     }
 
     /**
-     * 收佣用户类型
-     * @return commission_user_type 收佣用户类型
+     * 收佣用户类型（0 普通用户、1 试用会员、2 普通会员、3 VIP会员、4 业务员、5 PIB、6 MIB、7 IB、8 分析师、9 总监、10 总经理、11 信号源）
+     * @return commission_user_type 收佣用户类型（0 普通用户、1 试用会员、2 普通会员、3 VIP会员、4 业务员、5 PIB、6 MIB、7 IB、8 分析师、9 总监、10 总经理、11 信号源）
      */
     public Integer getCommissionUserType() {
         return commissionUserType;
     }
 
     /**
-     * 收佣用户类型
-     * @param commissionUserType 收佣用户类型
+     * 收佣用户类型（0 普通用户、1 试用会员、2 普通会员、3 VIP会员、4 业务员、5 PIB、6 MIB、7 IB、8 分析师、9 总监、10 总经理、11 信号源）
+     * @param commissionUserType 收佣用户类型（0 普通用户、1 试用会员、2 普通会员、3 VIP会员、4 业务员、5 PIB、6 MIB、7 IB、8 分析师、9 总监、10 总经理、11 信号源）
      */
     public void setCommissionUserType(Integer commissionUserType) {
         this.commissionUserType = commissionUserType;
@@ -362,6 +376,22 @@ public class FuCommissionCustomer {
      */
     public void setCommissionAccountId(Integer commissionAccountId) {
         this.commissionAccountId = commissionAccountId;
+    }
+
+    /**
+     * 比率计算类型（0 交易手数，1 按原金额，2 按返佣金额, 3 指定金额）
+     * @return commission_rate_type 比率计算类型（0 交易手数，1 按原金额，2 按返佣金额, 3 指定金额）
+     */
+    public Integer getCommissionRateType() {
+        return commissionRateType;
+    }
+
+    /**
+     * 比率计算类型（0 交易手数，1 按原金额，2 按返佣金额, 3 指定金额）
+     * @param commissionRateType 比率计算类型（0 交易手数，1 按原金额，2 按返佣金额, 3 指定金额）
+     */
+    public void setCommissionRateType(Integer commissionRateType) {
+        this.commissionRateType = commissionRateType;
     }
 
     /**

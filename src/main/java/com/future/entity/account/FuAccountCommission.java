@@ -8,9 +8,7 @@ import java.util.Date;
 
 public class FuAccountCommission {
     public static String USER_ID ="user_id";
-    /**
-     * 
-     */
+
     @TableId(type = IdType.AUTO)
     private Integer id;
 
@@ -53,6 +51,11 @@ public class FuAccountCommission {
      * 源发生金额
      */
     private BigDecimal commissionSourceMoney;
+
+    /**
+     * 源发生手数
+     */
+    private BigDecimal commissionSourceLots;
 
     /**
      * 返佣等级
@@ -216,6 +219,22 @@ public class FuAccountCommission {
      */
     public void setCommissionSourceMoney(BigDecimal commissionSourceMoney) {
         this.commissionSourceMoney = commissionSourceMoney;
+    }
+
+    /**
+     * 源发生手数
+     * @return commission_source_lots 源发生手数
+     */
+    public BigDecimal getCommissionSourceLots() {
+        return commissionSourceLots;
+    }
+
+    /**
+     * 源发生手数
+     * @param commissionSourceLots 源发生手数
+     */
+    public void setCommissionSourceLots(BigDecimal commissionSourceLots) {
+        this.commissionSourceLots = commissionSourceLots;
     }
 
     /**

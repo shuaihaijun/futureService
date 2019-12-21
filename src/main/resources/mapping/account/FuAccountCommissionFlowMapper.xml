@@ -5,21 +5,24 @@
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
     <result column="modify_date" jdbcType="TIMESTAMP" property="modifyDate" />
-    <result column="commission_user_id" jdbcType="INTEGER" property="commissionUserId" />
-    <result column="commission_account_id" jdbcType="INTEGER" property="commissionAccountId" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="account_id" jdbcType="INTEGER" property="accountId" />
     <result column="commission_date" jdbcType="TIMESTAMP" property="commissionDate" />
     <result column="commission_type" jdbcType="TINYINT" property="commissionType" />
+    <result column="commission_user_type" jdbcType="TINYINT" property="commissionUserType" />
     <result column="commission_level" jdbcType="TINYINT" property="commissionLevel" />
-    <result column="commission_rate" jdbcType="TINYINT" property="commissionRate" />
+    <result column="commission_rate_type" jdbcType="TINYINT" property="commissionRateType" />
+    <result column="commission_rate" jdbcType="DECIMAL" property="commissionRate" />
     <result column="source_money" jdbcType="DECIMAL" property="sourceMoney" />
+    <result column="source_lots" jdbcType="DECIMAL" property="sourceLots" />
     <result column="commission_money" jdbcType="DECIMAL" property="commissionMoney" />
     <result column="commission_state" jdbcType="TINYINT" property="commissionState" />
     <result column="coin_type" jdbcType="TINYINT" property="coinType" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, create_date, modify_date, commission_user_id, commission_account_id, commission_date, 
-    commission_type, commission_level, commission_rate, source_money, commission_money, 
-    commission_state, coin_type
+    id, create_date, modify_date, user_id, account_id, commission_date, commission_type, 
+    commission_user_type, commission_level, commission_rate_type, commission_rate, source_money, 
+    source_lots, commission_money, commission_state, coin_type
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -33,15 +36,17 @@
   </delete>
   <insert id="insert" parameterType="com.future.entity.account.FuAccountCommissionFlow">
     insert into fu_account_commission_flow (id, create_date, modify_date, 
-      commission_user_id, commission_account_id, 
-      commission_date, commission_type, commission_level, 
-      commission_rate, source_money, commission_money, 
-      commission_state, coin_type)
+      user_id, account_id, commission_date, 
+      commission_type, commission_user_type, commission_level, 
+      commission_rate_type, commission_rate, source_money, 
+      source_lots, commission_money, commission_state, 
+      coin_type)
     values (#{id,jdbcType=INTEGER}, #{createDate,jdbcType=TIMESTAMP}, #{modifyDate,jdbcType=TIMESTAMP}, 
-      #{commissionUserId,jdbcType=INTEGER}, #{commissionAccountId,jdbcType=INTEGER}, 
-      #{commissionDate,jdbcType=TIMESTAMP}, #{commissionType,jdbcType=TINYINT}, #{commissionLevel,jdbcType=TINYINT}, 
-      #{commissionRate,jdbcType=TINYINT}, #{sourceMoney,jdbcType=DECIMAL}, #{commissionMoney,jdbcType=DECIMAL}, 
-      #{commissionState,jdbcType=TINYINT}, #{coinType,jdbcType=TINYINT})
+      #{userId,jdbcType=INTEGER}, #{accountId,jdbcType=INTEGER}, #{commissionDate,jdbcType=TIMESTAMP}, 
+      #{commissionType,jdbcType=TINYINT}, #{commissionUserType,jdbcType=TINYINT}, #{commissionLevel,jdbcType=TINYINT}, 
+      #{commissionRateType,jdbcType=TINYINT}, #{commissionRate,jdbcType=DECIMAL}, #{sourceMoney,jdbcType=DECIMAL}, 
+      #{sourceLots,jdbcType=DECIMAL}, #{commissionMoney,jdbcType=DECIMAL}, #{commissionState,jdbcType=TINYINT}, 
+      #{coinType,jdbcType=TINYINT})
   </insert>
   <insert id="insertSelective" parameterType="com.future.entity.account.FuAccountCommissionFlow">
     insert into fu_account_commission_flow
@@ -55,11 +60,11 @@
       <if test="modifyDate != null">
         modify_date,
       </if>
-      <if test="commissionUserId != null">
-        commission_user_id,
+      <if test="userId != null">
+        user_id,
       </if>
-      <if test="commissionAccountId != null">
-        commission_account_id,
+      <if test="accountId != null">
+        account_id,
       </if>
       <if test="commissionDate != null">
         commission_date,
@@ -67,14 +72,23 @@
       <if test="commissionType != null">
         commission_type,
       </if>
+      <if test="commissionUserType != null">
+        commission_user_type,
+      </if>
       <if test="commissionLevel != null">
         commission_level,
+      </if>
+      <if test="commissionRateType != null">
+        commission_rate_type,
       </if>
       <if test="commissionRate != null">
         commission_rate,
       </if>
       <if test="sourceMoney != null">
         source_money,
+      </if>
+      <if test="sourceLots != null">
+        source_lots,
       </if>
       <if test="commissionMoney != null">
         commission_money,
@@ -96,11 +110,11 @@
       <if test="modifyDate != null">
         #{modifyDate,jdbcType=TIMESTAMP},
       </if>
-      <if test="commissionUserId != null">
-        #{commissionUserId,jdbcType=INTEGER},
+      <if test="userId != null">
+        #{userId,jdbcType=INTEGER},
       </if>
-      <if test="commissionAccountId != null">
-        #{commissionAccountId,jdbcType=INTEGER},
+      <if test="accountId != null">
+        #{accountId,jdbcType=INTEGER},
       </if>
       <if test="commissionDate != null">
         #{commissionDate,jdbcType=TIMESTAMP},
@@ -108,14 +122,23 @@
       <if test="commissionType != null">
         #{commissionType,jdbcType=TINYINT},
       </if>
+      <if test="commissionUserType != null">
+        #{commissionUserType,jdbcType=TINYINT},
+      </if>
       <if test="commissionLevel != null">
         #{commissionLevel,jdbcType=TINYINT},
       </if>
+      <if test="commissionRateType != null">
+        #{commissionRateType,jdbcType=TINYINT},
+      </if>
       <if test="commissionRate != null">
-        #{commissionRate,jdbcType=TINYINT},
+        #{commissionRate,jdbcType=DECIMAL},
       </if>
       <if test="sourceMoney != null">
         #{sourceMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="sourceLots != null">
+        #{sourceLots,jdbcType=DECIMAL},
       </if>
       <if test="commissionMoney != null">
         #{commissionMoney,jdbcType=DECIMAL},
@@ -137,11 +160,11 @@
       <if test="modifyDate != null">
         modify_date = #{modifyDate,jdbcType=TIMESTAMP},
       </if>
-      <if test="commissionUserId != null">
-        commission_user_id = #{commissionUserId,jdbcType=INTEGER},
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=INTEGER},
       </if>
-      <if test="commissionAccountId != null">
-        commission_account_id = #{commissionAccountId,jdbcType=INTEGER},
+      <if test="accountId != null">
+        account_id = #{accountId,jdbcType=INTEGER},
       </if>
       <if test="commissionDate != null">
         commission_date = #{commissionDate,jdbcType=TIMESTAMP},
@@ -149,14 +172,23 @@
       <if test="commissionType != null">
         commission_type = #{commissionType,jdbcType=TINYINT},
       </if>
+      <if test="commissionUserType != null">
+        commission_user_type = #{commissionUserType,jdbcType=TINYINT},
+      </if>
       <if test="commissionLevel != null">
         commission_level = #{commissionLevel,jdbcType=TINYINT},
       </if>
+      <if test="commissionRateType != null">
+        commission_rate_type = #{commissionRateType,jdbcType=TINYINT},
+      </if>
       <if test="commissionRate != null">
-        commission_rate = #{commissionRate,jdbcType=TINYINT},
+        commission_rate = #{commissionRate,jdbcType=DECIMAL},
       </if>
       <if test="sourceMoney != null">
         source_money = #{sourceMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="sourceLots != null">
+        source_lots = #{sourceLots,jdbcType=DECIMAL},
       </if>
       <if test="commissionMoney != null">
         commission_money = #{commissionMoney,jdbcType=DECIMAL},
@@ -174,13 +206,16 @@
     update fu_account_commission_flow
     set create_date = #{createDate,jdbcType=TIMESTAMP},
       modify_date = #{modifyDate,jdbcType=TIMESTAMP},
-      commission_user_id = #{commissionUserId,jdbcType=INTEGER},
-      commission_account_id = #{commissionAccountId,jdbcType=INTEGER},
+      user_id = #{userId,jdbcType=INTEGER},
+      account_id = #{accountId,jdbcType=INTEGER},
       commission_date = #{commissionDate,jdbcType=TIMESTAMP},
       commission_type = #{commissionType,jdbcType=TINYINT},
+      commission_user_type = #{commissionUserType,jdbcType=TINYINT},
       commission_level = #{commissionLevel,jdbcType=TINYINT},
-      commission_rate = #{commissionRate,jdbcType=TINYINT},
+      commission_rate_type = #{commissionRateType,jdbcType=TINYINT},
+      commission_rate = #{commissionRate,jdbcType=DECIMAL},
       source_money = #{sourceMoney,jdbcType=DECIMAL},
+      source_lots = #{sourceLots,jdbcType=DECIMAL},
       commission_money = #{commissionMoney,jdbcType=DECIMAL},
       commission_state = #{commissionState,jdbcType=TINYINT},
       coin_type = #{coinType,jdbcType=TINYINT}

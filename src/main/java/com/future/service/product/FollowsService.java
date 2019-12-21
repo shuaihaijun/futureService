@@ -12,7 +12,7 @@ import com.future.entity.user.FuUserFollows;
 import com.future.mapper.product.FuProductSignalMapper;
 import com.future.mapper.user.FuUserFollowsMapper;
 import com.future.pojo.bo.order.UserMTAccountBO;
-import com.future.service.account.FuAccountMtSevice;
+import com.future.service.account.FuAccountMtService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +34,7 @@ public class FollowsService extends ServiceImpl<FuUserFollowsMapper, FuUserFollo
     @Autowired
     FuProductSignalMapper fuProductSignalMapper;
     @Autowired
-    FuAccountMtSevice fuAccountMtSevice;
+    FuAccountMtService fuAccountMtService;
     @Autowired
     FuUserFollowsMapper fuUserFollowsMapper;
 
@@ -86,7 +86,7 @@ public class FollowsService extends ServiceImpl<FuUserFollowsMapper, FuUserFollo
         Map conMap=new HashMap();
         conMap.put("userId",userId);
         FuProductSignal signal=fuProductSignalMapper.selectByPrimaryKey(Integer.parseInt(signalId));
-        List<UserMTAccountBO> userAccounts= fuAccountMtSevice.getUserMTAccByCondition(conMap);
+        List<UserMTAccountBO> userAccounts= fuAccountMtService.getUserMTAccByCondition(conMap);
         if(ObjectUtils.isEmpty(signal)){
             log.error("根据信号源ID 查询信号源失败！");
             throw new ParameterInvalidException(GlobalResultCode.PARAM_IS_INVALID);

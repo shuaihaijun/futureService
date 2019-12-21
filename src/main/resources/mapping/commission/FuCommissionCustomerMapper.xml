@@ -8,7 +8,7 @@
     <result column="oper_date" jdbcType="TIMESTAMP" property="operDate" />
     <result column="source_user_id" jdbcType="INTEGER" property="sourceUserId" />
     <result column="source_account_id" jdbcType="INTEGER" property="sourceAccountId" />
-    <result column="source_order_id" jdbcType="INTEGER" property="sourceOrderId" />
+    <result column="source_order_id" jdbcType="VARCHAR" property="sourceOrderId" />
     <result column="source_order_state" jdbcType="TINYINT" property="sourceOrderState" />
     <result column="source_order_oper" jdbcType="TINYINT" property="sourceOrderOper" />
     <result column="source_order_money" jdbcType="DECIMAL" property="sourceOrderMoney" />
@@ -18,6 +18,7 @@
     <result column="commission_user_type" jdbcType="TINYINT" property="commissionUserType" />
     <result column="commission_user_level" jdbcType="TINYINT" property="commissionUserLevel" />
     <result column="commission_account_id" jdbcType="INTEGER" property="commissionAccountId" />
+    <result column="commission_rate_type" jdbcType="TINYINT" property="commissionRateType" />
     <result column="commission_rate" jdbcType="DECIMAL" property="commissionRate" />
     <result column="commission_money" jdbcType="DECIMAL" property="commissionMoney" />
     <result column="commission_date" jdbcType="TIMESTAMP" property="commissionDate" />
@@ -27,7 +28,7 @@
     id, create_date, modify_date, oper_date, source_user_id, source_account_id, source_order_id, 
     source_order_state, source_order_oper, source_order_money, source_order_lots, commission_type, 
     commission_user_id, commission_user_type, commission_user_level, commission_account_id, 
-    commission_rate, commission_money, commission_date, commission_state
+    commission_rate_type, commission_rate, commission_money, commission_date, commission_state
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -45,15 +46,17 @@
       source_order_id, source_order_state, source_order_oper, 
       source_order_money, source_order_lots, commission_type, 
       commission_user_id, commission_user_type, commission_user_level, 
-      commission_account_id, commission_rate, commission_money, 
-      commission_date, commission_state)
+      commission_account_id, commission_rate_type, 
+      commission_rate, commission_money, commission_date, 
+      commission_state)
     values (#{id,jdbcType=INTEGER}, #{createDate,jdbcType=TIMESTAMP}, #{modifyDate,jdbcType=TIMESTAMP}, 
       #{operDate,jdbcType=TIMESTAMP}, #{sourceUserId,jdbcType=INTEGER}, #{sourceAccountId,jdbcType=INTEGER}, 
-      #{sourceOrderId,jdbcType=INTEGER}, #{sourceOrderState,jdbcType=TINYINT}, #{sourceOrderOper,jdbcType=TINYINT}, 
+      #{sourceOrderId,jdbcType=VARCHAR}, #{sourceOrderState,jdbcType=TINYINT}, #{sourceOrderOper,jdbcType=TINYINT}, 
       #{sourceOrderMoney,jdbcType=DECIMAL}, #{sourceOrderLots,jdbcType=DECIMAL}, #{commissionType,jdbcType=TINYINT}, 
       #{commissionUserId,jdbcType=INTEGER}, #{commissionUserType,jdbcType=TINYINT}, #{commissionUserLevel,jdbcType=TINYINT}, 
-      #{commissionAccountId,jdbcType=INTEGER}, #{commissionRate,jdbcType=DECIMAL}, #{commissionMoney,jdbcType=DECIMAL}, 
-      #{commissionDate,jdbcType=TIMESTAMP}, #{commissionState,jdbcType=TINYINT})
+      #{commissionAccountId,jdbcType=INTEGER}, #{commissionRateType,jdbcType=TINYINT}, 
+      #{commissionRate,jdbcType=DECIMAL}, #{commissionMoney,jdbcType=DECIMAL}, #{commissionDate,jdbcType=TIMESTAMP}, 
+      #{commissionState,jdbcType=TINYINT})
   </insert>
   <insert id="insertSelective" parameterType="com.future.entity.commission.FuCommissionCustomer">
     insert into fu_commission_customer
@@ -106,6 +109,9 @@
       <if test="commissionAccountId != null">
         commission_account_id,
       </if>
+      <if test="commissionRateType != null">
+        commission_rate_type,
+      </if>
       <if test="commissionRate != null">
         commission_rate,
       </if>
@@ -139,7 +145,7 @@
         #{sourceAccountId,jdbcType=INTEGER},
       </if>
       <if test="sourceOrderId != null">
-        #{sourceOrderId,jdbcType=INTEGER},
+        #{sourceOrderId,jdbcType=VARCHAR},
       </if>
       <if test="sourceOrderState != null">
         #{sourceOrderState,jdbcType=TINYINT},
@@ -167,6 +173,9 @@
       </if>
       <if test="commissionAccountId != null">
         #{commissionAccountId,jdbcType=INTEGER},
+      </if>
+      <if test="commissionRateType != null">
+        #{commissionRateType,jdbcType=TINYINT},
       </if>
       <if test="commissionRate != null">
         #{commissionRate,jdbcType=DECIMAL},
@@ -201,7 +210,7 @@
         source_account_id = #{sourceAccountId,jdbcType=INTEGER},
       </if>
       <if test="sourceOrderId != null">
-        source_order_id = #{sourceOrderId,jdbcType=INTEGER},
+        source_order_id = #{sourceOrderId,jdbcType=VARCHAR},
       </if>
       <if test="sourceOrderState != null">
         source_order_state = #{sourceOrderState,jdbcType=TINYINT},
@@ -230,6 +239,9 @@
       <if test="commissionAccountId != null">
         commission_account_id = #{commissionAccountId,jdbcType=INTEGER},
       </if>
+      <if test="commissionRateType != null">
+        commission_rate_type = #{commissionRateType,jdbcType=TINYINT},
+      </if>
       <if test="commissionRate != null">
         commission_rate = #{commissionRate,jdbcType=DECIMAL},
       </if>
@@ -252,7 +264,7 @@
       oper_date = #{operDate,jdbcType=TIMESTAMP},
       source_user_id = #{sourceUserId,jdbcType=INTEGER},
       source_account_id = #{sourceAccountId,jdbcType=INTEGER},
-      source_order_id = #{sourceOrderId,jdbcType=INTEGER},
+      source_order_id = #{sourceOrderId,jdbcType=VARCHAR},
       source_order_state = #{sourceOrderState,jdbcType=TINYINT},
       source_order_oper = #{sourceOrderOper,jdbcType=TINYINT},
       source_order_money = #{sourceOrderMoney,jdbcType=DECIMAL},
@@ -262,10 +274,44 @@
       commission_user_type = #{commissionUserType,jdbcType=TINYINT},
       commission_user_level = #{commissionUserLevel,jdbcType=TINYINT},
       commission_account_id = #{commissionAccountId,jdbcType=INTEGER},
+      commission_rate_type = #{commissionRateType,jdbcType=TINYINT},
       commission_rate = #{commissionRate,jdbcType=DECIMAL},
       commission_money = #{commissionMoney,jdbcType=DECIMAL},
       commission_date = #{commissionDate,jdbcType=TIMESTAMP},
       commission_state = #{commissionState,jdbcType=TINYINT}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  <select id="selectOrderCustomerSumFlow" parameterType="java.util.Map" resultType="com.future.entity.account.FuAccountCommissionFlow">
+    SELECT
+      commission_type commissionType,
+      commission_user_type commissionUserType,
+      commission_user_level commissionUserLevel,
+      commission_rate_type commissionRateType,
+      commission_rate commissionRate,
+      SUM(commission_money) commissionMoney,
+      SUM(source_order_lots) sourceLots,
+      SUM(source_order_money) sourceMmoney
+    FROM
+      fu_commission_customer
+    WHERE
+      1=1
+      <if test="userId != null">
+        and acc.commission_user_id = #{userId,jdbcType=INTEGER}
+      </if>
+      <if test="accountId != null">
+        and acc.commission_account_id = #{accountId,jdbcType=INTEGER}
+      </if>
+      <if test="beginDate != null">
+        and acc.commission_date >= #{beginDate,jdbcType=TIMESTAMP}
+      </if>
+      <if test="endDate != null">
+        and acc.commission_date &lt; = #{endDate,jdbcType=TIMESTAMP}
+      </if>
+    GROUP BY
+        commission_type,
+        commission_user_type,
+        commission_user_level,
+        commission_rate_type,
+        commission_rate
+  </select>
 </mapper>

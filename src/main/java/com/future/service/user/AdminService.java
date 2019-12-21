@@ -1,7 +1,6 @@
 package com.future.service.user;
 
 import com.alibaba.druid.util.StringUtils;
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
@@ -10,24 +9,18 @@ import com.future.common.constants.CommonConstant;
 import com.future.common.constants.RedisConstant;
 import com.future.common.constants.UserConstant;
 import com.future.common.enums.GlobalResultCode;
-import com.future.common.enums.ResultCode;
 import com.future.common.enums.UserResultCode;
 import com.future.common.exception.*;
-import com.future.common.result.Result;
-import com.future.common.result.ResultMsg;
 import com.future.common.util.CommonUtil;
 import com.future.common.util.RedisManager;
 import com.future.common.util.RequestContextHolderUtil;
-import com.future.entity.account.FuAccountInfo;
-import com.future.entity.order.FuOrderCustomer;
 import com.future.entity.user.FuUser;
 import com.future.mapper.user.FuUserMapper;
 import com.future.pojo.bo.AdminInfo;
 import com.future.pojo.bo.order.UserMTAccountBO;
-import com.future.service.account.FuAccountInfoSevice;
-import com.future.service.account.FuAccountMtSevice;
+import com.future.service.account.FuAccountInfoService;
+import com.future.service.account.FuAccountMtService;
 import com.github.pagehelper.PageInfo;
-import org.apache.tomcat.util.security.MD5Encoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -49,9 +42,9 @@ public class AdminService extends ServiceImpl<FuUserMapper,FuUser> {
     @Autowired
     FuUserMapper fuUserMapper;
     @Autowired
-    FuAccountMtSevice fuAccountMtSevice;
+    FuAccountMtService fuAccountMtService;
     @Autowired
-    FuAccountInfoSevice fuAccountInfoSevice;
+    FuAccountInfoService fuAccountInfoService;
     @Autowired
     RedisManager redisManager;
 
@@ -194,7 +187,7 @@ public class AdminService extends ServiceImpl<FuUserMapper,FuUser> {
             int userId= fuUserMapper.insertSelective(fuUser);
 
             /*设置社区账户*/
-            fuAccountInfoSevice.initAccountInfo(userId,fuUser.getPassword());
+            fuAccountInfoService.initAccountInfo(userId,fuUser.getPassword());
 
             /*跟新介绍人 信息*/
             fuUserMapper.updateByPrimaryKeySelective(introducer);
@@ -455,7 +448,7 @@ public class AdminService extends ServiceImpl<FuUserMapper,FuUser> {
             user.setIsVerified(CommonConstant.COMMON_YES);
 
             /*给MT账户 分配 URL和 端口*/
-            fuAccountMtSevice.checkUserMtAccount(user.getId());
+            fuAccountMtService.checkUserMtAccount(user.getId());
 
         }else {
             //未通过
@@ -502,7 +495,7 @@ public class AdminService extends ServiceImpl<FuUserMapper,FuUser> {
         Map conditonMap=new HashMap();
         /*默认查询主账户号*/
         conditonMap.put("username",username);
-        List<UserMTAccountBO> accouts=  fuAccountMtSevice.getUserMTAccByCondition(conditonMap);
+        List<UserMTAccountBO> accouts=  fuAccountMtService.getUserMTAccByCondition(conditonMap);
         if(accouts==null || accouts.size()==0){
             //未查找用户MT账户信息
             log.error("提交用户绑定申请,MT账户信息未上传，请先保存！");

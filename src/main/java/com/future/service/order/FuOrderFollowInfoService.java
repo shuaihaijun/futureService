@@ -4,7 +4,6 @@ import com.alibaba.druid.util.StringUtils;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.future.common.constants.RedisConstant;
 import com.future.common.constants.UserConstant;
-import com.future.common.enums.GlobalResultCode;
 import com.future.common.exception.BusinessException;
 import com.future.common.exception.ParameterInvalidException;
 import com.future.common.util.RedisManager;
@@ -12,7 +11,7 @@ import com.future.entity.order.FuOrderCustomer;
 import com.future.entity.order.FuOrderFollowInfo;
 import com.future.mapper.order.FuOrderFollowInfoMapper;
 import com.future.pojo.bo.order.UserMTAccountBO;
-import com.future.service.account.FuAccountMtSevice;
+import com.future.service.account.FuAccountMtService;
 import com.future.service.account.FuAccoutInfoService;
 import com.future.service.mt.MTOrderService;
 import com.future.service.user.AdminService;
@@ -38,7 +37,7 @@ public class FuOrderFollowInfoService extends ServiceImpl<FuOrderFollowInfoMappe
     @Autowired
     FuAccoutInfoService fuAccoutInfoService;
     @Autowired
-    FuAccountMtSevice fuAccountMtSevice;
+    FuAccountMtService fuAccountMtService;
     @Autowired
     FuOrderCustomerService fuOrderCustomerService;
     @Autowired
@@ -123,7 +122,7 @@ public class FuOrderFollowInfoService extends ServiceImpl<FuOrderFollowInfoMappe
             acountMap.put("userId",userId);
             acountMap.put("username",username);
         }
-        List<UserMTAccountBO> mts=fuAccountMtSevice.getUserMTAccByCondition(acountMap);
+        List<UserMTAccountBO> mts= fuAccountMtService.getUserMTAccByCondition(acountMap);
         if(ObjectUtils.isEmpty(mts)||mts.isEmpty()){
             log.error("根据时间段查询用户历史订单|用户MT4账户未绑定！");
             throw new BusinessException("根据时间段查询用户历史订单|用户MT4账户未绑定！");
@@ -201,7 +200,7 @@ public class FuOrderFollowInfoService extends ServiceImpl<FuOrderFollowInfoMappe
             acountMap.put("accountId",accountId);
         }
         /*查询用户账户信息*/
-        List<UserMTAccountBO> mts=fuAccountMtSevice.getUserMTAccByCondition(acountMap);
+        List<UserMTAccountBO> mts= fuAccountMtService.getUserMTAccByCondition(acountMap);
         if(ObjectUtils.isEmpty(mts)||mts.isEmpty()){
             log.error("根据时间段查询用户历史订单|用户MT4账户未绑定！");
             throw new BusinessException("根据时间段查询用户历史订单|用户MT4账户未绑定！");

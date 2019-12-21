@@ -5,7 +5,6 @@ import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
-import com.future.common.constants.CommonConstant;
 import com.future.common.constants.SignalConstant;
 import com.future.common.enums.GlobalResultCode;
 import com.future.common.exception.BusinessException;
@@ -13,14 +12,13 @@ import com.future.common.exception.DataConflictException;
 import com.future.common.util.ConvertUtil;
 import com.future.common.util.StringUtils;
 import com.future.entity.account.FuAccountInfo;
-import com.future.entity.account.FuAccountMt;
 import com.future.entity.product.FuProductSignal;
 import com.future.entity.product.FuProductSignalApply;
 import com.future.mapper.product.FuProductSignalApplyMapper;
 import com.future.mapper.product.FuProductSignalMapper;
-import com.future.service.account.FuAccountCommissionSevice;
-import com.future.service.account.FuAccountInfoSevice;
-import com.future.service.account.FuAccountMtSevice;
+import com.future.service.account.FuAccountCommissionService;
+import com.future.service.account.FuAccountInfoService;
+import com.future.service.account.FuAccountMtService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,11 +45,11 @@ public class FuProductSignalApplyService extends ServiceImpl<FuProductSignalAppl
     @Autowired
     FuProductSignalMapper fuProductSignalMapper;
     @Autowired
-    FuAccountMtSevice fuAccountMtSevice;
+    FuAccountMtService fuAccountMtService;
     @Autowired
-    FuAccountInfoSevice fuAccountInfoSevice;
+    FuAccountInfoService fuAccountInfoService;
     @Autowired
-    FuAccountCommissionSevice fuAccountCommissionSevice;
+    FuAccountCommissionService fuAccountCommissionService;
 
     /**
      * 根据条件查找信号源信息
@@ -292,15 +290,15 @@ public class FuProductSignalApplyService extends ServiceImpl<FuProductSignalAppl
                 /*建立社区佣金账户*/
                 Map conditionMap =new HashMap();
                 conditionMap.put(FuProductSignalApply.USER_ID,signal.getUserId());
-                List<FuAccountInfo> accountInfos= fuAccountInfoSevice.selectByMap(conditionMap);
+                List<FuAccountInfo> accountInfos= fuAccountInfoService.selectByMap(conditionMap);
                 if(accountInfos==null || accountInfos.size()==0){
                     log.error("查询社区账户信息错误！");
                     throw new BusinessException("查询社区账户信息错误！");
                 }
-                fuAccountCommissionSevice.initAccountCommission(signal.getUserId(),accountInfos.get(0).getId());
+                fuAccountCommissionService.initAccountCommission(signal.getUserId(),accountInfos.get(0).getId());
 
                 /*修改绑定MT账号状态  isSignal=1、 设置端口等 */
-                fuAccountMtSevice.checkSignalMtAccount(apply.getUserId(),apply.getServerName(),apply.getMtAccId());
+                fuAccountMtService.checkSignalMtAccount(apply.getUserId(),apply.getServerName(),apply.getMtAccId());
                 /*保存信号源*/
                 fuProductSignalMapper.insertSelective(signal);
                 signalApply.setApplyState(SignalConstant.SIGNAL_APPLY_STATE_NORMAL);

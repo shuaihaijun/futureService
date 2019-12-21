@@ -1,25 +1,26 @@
 package com.future.service.commission;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.future.common.constants.CommissionConstant;
 import com.future.common.exception.BusinessException;
+import com.future.entity.account.FuAccountCommissionFlow;
 import com.future.entity.account.FuAccountInfo;
 import com.future.entity.commission.FuCommissionCustomer;
 import com.future.entity.commission.FuCommissionLevel;
 import com.future.entity.order.FuOrderCustomer;
 import com.future.entity.user.FuUser;
 import com.future.mapper.commission.FuCommissionCustomerMapper;
-import com.future.service.account.FuAccountInfoSevice;
+import com.future.service.account.FuAccountInfoService;
 import com.future.service.user.AdminService;
+import io.swagger.models.auth.In;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.xml.crypto.Data;
-import java.math.BigDecimal;
 import java.util.*;
 
 /**
@@ -30,7 +31,7 @@ public class FuCommissionCustomerService extends ServiceImpl<FuCommissionCustome
 
     Logger log=LoggerFactory.getLogger(FuCommissionCustomerService.class);
     @Autowired
-    FuAccountInfoSevice fuAccountInfoSevice;
+    FuAccountInfoService fuAccountInfoService;
     @Autowired
     FuCommissionLevelSevice fuCommissionLevelSevice;
     @Autowired
@@ -51,7 +52,7 @@ public class FuCommissionCustomerService extends ServiceImpl<FuCommissionCustome
 
         Map conditionMap =new HashMap();
         conditionMap.put(FuAccountInfo.USER_ID,userId);
-        List<FuAccountInfo> accountInfos= fuAccountInfoSevice.selectByMap(conditionMap);
+        List<FuAccountInfo> accountInfos= fuAccountInfoService.selectByMap(conditionMap);
         if(accountInfos==null || accountInfos.size()==0){
             log.error("处理用户自交易订单佣金,查询用户账户为空！");
         }
@@ -61,7 +62,7 @@ public class FuCommissionCustomerService extends ServiceImpl<FuCommissionCustome
 
             FuCommissionCustomer commission=new FuCommissionCustomer();
             /*订单ID*/
-//            commission.setSourceOrderId(orderCustomer.getOrderId());
+            commission.setSourceOrderId(orderCustomer.getOrderId());
             /*用户ID*/
             commission.setSourceUserId(orderCustomer.getUserId());
             /*账户ID*/
@@ -111,7 +112,7 @@ public class FuCommissionCustomerService extends ServiceImpl<FuCommissionCustome
         }
         Map conditionMap =new HashMap();
         conditionMap.put(FuAccountInfo.USER_ID,levelUserId);
-        List<FuAccountInfo> accountInfos= fuAccountInfoSevice.selectByMap(conditionMap);
+        List<FuAccountInfo> accountInfos= fuAccountInfoService.selectByMap(conditionMap);
         if(accountInfos==null || accountInfos.size()==0){
             log.error("处理用户自交易订单佣金,查询用户账户为空！");
         }
@@ -140,7 +141,7 @@ public class FuCommissionCustomerService extends ServiceImpl<FuCommissionCustome
             commission.setCommissionUserType(fuUser.getUserType());
             commission.setCommissionUserLevel(level);
             commission.setSourceAccountId(accountInfos.get(0).getId());
-//            commission.setCommissionRateType();
+            commission.setCommissionRateType(rateType);
             commission.setCommissionRate(commissionLevels.get(0).getRate());
             commission.setCommissionDate(new Date());
             /*比率计算类型（0 交易手数，1 按原金额，2 按返佣金额, 3 指定金额）*/
@@ -172,6 +173,53 @@ public class FuCommissionCustomerService extends ServiceImpl<FuCommissionCustome
                 CommissionConstant.COMMISSION_RATE_TYPE_LOTS,CommissionConstant.COMMISSION_USER_LEVEL_FIRST,commissions);
     }
 
+
+    /**
+     * 根据时间 查询佣金详情信息
+     * @param userId
+     * @param beginTime
+     * @param endTime
+     * @return
+     */
+    public List<FuCommissionCustomer> findCommissionByTime(Integer userId,Date beginTime,Date endTime){
+
+        if(userId ==null || userId==0){
+            log.error("查詢佣金詳情，用户ID为空！");
+            throw new BusinessException("查詢佣金詳情，用户ID为空！");
+        }
+        Wrapper<FuCommissionCustomer> wrapper=new EntityWrapper<FuCommissionCustomer>() ;
+        wrapper.eq(FuCommissionCustomer.COMMISSION_USER_ID,userId);
+        if(beginTime!=null){
+            wrapper.and().gt(FuCommissionCustomer.COMMISSION_DATE,beginTime);
+        }
+        if(endTime!=null){
+            wrapper.and().lt(FuCommissionCustomer.COMMISSION_DATE,endTime);
+        }
+        return selectList(wrapper);
+    }
+
+    /**
+     * 查询佣金-结算流水
+     * @param userId
+     * @param accountId
+     * @param beginDate
+     * @param endDate
+     * @return
+     */
+    public List<FuAccountCommissionFlow> selectOrderCustomerSumFlow(Integer userId, Integer accountId, Date beginDate, Date endDate){
+
+        if(userId==null||userId==0){
+            log.error("查询佣金-结算流水，用户ID为空！");
+            throw new BusinessException("查询佣金-结算流水，用户ID为空！");
+        }
+        Map conditionMap =new HashMap();
+        conditionMap.put("userId",userId);
+        conditionMap.put("accountId",accountId);
+        conditionMap.put("beginDate",beginDate);
+        conditionMap.put("endDate",endDate);
+
+        return fuCommissionCustomerMapper.selectOrderCustomerSumFlow(conditionMap);
+    }
     /**
      * 处理用户跟单订单佣金
      */

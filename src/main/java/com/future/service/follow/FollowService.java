@@ -17,7 +17,7 @@ import com.future.entity.user.FuUserFollows;
 import com.future.mapper.order.FuOrderFollowErrorMapper;
 import com.future.mapper.user.FuUserFollowsMapper;
 import com.future.pojo.bo.order.UserMTAccountBO;
-import com.future.service.account.FuAccountMtSevice;
+import com.future.service.account.FuAccountMtService;
 import com.future.service.order.FuOrderFollowActionService;
 import com.future.service.order.FuOrderFollowInfoService;
 import com.future.service.product.FuProductSignalService;
@@ -46,7 +46,7 @@ public class FollowService{
     @Autowired
     RedisManager redisManager;
     @Autowired
-    FuAccountMtSevice fuAccountMtSevice;
+    FuAccountMtService fuAccountMtService;
     @Autowired
     FuOrderFollowInfoService fuOrderFollowInfoService;
     @Autowired
@@ -101,7 +101,7 @@ public class FollowService{
             /*查询信号源账户*/
             userMtAccMap.put(FuAccountMt.MT_ACC_ID,follow.getSignalMtAccId());
             userMtAccMap.put(FuAccountMt.IS_SIGNAL, CommonConstant.COMMON_YES);
-            fuAccountMts=fuAccountMtSevice.getUserMTAccByCondition(userMtAccMap);
+            fuAccountMts= fuAccountMtService.getUserMTAccByCondition(userMtAccMap);
             if(fuAccountMts==null ||fuAccountMts.isEmpty()){
                 log.error("跟随信号源账户信息查询失败! signalId:"+follow.getSignalId());
                 throw new BusinessException(GlobalResultCode.RESULE_DATA_NONE,"跟随信号源账户信息查询失败! signalId:"+follow.getSignalId());
@@ -252,13 +252,13 @@ public class FollowService{
         Map conditionMap=new HashMap();
         conditionMap.put("serverName",followAccount[0]);
         conditionMap.put("mtAccId",followAccount[1]);
-        List<UserMTAccountBO> followAccountInfo=fuAccountMtSevice.getUserMTAccByCondition(conditionMap);
+        List<UserMTAccountBO> followAccountInfo= fuAccountMtService.getUserMTAccByCondition(conditionMap);
 
         /*根据信号源servername+mtAccId 查询信号源账户*/
         conditionMap.put("serverName",signalAccount[0]);
         conditionMap.put("mtAccId",signalAccount[1]);
         conditionMap.put("isSignal",CommonConstant.COMMON_YES);
-        List<UserMTAccountBO> signalAccountInfo=fuAccountMtSevice.getUserMTAccByCondition(conditionMap);
+        List<UserMTAccountBO> signalAccountInfo= fuAccountMtService.getUserMTAccByCondition(conditionMap);
 
         /*根据信号源servername+mtAccId 查询信号源*/
         conditionMap.clear();
