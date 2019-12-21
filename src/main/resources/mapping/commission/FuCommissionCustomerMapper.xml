@@ -302,10 +302,10 @@
         and acc.commission_account_id = #{accountId,jdbcType=INTEGER}
       </if>
       <if test="beginDate != null">
-        and acc.commission_date >= #{beginDate,jdbcType=TIMESTAMP}
+        and acc.commission_date > #{beginDate,jdbcType=TIMESTAMP}
       </if>
       <if test="endDate != null">
-        and acc.commission_date &lt; = #{endDate,jdbcType=TIMESTAMP}
+        and acc.commission_date &lt;  #{endDate,jdbcType=TIMESTAMP}
       </if>
     GROUP BY
         commission_type,

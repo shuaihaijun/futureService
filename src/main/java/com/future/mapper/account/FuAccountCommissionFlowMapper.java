@@ -4,6 +4,9 @@ import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.future.entity.account.FuAccountCommissionFlow;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+import java.util.Map;
+
 @Component
 public interface FuAccountCommissionFlowMapper extends BaseMapper<FuAccountCommissionFlow> {
     int deleteByPrimaryKey(Integer id);
@@ -17,4 +20,6 @@ public interface FuAccountCommissionFlowMapper extends BaseMapper<FuAccountCommi
     int updateByPrimaryKeySelective(FuAccountCommissionFlow record);
 
     int updateByPrimaryKey(FuAccountCommissionFlow record);
+
+    List<FuAccountCommissionFlow> findLastSumFlowByUserId(Map conditionMap);
 }

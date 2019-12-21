@@ -22,4 +22,8 @@ public class AgentConstant {
 	public static final int AGENT_STATE_FREEZE = 1;
 	public static final int AGENT_STATE_HIDE = 2;
 	public static final int AGENT_STATE_REMOVE = 3;
+
+	public static final int AGENT_TYPE_IB = 5;
+	public static final int AGENT_TYPE_MIB = 6;
+	public static final int AGENT_TYPE_PIB = 7;
 }

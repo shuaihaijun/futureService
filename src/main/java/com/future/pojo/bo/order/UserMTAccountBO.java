@@ -1,5 +1,7 @@
 package com.future.pojo.bo.order;
 
+import java.math.BigDecimal;
+
 /*用户MT账户BO*/
 public class UserMTAccountBO {
 
@@ -22,7 +24,15 @@ public class UserMTAccountBO {
     private Integer accountPort;//账户所在位置PORT
     private String mtAccUrl;//MT账户所在位置URL
     private Integer mtAccPort;//MT账户所在位置PORT
+    private BigDecimal leverage;//杠杆
+    private BigDecimal balance;//余额
+    private BigDecimal credit;//信用额
+    private BigDecimal profit;//收益
+    private BigDecimal equity;//净值
+    private BigDecimal margin;//保证金
     private Integer connectState;//账号链接状态
+
+    private Integer introducer;//介绍人
 
     /**
      * 用户账号
@@ -281,5 +291,61 @@ public class UserMTAccountBO {
 
     public void setMtAccPort(Integer mtAccPort) {
         this.mtAccPort = mtAccPort;
+    }
+
+    public BigDecimal getLeverage() {
+        return leverage;
+    }
+
+    public void setLeverage(BigDecimal leverage) {
+        this.leverage = leverage;
+    }
+
+    public BigDecimal getBalance() {
+        return balance;
+    }
+
+    public void setBalance(BigDecimal balance) {
+        this.balance = balance;
+    }
+
+    public BigDecimal getCredit() {
+        return credit;
+    }
+
+    public void setCredit(BigDecimal credit) {
+        this.credit = credit;
+    }
+
+    public BigDecimal getProfit() {
+        return profit;
+    }
+
+    public void setProfit(BigDecimal profit) {
+        this.profit = profit;
+    }
+
+    public BigDecimal getEquity() {
+        return equity;
+    }
+
+    public void setEquity(BigDecimal equity) {
+        this.equity = equity;
+    }
+
+    public BigDecimal getMargin() {
+        return margin;
+    }
+
+    public void setMargin(BigDecimal margin) {
+        this.margin = margin;
+    }
+
+    public Integer getIntroducer() {
+        return introducer;
+    }
+
+    public void setIntroducer(Integer introducer) {
+        this.introducer = introducer;
     }
 }

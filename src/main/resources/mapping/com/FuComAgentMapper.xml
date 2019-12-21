@@ -4,7 +4,7 @@
   <resultMap id="BaseResultMap" type="com.future.entity.com.FuComAgent">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="agent_name" jdbcType="VARCHAR" property="agentName" />
-    <result column="agent_type" jdbcType="VARCHAR" property="agentType" />
+    <result column="agent_type" jdbcType="TINYINT" property="agentType" />
     <result column="agent_level" jdbcType="TINYINT" property="agentLevel" />
     <result column="apply_desc" jdbcType="VARCHAR" property="applyDesc" />
     <result column="agent_number" jdbcType="INTEGER" property="agentNumber" />
@@ -36,7 +36,7 @@
       agent_state, group_name, comment, 
       user_id, create_date, modify_date, 
       apply_date)
-    values (#{id,jdbcType=INTEGER}, #{agentName,jdbcType=VARCHAR}, #{agentType,jdbcType=VARCHAR}, 
+    values (#{id,jdbcType=INTEGER}, #{agentName,jdbcType=VARCHAR}, #{agentType,jdbcType=TINYINT}, 
       #{agentLevel,jdbcType=TINYINT}, #{applyDesc,jdbcType=VARCHAR}, #{agentNumber,jdbcType=INTEGER}, 
       #{agentState,jdbcType=TINYINT}, #{groupName,jdbcType=VARCHAR}, #{comment,jdbcType=VARCHAR}, 
       #{userId,jdbcType=INTEGER}, #{createDate,jdbcType=TIMESTAMP}, #{modifyDate,jdbcType=TIMESTAMP}, 
@@ -93,7 +93,7 @@
         #{agentName,jdbcType=VARCHAR},
       </if>
       <if test="agentType != null">
-        #{agentType,jdbcType=VARCHAR},
+        #{agentType,jdbcType=TINYINT},
       </if>
       <if test="agentLevel != null">
         #{agentLevel,jdbcType=TINYINT},
@@ -134,7 +134,7 @@
         agent_name = #{agentName,jdbcType=VARCHAR},
       </if>
       <if test="agentType != null">
-        agent_type = #{agentType,jdbcType=VARCHAR},
+        agent_type = #{agentType,jdbcType=TINYINT},
       </if>
       <if test="agentLevel != null">
         agent_level = #{agentLevel,jdbcType=TINYINT},
@@ -172,7 +172,7 @@
   <update id="updateByPrimaryKey" parameterType="com.future.entity.com.FuComAgent">
     update fu_com_agent
     set agent_name = #{agentName,jdbcType=VARCHAR},
-      agent_type = #{agentType,jdbcType=VARCHAR},
+      agent_type = #{agentType,jdbcType=TINYINT},
       agent_level = #{agentLevel,jdbcType=TINYINT},
       apply_desc = #{applyDesc,jdbcType=VARCHAR},
       agent_number = #{agentNumber,jdbcType=INTEGER},

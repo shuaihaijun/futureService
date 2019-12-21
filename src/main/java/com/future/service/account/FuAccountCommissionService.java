@@ -1,6 +1,7 @@
 package com.future.service.account;
 
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.future.common.constants.AccountConstant;
 import com.future.common.constants.CommonConstant;
 import com.future.common.exception.BusinessException;
 import com.future.common.util.DateUtil;
@@ -48,7 +49,7 @@ public class FuAccountCommissionService extends ServiceImpl<FuAccountCommissionM
         if(accountInfos!=null && accountInfos.size()>0){
             /*以后账户，设置为正常*/
             acc=accountInfos.get(0);
-            acc.setAccountState(CommonConstant.COMMON_STATE_INVALID);
+            acc.setAccountState(AccountConstant.ACCOUNT_STATE_NORMAL);
             fuAccountCommissionMapper.updateByPrimaryKey(acc);
             return;
         }

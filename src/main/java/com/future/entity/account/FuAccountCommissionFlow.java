@@ -7,6 +7,14 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 public class FuAccountCommissionFlow {
+
+    public static String USER_ID ="user_id";
+    public static String ACCOUNT_ID ="account_id";
+    public static String COMMISSION_TYPE ="commission_type";
+    public static String COMMISSION_USER_TYPE ="commission_user_type";
+    public static String COMMISSION_LEVEL ="commission_level";
+    public static String COMMISSION_DATE ="commission_date";
+    public static String COMMISSION_STATE ="commission_state";
     /**
      * 
      */
@@ -44,7 +52,7 @@ public class FuAccountCommissionFlow {
     private Integer commissionType;
 
     /**
-     * 收佣用户类型（0 普通用户、1 试用会员、2 普通会员、3 VIP会员、4 业务员、5 PIB、6 MIB、7 IB、8 分析师、9 总监、10 总经理、11 信号源）
+     * 收佣用户类型（0 普通用户、1 试用会员、2 普通会员、3 VIP会员、4 业务员、5 IB、6 MIB、7 PIB、8 分析师、9 总监、10 总经理、11 信号源）
      */
     private Integer commissionUserType;
 
@@ -201,16 +209,16 @@ public class FuAccountCommissionFlow {
     }
 
     /**
-     * 收佣用户类型（0 普通用户、1 试用会员、2 普通会员、3 VIP会员、4 业务员、5 PIB、6 MIB、7 IB、8 分析师、9 总监、10 总经理、11 信号源）
-     * @return commission_user_type 收佣用户类型（0 普通用户、1 试用会员、2 普通会员、3 VIP会员、4 业务员、5 PIB、6 MIB、7 IB、8 分析师、9 总监、10 总经理、11 信号源）
+     * 收佣用户类型（0 普通用户、1 试用会员、2 普通会员、3 VIP会员、4 业务员、5 IB、6 MIB、7 PIB、8 分析师、9 总监、10 总经理、11 信号源）
+     * @return commission_user_type 收佣用户类型（0 普通用户、1 试用会员、2 普通会员、3 VIP会员、4 业务员、5 IB、6 MIB、7 PIB、8 分析师、9 总监、10 总经理、11 信号源）
      */
     public Integer getCommissionUserType() {
         return commissionUserType;
     }
 
     /**
-     * 收佣用户类型（0 普通用户、1 试用会员、2 普通会员、3 VIP会员、4 业务员、5 PIB、6 MIB、7 IB、8 分析师、9 总监、10 总经理、11 信号源）
-     * @param commissionUserType 收佣用户类型（0 普通用户、1 试用会员、2 普通会员、3 VIP会员、4 业务员、5 PIB、6 MIB、7 IB、8 分析师、9 总监、10 总经理、11 信号源）
+     * 收佣用户类型（0 普通用户、1 试用会员、2 普通会员、3 VIP会员、4 业务员、5 IB、6 MIB、7 PIB、8 分析师、9 总监、10 总经理、11 信号源）
+     * @param commissionUserType 收佣用户类型（0 普通用户、1 试用会员、2 普通会员、3 VIP会员、4 业务员、5 IB、6 MIB、7 PIB、8 分析师、9 总监、10 总经理、11 信号源）
      */
     public void setCommissionUserType(Integer commissionUserType) {
         this.commissionUserType = commissionUserType;

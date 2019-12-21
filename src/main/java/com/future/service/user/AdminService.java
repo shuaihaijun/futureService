@@ -226,7 +226,7 @@ public class AdminService extends ServiceImpl<FuUserMapper,FuUser> {
         if(ObjectUtils.isEmpty(fuUser)){
             throw new ParameterInvalidException(GlobalResultCode.PARAM_NULL_POINTER);
         }
-        if(StringUtils.isEmpty(fuUser.getUsername())){
+        if(StringUtils.isEmpty(fuUser.getUsername()) && fuUser.getId()==0){
             throw new ParameterInvalidException(GlobalResultCode.PARAM_NULL_POINTER);
         }
 
@@ -235,7 +235,13 @@ public class AdminService extends ServiceImpl<FuUserMapper,FuUser> {
             fuUser.setPassword(null);
         }
         /*此处可从redis中查询*/
-        FuUser eUser=fuUserMapper.selectByUsername(fuUser.getUsername());
+
+        FuUser eUser;
+        if(fuUser.getId()!=0){
+            eUser=fuUserMapper.selectByPrimaryKey(fuUser.getId());
+        }else {
+            eUser=fuUserMapper.selectByUsername(fuUser.getUsername());
+        }
         /*此处还需判断用户状态（123）*/
         if(ObjectUtils.isEmpty(eUser)){
             throw new DataNotFoundException(UserResultCode.USER_NOTEXIST_ERROR);

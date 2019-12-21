@@ -18,22 +18,19 @@
             <property name="forceBigDecimals" value="false"/>
         </javaTypeResolver>
         <!-- 生成模型的包名和位置-->
-        <javaModelGenerator targetPackage="com.future.entity.commission" targetProject="src/main/java">
+        <javaModelGenerator targetPackage="com.future.entity.com" targetProject="src/main/java">
             <property name="enableSubPackages" value="true"/>
             <property name="trimStrings" value="true"/>
         </javaModelGenerator>
         <!-- 生成映射文件的包名和位置-->
-        <sqlMapGenerator targetPackage="mapping.commission" targetProject="src/main/resources">
+        <sqlMapGenerator targetPackage="mapping.com" targetProject="src/main/resources">
             <property name="enableSubPackages" value="true"/>
         </sqlMapGenerator>
         <!-- 生成DAO的包名和位置-->
-        <javaClientGenerator type="XMLMAPPER" targetPackage="com.future.mapper.commission" targetProject="src/main/java">
+        <javaClientGenerator type="XMLMAPPER" targetPackage="com.future.mapper.com" targetProject="src/main/java">
             <property name="enableSubPackages" value="true"/>
         </javaClientGenerator>
-        <!--fu_commission_customer source_order_id commission_rate_type ->
-        <!- fu_account_commission_flow commission_rate_type commission_rate->
-        <!- fu_account_commission commission_source_lots->
-        <!- 要生成的表 tableName是数据库中的表名或视图名 domainObjectName是实体类名-->
-        <table tableName="fu_commission_customer" domainObjectName="FuCommissionCustomer" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>
+        <!--<!- 要生成的表 tableName是数据库中的表名或视图名 domainObjectName是实体类名&ndash;&gt;-->
+        <table tableName="fu_com_agent" domainObjectName="FuComAgent" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>
     </context>
 </generatorConfiguration>

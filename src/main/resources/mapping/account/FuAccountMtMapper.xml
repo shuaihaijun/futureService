@@ -331,6 +331,12 @@
     acc.mt_acc_port mtAccPort,
     acc.account_url accountUrl,
     acc.account_port accountPort,
+    acc.leverage leverage,
+    acc.balance balance,
+    acc.credit credit,
+    acc.profit profit,
+    acc.equity equity,
+    acc.margin margin,
     u.id userId,
     u.username,
     u.real_name realName,
@@ -339,6 +345,7 @@
     u.user_type userType,
     u.email,
     u.mobile,
+    u.introducer,
     s.id serverId,
     s.server_name serverName,
     s.broker_id brokerId,
@@ -382,7 +389,13 @@
         and s.broker_name = #{brokerName,jdbcType=VARCHAR}
       </if>
       <if test="isAccount != null">
-        and u.is_account = #{isAccount,jdbcType=VARCHAR}
+        and u.is_account = #{isAccount,jdbcType=INTEGER}
+      </if>
+      <if test="introducer != null">
+        and u.introducer = #{introducer,jdbcType=INTEGER}
+      </if>
+      <if test="userState != null">
+        and u.user_state = #{userState,jdbcType=INTEGER}
       </if>
     </trim>
   </select>

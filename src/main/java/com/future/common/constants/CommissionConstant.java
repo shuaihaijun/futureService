@@ -1,5 +1,7 @@
 package com.future.common.constants;
 
+import java.math.BigDecimal;
+
 /**
  * 信号源全局常量类
  */
@@ -32,4 +34,6 @@ public class CommissionConstant {
 	public static final int COMMISSION_RATE_TYPE_MONEY_COMMISSION = 2;
 	public static final int COMMISSION_RATE_TYPE_MONEY= 3;
 
+	/*社区同级别代理返佣*/
+	public static final BigDecimal COMMISSION_SAME_LEVEL_RATE_FROM_COMMUNITY= new BigDecimal(0.1);
 }

@@ -14,20 +14,20 @@ public class FuComAgent {
     public static final String AGENT_STATE = "agent_state";
     public static final String USER_ID = "user_id";
     /**
-     * 
+     *
      */
     @TableId(type = IdType.AUTO)
     private Integer id;
 
     /**
-     * 代理人名称
+     * 代理名称
      */
     private String agentName;
 
     /**
-     * IB类型(0 IB ,1 MIB, 2 PIB)
+     * IB类型(5 IB初级代理 ,6 MIB中级代理, 7 PIB高级代理)
      */
-    private String agentType;
+    private Integer agentType;
 
     /**
      * 代理人等级(0 普通 ,1 中级, 2 高级)
@@ -45,7 +45,7 @@ public class FuComAgent {
     private Integer agentNumber;
 
     /**
-     * 代理人状态
+     * 代理人状态(0 正常，1 冻结，2 隐藏，3 删除)
      */
     private Integer agentState;
 
@@ -96,35 +96,35 @@ public class FuComAgent {
     }
 
     /**
-     * 代理人名称
-     * @return agent_name 代理人名称
+     * 代理名称
+     * @return agent_name 代理名称
      */
     public String getAgentName() {
         return agentName;
     }
 
     /**
-     * 代理人名称
-     * @param agentName 代理人名称
+     * 代理名称
+     * @param agentName 代理名称
      */
     public void setAgentName(String agentName) {
         this.agentName = agentName == null ? null : agentName.trim();
     }
 
     /**
-     * IB类型(0 IB ,1 MIB, 2 PIB)
-     * @return agent_type IB类型(0 IB ,1 MIB, 2 PIB)
+     * IB类型(5 IB初级代理 ,6 MIB中级代理, 7 PIB高级代理)
+     * @return agent_type IB类型(5 IB初级代理 ,6 MIB中级代理, 7 PIB高级代理)
      */
-    public String getAgentType() {
+    public Integer getAgentType() {
         return agentType;
     }
 
     /**
-     * IB类型(0 IB ,1 MIB, 2 PIB)
-     * @param agentType IB类型(0 IB ,1 MIB, 2 PIB)
+     * IB类型(5 IB初级代理 ,6 MIB中级代理, 7 PIB高级代理)
+     * @param agentType IB类型(5 IB初级代理 ,6 MIB中级代理, 7 PIB高级代理)
      */
-    public void setAgentType(String agentType) {
-        this.agentType = agentType == null ? null : agentType.trim();
+    public void setAgentType(Integer agentType) {
+        this.agentType = agentType;
     }
 
     /**
@@ -176,16 +176,16 @@ public class FuComAgent {
     }
 
     /**
-     * 代理人状态
-     * @return agent_state 代理人状态
+     * 代理人状态(0 正常，1 冻结，2 隐藏，3 删除)
+     * @return agent_state 代理人状态(0 正常，1 冻结，2 隐藏，3 删除)
      */
     public Integer getAgentState() {
         return agentState;
     }
 
     /**
-     * 代理人状态
-     * @param agentState 代理人状态
+     * 代理人状态(0 正常，1 冻结，2 隐藏，3 删除)
+     * @param agentState 代理人状态(0 正常，1 冻结，2 隐藏，3 删除)
      */
     public void setAgentState(Integer agentState) {
         this.agentState = agentState;
