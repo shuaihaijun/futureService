@@ -23,4 +23,5 @@ public interface FuProductSignalMapper extends BaseMapper<FuProductSignal> {
     int updateByPrimaryKey(FuProductSignal record);
 
     List<FuUserSignalVO> querySignalUsers(Map conditionMap);
+
 }

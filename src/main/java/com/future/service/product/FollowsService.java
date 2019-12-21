@@ -1,10 +1,12 @@
 package com.future.service.product;
 
 
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.baomidou.mybatisplus.toolkit.MapUtils;
 import com.future.common.enums.GlobalResultCode;
 import com.future.common.exception.BusinessException;
+import com.future.common.exception.DataConflictException;
 import com.future.common.exception.ParameterInvalidException;
 import com.future.common.util.StringUtils;
 import com.future.entity.product.FuProductSignal;
@@ -12,7 +14,11 @@ import com.future.entity.user.FuUserFollows;
 import com.future.mapper.product.FuProductSignalMapper;
 import com.future.mapper.user.FuUserFollowsMapper;
 import com.future.pojo.bo.order.UserMTAccountBO;
+import com.future.pojo.vo.signal.FuFollowUserVO;
+import com.future.pojo.vo.signal.FuUserSignalVO;
 import com.future.service.account.FuAccountMtService;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -183,6 +189,33 @@ public class FollowsService extends ServiceImpl<FuUserFollowsMapper, FuUserFollo
         follows.setRuleState(2);
         follows.setModifyDate(new Date());
         fuUserFollowsMapper.updateByPrimaryKeySelective(follows);
+    }
+
+
+    /**
+     * 查询跟随用户信息
+     * @param requestMap
+     */
+    public PageInfo<FuFollowUserVO> queryFollowUsers(JSONObject requestMap){
+        /*校验信息*/
+        int pageSize=20;
+        int pageNum=1;
+
+        if(StringUtils.isEmpty(pageSize)||StringUtils.isEmpty(pageNum)){
+            log.error("分页数据为空！");
+            new DataConflictException("分页数据为空！");
+        }
+        if(!StringUtils.isEmpty(requestMap.getString("pageSize"))){
+            pageSize=Integer.parseInt(requestMap.getString("pageSize"));
+        }
+        if(!StringUtils.isEmpty(requestMap.getString("pageNum"))){
+            pageNum=Integer.parseInt(requestMap.getString("pageNum"));
+        }
+
+        Map conditionMap =requestMap.getInnerMap();
+        PageHelper.startPage(pageNum,pageSize);
+        List<FuFollowUserVO>followUsers= fuUserFollowsMapper.queryFollowUsers(conditionMap);
+        return new PageInfo<FuFollowUserVO>(followUsers);
     }
 
 }

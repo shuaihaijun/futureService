@@ -7,6 +7,10 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 public class FuProductSignalValuation {
+
+
+    public static String SIGNAL_ID="signal_id";
+
     /**
      * 
      */
