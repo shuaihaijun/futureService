@@ -42,7 +42,9 @@
         tpp.Proj_name
         FROM fu_permission_role tpr
         LEFT JOIN fu_permission_project tpp ON tpp.Proj_key = tpr.Proj_key
-        WHERE Role_status = 1 AND Role_sign = 2   AND Role_level = 3 AND tpp.Proj_status = 1
+        WHERE Role_status = 1 AND Role_sign = 2
+        AND Role_level = 3
+        AND tpp.Proj_status = 1
         <if test="projKeys != null and projKeys.size > 0">
             AND tpr.Proj_key
             <foreach collection="projKeys" item="projKey" open="IN (" close=")" separator=",">

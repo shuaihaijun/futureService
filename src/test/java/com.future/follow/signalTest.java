@@ -18,6 +18,7 @@ import java.util.Map;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
+@Ignore
 public class signalTest {
 
     @Autowired
@@ -58,7 +59,8 @@ public class signalTest {
         String followUrl="127.0.0.1:33888";
         String serverId="MultiBankFXInt-Demo F";
         String accountId="2102272054";
-        boolean isSuccess=followService.followInit(hostUrl,followUrl,serverId,accountId);
+        String userId="";
+        boolean isSuccess=followService.followInit(userId,hostUrl,followUrl,serverId,accountId);
         if(!isSuccess){
             System.out.println("Init failed!");
         }else {

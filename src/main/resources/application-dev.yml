@@ -71,9 +71,11 @@ pubUserServerUrl1: 127.0.0.1
 pubUserServerUrl2: 127.0.0.1
 #图片保存路径
 imageFilePath: D:\test\
+#新用户角色ID
+newUserRoleId: 6
 
 #超级管理员id集合 Administrator,使用逗号分隔
-SUPER_ADMINISTRATOR: 37,38
+SUPER_ADMINISTRATOR: 37
 
 
 logging:

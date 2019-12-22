@@ -2,8 +2,7 @@ package com.future.user;
 
 
 import com.future.entity.user.FuUser;
-import com.future.pojo.bo.order.UserMTAccountBO;
-import com.future.service.account.FuAccountMtSevice;
+import com.future.service.account.FuAccountMtService;
 import com.future.service.mt.MTAccountService;
 import com.future.service.user.AdminService;
 import com.future.trade.OrderSendExample;
@@ -26,7 +25,7 @@ public class AdminTest {
     @Autowired
     AdminService adminService;
     @Autowired
-    FuAccountMtSevice fuAccountMtSevice;
+    FuAccountMtService fuAccountMtService;
     @Autowired
     MTAccountService mtAccountService;
 

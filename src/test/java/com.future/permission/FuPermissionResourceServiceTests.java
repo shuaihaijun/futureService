@@ -2,10 +2,12 @@ package com.future.permission;
 
 import com.future.common.helper.PageInfoHelper;
 import com.future.common.util.LogUtil;
+import com.future.mapper.permission.FuPermissionResourceMapper;
 import com.future.pojo.bo.AdminInfo;
 import com.future.pojo.bo.permission.FuPermissionResourceBO;
 import com.future.pojo.vo.permission.FuPermissionResourceVO;
 import com.future.service.permission.PermissionResourceService;
+import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -35,6 +37,8 @@ public class FuPermissionResourceServiceTests {
 
     @Autowired
     private PermissionResourceService permissionResourceService;
+    @Autowired
+    FuPermissionResourceMapper fuPermissionResourceMapper;
 
 
     /**
@@ -136,8 +140,23 @@ public class FuPermissionResourceServiceTests {
      */
     @Test
     public void testFindByRoleId() {
-        Integer roleId = 1;
-        log.info(permissionResourceService.findByRoleId(roleId).toString());
+        //设置分页信息
+        Integer pro=0;
+        List<Integer> pros=new ArrayList<>();
+        pros.add(pro);
+        PageInfoHelper   helper = new PageInfoHelper();
+        PageHelper.startPage(helper.getPageNo(), helper.getPageSize());
+        // 超级管理员用户查看全部内容，其他用户获取当前有拥有的工程项目
+        List<FuPermissionResourceVO>  list  = fuPermissionResourceMapper.selectPageList(null, pros);
+        while (list.size()>0){
+            System.out.println(list.size());
+
+            helper.setPageNo(helper.getPageNo()+1);
+            System.out.println(helper.getPageNo());
+
+            PageHelper.startPage(helper.getPageNo(), helper.getPageSize());
+            list  = fuPermissionResourceMapper.selectPageList(null, pros);
+        }
 
     }
 }

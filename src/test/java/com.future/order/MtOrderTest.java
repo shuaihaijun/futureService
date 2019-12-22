@@ -5,7 +5,7 @@ import com.future.TestDemoAccount;
 import com.future.common.util.DateUtil;
 import com.future.entity.order.FuOrderFollowInfo;
 import com.future.service.mt.MTOrderService;
-import com.future.service.order.FuOrderInfoService;
+import com.future.service.order.FuOrderFollowInfoService;
 import com.jfx.SelectionPool;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -25,7 +25,7 @@ public class MtOrderTest {
     @Autowired
     MTOrderService mtOrderService;
     @Autowired
-    FuOrderInfoService fuOrderInfoService;
+    FuOrderFollowInfoService fuOrderInfoService;
 
     @Test
     public void testGetHistoryOrder(){

@@ -14,17 +14,20 @@ import com.future.common.exception.*;
 import com.future.common.util.CommonUtil;
 import com.future.common.util.RedisManager;
 import com.future.common.util.RequestContextHolderUtil;
+import com.future.entity.permission.FuPermissionUserRole;
 import com.future.entity.user.FuUser;
 import com.future.mapper.user.FuUserMapper;
 import com.future.pojo.bo.AdminInfo;
 import com.future.pojo.bo.order.UserMTAccountBO;
 import com.future.service.account.FuAccountInfoService;
 import com.future.service.account.FuAccountMtService;
+import com.future.service.permission.PermissionUserRoleService;
 import com.github.pagehelper.PageInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 import org.springframework.util.ObjectUtils;
@@ -46,7 +49,11 @@ public class AdminService extends ServiceImpl<FuUserMapper,FuUser> {
     @Autowired
     FuAccountInfoService fuAccountInfoService;
     @Autowired
+    PermissionUserRoleService permissionUserRoleService;
+    @Autowired
     RedisManager redisManager;
+    @Value("${newUserRoleId}")
+    public Integer newUserRoleId;
 
     /**
      * 通过用户名密码登录
@@ -191,6 +198,12 @@ public class AdminService extends ServiceImpl<FuUserMapper,FuUser> {
 
             /*跟新介绍人 信息*/
             fuUserMapper.updateByPrimaryKeySelective(introducer);
+
+            /*设置普通用户角色*/
+            FuPermissionUserRole userRole=new FuPermissionUserRole();
+            userRole.setUserId(userId);
+            userRole.setRoleId(newUserRoleId);
+            permissionUserRoleService.insert(userRole);
 
             /*更新缓存*/
 //            FuUser user=fuUserMapper.selectByUsername(fuUser.getUsername());
