@@ -8,15 +8,17 @@ import java.util.Date;
 
 public class FuCommissionLevel {
 
-    public static String COMMISSION_TYPE ="commission_type";
-    public static String ORDER_TYPE ="order_type";
-    public static String COMMISSION_USER_TYPE ="commission_user_type";
-    public static String COMMISSION_USER_LEVEL ="commission_user_level";
-    public static String RATE_TYPE ="rate_type";
+    public static String COMMISSION_TYPE="commission_type";
+    public static String ORDER_TYPE="order_type";
+    public static String COMMISSION_USER_TYPE="commission_user_type";
+    public static String COMMISSION_USER_LEVEL="commission_user_level";
+    public static String RATE_TYPE="rate_type";
+    public static String LEVEL_NAME="level_name";
 
     /**
      * 
      */
+
     @TableId(type = IdType.AUTO)
     private Integer id;
 
@@ -29,6 +31,11 @@ public class FuCommissionLevel {
      * 修改时间
      */
     private Date modifyDate;
+
+    /**
+     * 规则名称（例：信号源返佣规则1-5）
+     */
+    private String levelName;
 
     /**
      * 佣金发生来源 佣金类型（0 信号源返佣，1 多级返佣，2 社区返佣，3 其他）
@@ -46,7 +53,7 @@ public class FuCommissionLevel {
     private Integer commissionUserType;
 
     /**
-     * 收佣等级（1级、2级、3级）
+     * 返佣用户等级（1级、2级、3级）
      */
     private Integer commissionUserLevel;
 
@@ -109,6 +116,22 @@ public class FuCommissionLevel {
     }
 
     /**
+     * 规则名称（例：信号源返佣规则1-5）
+     * @return level_name 规则名称（例：信号源返佣规则1-5）
+     */
+    public String getLevelName() {
+        return levelName;
+    }
+
+    /**
+     * 规则名称（例：信号源返佣规则1-5）
+     * @param levelName 规则名称（例：信号源返佣规则1-5）
+     */
+    public void setLevelName(String levelName) {
+        this.levelName = levelName == null ? null : levelName.trim();
+    }
+
+    /**
      * 佣金发生来源 佣金类型（0 信号源返佣，1 多级返佣，2 社区返佣，3 其他）
      * @return commission_type 佣金发生来源 佣金类型（0 信号源返佣，1 多级返佣，2 社区返佣，3 其他）
      */
@@ -157,16 +180,16 @@ public class FuCommissionLevel {
     }
 
     /**
-     * 收佣等级（1级、2级、3级）
-     * @return commission_user_level 收佣等级（1级、2级、3级）
+     * 返佣用户等级（1级、2级、3级）
+     * @return commission_user_level 返佣用户等级（1级、2级、3级）
      */
     public Integer getCommissionUserLevel() {
         return commissionUserLevel;
     }
 
     /**
-     * 收佣等级（1级、2级、3级）
-     * @param commissionUserLevel 收佣等级（1级、2级、3级）
+     * 返佣用户等级（1级、2级、3级）
+     * @param commissionUserLevel 返佣用户等级（1级、2级、3级）
      */
     public void setCommissionUserLevel(Integer commissionUserLevel) {
         this.commissionUserLevel = commissionUserLevel;

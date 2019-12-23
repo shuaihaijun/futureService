@@ -13,7 +13,7 @@ public class PageInfoHelper {
     /**
      * 每页条数
      */
-    private Integer pageSize = 20;
+    private Integer pageSize = 30;
     /**
      * 分页页码
      */

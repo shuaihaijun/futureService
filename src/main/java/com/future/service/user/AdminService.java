@@ -14,6 +14,7 @@ import com.future.common.exception.*;
 import com.future.common.util.CommonUtil;
 import com.future.common.util.RedisManager;
 import com.future.common.util.RequestContextHolderUtil;
+import com.future.entity.com.FuComAgent;
 import com.future.entity.permission.FuPermissionUserRole;
 import com.future.entity.user.FuUser;
 import com.future.mapper.user.FuUserMapper;
@@ -21,6 +22,7 @@ import com.future.pojo.bo.AdminInfo;
 import com.future.pojo.bo.order.UserMTAccountBO;
 import com.future.service.account.FuAccountInfoService;
 import com.future.service.account.FuAccountMtService;
+import com.future.service.com.FuComAgentService;
 import com.future.service.permission.PermissionUserRoleService;
 import com.github.pagehelper.PageInfo;
 import org.slf4j.Logger;
@@ -29,6 +31,8 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.DigestUtils;
 import org.springframework.util.ObjectUtils;
 
@@ -50,6 +54,8 @@ public class AdminService extends ServiceImpl<FuUserMapper,FuUser> {
     FuAccountInfoService fuAccountInfoService;
     @Autowired
     PermissionUserRoleService permissionUserRoleService;
+    @Autowired
+    FuComAgentService fuComAgentService;
     @Autowired
     RedisManager redisManager;
     @Value("${newUserRoleId}")
@@ -146,6 +152,7 @@ public class AdminService extends ServiceImpl<FuUserMapper,FuUser> {
      * @param userJson
      * @return
      */
+    @Transactional(propagation= Propagation.REQUIRED)
     public Map registered(JSONObject userJson){
 
         if(userJson==null||userJson.toJSONString().equalsIgnoreCase("")){
@@ -191,30 +198,46 @@ public class AdminService extends ServiceImpl<FuUserMapper,FuUser> {
             fuUser.setPassword(DigestUtils.md5DigestAsHex(fuUser.getPassword().getBytes()));
 
             /*保存数据*/
-            int userId= fuUserMapper.insertSelective(fuUser);
+            int isSuccess= fuUserMapper.insertSelective(fuUser);
+            if(isSuccess<1){
+                log.warn("注册用户信息 , 注册失败！");
+                throw new BusinessException("注册用户信息 , 注册失败！");
+            }
+            FuUser newUser=fuUserMapper.selectByUsername(fuUser.getUsername());
+            if(newUser==null){
+                log.warn("注册用户信息 , 注册失败！");
+                throw new BusinessException("注册用户信息 , 注册失败！");
+            }
 
             /*设置社区账户*/
-            fuAccountInfoService.initAccountInfo(userId,fuUser.getPassword());
+            fuAccountInfoService.initAccountInfo(newUser.getId(),newUser.getPassword());
 
             /*跟新介绍人 信息*/
+            introducer.setRecommend(introducer.getRecommend()+1);
             fuUserMapper.updateByPrimaryKeySelective(introducer);
+            if(introducer.getUserType()==UserConstant.USER_TYPE_IB
+                ||introducer.getUserType()==UserConstant.USER_TYPE_MIB
+                    ||introducer.getUserType()==UserConstant.USER_TYPE_PIB){
+                FuComAgent agent=  fuComAgentService.selectOne(new EntityWrapper<FuComAgent>().eq(FuComAgent.USER_ID,newUser.getId()));
+                agent.setAgentNumber(agent.getAgentNumber()+1);
+                fuComAgentService.updateById(agent);
+            }
 
             /*设置普通用户角色*/
             FuPermissionUserRole userRole=new FuPermissionUserRole();
-            userRole.setUserId(userId);
+            userRole.setUserId(newUser.getId());
             userRole.setRoleId(newUserRoleId);
             permissionUserRoleService.insert(userRole);
 
             /*更新缓存*/
-//            FuUser user=fuUserMapper.selectByUsername(fuUser.getUsername());
             //*返回数据填充/*
             Map userMap=new HashMap();
-            userMap.put("userId",userId);
-            /*userMap.put("username",fuUser.getUsername());
+            userMap.put("userId",newUser.getId());
+            userMap.put("username",fuUser.getUsername());
             userMap.put("refName",fuUser.getRefName());
             userMap.put("realName",fuUser.getRealName());
             userMap.put("userType",fuUser.getUserType());
-            userMap.put("userState",fuUser.getUserState());*/
+            userMap.put("userState",fuUser.getUserState());
 
             registeredInfo.put("code",GlobalResultCode.SUCCESS.code());
             registeredInfo.put("msg",GlobalResultCode.SUCCESS.message());

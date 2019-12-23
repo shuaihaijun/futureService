@@ -463,4 +463,12 @@ public class FuComAgentService extends ServiceImpl<FuComAgentMapper,FuComAgent> 
         fuAccountCommissionFlowService.insertBatch(agenFlows);
         fuAccountCommissionService.updateById(commission);
     }
+
+    /**
+     * 保存
+     * @param agent
+     */
+    public void insertSelective(FuComAgent agent){
+        fuComAgentMapper.insertSelective(agent);
+    }
 }

@@ -7,7 +7,11 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 public class FuAccountCommission {
+
     public static String USER_ID ="user_id";
+    public static String ACCOUNT_ID ="account_id";
+    public static String ACCOUNT_STATE ="account_state";
+
 
     @TableId(type = IdType.AUTO)
     private Integer id;

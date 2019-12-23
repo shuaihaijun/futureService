@@ -204,13 +204,14 @@ public class FuAccountMtService extends ServiceImpl<FuAccountMtMapper, FuAccount
             //信号源用观摩密码验证
             password=accountMts.get(0).getMtPasswordWatch();
         }
-
+        String stateKey=mtServer+"&"+mtAccId;
         /*登录MT账号*/
         try {
             Strategy strategy=new Strategy();
             Broker broker = new Broker(mtServer);
             /*1 、连接数据*/
             if(!mtAccountService.getConnect(strategy,broker,mtAccId,password)){
+                redisManager.hset(RedisConstant.ACCOUNT_CONNECT_STATE,stateKey, CommonConstant.COMMON_NO);
                 log.error("user connect failed");
                 return false;
             }
@@ -220,7 +221,6 @@ public class FuAccountMtService extends ServiceImpl<FuAccountMtMapper, FuAccount
             }
 
             /*3、修改缓存中的状态*/
-            String stateKey=mtServer+"&"+mtAccId;
             redisManager.hset(RedisConstant.ACCOUNT_CONNECT_STATE,stateKey, CommonConstant.COMMON_YES);
         }catch (Exception e){
             log.error(e.getMessage(),e);

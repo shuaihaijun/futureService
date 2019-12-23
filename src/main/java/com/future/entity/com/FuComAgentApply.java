@@ -20,7 +20,7 @@ public class FuComAgentApply {
     private Integer id;
 
     /**
-     * 申请类型（0 IB升级申请，1 注册申请 ，2 IB降级申请）
+     * 申请类型（0 IB注册申请，1 IB升级申请 ，2 IB降级申请）
      */
     private Integer applyType;
 
@@ -106,16 +106,16 @@ public class FuComAgentApply {
     }
 
     /**
-     * 申请类型（0 IB升级申请，1 注册申请 ，2 IB降级申请）
-     * @return apply_type 申请类型（0 IB升级申请，1 注册申请 ，2 IB降级申请）
+     * 申请类型（0 IB注册申请，1 IB升级申请 ，2 IB降级申请）
+     * @return apply_type 申请类型（0 IB注册申请，1 IB升级申请 ，2 IB降级申请）
      */
     public Integer getApplyType() {
         return applyType;
     }
 
     /**
-     * 申请类型（0 IB升级申请，1 注册申请 ，2 IB降级申请）
-     * @param applyType 申请类型（0 IB升级申请，1 注册申请 ，2 IB降级申请）
+     * 申请类型（0 IB注册申请，1 IB升级申请 ，2 IB降级申请）
+     * @param applyType 申请类型（0 IB注册申请，1 IB升级申请 ，2 IB降级申请）
      */
     public void setApplyType(Integer applyType) {
         this.applyType = applyType;

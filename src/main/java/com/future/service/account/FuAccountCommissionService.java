@@ -1,15 +1,23 @@
 package com.future.service.account;
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.future.common.constants.AccountConstant;
 import com.future.common.constants.CommonConstant;
+import com.future.common.enums.GlobalResultCode;
 import com.future.common.exception.BusinessException;
+import com.future.common.exception.ParameterInvalidException;
+import com.future.common.helper.PageInfoHelper;
 import com.future.common.util.DateUtil;
 import com.future.entity.account.FuAccountCommission;
 import com.future.entity.account.FuAccountCommissionFlow;
 import com.future.entity.commission.FuCommissionCustomer;
+import com.future.entity.commission.FuCommissionLevel;
 import com.future.mapper.account.FuAccountCommissionMapper;
 import com.future.service.commission.FuCommissionCustomerService;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,6 +66,61 @@ public class FuAccountCommissionService extends ServiceImpl<FuAccountCommissionM
         acc.setAccountId(accountId);
         /*加密后的密码，初始密码默认 跟 用户密码一致*/
         fuAccountCommissionMapper.insertSelective(acc);
+    }
+
+    /**
+     * 获取佣金账户
+     * @return
+     */
+    public PageInfo<FuAccountCommission> getPageAccountCommisson(FuAccountCommission commission, PageInfoHelper helper){
+
+        Wrapper<FuAccountCommission> wrapper=new EntityWrapper<>();
+
+        if(commission.getUserId()!=null){
+            wrapper.eq(FuAccountCommission.USER_ID,commission.getUserId());
+        }
+        if(commission.getAccountId()!=null){
+            wrapper.eq(FuAccountCommission.ACCOUNT_ID,commission.getAccountId());
+        }
+        if(commission.getAccountState()!=null){
+            wrapper.eq(FuAccountCommission.ACCOUNT_STATE,commission.getAccountState());
+        }
+
+        if(helper==null){
+            helper=new PageInfoHelper();
+        }
+        PageHelper.startPage(helper.getPageNo(),helper.getPageSize());
+        List<FuAccountCommission> commissions= selectList(wrapper);
+        return new PageInfo<>(commissions);
+    }
+
+    /**
+     * 根据ID佣金账户
+     * @param id
+     * @return
+     */
+    public FuAccountCommission getAccountCommissonById(Integer id){
+        if(id==null||id==0){
+            log.error("根据ID佣金账户,ID为空");
+            throw new ParameterInvalidException(GlobalResultCode.PARAM_NULL_POINTER);
+        }
+        return fuAccountCommissionMapper.selectByPrimaryKey(id);
+    }
+
+
+    /**
+     * 根据userID佣金账户
+     * @param userId
+     * @return
+     */
+    public FuAccountCommission getAccountCommissonByUserId(Integer userId){
+        if(userId==null||userId==0){
+            log.error("根据ID佣金账户,ID为空");
+            throw new ParameterInvalidException(GlobalResultCode.PARAM_NULL_POINTER);
+        }
+        Wrapper<FuAccountCommission> wrapper=new EntityWrapper<>();
+        wrapper.eq(FuAccountCommission.USER_ID,userId);
+        return selectOne(wrapper);
     }
 
     /**

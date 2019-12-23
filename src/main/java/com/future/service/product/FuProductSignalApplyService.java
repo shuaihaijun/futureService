@@ -6,19 +6,25 @@ import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.future.common.constants.SignalConstant;
+import com.future.common.constants.UserConstant;
 import com.future.common.enums.GlobalResultCode;
+import com.future.common.enums.UserRoleCode;
 import com.future.common.exception.BusinessException;
 import com.future.common.exception.DataConflictException;
 import com.future.common.util.ConvertUtil;
 import com.future.common.util.StringUtils;
 import com.future.entity.account.FuAccountInfo;
+import com.future.entity.permission.FuPermissionUserRole;
 import com.future.entity.product.FuProductSignal;
 import com.future.entity.product.FuProductSignalApply;
+import com.future.entity.user.FuUser;
 import com.future.mapper.product.FuProductSignalApplyMapper;
 import com.future.mapper.product.FuProductSignalMapper;
 import com.future.service.account.FuAccountCommissionService;
 import com.future.service.account.FuAccountInfoService;
 import com.future.service.account.FuAccountMtService;
+import com.future.service.permission.PermissionUserRoleService;
+import com.future.service.user.AdminService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +56,10 @@ public class FuProductSignalApplyService extends ServiceImpl<FuProductSignalAppl
     FuAccountInfoService fuAccountInfoService;
     @Autowired
     FuAccountCommissionService fuAccountCommissionService;
+    @Autowired
+    AdminService adminService;
+    @Autowired
+    PermissionUserRoleService permissionUserRoleService;
 
     /**
      * 根据条件查找信号源信息
@@ -296,6 +306,25 @@ public class FuProductSignalApplyService extends ServiceImpl<FuProductSignalAppl
                     throw new BusinessException("查询社区账户信息错误！");
                 }
                 fuAccountCommissionService.initAccountCommission(signal.getUserId(),accountInfos.get(0).getId());
+
+                /*变更用户类型*/
+                FuUser user=adminService.selectById(signal.getUserId());
+                if(user==null){
+                    log.error("查询用户信息错误！");
+                    throw new BusinessException("查询用户信息错误！");
+                }
+                FuPermissionUserRole userRole=permissionUserRoleService.selectOne((new EntityWrapper<FuPermissionUserRole>().eq(FuPermissionUserRole.USER_ID,signal.getUserId())));
+                if(userRole==null){
+                    log.error("查询用户信息错误！");
+                    throw new BusinessException("查询用户信息错误！");
+                }
+                user.setUserType(UserConstant.USER_TYPE_SIGNAL);
+                userRole.setRoleId(UserRoleCode.USER_ROLE_SIGNAL.code());
+
+                /*变更用户类型*/
+                adminService.updateById(user);
+                /*分配信号源角色*/
+                permissionUserRoleService.updateById(userRole);
 
                 /*修改绑定MT账号状态  isSignal=1、 设置端口等 */
                 fuAccountMtService.checkSignalMtAccount(apply.getUserId(),apply.getServerName(),apply.getMtAccId());

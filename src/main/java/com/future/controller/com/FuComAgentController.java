@@ -6,8 +6,10 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.future.common.exception.DataConflictException;
 import com.future.common.util.StringUtils;
 import com.future.common.util.ThreadCache;
+import com.future.entity.com.FuComAgent;
 import com.future.entity.com.FuComAgentApply;
 import com.future.service.com.FuComAgentApplyService;
+import com.future.service.com.FuComAgentService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +26,8 @@ public class FuComAgentController {
 
     @Autowired
     FuComAgentApplyService fuComAgentApplyService;
+    @Autowired
+    FuComAgentService fuComAgentService;
 
 
     @RequestMapping("/saveAgentApply")
@@ -132,7 +136,7 @@ public class FuComAgentController {
     }
 
     @RequestMapping("/reviewAgentApply")
-    public @ResponseBody void reviewAgentApply(){
+    public @ResponseBody boolean reviewAgentApply(){
         // 获取请求参数
         String requestJSONStr = ThreadCache.getPostRequestParams();
         JSONObject requestMap = JSONObject.parseObject(requestJSONStr);
@@ -148,5 +152,19 @@ public class FuComAgentController {
         }
         String message=requestMap.getString("message");
         fuComAgentApplyService.reviewAgentApply(Integer.parseInt(id),Integer.parseInt(applyState),message);
+        return true;
+    }
+
+    @RequestMapping("/queryAgent")
+    public @ResponseBody
+    Page<FuComAgent> queryAgent(){
+        // 获取请求参数
+        String requestJSONStr = ThreadCache.getPostRequestParams();
+        JSONObject requestMap = JSONObject.parseObject(requestJSONStr);
+        if(ObjectUtils.isEmpty(requestJSONStr)){
+            log.error("数据为空！");
+            throw new DataConflictException("数据为空！");
+        }
+        return fuComAgentService.findAgentByCondition(requestMap);
     }
 }

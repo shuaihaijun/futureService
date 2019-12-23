@@ -21,10 +21,10 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/account")
-public class AccountController {
+@RequestMapping("/accountMt")
+public class AccountMtController {
 
-    Logger log= LoggerFactory.getLogger(AccountController.class);
+    Logger log= LoggerFactory.getLogger(AccountMtController.class);
 
     @Autowired
     FuAccountMtService fuAccountMtService;

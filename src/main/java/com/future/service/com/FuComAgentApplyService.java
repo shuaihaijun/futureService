@@ -8,6 +8,8 @@ import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.future.common.constants.AgentConstant;
 import com.future.common.constants.SignalConstant;
 import com.future.common.enums.GlobalResultCode;
+import com.future.common.enums.UserResultCode;
+import com.future.common.enums.UserRoleCode;
 import com.future.common.exception.BusinessException;
 import com.future.common.exception.DataConflictException;
 import com.future.common.util.BeanUtil;
@@ -16,11 +18,15 @@ import com.future.common.util.StringUtils;
 import com.future.entity.account.FuAccountInfo;
 import com.future.entity.com.FuComAgent;
 import com.future.entity.com.FuComAgentApply;
+import com.future.entity.permission.FuPermissionUserRole;
 import com.future.entity.product.FuProductSignalApply;
+import com.future.entity.user.FuUser;
 import com.future.mapper.com.FuComAgentApplyMapper;
 import com.future.mapper.com.FuComAgentMapper;
 import com.future.service.account.FuAccountCommissionService;
 import com.future.service.account.FuAccountInfoService;
+import com.future.service.permission.PermissionUserRoleService;
+import com.future.service.user.AdminService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,9 +50,13 @@ public class FuComAgentApplyService extends ServiceImpl<FuComAgentApplyMapper,Fu
     @Autowired
     FuAccountCommissionService fuAccountCommissionService;
     @Autowired
-    FuComAgentApplyMapper agentApplyMapper;
+    AdminService adminService;
     @Autowired
-    FuComAgentMapper agentMapper;
+    FuComAgentService fuComAgentService;
+    @Autowired
+    PermissionUserRoleService permissionUserRoleService;
+    @Autowired
+    FuComAgentApplyMapper agentApplyMapper;
     /**
      * 根据条件查找代理信息
      * @param conditionMap
@@ -143,7 +153,7 @@ public class FuComAgentApplyService extends ServiceImpl<FuComAgentApplyMapper,Fu
             HashMap infoMap = JSON.parseObject(str, HashMap.class);
             FuComAgentApply agentApply=(FuComAgentApply)ConvertUtil.MapToJavaBean(infoMap,FuComAgentApply.class);
             if(ObjectUtils.isEmpty(agentMap.get("applyType"))){
-                //申请类型（0 IB升级申请，1 注册申请 ，2 IB降级申请）
+                //申请类型（0 IB注册申请，1 IB升级申请 ，2 IB降级申请）
                 agentApply.setApplyType(AgentConstant.AGENT_APPLY_TYPE_NEW);
             }
             agentApply.setApplyState(AgentConstant.AGENT_APPLY_STATE_SAVE);
@@ -244,19 +254,82 @@ public class FuComAgentApplyService extends ServiceImpl<FuComAgentApplyMapper,Fu
                 BeanUtil.copyProperties(agentApply,agent);
                 /*初始化代理数据*/
                 agent.setId(null);
-
-                /*建立社区佣金账户*/
-                Map conditionMap =new HashMap();
-                conditionMap.put(FuProductSignalApply.USER_ID,agent.getUserId());
-                List<FuAccountInfo> accountInfos= fuAccountInfoService.selectByMap(conditionMap);
-                if(accountInfos==null || accountInfos.size()==0){
-                    log.error("查询社区账户信息错误！");
-                    throw new BusinessException("查询社区账户信息错误！");
+                /*变更用户类型*/
+                FuUser user=adminService.selectById(agent.getUserId());
+                if(user==null){
+                    log.error("查询用户信息错误！");
+                    throw new BusinessException("查询用户信息错误！");
                 }
-                fuAccountCommissionService.initAccountCommission(agent.getUserId(),accountInfos.get(0).getId());
+                FuPermissionUserRole userRole=permissionUserRoleService.selectOne((new EntityWrapper<FuPermissionUserRole>().eq(FuPermissionUserRole.USER_ID,agentApply.getUserId())));
+                if(userRole==null){
+                    log.error("查询用户信息错误！");
+                    throw new BusinessException("查询用户信息错误！");
+                }
+                if(agentApply.getApplyType().equals(AgentConstant.AGENT_APPLY_TYPE_NEW)){
+                    //新增
+                    /*建立社区佣金账户*/
+                    Map conditionMap =new HashMap();
+                    conditionMap.put(FuProductSignalApply.USER_ID,agent.getUserId());
+                    List<FuAccountInfo> accountInfos= fuAccountInfoService.selectByMap(conditionMap);
+                    if(accountInfos==null || accountInfos.size()==0){
+                        log.error("查询社区账户信息错误！");
+                        throw new BusinessException("查询社区账户信息错误！");
+                    }
+                    fuAccountCommissionService.initAccountCommission(agent.getUserId(),accountInfos.get(0).getId());
 
-                /*保存信号源*/
-                agentMapper.insertSelective(agent);
+                    agent.setAgentType(AgentConstant.AGENT_TYPE_IB);
+                    /**/
+                    user.setUserType(AgentConstant.AGENT_TYPE_IB);
+
+                    /*设置角色信息*/
+                    userRole.setRoleId(UserRoleCode.USER_ROLE_IB.code());
+                    fuComAgentService.insertSelective(agent);
+
+                }else if(agentApply.getApplyType().equals(AgentConstant.AGENT_APPLY_TYPE_UP)){
+                    //升级
+                    if(user.getUserType()!=AgentConstant.AGENT_TYPE_IB&&user.getUserType()!=AgentConstant.AGENT_TYPE_MIB){
+                        log.error("审核状态错误！用户类型不符合！");
+                        throw new DataConflictException(GlobalResultCode.PARAM_IS_INVALID,"核状态错误！用户类型不符合！");
+                    }
+                    agent=  fuComAgentService.selectOne(new EntityWrapper<FuComAgent>().eq(FuComAgent.USER_ID,agentApply.getUserId()));
+                    if(user.getUserType()==AgentConstant.AGENT_TYPE_IB){
+                        user.setUserType(AgentConstant.AGENT_TYPE_MIB);
+                        agent.setAgentType(AgentConstant.AGENT_TYPE_MIB);
+                        userRole.setRoleId(UserRoleCode.USER_ROLE_MIB.code());
+                    }
+                    if(user.getUserType()==AgentConstant.AGENT_TYPE_MIB){
+                        user.setUserType(AgentConstant.AGENT_TYPE_PIB);
+                        agent.setAgentType(AgentConstant.AGENT_TYPE_PIB);
+                        userRole.setRoleId(UserRoleCode.USER_ROLE_PIB.code());
+                    }
+                    fuComAgentService.updateById(agent);
+                }else if(agentApply.getApplyType().equals(AgentConstant.AGENT_APPLY_TYPE_DOWN)){
+                    //降级
+                    if(user.getUserType()!=AgentConstant.AGENT_TYPE_PIB&&user.getUserType()!=AgentConstant.AGENT_TYPE_MIB){
+                        log.error("审核状态错误！用户类型不符合！");
+                        throw new DataConflictException(GlobalResultCode.PARAM_IS_INVALID,"核状态错误！用户类型不符合！");
+                    }
+                    agent=  fuComAgentService.selectOne(new EntityWrapper<FuComAgent>().eq(FuComAgent.USER_ID,agentApply.getUserId()));
+                    if(user.getUserType()==AgentConstant.AGENT_TYPE_PIB){
+                        user.setUserType(AgentConstant.AGENT_TYPE_MIB);
+                        agent.setAgentType(AgentConstant.AGENT_TYPE_MIB);
+                        userRole.setRoleId(UserRoleCode.USER_ROLE_MIB.code());
+                    }
+                    if(user.getUserType()==AgentConstant.AGENT_TYPE_MIB){
+                        user.setUserType(AgentConstant.AGENT_TYPE_IB);
+                        agent.setAgentType(AgentConstant.AGENT_TYPE_IB);
+                        userRole.setRoleId(UserRoleCode.USER_ROLE_IB.code());
+                    }
+                    fuComAgentService.updateById(agent);
+                }else {
+                    log.error("审核状态错误！");
+                    throw new DataConflictException(GlobalResultCode.PARAM_IS_INVALID,"核状态错误！");
+                }
+
+                /*变更用户类型*/
+                adminService.updateById(user);
+                /*分配相关角色*/
+                permissionUserRoleService.updateById(userRole);
             }else if(state==SignalConstant.SIGNAL_APPLY_STATE_UNPASS){
                 /*审核未通过*/
                 agentApply.setApplyState(AgentConstant.AGENT_APPLY_STATE_FAIL);
@@ -271,6 +344,15 @@ public class FuComAgentApplyService extends ServiceImpl<FuComAgentApplyMapper,Fu
             log.error(e.getMessage(),e);
             throw new BusinessException(e);
         }
+
+    }
+
+    /**
+     * 处理代理升级逻辑
+     * @param userId
+     * @param applyType
+     */
+    public void dealAgentApply(Integer userId,Integer applyType){
 
     }
 
