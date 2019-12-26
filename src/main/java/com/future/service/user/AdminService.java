@@ -483,7 +483,7 @@ public class AdminService extends ServiceImpl<FuUserMapper,FuUser> {
             throw new ParameterInvalidException("查找用户信息,参数错误！");
         }
 
-        if(oper.equals(CommonConstant.CHECK_YES)){
+        if(Integer.parseInt(oper)==CommonConstant.CHECK_YES){
             //通过
             user.setUserState(UserConstant.USER_STATE_NORMAL);
             user.setIsAccount(CommonConstant.COMMON_YES);

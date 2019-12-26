@@ -221,7 +221,7 @@
       coin_type = #{coinType,jdbcType=TINYINT}
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <select id="findLastSumFlowByUserId" parameterType="java.util.Map" resultType="com.future.entity.account.FuAccountCommissionFlow">
+  <select id="findLastSumFlowByUserId" parameterType="java.util.Map" resultMap="BaseResultMap">
     SELECT
       <include refid="Base_Column_List" />
     from
@@ -229,10 +229,10 @@
     WHERE
       1=1
       <if test="userId != null">
-        and acc.commission_user_id = #{userId,jdbcType=INTEGER}
+        and user_id = #{userId,jdbcType=INTEGER}
       </if>
       <if test="accountId != null">
-        and acc.commission_account_id = #{accountId,jdbcType=INTEGER}
+        and account_id = #{accountId,jdbcType=INTEGER}
       </if>
     order BY
     commission_date desc limit

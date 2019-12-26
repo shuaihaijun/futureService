@@ -6,6 +6,8 @@ import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.future.common.constants.CommissionConstant;
 import com.future.common.exception.BusinessException;
+import com.future.common.helper.PageInfoHelper;
+import com.future.common.util.DateUtil;
 import com.future.entity.account.FuAccountCommissionFlow;
 import com.future.entity.account.FuAccountInfo;
 import com.future.entity.commission.FuCommissionCustomer;
@@ -15,6 +17,8 @@ import com.future.entity.user.FuUser;
 import com.future.mapper.commission.FuCommissionCustomerMapper;
 import com.future.service.account.FuAccountInfoService;
 import com.future.service.user.AdminService;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import io.swagger.models.auth.In;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,7 +51,7 @@ public class FuCommissionCustomerService extends ServiceImpl<FuCommissionCustome
     public void dealUserOrderCommission(Integer userId, List<FuOrderCustomer> orderCustomers){
         if(orderCustomers==null || orderCustomers.size()==0){
             log.error("处理用户自交易订单佣金,参数为空！");
-            return;
+            throw new BusinessException("处理用户自交易订单佣金,参数为空！");
         }
 
         Map conditionMap =new HashMap();
@@ -55,12 +59,15 @@ public class FuCommissionCustomerService extends ServiceImpl<FuCommissionCustome
         List<FuAccountInfo> accountInfos= fuAccountInfoService.selectByMap(conditionMap);
         if(accountInfos==null || accountInfos.size()==0){
             log.error("处理用户自交易订单佣金,查询用户账户为空！");
+            throw new BusinessException("处理用户自交易订单佣金,查询用户账户为空！");
         }
 
         List<FuCommissionCustomer> commissions=new ArrayList<>();
         for(FuOrderCustomer orderCustomer:orderCustomers){
 
             FuCommissionCustomer commission=new FuCommissionCustomer();
+            commission.setCreateDate(new Date());
+            commission.setModifyDate(new Date());
             /*订单ID*/
             commission.setSourceOrderId(orderCustomer.getOrderId());
             /*用户ID*/
@@ -77,8 +84,10 @@ public class FuCommissionCustomerService extends ServiceImpl<FuCommissionCustome
             commission.setSourceOrderMoney(orderCustomer.getOrderOpenPrice().multiply(orderCustomer.getOrderLots()));
             /*订单开仓时间*/
             commission.setOperDate(orderCustomer.getOrderOpenDate());
-
+            /*订单平仓时间*/
+            commission.setCommissionDate(new Date());
             commissions.add(commission);
+
         }
 
         /*计算下一级佣金*/
@@ -99,7 +108,7 @@ public class FuCommissionCustomerService extends ServiceImpl<FuCommissionCustome
     public void dealCommissionLevel(Integer levelUserId,Integer commissionType,Integer orderType,Integer rateType, Integer level, List<FuCommissionCustomer> commissions){
 
         /*校验数据*/
-        if(levelUserId==0 || commissions==null||commissions.size()==0||level==0){
+        if(levelUserId==0 || commissions==null||commissions.size()==0||level==0||level>3){
             log.error("计算佣金时，获取参数为空！");
         }
 
@@ -107,16 +116,16 @@ public class FuCommissionCustomerService extends ServiceImpl<FuCommissionCustome
         FuUser fuUser= adminService.findUserIntroducer(levelUserId);
         if(fuUser==null||fuUser.getId()==0){
             /*该用户无推荐用户（自助注册有用/升级过猛用户）*/
-            log.warn("用户："+levelUserId+"无推荐人！计算上级佣金失败！");
+            log.info("用户："+levelUserId+"无推荐人！计算上级佣金失败！");
             return;
         }
         Map conditionMap =new HashMap();
-        conditionMap.put(FuAccountInfo.USER_ID,levelUserId);
+        conditionMap.put(FuAccountInfo.USER_ID,fuUser.getId());
         List<FuAccountInfo> accountInfos= fuAccountInfoService.selectByMap(conditionMap);
         if(accountInfos==null || accountInfos.size()==0){
             log.error("处理用户自交易订单佣金,查询用户账户为空！");
+            throw new BusinessException("处理用户自交易订单佣金,查询用户账户为空！userId+"+fuUser.getId());
         }
-
 
         /*根据客户登记查询返佣等级*/
         Map condtionMap =new HashMap();
@@ -128,22 +137,22 @@ public class FuCommissionCustomerService extends ServiceImpl<FuCommissionCustome
         List<FuCommissionLevel> commissionLevels= fuCommissionLevelSevice.selectByMap(condtionMap);
         if(commissionLevels==null || commissionLevels.size()==0){
             log.error("根据条件查询返佣规则失败，Data:"+ JSON.toJSON(condtionMap));
-            throw new BusinessException("根据条件查询返佣规则失败!");
+            return;
         }
         if(commissionLevels.size()>1){
             log.warn("根据条件查询返佣规则多条，Data:"+ JSON.toJSON(condtionMap));
+            return;
         }
-
         /*根据返佣等级计算佣金*/
         for(FuCommissionCustomer commission:commissions ){
             commission.setCommissionType(commissionType);
-            commission.setSourceUserId(fuUser.getId());
+            commission.setCommissionUserId(fuUser.getId());
             commission.setCommissionUserType(fuUser.getUserType());
             commission.setCommissionUserLevel(level);
-            commission.setSourceAccountId(accountInfos.get(0).getId());
+            commission.setCommissionAccountId(accountInfos.get(0).getId());
             commission.setCommissionRateType(rateType);
             commission.setCommissionRate(commissionLevels.get(0).getRate());
-            commission.setCommissionDate(new Date());
+            commission.setCommissionState(0);
             /*比率计算类型（0 交易手数，1 按原金额，2 按返佣金额, 3 指定金额）*/
             if(rateType.equals(CommissionConstant.COMMISSION_RATE_TYPE_LOTS)){
                 commission.setCommissionMoney(commission.getSourceOrderLots().multiply(commissionLevels.get(0).getRate()));
@@ -154,12 +163,15 @@ public class FuCommissionCustomerService extends ServiceImpl<FuCommissionCustome
             }else {
                 /*此处无法按 按返佣金额*/
                 log.error("此处无法按 按返佣金额!");
-                throw new BusinessException("返佣计算，此处无法按 按返佣金额!");
+                throw new BusinessException("此处无法按 按返佣金额!");
             }
         }
 
-        /*保存数据*/
         insertBatch(commissions);
+//        /*保存数据*/
+        /*for(FuCommissionCustomer commissionCustomer:commissions){
+            fuCommissionCustomerMapper.insertSelective(commissionCustomer);
+        }*/
 
         /*继续下一级别*/
         if(level.equals(CommissionConstant.COMMISSION_USER_LEVEL_THIRD)){
@@ -170,7 +182,7 @@ public class FuCommissionCustomerService extends ServiceImpl<FuCommissionCustome
 
         /*计算上一级佣金*/
         dealCommissionLevel(fuUser.getId(),CommissionConstant.COMMISSION_TYPE_AGENT,CommissionConstant.COMMISSION_ORDER_TYPE_CUSTOMER,
-                CommissionConstant.COMMISSION_RATE_TYPE_LOTS,CommissionConstant.COMMISSION_USER_LEVEL_FIRST,commissions);
+                CommissionConstant.COMMISSION_RATE_TYPE_LOTS,level,commissions);
     }
 
 
@@ -220,10 +232,44 @@ public class FuCommissionCustomerService extends ServiceImpl<FuCommissionCustome
 
         return fuCommissionCustomerMapper.selectOrderCustomerSumFlow(conditionMap);
     }
-    /**
-     * 处理用户跟单订单佣金
-     */
-    public void dealUserFollowOrderCommission(){
 
+    /**
+     * 根据时间 查询佣金详情信息
+     * @param commissionCustomer
+     * @param pageInfoHelper
+     * @return
+     */
+    public PageInfo<FuCommissionCustomer> findCommissionByCondition(FuCommissionCustomer commissionCustomer, PageInfoHelper pageInfoHelper){
+
+        if(commissionCustomer ==null || commissionCustomer.getCommissionUserId()==0){
+            log.error("查詢佣金詳情，用户ID为空！");
+            throw new BusinessException("查詢佣金詳情，用户ID为空！");
+        }
+        Wrapper<FuCommissionCustomer> wrapper=new EntityWrapper<FuCommissionCustomer>() ;
+        wrapper.eq(FuCommissionCustomer.COMMISSION_USER_ID,commissionCustomer.getCommissionUserId());
+        if(commissionCustomer.getCommissionAccountId()!=null){
+            wrapper.and().eq(FuCommissionCustomer.COMMISSION_ACCOUNT_ID,commissionCustomer.getCommissionAccountId());
+        }
+        if(commissionCustomer.getCommissionDate()!=null){
+            /*commissionDate 差讯当日的*/
+            String date= DateUtil.toDateString(commissionCustomer.getCommissionDate());
+            /*截取日志*/
+            wrapper.and().ge(FuCommissionCustomer.COMMISSION_DATE,date);
+            wrapper.and().lt(FuCommissionCustomer.COMMISSION_DATE,DateUtil.getFutureDate(date,1));
+        }
+        if(commissionCustomer.getCommissionType()!=null){
+            wrapper.and().eq(FuCommissionCustomer.COMMISSION_TYPE,commissionCustomer.getCommissionType());
+        }
+        if(commissionCustomer.getCommissionUserLevel()!=null){
+            wrapper.and().eq(FuCommissionCustomer.COMMISSION_USER_LEVEL,commissionCustomer.getCommissionUserLevel());
+        }
+
+        if(pageInfoHelper==null){
+            pageInfoHelper=new PageInfoHelper();
+        }
+        PageHelper.startPage(pageInfoHelper.getPageNo(),pageInfoHelper.getPageSize());
+        List<FuCommissionCustomer> commissionCustomers= selectList(wrapper);
+
+        return new PageInfo<>(commissionCustomers);
     }
 }

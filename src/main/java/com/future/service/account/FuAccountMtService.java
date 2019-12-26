@@ -1,6 +1,7 @@
 package com.future.service.account;
 
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.baomidou.mybatisplus.toolkit.MapUtils;
 import com.future.common.constants.CommonConstant;
@@ -13,11 +14,14 @@ import com.future.common.util.ConvertUtil;
 import com.future.common.util.RedisManager;
 import com.future.common.util.StringUtils;
 import com.future.entity.account.FuAccountMt;
+import com.future.entity.com.FuComServer;
 import com.future.entity.product.FuProductSignal;
 import com.future.mapper.account.FuAccountMtMapper;
 import com.future.mapper.product.FuProductSignalMapper;
 import com.future.mapper.user.FuUserMapper;
 import com.future.pojo.bo.order.UserMTAccountBO;
+import com.future.service.com.FuComServerService;
+import com.future.service.com.FuComService;
 import com.future.service.mt.MTAccountService;
 import com.jfx.AccountInfo;
 import com.jfx.Broker;
@@ -48,11 +52,15 @@ public class FuAccountMtService extends ServiceImpl<FuAccountMtMapper, FuAccount
     @Autowired
     FuProductSignalMapper fuProductSignalMapper;
     @Autowired
+    FuComServerService fuComServerService;
+    @Autowired
     RedisManager redisManager;
-    @Value("pubUserServerUrl1")
+    @Value("${pubUserServerUrl1}")
     String pubUserServerUrl1;
-    @Value("pubUserServerUrl2")
+    @Value("${pubUserServerUrl2}")
     String pubUserServerUrl2;
+    @Value("${pubUserServerPort}")
+    Integer pubUserServerPort;
     /**
      * 根据条件查询用户MT账户信息
      * @param condition
@@ -122,16 +130,22 @@ public class FuAccountMtService extends ServiceImpl<FuAccountMtMapper, FuAccount
             throw new ParameterInvalidException("保存/绑定用户MT账户信息,密码信息为空！");
         }
 
-        try {
-            /*保存账户信息*/
-            if(fuAccountMt.getId()>0){
-                fuAccountMtMapper.updateByPrimaryKeySelective(fuAccountMt);
-            }else {
-                fuAccountMtMapper.insertSelective(fuAccountMt);
-            }
-        }catch (Exception e){
-            log.error(e.getMessage(),e);
-            throw new BusinessException(e.getMessage());
+        /*根据serverName 查询server信息*/
+        FuComServer server= fuComServerService.selectOne(new EntityWrapper<FuComServer>().eq(FuComServer.SERVER_NAME,fuAccountMt.getServerName()));
+        if(server==null){
+            log.error("保存/绑定用户MT账户信息,服务器信息查询失败！");
+            throw new ParameterInvalidException("保存/绑定用户MT账户信息,服务器信息查询失败！");
+        }
+        fuAccountMt.setServerId(server.getId());
+        fuAccountMt.setServerName(server.getServerName());
+        fuAccountMt.setBrokerId(server.getBrokerId());
+        fuAccountMt.setBrokerName(server.getBrokerName());
+
+        /*保存账户信息*/
+        if(fuAccountMt.getId()>0){
+            fuAccountMtMapper.updateByPrimaryKeySelective(fuAccountMt);
+        }else {
+            fuAccountMtMapper.insertSelective(fuAccountMt);
         }
     }
 
@@ -479,7 +493,7 @@ public class FuAccountMtService extends ServiceImpl<FuAccountMtMapper, FuAccount
      * @return
      */
     private Integer getUserAccountPort(Integer userId,Integer accountId){
-        return 10000+accountId;
+        return pubUserServerPort;
     }
 
 

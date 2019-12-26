@@ -4,6 +4,8 @@ import com.future.common.constants.AgentConstant;
 import com.future.common.constants.CommonConstant;
 import com.future.common.constants.UserConstant;
 import com.future.common.helper.PageInfoHelper;
+import com.future.common.util.DateUtil;
+import com.future.entity.account.FuAccountCommission;
 import com.future.entity.account.FuAccountCommissionFlow;
 import com.future.entity.com.FuComAgent;
 import com.future.pojo.bo.order.UserMTAccountBO;
@@ -16,7 +18,10 @@ import com.github.pagehelper.PageHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Service;
 
 import java.util.*;
 
@@ -27,9 +32,11 @@ import java.util.*;
  * @modified By：
  * @version: 1/0$
  */
-public class CustomerOrderlMonitor {
+@Configuration
+@EnableScheduling
+public class CommissionOrderlMonitor {
 
-    Logger log= LoggerFactory.getLogger(CustomerOrderlMonitor.class);
+    Logger log= LoggerFactory.getLogger(CommissionOrderlMonitor.class);
     @Autowired
     FuOrderCustomerService fuOrderCustomerService;
     @Autowired
@@ -51,8 +58,10 @@ public class CustomerOrderlMonitor {
         /*已验证的 合作平台的 MT账户*/
         conditionMap.put("isAccount", CommonConstant.COMMON_YES);
         conditionMap.put("isChief",CommonConstant.COMMON_YES);
-        Date beginTime=new Date();
+        Date daySumBegin= DateUtil.getFutureDate(new Date(),-11);
+//        Date daySumBegin=new Date();
         List<FuAccountCommissionFlow> flows=new ArrayList<>();
+        FuAccountCommission accountCommission=new FuAccountCommission();
         PageInfoHelper helper = new PageInfoHelper();
 
         /*1、同步用户自定义订单 计算佣金流水*/
@@ -60,7 +69,12 @@ public class CustomerOrderlMonitor {
         List<UserMTAccountBO> list = fuAccountMtService.getUserMTAccByCondition(conditionMap);
         while (list.size()>0){
             for(UserMTAccountBO userMTAccountBO: list){
-                fuOrderCustomerService.synUserMTOrder(userMTAccountBO.getUserId(),userMTAccountBO.getUsername());
+                try {
+                    fuOrderCustomerService.synUserMTOrder(userMTAccountBO.getUserId(),userMTAccountBO.getUsername());
+                }catch (Exception e){
+                    log.error(e.getMessage(),e);
+                    //TODO error log
+                }
             }
             /*翻页*/
             helper.setPageNo(helper.getPageNo()+1);
@@ -70,26 +84,41 @@ public class CustomerOrderlMonitor {
 
 
         /*2、计算佣金*/
+        Date commissionBegin=new Date();
         helper.setPageNo(1);
         PageHelper.startPage(helper.getPageNo(), helper.getPageSize());
         list = fuAccountMtService.getUserMTAccByCondition(conditionMap);
         while (list.size()>0){
             for(UserMTAccountBO userMTAccountBO: list){
-                /*根据佣金日志 查出上次结算时间*/
-                flows= fuAccountCommissionFlowService.findLastSumFlowByUserId(userMTAccountBO.getUserId(),userMTAccountBO.getAccountId(),1);
-                if(flows!=null&& flows.size()>0){
-                    beginTime=flows.get(0).getCommissionDate();
+                try {
+                    if(userMTAccountBO.getUserType()!=UserConstant.USER_TYPE_SIGNAL
+                        &&userMTAccountBO.getUserType()!=UserConstant.USER_TYPE_IB
+                            &&userMTAccountBO.getUserType()!=UserConstant.USER_TYPE_MIB
+                                &&userMTAccountBO.getUserType()!=UserConstant.USER_TYPE_PIB){
+                        continue;
+                    }
+                    /*根据佣金日志 查出上次结算时间*/
+                    flows= fuAccountCommissionFlowService.findLastSumFlowByUserId(userMTAccountBO.getUserId(),userMTAccountBO.getAccountId(),1);
+                    if(flows!=null&& flows.size()>0){
+                        commissionBegin=flows.get(0).getCommissionDate();
+                    }else {
+                        /*初次返佣  以建立佣金账户时间为参考*/
+                        accountCommission=fuAccountCommissionService.getAccountCommissonByUserId(userMTAccountBO.getUserId());
+                        commissionBegin=accountCommission.getCreateDate();
+                    }
+
+                    /*计算佣金*/
+                    fuAccountCommissionService.dealAccountCommissionDaySum(userMTAccountBO.getUserId(),userMTAccountBO.getAccountId(),commissionBegin,null);
+
+                    /*判断代理是否可升级(介绍人可升级到初级代理)*/
+                    if(userMTAccountBO.getUserType()< UserConstant.USER_TYPE_PIB){
+                        /*升级逻辑*/
+                        fuComAgentService.agentUpgrade(userMTAccountBO);
+                    }
+                }catch (Exception e){
+                    log.error(e.getMessage(),e);
+                    //TODO error log
                 }
-
-                /*计算佣金*/
-                fuAccountCommissionService.dealAccountCommissionDaySum(userMTAccountBO.getUserId(),userMTAccountBO.getAccountId(),beginTime,null);
-
-                /*判断代理是否可升级(介绍人可升级到初级代理)*/
-                if(userMTAccountBO.getUserType()> UserConstant.USER_TYPE_PIB){
-                    /*升级逻辑*/
-                    fuComAgentService.agentUpgrade(userMTAccountBO);
-                }
-
             }
             /*翻页*/
             helper.setPageNo(helper.getPageNo()+1);
@@ -105,8 +134,13 @@ public class CustomerOrderlMonitor {
         List<FuComAgent> agents = fuComAgentService.selectByMap(conditionMap);
         while (agents.size()>0){
             for(FuComAgent agent: agents){
-                // 同级反佣0.1 越级置空
-                fuComAgentService.dealAgentCommissionFromCommunity(agent,beginTime,null);
+                try {
+                    // 同级反佣0.1 越级置空
+                    fuComAgentService.dealAgentCommissionFromCommunity(agent,daySumBegin,null);
+                }catch (Exception e){
+                    log.error(e.getMessage(),e);
+                    //TODO error log
+                }
             }
             /*翻页*/
             helper.setPageNo(helper.getPageNo()+1);

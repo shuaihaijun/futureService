@@ -1,11 +1,14 @@
 package com.future.mapper.account;
 
+import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.future.entity.account.FuAccountWithdraw;
+import org.springframework.stereotype.Component;
 
-public interface FuAccountWithdrawMapper {
+@Component
+public interface FuAccountWithdrawMapper extends BaseMapper<FuAccountWithdraw> {
     int deleteByPrimaryKey(Integer id);
 
-    int insert(FuAccountWithdraw record);
+    Integer insert(FuAccountWithdraw record);
 
     int insertSelective(FuAccountWithdraw record);
 

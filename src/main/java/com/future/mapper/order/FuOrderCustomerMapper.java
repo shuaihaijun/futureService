@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.future.entity.order.FuOrderCustomer;
 import org.springframework.stereotype.Repository;
 
+import java.util.Map;
+
 @Repository
 public interface FuOrderCustomerMapper  extends BaseMapper<FuOrderCustomer> {
     int deleteByPrimaryKey(Integer id);
@@ -18,5 +20,5 @@ public interface FuOrderCustomerMapper  extends BaseMapper<FuOrderCustomer> {
 
     int updateByPrimaryKey(FuOrderCustomer record);
 
-    FuOrderCustomer getLastCustomerOrder(String username);
+    FuOrderCustomer getLastCustomerOrder(Map condition);
 }

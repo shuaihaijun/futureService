@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -178,6 +179,41 @@ public class MTOrderService {
                 throw new RuntimeException("user connect failed!");
             }*/
             return mtStrategy.accountInfo();
+
+        }catch (Exception e){
+            log.error(e.getMessage(),e);
+            throw new BusinessException(e);
+        }
+    }
+
+    /**
+     * 获取订单信息(在仓/历史)
+     * @param selectionPool
+     * @param dateFrom
+     * @param dateTo
+     * @param symbol
+     * @return
+     */
+    public Map getOrderAndAccountInfo(MTStrategy mtStrategy, SelectionPool selectionPool, Date dateFrom,Date dateTo,String symbol){
+
+        if(ObjectUtils.isEmpty(selectionPool)){
+            selectionPool= SelectionPool.MODE_HISTORY;
+        }
+
+        try {
+            if(!mtStrategy.checkData()){
+                log.error("获取MT账户信息 参数信息不全！");
+                throw new BusinessException("获取MT账户信息 参数信息不全！");
+            }
+            /*连接服务器*/
+            mtStrategy.init();
+            Map<Long, OrderInfo> userOrders=mtStrategy.orderGetAll(selectionPool, dateFrom,dateTo,symbol);
+            AccountInfo accountInfo= mtStrategy.accountInfo();
+            List<FuOrderFollowInfo> orderFollowInfos= ConvertUtil.convertOrderInfo(userOrders);
+            Map orderAndAccount = new HashMap();
+            orderAndAccount.put("orders",orderFollowInfos);
+            orderAndAccount.put("accountInfo",accountInfo);
+            return orderAndAccount;
 
         }catch (Exception e){
             log.error(e.getMessage(),e);

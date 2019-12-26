@@ -43,7 +43,7 @@ public class FuUserBank {
     private Date modifyTime;
 
     /**
-     * 是否为主账号(1 是，0 否)
+     * 是否为社区账号(1 是，0 否)
      */
     private Integer isChief;
 
@@ -160,16 +160,16 @@ public class FuUserBank {
     }
 
     /**
-     * 是否为主账号(1 是，0 否)
-     * @return is_chief 是否为主账号(1 是，0 否)
+     * 是否为社区账号(1 是，0 否)
+     * @return is_chief 是否为社区账号(1 是，0 否)
      */
     public Integer getIsChief() {
         return isChief;
     }
 
     /**
-     * 是否为主账号(1 是，0 否)
-     * @param isChief 是否为主账号(1 是，0 否)
+     * 是否为社区账号(1 是，0 否)
+     * @param isChief 是否为社区账号(1 是，0 否)
      */
     public void setIsChief(Integer isChief) {
         this.isChief = isChief;

@@ -318,7 +318,7 @@
   </update>
   <select id="selectUserMTAccByCondition" parameterType="java.util.Map" resultType="com.future.pojo.bo.order.UserMTAccountBO">
     SELECT
-    acc.id accountId,
+    a.id accountId,
     acc.mt_acc_id mtAccId,
     acc.is_signal isSignal,
     acc.is_chief isChief,
@@ -353,6 +353,7 @@
     s.server_state serverState
     FROM
     fu_account_mt acc
+    LEFT JOIN fu_account_info a on a.user_id=acc.user_id
     LEFT JOIN fu_user u on u.id=acc.user_id
     LEFT JOIN fu_com_server s on acc.server_id=s.id
     where

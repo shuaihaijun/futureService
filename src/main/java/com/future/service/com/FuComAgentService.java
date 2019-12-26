@@ -4,10 +4,7 @@ import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
-import com.future.common.constants.AgentConstant;
-import com.future.common.constants.CommissionConstant;
-import com.future.common.constants.CommonConstant;
-import com.future.common.constants.UserConstant;
+import com.future.common.constants.*;
 import com.future.common.enums.GlobalResultCode;
 import com.future.common.exception.BusinessException;
 import com.future.common.exception.DataConflictException;
@@ -401,7 +398,7 @@ public class FuComAgentService extends ServiceImpl<FuComAgentMapper,FuComAgent> 
         }
         FuAccountInfo accountInfo = new FuAccountInfo();
         BigDecimal commissionMoney=new BigDecimal(0);
-        List<FuAccountCommissionFlow> agenFlows=new ArrayList<>();
+        BigDecimal commissionLots=new BigDecimal(0);
         List<FuAccountCommission> commissions= fuAccountCommissionService.selectList(new EntityWrapper<FuAccountCommission>().eq(FuAccountCommission.USER_ID,agent.getUserId()));
         if(commissions==null ||commissions.size()==0){
             log.error("查询代理人佣金账户失败！ userId:"+agent.getUserId());
@@ -432,35 +429,39 @@ public class FuComAgentService extends ServiceImpl<FuComAgentMapper,FuComAgent> 
                 if (userflows==null || userflows.size()==0){
                     continue;
                 }
+                accountInfo=fuAccountInfoService.selectOne(new EntityWrapper<FuAccountInfo>().eq(FuAccountInfo.USER_ID,agent.getUserId()));
                 if(ObjectUtils.isEmpty(accountInfo)){
-                    accountInfo=fuAccountInfoService.selectOne(new EntityWrapper<FuAccountInfo>().eq(FuAccountInfo.USER_ID,agent.getUserId()));
-                    if(ObjectUtils.isEmpty(accountInfo)){
-                        log.error("查询代理人 社区账户失败！userId:"+agent.getUserId());
-                        return;
-                    }
+                    log.error("查询代理人 社区账户失败！userId:"+agent.getUserId());
+                    return;
                 }
                 /*社区 返该用户 佣金的10%给代理*/
                 FuAccountCommissionFlow agenFlow=new FuAccountCommissionFlow();
+                agenFlow.setCreateDate(new Date());
+                agenFlow.setModifyDate(new Date());
                 agenFlow.setUserId(agent.getUserId());
                 agenFlow.setAccountId(accountInfo.getId());
                 agenFlow.setCommissionDate(new Date());
                 agenFlow.setCommissionType(CommissionConstant.COMMISSION_TYPE_COMMUNITY);
                 agenFlow.setCommissionUserType(agent.getAgentType());
                 agenFlow.setCommissionRate(CommissionConstant.COMMISSION_SAME_LEVEL_RATE_FROM_COMMUNITY);
-
+                agenFlow.setCommissionLevel(0);
+                agenFlow.setCommissionRateType(2);
+                agenFlow.setCommissionState(CommissionConstant.COMMISSION_STATE_SUCCESS);
+                agenFlow.setCoinType(AccountConstant.ACCOUNT_CION_BALANCE);
                 for (FuAccountCommissionFlow userFlow:userflows){
+                    commissionLots=commissionLots.add(userFlow.getSourceLots());
                     commissionMoney=commissionMoney.add(userFlow.getCommissionMoney());
                 }
+                agenFlow.setSourceLots(commissionLots);
                 agenFlow.setSourceMoney(commissionMoney);
                 agenFlow.setCommissionMoney(commissionMoney.multiply(agenFlow.getCommissionRate()));
 
+                commission.setCommissionSourceMoney(commission.getCommissionSourceMoney().add(commissionMoney));
                 commission.setCommissionMoney(commission.getCommissionMoney().add(agenFlow.getCommissionMoney()));
                 commission.setCommissionTotal(commission.getCommissionTotal().add(agenFlow.getCommissionMoney()));
-                agenFlows.add(agenFlow);
+                fuAccountCommissionFlowService.insert(agenFlow);
             }
         }
-
-        fuAccountCommissionFlowService.insertBatch(agenFlows);
         fuAccountCommissionService.updateById(commission);
     }
 

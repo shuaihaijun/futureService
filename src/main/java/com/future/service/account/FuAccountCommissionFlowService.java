@@ -80,10 +80,10 @@ public class FuAccountCommissionFlowService extends ServiceImpl<FuAccountCommiss
             wrapper.and().eq(FuAccountCommissionFlow.COMMISSION_LEVEL,conditionMap.get("commissionLevel"));
         }
         if(conditionMap.get("beginDate")!=null){
-            wrapper.ge(FuAccountCommissionFlow.COMMISSION_DATE,conditionMap.get("commissionDate"));
+            wrapper.ge(FuAccountCommissionFlow.COMMISSION_DATE,conditionMap.get("beginDate"));
         }
         if(conditionMap.get("endDate")!=null){
-            wrapper.le(FuAccountCommissionFlow.COMMISSION_DATE,conditionMap.get("commissionDate"));
+            wrapper.le(FuAccountCommissionFlow.COMMISSION_DATE,conditionMap.get("endDate"));
         }
        return selectList(wrapper);
     }

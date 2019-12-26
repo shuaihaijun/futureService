@@ -6,12 +6,11 @@ import com.future.common.enums.GlobalResultCode;
 import com.future.common.exception.ParameterInvalidException;
 import com.future.common.util.ThreadCache;
 import com.future.entity.product.FuProductSignal;
-import com.future.entity.product.FuProductSignalApply;
 import com.future.entity.product.FuProductSignalValuation;
 import com.future.entity.user.FuUserFollows;
 import com.future.pojo.vo.signal.FuFollowUserVO;
 import com.future.pojo.vo.signal.FuUserSignalVO;
-import com.future.service.product.FollowsService;
+import com.future.service.product.FuUserFollowsService;
 import com.future.service.product.FuProductSignalService;
 import com.future.service.product.FuProductSignalValuationService;
 import com.github.pagehelper.PageInfo;
@@ -23,7 +22,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.lang.management.GarbageCollectorMXBean;
 import java.util.List;
 import java.util.Map;
 
@@ -35,7 +33,7 @@ public class ProductSignalController {
     @Autowired
     FuProductSignalService fuProductSignalService;
     @Autowired
-    FollowsService followsService;
+    FuUserFollowsService fuUserFollowsService;
     @Autowired
     FuProductSignalValuationService fuProductSignalValuationService;
 
@@ -107,7 +105,7 @@ public class ProductSignalController {
         JSONObject requestMap = JSONObject.parseObject(requestJSONStr);
         Map conditionMap = requestMap.getInnerMap();
         /*校验参数*/
-        return followsService.signalFollowsQuery(conditionMap);
+        return fuUserFollowsService.signalFollowsQuery(conditionMap);
     }
 
     //删除申请信息
@@ -118,7 +116,7 @@ public class ProductSignalController {
         JSONObject requestMap = JSONObject.parseObject(requestJSONStr);
         Map conditionMap = requestMap.getInnerMap();
         /*校验参数*/
-        followsService.signalFollowsRemove(conditionMap);
+        fuUserFollowsService.signalFollowsRemove(conditionMap);
     }
 
     //信号源订阅信息保存/修改
@@ -129,7 +127,7 @@ public class ProductSignalController {
         JSONObject requestMap = JSONObject.parseObject(requestJSONStr);
         Map conditionMap = requestMap.getInnerMap();
         /*校验参数*/
-        followsService.signalFollowsSaveOrUpdate(conditionMap);
+        fuUserFollowsService.signalFollowsSaveOrUpdate(conditionMap);
     }
 
     //查询跟单信息
@@ -139,7 +137,7 @@ public class ProductSignalController {
         String requestJSONStr = ThreadCache.getPostRequestParams();
         JSONObject requestMap = JSONObject.parseObject(requestJSONStr);
         /*校验参数*/
-        return followsService.queryFollowUsers(requestMap);
+        return fuUserFollowsService.queryFollowUsers(requestMap);
     }
 
     //查询跟单信息

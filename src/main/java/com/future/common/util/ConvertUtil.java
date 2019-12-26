@@ -259,9 +259,11 @@ public class ConvertUtil {
                 break;
             }
             FuOrderFollowInfo fuOrderInfo=new FuOrderFollowInfo();
+            fuOrderInfo.setCreateDate(new Date());
+
+            fuOrderInfo.setOrderType(order.getType().val);
 
             fuOrderInfo.setOrderId(String.valueOf(order.ticket()));
-            fuOrderInfo.setCreateDate(order.getOpenTime());
             fuOrderInfo.setOrderCloseDate(order.getCloseTime());
             fuOrderInfo.setOrderOpenDate(order.getOpenTime());
 
@@ -278,6 +280,7 @@ public class ConvertUtil {
             fuOrderInfo.setOrderTakeprofit(new BigDecimal(order.getTp()).setScale(6,BigDecimal.ROUND_HALF_UP));
 
             fuOrderInfo.setOrderMagic(new BigDecimal(order.getMagic()).setScale(6,BigDecimal.ROUND_HALF_UP));
+            fuOrderInfo.setOrderExpiration(order.getExpiration());
             fuOrderInfo.setOrderSwap(new BigDecimal(order.getSwap()).setScale(6,BigDecimal.ROUND_HALF_UP));
             fuOrderInfo.setOrderCommission(new BigDecimal(order.getCommission()));
             orderInfos.add(fuOrderInfo);
@@ -352,6 +355,7 @@ public class ConvertUtil {
         fuOrderCustomer.setOrderClosePrice(fuOrderInfo.getOrderClosePrice().setScale(6,BigDecimal.ROUND_HALF_UP));
         fuOrderCustomer.setOrderOpenDate(fuOrderInfo.getOrderOpenDate());
         fuOrderCustomer.setOrderOpenPrice(fuOrderInfo.getOrderOpenPrice().setScale(6,BigDecimal.ROUND_HALF_UP));
+        fuOrderCustomer.setOrderExpiration(fuOrderInfo.getOrderExpiration());
 
         /*交易 收益*/
         fuOrderCustomer.setOrderSymbol(fuOrderInfo.getOrderSymbol());

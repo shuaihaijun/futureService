@@ -5,6 +5,8 @@ import com.future.service.follow.SignalService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.zeromq.SocketType;
 import org.zeromq.ZContext;
@@ -21,6 +23,8 @@ import java.util.Map;
  * @modified By：
  * @version: 1/0$
  */
+@Configuration
+@EnableScheduling
 public class FollowMonitor {
 
     Logger log= LoggerFactory.getLogger(FollowMonitor.class);
@@ -30,7 +34,7 @@ public class FollowMonitor {
     /**
      * 监听信号源
      */
-    @Scheduled(cron = "*/1 * * * * ?")
+    @Scheduled(cron = "* * * 1 * ?")
     public void monitor(){
         //从缓存中查询信号源列表
         try(ZContext zContext=new ZContext()) {

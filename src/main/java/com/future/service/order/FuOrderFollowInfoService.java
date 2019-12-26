@@ -12,7 +12,6 @@ import com.future.entity.order.FuOrderFollowInfo;
 import com.future.mapper.order.FuOrderFollowInfoMapper;
 import com.future.pojo.bo.order.UserMTAccountBO;
 import com.future.service.account.FuAccountMtService;
-import com.future.service.account.FuAccoutInfoService;
 import com.future.service.mt.MTOrderService;
 import com.future.service.user.AdminService;
 import com.jfx.Broker;
@@ -34,8 +33,6 @@ public class FuOrderFollowInfoService extends ServiceImpl<FuOrderFollowInfoMappe
     AdminService adminService;
     @Autowired
     MTOrderService mtOrderService;
-    @Autowired
-    FuAccoutInfoService fuAccoutInfoService;
     @Autowired
     FuAccountMtService fuAccountMtService;
     @Autowired
@@ -259,7 +256,7 @@ public class FuOrderFollowInfoService extends ServiceImpl<FuOrderFollowInfoMappe
         conditionMap.put(FuOrderFollowInfo.USER_ID,userId);
         conditionMap.put(FuOrderFollowInfo.ORDER_ID,orderId);
         List<FuOrderFollowInfo> infos=fuOrderFollowInfoMapper.selectByMap(conditionMap);
-        if (infos!=null){
+        if (infos!=null&& infos.size()>0){
             return infos.get(0);
         }
         return null;

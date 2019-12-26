@@ -15,7 +15,6 @@ import com.future.mapper.product.FuProductSignalMapper;
 import com.future.mapper.user.FuUserFollowsMapper;
 import com.future.pojo.bo.order.UserMTAccountBO;
 import com.future.pojo.vo.signal.FuFollowUserVO;
-import com.future.pojo.vo.signal.FuUserSignalVO;
 import com.future.service.account.FuAccountMtService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -32,9 +31,9 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public class FollowsService extends ServiceImpl<FuUserFollowsMapper, FuUserFollows> {
+public class FuUserFollowsService extends ServiceImpl<FuUserFollowsMapper, FuUserFollows> {
 
-    Logger log= LoggerFactory.getLogger(FollowsService.class);
+    Logger log= LoggerFactory.getLogger(FuUserFollowsService.class);
     @Autowired
     FuProductSignalService fuProductSignalService;
     @Autowired

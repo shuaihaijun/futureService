@@ -34,6 +34,18 @@ public class CommissionConstant {
 	public static final int COMMISSION_RATE_TYPE_MONEY_COMMISSION = 2;
 	public static final int COMMISSION_RATE_TYPE_MONEY= 3;
 
+	/*commissionState 返佣状态（0 成功，1失败，2 执行中）*/
+	public static final int COMMISSION_STATE_SUCCESS = 0;
+	public static final int COMMISSION_STATE_FAIL = 2;
+	public static final int COMMISSION_STATE_ING = 3;
+
+	/**
+	 * 回撤类型（0 佣金提取，1 余额提取）
+	 */
+	public static final int COMMISSION_WITHDRAW_TYPE_COMMISSION= 0;
+	public static final int COMMISSION_WITHDRAW_TYPE_BALANCE= 1;
+
+	/*coin_type 币种类型（0 余额，1社区币，2 期债）*/
 	/*社区同级别代理返佣*/
 	public static final BigDecimal COMMISSION_SAME_LEVEL_RATE_FROM_COMMUNITY= new BigDecimal(0.1);
 }

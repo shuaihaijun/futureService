@@ -10,4 +10,10 @@ public class AccountConstant {
 	public static final int ACCOUNT_STATE_NORMAL=0;;
 	public static final int ACCOUNT_STATE_FREEZE=1;;
 	public static final int ACCOUNT_STATE_DELETE=2;;
+
+	/*coin_type 币种类型（0 余额，1社区币，2 期债）*/
+	public static final int ACCOUNT_CION_BALANCE=0;;
+	public static final int ACCOUNT_CION_BI=1;;
+	public static final int ACCOUNT_CION_DEBT=2;;
+
 }

@@ -285,27 +285,27 @@
     SELECT
       commission_type commissionType,
       commission_user_type commissionUserType,
-      commission_user_level commissionUserLevel,
+      commission_user_level commissionLevel,
       commission_rate_type commissionRateType,
       commission_rate commissionRate,
       SUM(commission_money) commissionMoney,
       SUM(source_order_lots) sourceLots,
-      SUM(source_order_money) sourceMmoney
+      SUM(source_order_money) sourceMoney
     FROM
       fu_commission_customer
     WHERE
       1=1
       <if test="userId != null">
-        and acc.commission_user_id = #{userId,jdbcType=INTEGER}
+        and commission_user_id = #{userId,jdbcType=INTEGER}
       </if>
       <if test="accountId != null">
-        and acc.commission_account_id = #{accountId,jdbcType=INTEGER}
+        and commission_account_id = #{accountId,jdbcType=INTEGER}
       </if>
       <if test="beginDate != null">
-        and acc.commission_date > #{beginDate,jdbcType=TIMESTAMP}
+        and commission_date > #{beginDate,jdbcType=TIMESTAMP}
       </if>
       <if test="endDate != null">
-        and acc.commission_date &lt;  #{endDate,jdbcType=TIMESTAMP}
+        and commission_date &lt;  #{endDate,jdbcType=TIMESTAMP}
       </if>
     GROUP BY
         commission_type,
