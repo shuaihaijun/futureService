@@ -56,4 +56,19 @@ public class FileUtil {
         }
 
     }
+
+    /**
+     * 获取文件相对地址
+     * @param absolutePath
+     * @return
+     */
+    public static String getFileRelativePath(String absolutePath){
+        if (StringUtils.isEmpty(absolutePath)){
+            return null;
+        }
+        if(absolutePath.indexOf(":")<0){
+            return absolutePath;
+        }
+        return absolutePath.substring(absolutePath.indexOf(":")+1,absolutePath.length());
+    }
 }

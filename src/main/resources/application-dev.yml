@@ -71,7 +71,7 @@ pubUserServerUrl1: 127.0.0.1
 pubUserServerUrl2: 127.0.0.1
 pubUserServerPort: 7788
 #图片保存路径
-imageFilePath: D:\test\
+imageFilePath: D:\image\
 #新用户角色ID
 newUserRoleId: 6
 

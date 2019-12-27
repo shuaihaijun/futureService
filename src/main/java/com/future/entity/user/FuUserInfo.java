@@ -26,7 +26,7 @@ public class FuUserInfo {
     /**
      * 性别
      */
-    private String sex;
+    private Integer sex;
 
     /**
      * 国家
@@ -140,7 +140,7 @@ public class FuUserInfo {
      * 性别
      * @return sex 性别
      */
-    public String getSex() {
+    public Integer getSex() {
         return sex;
     }
 
@@ -148,8 +148,8 @@ public class FuUserInfo {
      * 性别
      * @param sex 性别
      */
-    public void setSex(String sex) {
-        this.sex = sex == null ? null : sex.trim();
+    public void setSex(Integer sex) {
+        this.sex = sex == null ? null : sex;
     }
 
     /**

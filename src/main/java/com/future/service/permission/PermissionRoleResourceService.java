@@ -18,6 +18,7 @@ import com.future.pojo.bo.Node;
 import com.future.pojo.bo.permission.FuPermissionResourceBO;
 import com.future.pojo.bo.permission.FuPermissionRoleResourceBO;
 import com.future.service.user.AdminService;
+import com.future.service.user.UserCommonService;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -43,11 +44,11 @@ public class PermissionRoleResourceService extends ServiceImpl<FuPermissionRoleR
     @Autowired
     private FuPermissionRoleResourceMapper fuPermissionRoleResourceMapper;
     @Autowired
-    private PermissionUserProjectService permissionUserProjectService;
-    @Autowired
     PermissionUserRoleService permissionUserRoleService;
     @Autowired
     PermissionResourceService permissionResourceService;
+    @Autowired
+    UserCommonService userCommonService;
 
     /**
      * 注入超级管理员数据
@@ -223,11 +224,7 @@ public class PermissionRoleResourceService extends ServiceImpl<FuPermissionRoleR
         List<Integer> roles= permissionUserRoleService.findRoleIdsByUserId(userId);
 
         //获取配置文件中超级管理员，判断当前登录用户是否为超级管理员,true为超管
-        String[] superAdministrators = superAdministrator.split(",");
-        boolean contains = false;
-        if (userId != null && superAdministrators != null) {
-            contains = Arrays.asList(superAdministrators).contains(userId.toString());
-        }
+        boolean contains = userCommonService.isAdministrator(userId.toString());
 
         //声明权限结构树
         List<Node> permenuList=new ArrayList<>();

@@ -4,6 +4,10 @@ import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.enums.IdType;
 
 public class FuComBroker {
+
+
+    public static String BROKER_NAME="broker_name";
+    public static String BROKER_ID="id";
     /**
      * 
      */

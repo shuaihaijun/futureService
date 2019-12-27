@@ -20,7 +20,7 @@
     <result column="is_account" jdbcType="TINYINT" property="isAccount" />
     <result column="introducer" jdbcType="INTEGER" property="introducer" />
     <result column="recommend" jdbcType="INTEGER" property="recommend" />
-    <result column="sex" jdbcType="VARCHAR" property="sex" />
+    <result column="sex" jdbcType="TINYINT" property="sex" />
     <result column="country" jdbcType="VARCHAR" property="country" />
     <result column="province" jdbcType="VARCHAR" property="province" />
     <result column="city" jdbcType="VARCHAR" property="city" />
@@ -67,7 +67,7 @@
       #{mobile,jdbcType=VARCHAR}, #{regTime,jdbcType=TIMESTAMP}, #{lastLogin,jdbcType=TIMESTAMP}, 
       #{loginIp,jdbcType=VARCHAR}, #{regIp,jdbcType=VARCHAR}, #{isVerified,jdbcType=TINYINT}, 
       #{isAccount,jdbcType=TINYINT}, #{introducer,jdbcType=INTEGER}, #{recommend,jdbcType=INTEGER}, 
-      #{sex,jdbcType=VARCHAR}, #{country,jdbcType=VARCHAR}, #{province,jdbcType=VARCHAR}, 
+      #{sex,jdbcType=TINYINT}, #{country,jdbcType=VARCHAR}, #{province,jdbcType=VARCHAR}, 
       #{city,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, #{followLevel,jdbcType=DECIMAL}, 
       #{idObverse,jdbcType=VARCHAR}, #{idFront,jdbcType=VARCHAR}, #{avatarUrl,jdbcType=VARCHAR}, 
       #{salt,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, #{modifyDate,jdbcType=TIMESTAMP}
@@ -223,7 +223,7 @@
         #{recommend,jdbcType=INTEGER},
       </if>
       <if test="sex != null">
-        #{sex,jdbcType=VARCHAR},
+        #{sex,jdbcType=TINYINT},
       </if>
       <if test="country != null">
         #{country,jdbcType=VARCHAR},
@@ -315,7 +315,7 @@
         recommend = #{recommend,jdbcType=INTEGER},
       </if>
       <if test="sex != null">
-        sex = #{sex,jdbcType=VARCHAR},
+        sex = #{sex,jdbcType=TINYINT},
       </if>
       <if test="country != null">
         country = #{country,jdbcType=VARCHAR},
@@ -372,7 +372,7 @@
       is_account = #{isAccount,jdbcType=TINYINT},
       introducer = #{introducer,jdbcType=INTEGER},
       recommend = #{recommend,jdbcType=INTEGER},
-      sex = #{sex,jdbcType=VARCHAR},
+      sex = #{sex,jdbcType=TINYINT},
       country = #{country,jdbcType=VARCHAR},
       province = #{province,jdbcType=VARCHAR},
       city = #{city,jdbcType=VARCHAR},

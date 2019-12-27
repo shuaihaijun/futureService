@@ -5,7 +5,7 @@
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="dic_sign" jdbcType="VARCHAR" property="dicSign" />
     <result column="dic_name" jdbcType="VARCHAR" property="dicName" />
-    <result column="dic_key" jdbcType="VARCHAR" property="dicKey" />
+    <result column="dic_key" jdbcType="INTEGER" property="dicKey" />
     <result column="dic_value" jdbcType="VARCHAR" property="dicValue" />
     <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
     <result column="modify_date" jdbcType="TIMESTAMP" property="modifyDate" />
@@ -28,7 +28,7 @@
       dic_key, dic_value, create_date, 
       modify_date)
     values (#{id,jdbcType=INTEGER}, #{dicSign,jdbcType=VARCHAR}, #{dicName,jdbcType=VARCHAR}, 
-      #{dicKey,jdbcType=VARCHAR}, #{dicValue,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, 
+      #{dicKey,jdbcType=INTEGER}, #{dicValue,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, 
       #{modifyDate,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.future.entity.com.FuComDictionary">
@@ -67,7 +67,7 @@
         #{dicName,jdbcType=VARCHAR},
       </if>
       <if test="dicKey != null">
-        #{dicKey,jdbcType=VARCHAR},
+        #{dicKey,jdbcType=INTEGER},
       </if>
       <if test="dicValue != null">
         #{dicValue,jdbcType=VARCHAR},
@@ -90,7 +90,7 @@
         dic_name = #{dicName,jdbcType=VARCHAR},
       </if>
       <if test="dicKey != null">
-        dic_key = #{dicKey,jdbcType=VARCHAR},
+        dic_key = #{dicKey,jdbcType=INTEGER},
       </if>
       <if test="dicValue != null">
         dic_value = #{dicValue,jdbcType=VARCHAR},
@@ -108,7 +108,7 @@
     update fu_com_dictionary
     set dic_sign = #{dicSign,jdbcType=VARCHAR},
       dic_name = #{dicName,jdbcType=VARCHAR},
-      dic_key = #{dicKey,jdbcType=VARCHAR},
+      dic_key = #{dicKey,jdbcType=INTEGER},
       dic_value = #{dicValue,jdbcType=VARCHAR},
       create_date = #{createDate,jdbcType=TIMESTAMP},
       modify_date = #{modifyDate,jdbcType=TIMESTAMP}

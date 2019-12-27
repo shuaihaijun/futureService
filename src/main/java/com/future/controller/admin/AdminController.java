@@ -103,4 +103,18 @@ public class AdminController{
         JSONObject requestMap = JSONObject.parseObject(requestJSONStr);
         return adminService.checkUserBinding(requestMap);
     }
+
+    //登录操作
+    @RequestMapping(value= "/updatePassword",method=RequestMethod.POST)
+    public @ResponseBody boolean updatePassword(){
+        // 获取请求参数
+        String requestJSONStr = ThreadCache.getPostRequestParams();
+        JSONObject requestMap = JSONObject.parseObject(requestJSONStr);
+        Integer userId=requestMap.getInteger("userId");
+        String username=requestMap.getString("username");
+        String password=requestMap.getString("password");
+        String passwordNew=requestMap.getString("passwordNew");
+        adminService.updatePassword(userId,username,password,passwordNew);
+        return true;
+    }
 }

@@ -23,6 +23,7 @@ import com.future.pojo.bo.order.UserMTAccountBO;
 import com.future.service.com.FuComServerService;
 import com.future.service.com.FuComService;
 import com.future.service.mt.MTAccountService;
+import com.future.service.user.UserCommonService;
 import com.jfx.AccountInfo;
 import com.jfx.Broker;
 import com.jfx.strategy.Strategy;
@@ -54,6 +55,8 @@ public class FuAccountMtService extends ServiceImpl<FuAccountMtMapper, FuAccount
     @Autowired
     FuComServerService fuComServerService;
     @Autowired
+    UserCommonService userCommonService;
+    @Autowired
     RedisManager redisManager;
     @Value("${pubUserServerUrl1}")
     String pubUserServerUrl1;
@@ -81,6 +84,15 @@ public class FuAccountMtService extends ServiceImpl<FuAccountMtMapper, FuAccount
      * @return
      */
     public List<UserMTAccountBO> queryUsersMtAccount(Map condition){
+
+        if(condition.get("operUserId")!=null){
+            String operUserId=String.valueOf(condition.get("operUserId"));
+            /*非管理员用户 只能查询自己的数据*/
+            if(!userCommonService.isAdministrator(operUserId)){
+                condition.put("userId",operUserId);
+            }
+        }
+
         /*查询账户值*/
         List<UserMTAccountBO> accounts= fuAccountMtMapper.selectUserMTAccByCondition(condition);
 
@@ -119,7 +131,7 @@ public class FuAccountMtService extends ServiceImpl<FuAccountMtMapper, FuAccount
             log.error("保存/绑定用户MT账户信息,用户信息为空！");
             throw new ParameterInvalidException("保存/绑定用户MT账户信息,用户信息为空！");
         }
-        if(fuAccountMt.getServerId()==0
+        if(fuAccountMt.getServerName()==null
             ||StringUtils.isEmpty(fuAccountMt.getMtAccId())){
             log.error("保存/绑定用户MT账户信息,账户信息为空！");
             throw new ParameterInvalidException("保存/绑定用户MT账户信息,账户信息为空！");
@@ -142,7 +154,7 @@ public class FuAccountMtService extends ServiceImpl<FuAccountMtMapper, FuAccount
         fuAccountMt.setBrokerName(server.getBrokerName());
 
         /*保存账户信息*/
-        if(fuAccountMt.getId()>0){
+        if(fuAccountMt.getId()!=null&&fuAccountMt.getId()>0){
             fuAccountMtMapper.updateByPrimaryKeySelective(fuAccountMt);
         }else {
             fuAccountMtMapper.insertSelective(fuAccountMt);

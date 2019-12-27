@@ -1,32 +1,15 @@
 package com.future.service.com;
 
-import com.baomidou.mybatisplus.mapper.EntityWrapper;
-import com.baomidou.mybatisplus.mapper.Wrapper;
-import com.baomidou.mybatisplus.plugins.Page;
-import com.baomidou.mybatisplus.service.impl.ServiceImpl;
-import com.future.common.constants.AgentConstant;
-import com.future.common.enums.GlobalResultCode;
-import com.future.common.exception.BusinessException;
-import com.future.common.exception.DataConflictException;
-import com.future.common.util.ConvertUtil;
 import com.future.common.util.DateUtil;
 import com.future.common.util.FileUtil;
-import com.future.common.util.StringUtils;
-import com.future.entity.com.FuComAgent;
-import com.future.mapper.com.FuComAgentMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ObjectUtils;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.util.ResourceUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.io.File;
 
 
 @Service
@@ -50,6 +33,21 @@ public class FuComService{
         return filePath+"\\"+fileName;
     }
 
+
+    /**
+     * 获取 jar包所在目录路径
+     * @return
+     */
+    public String getLoactionPath(){
+        try {
+            File path = new File(ResourceUtils.getURL("classpath:").getPath());
+            if(!path.exists()) path = new File("");
+            return path.getAbsolutePath();
+        }catch (Exception e){
+            log.error(e.getMessage(),e);
+            return null;
+        }
+    }
 
     /*if(file.isEmpty()){
             log.error("查询用户列表,获取参数为空！");

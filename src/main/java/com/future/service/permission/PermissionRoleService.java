@@ -15,6 +15,7 @@ import com.future.pojo.bo.AdminInfo;
 import com.future.pojo.bo.BasicBO;
 import com.future.pojo.bo.permission.FuPermissionRoleBO;
 import com.future.pojo.vo.permission.FuPermissionRoleVO;
+import com.future.service.user.UserCommonService;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -49,13 +50,8 @@ public class PermissionRoleService extends ServiceImpl<FuPermissionRoleMapper, F
     private PermissionUserProjectService permissionUserProjectService;
     @Autowired
     private PermissionUserRoleService permissionUserRoleService;
-
-
-    /**
-     * 注入超级管理员数据
-     */
-    @Value("${SUPER_ADMINISTRATOR}")
-    private String superAdministrator;
+    @Autowired
+    UserCommonService userCommonService;
 
     /**
      * 新增角色信息
@@ -201,13 +197,9 @@ public class PermissionRoleService extends ServiceImpl<FuPermissionRoleMapper, F
             throw new BusinessException(GlobalResultCode.PARAM_NULL_POINTER);
         }
         //获取当前登录用户信息
-        AdminInfo user = RequestContextHolderUtil.getAdminInfo();
+//        AdminInfo user = RequestContextHolderUtil.getAdminInfo();
         //获取配置文件中超级管理员，判断当前登录用户是否为超级管理员,true为超管
-        String[] superAdministrators = superAdministrator.split(",");
-        boolean contains = false;
-        if (user != null && superAdministrators != null) {
-            contains = Arrays.asList(superAdministrators).contains(user.getAdminId().toString());
-        }
+        boolean contains = userCommonService.isAdministrator(fuPermissionRoleBO.getUserId().toString());
 
         //由于分页组件默认执行startPage的第一个sql，因此提前单独执行
         List<Integer> porjKeys = null;
@@ -309,11 +301,8 @@ public class PermissionRoleService extends ServiceImpl<FuPermissionRoleMapper, F
             user = new AdminInfo();
             user.setAdminId(1);
             //获取配置文件中超级管理员，判断当前登录用户是否为超级管理员,true为超管
-            String[] superAdministrators = superAdministrator.split(",");
-            boolean contains = false;
-            if (user != null && superAdministrators != null) {
-                contains = Arrays.asList(superAdministrators).contains(user.getAdminId().toString());
-            }
+            boolean contains = userCommonService.isAdministrator(user.getAdminId().toString());;
+            
             if (contains) {
                 list = fuPermissionRoleMapper.selectByProjKey(null);
             } else {

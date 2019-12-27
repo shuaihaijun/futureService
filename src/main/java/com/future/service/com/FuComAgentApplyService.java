@@ -27,17 +27,16 @@ import com.future.service.account.FuAccountCommissionService;
 import com.future.service.account.FuAccountInfoService;
 import com.future.service.permission.PermissionUserRoleService;
 import com.future.service.user.AdminService;
+import com.future.service.user.UserCommonService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 @Service
@@ -57,6 +56,8 @@ public class FuComAgentApplyService extends ServiceImpl<FuComAgentApplyMapper,Fu
     PermissionUserRoleService permissionUserRoleService;
     @Autowired
     FuComAgentApplyMapper agentApplyMapper;
+    @Autowired
+    UserCommonService userCommonService;
     /**
      * 根据条件查找代理信息
      * @param conditionMap
@@ -83,6 +84,19 @@ public class FuComAgentApplyService extends ServiceImpl<FuComAgentApplyMapper,Fu
         page.setSize(pageSize);
         page.setCurrent(pageNum);
 
+        if(ObjectUtils.isEmpty(conditionMap.get("operUserId"))){
+            log.error("操作人数据为空！");
+            new DataConflictException(GlobalResultCode.PARAM_NULL_POINTER,"操作人数据为空！");
+        }
+        String operUserId=String.valueOf(conditionMap.get("operUserId"));
+        //获取配置文件中超级管理员，判断当前登录用户是否为超级管理员,true为超管
+        boolean contains =  userCommonService.isAdministrator(operUserId);
+        if(!contains){
+            //该用户只能查询自己的数据
+            wrapper.eq(FuComAgentApply.USER_ID,operUserId);
+        }else if(!ObjectUtils.isEmpty(conditionMap.get("userId"))){
+            wrapper.eq(FuComAgentApply.USER_ID,String.valueOf(conditionMap.get("userId")));
+        }
 
         if(!ObjectUtils.isEmpty(conditionMap.get("id"))){
             wrapper.eq(FuComAgentApply.ID,String.valueOf(conditionMap.get("id")));
@@ -96,9 +110,7 @@ public class FuComAgentApplyService extends ServiceImpl<FuComAgentApplyMapper,Fu
         if(!ObjectUtils.isEmpty(conditionMap.get("applyState"))){
             wrapper.eq(FuComAgentApply.APPLY_STATE,String.valueOf(conditionMap.get("applyState")));
         }
-        if(!ObjectUtils.isEmpty(conditionMap.get("userId"))){
-            wrapper.eq(FuComAgentApply.USER_ID,String.valueOf(conditionMap.get("userId")));
-        }
+
 
         return selectPage(page,wrapper);
     }
@@ -344,15 +356,6 @@ public class FuComAgentApplyService extends ServiceImpl<FuComAgentApplyMapper,Fu
             log.error(e.getMessage(),e);
             throw new BusinessException(e);
         }
-
-    }
-
-    /**
-     * 处理代理升级逻辑
-     * @param userId
-     * @param applyType
-     */
-    public void dealAgentApply(Integer userId,Integer applyType){
 
     }
 

@@ -105,6 +105,7 @@ public class AccountMtController {
         String requestJSONStr = ThreadCache.getPostRequestParams();
         JSONObject requestMap = JSONObject.parseObject(requestJSONStr);
         String userId=requestMap.getString("userId");
+        String operUserId=requestMap.getString("operUserId");
         String username=requestMap.getString("username");
         String brokerName=requestMap.getString("brokerName");
         String serverName=requestMap.getString("serverName");
@@ -113,6 +114,9 @@ public class AccountMtController {
         Map conditonMap=new HashMap();
         if(!StringUtils.isEmpty(userId)){
             conditonMap.put("userId",userId);
+        }
+        if(!StringUtils.isEmpty(operUserId)){
+            conditonMap.put("operUserId",operUserId);
         }
         if(!StringUtils.isEmpty(username)){
             conditonMap.put("username",username);

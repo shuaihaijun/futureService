@@ -26,12 +26,14 @@
     <result column="profit" jdbcType="DECIMAL" property="profit" />
     <result column="equity" jdbcType="DECIMAL" property="equity" />
     <result column="margin" jdbcType="DECIMAL" property="margin" />
+    <result column="account_state" jdbcType="TINYINT" property="accountState" />
+    <result column="plat_type" jdbcType="TINYINT" property="platType" />
   </resultMap>
   <sql id="Base_Column_List">
     id, user_id, server_id, server_name, broker_name, broker_id, mt_acc_id, mt_password_trade, 
     mt_password_watch, mt_acc_url, mt_acc_port, account_url, account_port, password_trade_checked, 
     password_watch_checked, is_signal, is_chief, account_type, leverage, balance, credit, 
-    profit, equity, margin
+    profit, equity, margin, account_state, plat_type
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -51,8 +53,8 @@
       account_port, password_trade_checked, password_watch_checked, 
       is_signal, is_chief, account_type, 
       leverage, balance, credit, 
-      profit, equity, margin
-      )
+      profit, equity, margin, 
+      account_state, plat_type)
     values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{serverId,jdbcType=INTEGER}, 
       #{serverName,jdbcType=VARCHAR}, #{brokerName,jdbcType=VARCHAR}, #{brokerId,jdbcType=INTEGER}, 
       #{mtAccId,jdbcType=VARCHAR}, #{mtPasswordTrade,jdbcType=VARCHAR}, #{mtPasswordWatch,jdbcType=VARCHAR}, 
@@ -60,8 +62,8 @@
       #{accountPort,jdbcType=INTEGER}, #{passwordTradeChecked,jdbcType=TINYINT}, #{passwordWatchChecked,jdbcType=TINYINT}, 
       #{isSignal,jdbcType=TINYINT}, #{isChief,jdbcType=TINYINT}, #{accountType,jdbcType=TINYINT}, 
       #{leverage,jdbcType=DECIMAL}, #{balance,jdbcType=DECIMAL}, #{credit,jdbcType=DECIMAL}, 
-      #{profit,jdbcType=DECIMAL}, #{equity,jdbcType=DECIMAL}, #{margin,jdbcType=DECIMAL}
-      )
+      #{profit,jdbcType=DECIMAL}, #{equity,jdbcType=DECIMAL}, #{margin,jdbcType=DECIMAL}, 
+      #{accountState,jdbcType=TINYINT}, #{platType,jdbcType=TINYINT})
   </insert>
   <insert id="insertSelective" parameterType="com.future.entity.account.FuAccountMt">
     insert into fu_account_mt
@@ -138,6 +140,12 @@
       <if test="margin != null">
         margin,
       </if>
+      <if test="accountState != null">
+        account_state,
+      </if>
+      <if test="platType != null">
+        plat_type,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -211,6 +219,12 @@
       </if>
       <if test="margin != null">
         #{margin,jdbcType=DECIMAL},
+      </if>
+      <if test="accountState != null">
+        #{accountState,jdbcType=TINYINT},
+      </if>
+      <if test="platType != null">
+        #{platType,jdbcType=TINYINT},
       </if>
     </trim>
   </insert>
@@ -286,6 +300,12 @@
       <if test="margin != null">
         margin = #{margin,jdbcType=DECIMAL},
       </if>
+      <if test="accountState != null">
+        account_state = #{accountState,jdbcType=TINYINT},
+      </if>
+      <if test="platType != null">
+        plat_type = #{platType,jdbcType=TINYINT},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -313,7 +333,9 @@
       credit = #{credit,jdbcType=DECIMAL},
       profit = #{profit,jdbcType=DECIMAL},
       equity = #{equity,jdbcType=DECIMAL},
-      margin = #{margin,jdbcType=DECIMAL}
+      margin = #{margin,jdbcType=DECIMAL},
+      account_state = #{accountState,jdbcType=TINYINT},
+      plat_type = #{platType,jdbcType=TINYINT}
     where id = #{id,jdbcType=INTEGER}
   </update>
   <select id="selectUserMTAccByCondition" parameterType="java.util.Map" resultType="com.future.pojo.bo.order.UserMTAccountBO">
@@ -323,6 +345,8 @@
     acc.is_signal isSignal,
     acc.is_chief isChief,
     acc.account_type accountType,
+    acc.account_state accountState,
+    acc.plat_type platType,
     acc.mt_password_trade mtPasswordTrade,
     acc.mt_password_watch mtPasswordWatch,
     acc.password_watch_checked passwordWatchChecked,

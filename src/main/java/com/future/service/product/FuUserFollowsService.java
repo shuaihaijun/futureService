@@ -16,6 +16,7 @@ import com.future.mapper.user.FuUserFollowsMapper;
 import com.future.pojo.bo.order.UserMTAccountBO;
 import com.future.pojo.vo.signal.FuFollowUserVO;
 import com.future.service.account.FuAccountMtService;
+import com.future.service.user.UserCommonService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.slf4j.Logger;
@@ -41,6 +42,8 @@ public class FuUserFollowsService extends ServiceImpl<FuUserFollowsMapper, FuUse
     @Autowired
     FuAccountMtService fuAccountMtService;
     @Autowired
+    UserCommonService userCommonService;
+    @Autowired
     FuUserFollowsMapper fuUserFollowsMapper;
 
     /**
@@ -65,6 +68,13 @@ public class FuUserFollowsService extends ServiceImpl<FuUserFollowsMapper, FuUse
         }
         if(!StringUtils.isEmpty(conditionMap.get("ruleState"))){
             serchMap.put(FuUserFollows.RULE_STATE,conditionMap.get("ruleState"));
+        }
+        if(conditionMap.get("operUserId")!=null){
+            String operUserId=String.valueOf(conditionMap.get("operUserId"));
+            /*非管理员用户 只能查询自己的数据*/
+            if(!userCommonService.isAdministrator(operUserId)){
+                conditionMap.put("userId",operUserId);
+            }
         }
         return selectByMap(serchMap);
     }

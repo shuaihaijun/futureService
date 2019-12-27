@@ -13,7 +13,7 @@ public class FuComDictionary {
     public static String DIC_KEY="dic_key";
     public static String DIC_VALUE="dic_value";
     /**
-     * 
+     *
      */
     @TableId(type = IdType.AUTO)
     private Integer id;
@@ -31,7 +31,7 @@ public class FuComDictionary {
     /**
      * 字典key
      */
-    private String dicKey;
+    private Integer dicKey;
 
     /**
      * 字典值
@@ -100,7 +100,7 @@ public class FuComDictionary {
      * 字典key
      * @return dic_key 字典key
      */
-    public String getDicKey() {
+    public Integer getDicKey() {
         return dicKey;
     }
 
@@ -108,8 +108,8 @@ public class FuComDictionary {
      * 字典key
      * @param dicKey 字典key
      */
-    public void setDicKey(String dicKey) {
-        this.dicKey = dicKey == null ? null : dicKey.trim();
+    public void setDicKey(Integer dicKey) {
+        this.dicKey = dicKey;
     }
 
     /**

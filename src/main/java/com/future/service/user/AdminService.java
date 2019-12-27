@@ -12,6 +12,7 @@ import com.future.common.enums.GlobalResultCode;
 import com.future.common.enums.UserResultCode;
 import com.future.common.exception.*;
 import com.future.common.util.CommonUtil;
+import com.future.common.util.FileUtil;
 import com.future.common.util.RedisManager;
 import com.future.common.util.RequestContextHolderUtil;
 import com.future.entity.com.FuComAgent;
@@ -179,6 +180,11 @@ public class AdminService extends ServiceImpl<FuUserMapper,FuUser> {
                 throw new ParameterInvalidException(GlobalResultCode.PARAM_NULL_POINTER);
             }
 
+            if(!CommonUtil.checkName(fuUser.getUsername())){
+                log.warn("注册用户信息 ,用户名验证失败！ 必须是6-10位字母、数字、下划线 不能以数字开头");
+                throw new DataConflictException("注册用户信息 ,用户名验证失败！ 必须是6-10位字母、数字、下划线 不能以数字开头");
+            }
+
             /*校验改用户是否已存在 此处可从redis中查询*/
             FuUser eUser=fuUserMapper.selectByUsername(fuUser.getUsername());
             /*此处还需判断用户状态（123）*/
@@ -282,7 +288,16 @@ public class AdminService extends ServiceImpl<FuUserMapper,FuUser> {
         if(ObjectUtils.isEmpty(eUser)){
             throw new DataNotFoundException(UserResultCode.USER_NOTEXIST_ERROR);
         }
-
+        /*转换图片相对路径*/
+        if(!StringUtils.isEmpty(fuUser.getAvatarUrl())){
+            fuUser.setAvatarUrl(FileUtil.getFileRelativePath(fuUser.getAvatarUrl()));
+        }
+        if(!StringUtils.isEmpty(fuUser.getIdFront())){
+            fuUser.setIdFront(FileUtil.getFileRelativePath(fuUser.getIdFront()));
+        }
+        if(!StringUtils.isEmpty(fuUser.getIdObverse())){
+            fuUser.setIdObverse(FileUtil.getFileRelativePath(fuUser.getIdObverse()));
+        }
         /*copy信息*/
         BeanUtils.copyProperties(fuUser,eUser);
         /*修改数据*/
@@ -301,7 +316,7 @@ public class AdminService extends ServiceImpl<FuUserMapper,FuUser> {
      * @param newPass
      * @return
      */
-    public void updatePassword(String username,String oldPass,String newPass) throws Exception{
+    public void updatePassword(Integer userId, String username,String oldPass,String newPass){
 
         if(StringUtils.isEmpty(username)
                 ||StringUtils.isEmpty(oldPass)
@@ -311,16 +326,20 @@ public class AdminService extends ServiceImpl<FuUserMapper,FuUser> {
 
         /*校验密码格式*/
         if(!CommonUtil.verifyPassword(newPass)){
-            throw new UserException("校验密码格式不正确，规则(6-18位/字符与数据同时出现)");
+            throw new UserException("校验密码格式不正确，必须是6-20位的字母、数字、下划线组合！");
         }
-
-        FuUser fuUser=fuUserMapper.selectByUsername(username);
+        FuUser fuUser=null;
+        if(userId!=null && userId!=0){
+            fuUser=fuUserMapper.selectByPrimaryKey(userId);
+        }else if(!StringUtils.isEmpty(username)){
+            fuUser=fuUserMapper.selectByUsername(username);
+        }
         if(ObjectUtils.isEmpty(fuUser)){
             throw new DataNotFoundException(UserResultCode.USER_NOTEXIST_ERROR);
         }
 
         if(!fuUser.getPassword().equalsIgnoreCase(DigestUtils.md5DigestAsHex(oldPass.getBytes()))){
-            throw new UserException("旧密码错误！");
+            throw new UserException("原密码错误！");
         }
 
         FuUser user=new FuUser();

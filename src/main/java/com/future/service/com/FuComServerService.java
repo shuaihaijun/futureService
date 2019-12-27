@@ -96,8 +96,7 @@ public class FuComServerService extends ServiceImpl<FuComServerMapper,FuComServe
         }
 
         if(ObjectUtils.isEmpty(dataMap.get("serverName"))
-                ||ObjectUtils.isEmpty(dataMap.get("brokerName"))
-                ||ObjectUtils.isEmpty(dataMap.get("serverIp"))){
+                ||ObjectUtils.isEmpty(dataMap.get("brokerName"))){
             log.error("请传入必要参数！");
             throw new DataConflictException("请传入必要参数！");
         }

@@ -11,7 +11,7 @@ public class FuAccountMt {
     public static String IS_SIGNAL="is_signal";
     public static String ACCOUNT_TYPE="account_type";
     /**
-     * 
+     *
      */
     @TableId(type = IdType.AUTO)
     private Integer id;
@@ -97,7 +97,7 @@ public class FuAccountMt {
     private Integer isChief;
 
     /**
-     * 账户类型：0 mt4,1 mt5
+     * 账户类型：0 实盘账户,1 模拟账户
      */
     private Integer accountType;
 
@@ -130,6 +130,16 @@ public class FuAccountMt {
      * 保证金
      */
     private BigDecimal margin;
+
+    /**
+     * 账户状态（0 正常，1冻结，2 删除）
+     */
+    private Integer accountState;
+
+    /**
+     * MT类型：0 mt4,1 mt5
+     */
+    private Integer platType;
 
     /**
      * 
@@ -404,16 +414,16 @@ public class FuAccountMt {
     }
 
     /**
-     * 账户类型：0 mt4,1 mt5
-     * @return account_type 账户类型：0 mt4,1 mt5
+     * 账户类型：0 实盘账户,1 模拟账户
+     * @return account_type 账户类型：0 实盘账户,1 模拟账户
      */
     public Integer getAccountType() {
         return accountType;
     }
 
     /**
-     * 账户类型：0 mt4,1 mt5
-     * @param accountType 账户类型：0 mt4,1 mt5
+     * 账户类型：0 实盘账户,1 模拟账户
+     * @param accountType 账户类型：0 实盘账户,1 模拟账户
      */
     public void setAccountType(Integer accountType) {
         this.accountType = accountType;
@@ -513,5 +523,37 @@ public class FuAccountMt {
      */
     public void setMargin(BigDecimal margin) {
         this.margin = margin;
+    }
+
+    /**
+     * 账户状态（0 正常，1冻结，2 删除）
+     * @return account_state 账户状态（0 正常，1冻结，2 删除）
+     */
+    public Integer getAccountState() {
+        return accountState;
+    }
+
+    /**
+     * 账户状态（0 正常，1冻结，2 删除）
+     * @param accountState 账户状态（0 正常，1冻结，2 删除）
+     */
+    public void setAccountState(Integer accountState) {
+        this.accountState = accountState;
+    }
+
+    /**
+     * MT类型：0 mt4,1 mt5
+     * @return plat_type MT类型：0 mt4,1 mt5
+     */
+    public Integer getPlatType() {
+        return platType;
+    }
+
+    /**
+     * MT类型：0 mt4,1 mt5
+     * @param platType MT类型：0 mt4,1 mt5
+     */
+    public void setPlatType(Integer platType) {
+        this.platType = platType;
     }
 }

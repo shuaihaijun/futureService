@@ -33,6 +33,8 @@ public class UserMTAccountBO {
     private Integer connectState;//账号链接状态
 
     private Integer introducer;//介绍人
+    private Integer accountState;//账户状态
+    private Integer platType;//平台类型
 
     /**
      * 用户账号
@@ -347,5 +349,21 @@ public class UserMTAccountBO {
 
     public void setIntroducer(Integer introducer) {
         this.introducer = introducer;
+    }
+
+    public Integer getAccountState() {
+        return accountState;
+    }
+
+    public void setAccountState(Integer accountState) {
+        this.accountState = accountState;
+    }
+
+    public Integer getPlatType() {
+        return platType;
+    }
+
+    public void setPlatType(Integer platType) {
+        this.platType = platType;
     }
 }

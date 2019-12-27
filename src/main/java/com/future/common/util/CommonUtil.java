@@ -660,22 +660,32 @@ public class CommonUtil {
 		return match(regex, str);
 	}
 
-	/**
-	 * 校验密码是否符合规则(6-18位/字符与数据同时出现)
-	 * @param str
-	 * @return
-	 */
-	public static Boolean verifyPassword(String str){
 
-		String regex1 = "[A-Za-z]+[0-9]";
-		if(!match(regex1, str)){
-			return  false;
+	/**
+	 * 用户名验证 必须是6-10位字母、数字、下划线 不能以数字开头
+	 *  @param name
+	 *  @return
+	 */
+	public static boolean checkName(String name) {
+		String regExp = "^[^0-9][\\w_]{5,9}$";
+		if(name.matches(regExp)) {
+			return true;
+		}else {
+			return false;
 		}
-		String regex2 = "^\\d{6,18}$";
-		if(!match(regex2, str)){
-			return  false;
+	}
+
+	/**
+	 * 密码验证 必须是6-20位的字母、数字、下划线
+	 *  @param pwd
+	 *  @return
+	 */
+	public static boolean verifyPassword(String pwd) {
+		String regExp = "^[\\w_]{6,20}$";
+		if(pwd.matches(regExp)) {
+			return true;
 		}
-		return true;
+		return false;
 	}
 
 	/**

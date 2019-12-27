@@ -194,7 +194,7 @@ public class FuUserSignalVO {
     /**
      * 性别
      */
-    private String sex;
+    private Integer sex;
 
     /**
      * 最大跟单比例

@@ -52,9 +52,7 @@ public class RequestParamsFilter implements Filter {
             } else {
                 //logger.info("非post请求");
             }
-            System.out.println("========" + 1);
             chain.doFilter(wrappedHttpServletRequest, response);
-            System.out.println("========" + 2);
         } catch (Exception e) {
             System.out.println("========" + e.getMessage());
             logger.error(e.getMessage(), e);
