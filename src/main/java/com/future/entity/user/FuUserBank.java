@@ -6,6 +6,10 @@ import com.baomidou.mybatisplus.enums.IdType;
 import java.util.Date;
 
 public class FuUserBank {
+
+
+    public static String ID="id";
+    public static String USER_ID="user_id";
     /**
      * 
      */
@@ -21,6 +25,11 @@ public class FuUserBank {
      * 银行名称
      */
     private String bankName;
+
+    /**
+     * 户主姓名
+     */
+    private String hostName;
 
     /**
      * 银行卡号
@@ -43,9 +52,14 @@ public class FuUserBank {
     private Date modifyTime;
 
     /**
-     * 是否为社区账号(1 是，0 否)
+     * 是否为主账号(1 是，0 否)
      */
     private Integer isChief;
+
+    /**
+     * 是否已校验（0 否，1 是）
+     */
+    private Integer isChecked;
 
     /**
      * 
@@ -93,6 +107,22 @@ public class FuUserBank {
      */
     public void setBankName(String bankName) {
         this.bankName = bankName == null ? null : bankName.trim();
+    }
+
+    /**
+     * 户主姓名
+     * @return host_name 户主姓名
+     */
+    public String getHostName() {
+        return hostName;
+    }
+
+    /**
+     * 户主姓名
+     * @param hostName 户主姓名
+     */
+    public void setHostName(String hostName) {
+        this.hostName = hostName == null ? null : hostName.trim();
     }
 
     /**
@@ -160,18 +190,34 @@ public class FuUserBank {
     }
 
     /**
-     * 是否为社区账号(1 是，0 否)
-     * @return is_chief 是否为社区账号(1 是，0 否)
+     * 是否为主账号(1 是，0 否)
+     * @return is_chief 是否为主账号(1 是，0 否)
      */
     public Integer getIsChief() {
         return isChief;
     }
 
     /**
-     * 是否为社区账号(1 是，0 否)
-     * @param isChief 是否为社区账号(1 是，0 否)
+     * 是否为主账号(1 是，0 否)
+     * @param isChief 是否为主账号(1 是，0 否)
      */
     public void setIsChief(Integer isChief) {
         this.isChief = isChief;
+    }
+
+    /**
+     * 是否已校验（0 否，1 是）
+     * @return is_checked 是否已校验（0 否，1 是）
+     */
+    public Integer getIsChecked() {
+        return isChecked;
+    }
+
+    /**
+     * 是否已校验（0 否，1 是）
+     * @param isChecked 是否已校验（0 否，1 是）
+     */
+    public void setIsChecked(Integer isChecked) {
+        this.isChecked = isChecked;
     }
 }

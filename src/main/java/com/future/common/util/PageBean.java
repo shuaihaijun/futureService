@@ -4,6 +4,7 @@ package com.future.common.util;
 import com.baomidou.mybatisplus.plugins.Page;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.ObjectUtils;
 
 import java.io.Serializable;
 import java.util.Map;
@@ -26,10 +27,10 @@ public class PageBean<T> implements Serializable {
 
         page.setSize(pageSize);
         page.setCurrent(pageNum);
-        if (!StringUtils.isEmpty(String.valueOf(pageMap.get("pageSize")))) {
+        if (!ObjectUtils.isEmpty(pageMap.get("pageSize"))) {
             pageSize = Integer.parseInt(String.valueOf(pageMap.get("pageSize")));
         }
-        if (!StringUtils.isEmpty(String.valueOf(pageMap.get("pageNum")))) {
+        if (!ObjectUtils.isEmpty(pageMap.get("pageNum"))) {
             pageNum = Integer.parseInt(String.valueOf(pageMap.get("pageNum")));
         }
         return page;

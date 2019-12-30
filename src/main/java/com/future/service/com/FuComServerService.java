@@ -37,11 +37,11 @@ public class FuComServerService extends ServiceImpl<FuComServerMapper,FuComServe
      * @return
      */
     public Page<FuComServer> queryComServer(Map conditionMap){
-        if(ObjectUtils.isEmpty(conditionMap)){
+       /* if(ObjectUtils.isEmpty(conditionMap)){
             log.error("传入参数为空！");
             throw new DataConflictException("传入参数为空！");
         }
-
+*/
         /*if(ObjectUtils.isEmpty(conditionMap.get("id"))
                 &&ObjectUtils.isEmpty(conditionMap.get("serverName"))
                 &&ObjectUtils.isEmpty(conditionMap.get("serverState"))

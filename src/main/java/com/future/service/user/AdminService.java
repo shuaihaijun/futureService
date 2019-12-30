@@ -9,8 +9,10 @@ import com.future.common.constants.CommonConstant;
 import com.future.common.constants.RedisConstant;
 import com.future.common.constants.UserConstant;
 import com.future.common.enums.GlobalResultCode;
+import com.future.common.enums.ResultCode;
 import com.future.common.enums.UserResultCode;
 import com.future.common.exception.*;
+import com.future.common.result.ResultMsg;
 import com.future.common.util.CommonUtil;
 import com.future.common.util.FileUtil;
 import com.future.common.util.RedisManager;
@@ -89,7 +91,7 @@ public class AdminService extends ServiceImpl<FuUserMapper,FuUser> {
             throw new BusinessException(UserResultCode.USER_PASSWORD_ERROR);
         }
         //(0 未审核，1 正常，2 待审核，3 删除）
-        if(fuUser.getUserState()>1){
+        if(fuUser.getUserState()>2){
             /*用户状态异常*/
             throw new BusinessException(UserResultCode.USER_STATE_EXCEPTION);
         }
@@ -180,10 +182,10 @@ public class AdminService extends ServiceImpl<FuUserMapper,FuUser> {
                 throw new ParameterInvalidException(GlobalResultCode.PARAM_NULL_POINTER);
             }
 
-            if(!CommonUtil.checkName(fuUser.getUsername())){
+            /*if(!CommonUtil.checkName(fuUser.getUsername())){
                 log.warn("注册用户信息 ,用户名验证失败！ 必须是6-10位字母、数字、下划线 不能以数字开头");
                 throw new DataConflictException("注册用户信息 ,用户名验证失败！ 必须是6-10位字母、数字、下划线 不能以数字开头");
-            }
+            }*/
 
             /*校验改用户是否已存在 此处可从redis中查询*/
             FuUser eUser=fuUserMapper.selectByUsername(fuUser.getUsername());
@@ -194,10 +196,13 @@ public class AdminService extends ServiceImpl<FuUserMapper,FuUser> {
             }
 
             /*校验推荐人是否存在*/
-            FuUser introducer=fuUserMapper.selectByPrimaryKey(fuUser.getIntroducer());
-            if(introducer==null){
-                log.warn("注册用户信息 , 介绍人不存在！");
-                throw new DataConflictException("介绍人不存在！");
+            FuUser introducer=new FuUser();
+            if(fuUser.getIntroducer()!=null || fuUser.getIntroducer()>0){
+                introducer=fuUserMapper.selectByPrimaryKey(fuUser.getIntroducer());
+                if(introducer==null){
+                    log.warn("注册用户信息 , 介绍人不存在！");
+                    throw new BusinessException("注册用户信息 , 介绍人不存在！");
+                }
             }
 
             /*密码加密*/
@@ -219,15 +224,18 @@ public class AdminService extends ServiceImpl<FuUserMapper,FuUser> {
             fuAccountInfoService.initAccountInfo(newUser.getId(),newUser.getPassword());
 
             /*跟新介绍人 信息*/
-            introducer.setRecommend(introducer.getRecommend()+1);
-            fuUserMapper.updateByPrimaryKeySelective(introducer);
-            if(introducer.getUserType()==UserConstant.USER_TYPE_IB
-                ||introducer.getUserType()==UserConstant.USER_TYPE_MIB
-                    ||introducer.getUserType()==UserConstant.USER_TYPE_PIB){
-                FuComAgent agent=  fuComAgentService.selectOne(new EntityWrapper<FuComAgent>().eq(FuComAgent.USER_ID,newUser.getId()));
-                agent.setAgentNumber(agent.getAgentNumber()+1);
-                fuComAgentService.updateById(agent);
+            if(introducer!=null&&introducer.getId()>0){
+                introducer.setRecommend(introducer.getRecommend()+1);
+                fuUserMapper.updateByPrimaryKeySelective(introducer);
+                if(introducer.getUserType()==UserConstant.USER_TYPE_IB
+                        ||introducer.getUserType()==UserConstant.USER_TYPE_MIB
+                        ||introducer.getUserType()==UserConstant.USER_TYPE_PIB){
+                    FuComAgent agent=  fuComAgentService.selectOne(new EntityWrapper<FuComAgent>().eq(FuComAgent.USER_ID,introducer.getId()));
+                    agent.setAgentNumber(agent.getAgentNumber()+1);
+                    fuComAgentService.updateById(agent);
+                }
             }
+
 
             /*设置普通用户角色*/
             FuPermissionUserRole userRole=new FuPermissionUserRole();
