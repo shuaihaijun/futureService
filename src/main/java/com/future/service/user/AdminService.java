@@ -18,14 +18,19 @@ import com.future.common.util.FileUtil;
 import com.future.common.util.RedisManager;
 import com.future.common.util.RequestContextHolderUtil;
 import com.future.entity.com.FuComAgent;
+import com.future.entity.permission.FuPermissionRole;
+import com.future.entity.permission.FuPermissionUserProject;
 import com.future.entity.permission.FuPermissionUserRole;
 import com.future.entity.user.FuUser;
+import com.future.mapper.permission.FuPermissionUserProjectMapper;
 import com.future.mapper.user.FuUserMapper;
 import com.future.pojo.bo.AdminInfo;
 import com.future.pojo.bo.order.UserMTAccountBO;
 import com.future.service.account.FuAccountInfoService;
 import com.future.service.account.FuAccountMtService;
 import com.future.service.com.FuComAgentService;
+import com.future.service.permission.PermissionRoleService;
+import com.future.service.permission.PermissionUserProjectService;
 import com.future.service.permission.PermissionUserRoleService;
 import com.github.pagehelper.PageInfo;
 import org.slf4j.Logger;
@@ -39,10 +44,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.DigestUtils;
 import org.springframework.util.ObjectUtils;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class AdminService extends ServiceImpl<FuUserMapper,FuUser> {
@@ -59,6 +61,10 @@ public class AdminService extends ServiceImpl<FuUserMapper,FuUser> {
     PermissionUserRoleService permissionUserRoleService;
     @Autowired
     FuComAgentService fuComAgentService;
+    @Autowired
+    PermissionUserProjectService permissionUserProjectService;
+    @Autowired
+    PermissionRoleService permissionRoleService;
     @Autowired
     RedisManager redisManager;
     @Value("${newUserRoleId}")
@@ -169,98 +175,122 @@ public class AdminService extends ServiceImpl<FuUserMapper,FuUser> {
         }
 
         Map registeredInfo=new HashMap();
-        try{
-            FuUser fuUser=JSONObject.parseObject(userJson.toJSONString(),FuUser.class);
-            /*验证*/
-            if(ObjectUtils.isEmpty(fuUser)){
-                throw new ParameterInvalidException(GlobalResultCode.PARAM_NULL_POINTER);
-            }
-            if(StringUtils.isEmpty(fuUser.getUsername())
-                    ||StringUtils.isEmpty(fuUser.getPassword())
-                    ||StringUtils.isEmpty(fuUser.getEmail())
-                    ||StringUtils.isEmpty(fuUser.getMobile())){
-                throw new ParameterInvalidException(GlobalResultCode.PARAM_NULL_POINTER);
-            }
-
-            /*if(!CommonUtil.checkName(fuUser.getUsername())){
-                log.warn("注册用户信息 ,用户名验证失败！ 必须是6-10位字母、数字、下划线 不能以数字开头");
-                throw new DataConflictException("注册用户信息 ,用户名验证失败！ 必须是6-10位字母、数字、下划线 不能以数字开头");
-            }*/
-
-            /*校验改用户是否已存在 此处可从redis中查询*/
-            FuUser eUser=fuUserMapper.selectByUsername(fuUser.getUsername());
-            /*此处还需判断用户状态（123）*/
-            if(!ObjectUtils.isEmpty(eUser)){
-                log.warn("注册用户信息 , 该用户已存在，username:"+fuUser.getUsername());
-                throw new DataConflictException(UserResultCode.LOGINISEXIST);
-            }
-
-            /*校验推荐人是否存在*/
-            FuUser introducer=new FuUser();
-            if(fuUser.getIntroducer()!=null || fuUser.getIntroducer()>0){
-                introducer=fuUserMapper.selectByPrimaryKey(fuUser.getIntroducer());
-                if(introducer==null){
-                    log.warn("注册用户信息 , 介绍人不存在！");
-                    throw new BusinessException("注册用户信息 , 介绍人不存在！");
-                }
-            }
-
-            /*密码加密*/
-            fuUser.setPassword(DigestUtils.md5DigestAsHex(fuUser.getPassword().getBytes()));
-
-            /*保存数据*/
-            int isSuccess= fuUserMapper.insertSelective(fuUser);
-            if(isSuccess<1){
-                log.warn("注册用户信息 , 注册失败！");
-                throw new BusinessException("注册用户信息 , 注册失败！");
-            }
-            FuUser newUser=fuUserMapper.selectByUsername(fuUser.getUsername());
-            if(newUser==null){
-                log.warn("注册用户信息 , 注册失败！");
-                throw new BusinessException("注册用户信息 , 注册失败！");
-            }
-
-            /*设置社区账户*/
-            fuAccountInfoService.initAccountInfo(newUser.getId(),newUser.getPassword());
-
-            /*跟新介绍人 信息*/
-            if(introducer!=null&&introducer.getId()>0){
-                introducer.setRecommend(introducer.getRecommend()+1);
-                fuUserMapper.updateByPrimaryKeySelective(introducer);
-                if(introducer.getUserType()==UserConstant.USER_TYPE_IB
-                        ||introducer.getUserType()==UserConstant.USER_TYPE_MIB
-                        ||introducer.getUserType()==UserConstant.USER_TYPE_PIB){
-                    FuComAgent agent=  fuComAgentService.selectOne(new EntityWrapper<FuComAgent>().eq(FuComAgent.USER_ID,introducer.getId()));
-                    agent.setAgentNumber(agent.getAgentNumber()+1);
-                    fuComAgentService.updateById(agent);
-                }
-            }
-
-
-            /*设置普通用户角色*/
-            FuPermissionUserRole userRole=new FuPermissionUserRole();
-            userRole.setUserId(newUser.getId());
-            userRole.setRoleId(newUserRoleId);
-            permissionUserRoleService.insert(userRole);
-
-            /*更新缓存*/
-            //*返回数据填充/*
-            Map userMap=new HashMap();
-            userMap.put("userId",newUser.getId());
-            userMap.put("username",fuUser.getUsername());
-            userMap.put("refName",fuUser.getRefName());
-            userMap.put("realName",fuUser.getRealName());
-            userMap.put("userType",fuUser.getUserType());
-            userMap.put("userState",fuUser.getUserState());
-
-            registeredInfo.put("code",GlobalResultCode.SUCCESS.code());
-            registeredInfo.put("msg",GlobalResultCode.SUCCESS.message());
-            registeredInfo.put("data",JSONObject.toJSON(userMap));
-
-        }catch (Exception e){
-            log.error(e.getMessage(),e);
-            throw new BusinessException(e);
+        FuUser fuUser=JSONObject.parseObject(userJson.toJSONString(),FuUser.class);
+        /*验证*/
+        if(ObjectUtils.isEmpty(fuUser)){
+            throw new ParameterInvalidException(GlobalResultCode.PARAM_NULL_POINTER);
         }
+        if(StringUtils.isEmpty(fuUser.getUsername())
+                ||StringUtils.isEmpty(fuUser.getPassword())
+                ||StringUtils.isEmpty(fuUser.getEmail())
+                ||StringUtils.isEmpty(fuUser.getMobile())){
+            throw new ParameterInvalidException(GlobalResultCode.PARAM_NULL_POINTER);
+        }
+
+        /*if(!CommonUtil.checkName(fuUser.getUsername())){
+            log.warn("注册用户信息 ,用户名验证失败！ 必须是6-10位字母、数字、下划线 不能以数字开头");
+            throw new DataConflictException("注册用户信息 ,用户名验证失败！ 必须是6-10位字母、数字、下划线 不能以数字开头");
+        }*/
+
+        /*校验改用户是否已存在 此处可从redis中查询*/
+        FuUser eUser=fuUserMapper.selectByUsername(fuUser.getUsername());
+        /*此处还需判断用户状态（123）*/
+        if(!ObjectUtils.isEmpty(eUser)){
+            log.warn("注册用户信息 , 该用户已存在，username:"+fuUser.getUsername());
+            throw new DataConflictException("注册用户信息 , 该用户已存在，username:"+fuUser.getUsername());
+        }
+        eUser=selectOne(new EntityWrapper<FuUser>().eq(FuUser.EMAIL, fuUser.getEmail()));
+        if(!ObjectUtils.isEmpty(eUser)){
+            log.warn("注册用户信息 , 邮箱已存在！");
+            throw new DataConflictException("注册用户信息 , 邮箱已存在！");
+        }
+        eUser=selectOne(new EntityWrapper<FuUser>().eq(FuUser.MOBILE, fuUser.getMobile()));
+        if(!ObjectUtils.isEmpty(eUser)){
+            log.warn("注册用户信息 , 电话已存在！");
+            throw new DataConflictException("注册用户信息 , 电话已存在！");
+        }
+
+        /*校验推荐人是否存在*/
+        FuUser introducer=new FuUser();
+        if(fuUser.getIntroducer()!=null && fuUser.getIntroducer()>0){
+            introducer=fuUserMapper.selectByPrimaryKey(fuUser.getIntroducer());
+            if(introducer==null){
+                log.warn("注册用户信息 , 介绍人不存在！");
+                    throw new BusinessException(UserResultCode.USER_INTRODUCE_NOTEXIST_ERROR);
+            }
+        }
+
+        /*密码加密*/
+        fuUser.setPassword(DigestUtils.md5DigestAsHex(fuUser.getPassword().getBytes()));
+
+        /*保存数据*/
+        int isSuccess= fuUserMapper.insertSelective(fuUser);
+        if(isSuccess<1){
+            log.warn("注册用户信息 , 注册失败！");
+            throw new BusinessException("注册用户信息 , 注册失败！");
+        }
+        FuUser newUser=fuUserMapper.selectByUsername(fuUser.getUsername());
+        if(newUser==null){
+            log.warn("注册用户信息 , 注册失败！");
+            throw new BusinessException("注册用户信息 , 注册失败！");
+        }
+
+        /*设置社区账户*/
+        fuAccountInfoService.initAccountInfo(newUser.getId(),newUser.getPassword());
+
+        /*跟新介绍人 信息*/
+        if(introducer!=null&&introducer.getId()!=null&&introducer.getId()>0){
+            introducer.setRecommend(introducer.getRecommend()+1);
+            fuUserMapper.updateByPrimaryKeySelective(introducer);
+            if(introducer.getUserType()==UserConstant.USER_TYPE_IB
+                    ||introducer.getUserType()==UserConstant.USER_TYPE_MIB
+                    ||introducer.getUserType()==UserConstant.USER_TYPE_PIB){
+                FuComAgent agent=  fuComAgentService.selectOne(new EntityWrapper<FuComAgent>().eq(FuComAgent.USER_ID,introducer.getId()));
+                agent.setAgentNumber(agent.getAgentNumber()+1);
+                fuComAgentService.updateById(agent);
+            }
+        }
+
+        /*设置用户所属资源*/
+        FuPermissionUserProject introducerUserProject= permissionUserProjectService.selectOne(new EntityWrapper<FuPermissionUserProject>()
+                .eq(FuPermissionUserProject.USER_ID,introducer.getId()));
+        FuPermissionUserProject userProject=new FuPermissionUserProject();
+        userProject.setUserId(newUser.getId());
+        if(introducerUserProject==null){
+            userProject.setProjKey(0);
+        }else {
+            userProject.setProjKey(introducerUserProject.getProjKey());
+        }
+        userProject.setCreateDate(new Date());
+        userProject.setModifyDate(new Date());
+        permissionUserProjectService.insert(userProject);
+
+
+        /*设置普通用户角色*/
+        FuPermissionRole defaultRole= permissionRoleService.getDefaultRoleByProject(userProject.getProjKey());
+        FuPermissionUserRole userRole=new FuPermissionUserRole();
+        userRole.setUserId(newUser.getId());
+        if(defaultRole==null){
+            userRole.setRoleId(newUserRoleId);
+        }else {
+            userRole.setRoleId(defaultRole.getId());
+        }
+        permissionUserRoleService.insert(userRole);
+
+        /*更新缓存*/
+        //*返回数据填充/*
+        Map userMap=new HashMap();
+        userMap.put("userId",newUser.getId());
+        userMap.put("username",fuUser.getUsername());
+        userMap.put("refName",fuUser.getRefName());
+        userMap.put("realName",fuUser.getRealName());
+        userMap.put("userType",fuUser.getUserType());
+        userMap.put("userState",fuUser.getUserState());
+
+        registeredInfo.put("code",GlobalResultCode.SUCCESS.code());
+        registeredInfo.put("msg",GlobalResultCode.SUCCESS.message());
+        registeredInfo.put("data",JSONObject.toJSON(userMap));
+
         return registeredInfo;
     }
 

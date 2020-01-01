@@ -1,153 +1,317 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.future.mapper.permission.FuPermissionRoleMapper">
-
-    <resultMap id="Role" type="com.future.pojo.vo.permission.FuPermissionRoleVO">
-        <id column="Id" property="id" jdbcType="INTEGER"/>
-        <result column="Id" property="id" jdbcType="INTEGER"/>
-        <result column="Role_code" property="roleCode" jdbcType="VARCHAR"/>
-        <result column="Role_name" property="roleName" jdbcType="VARCHAR"/>
-        <result column="Role_level" property="roleLevel" jdbcType="INTEGER"/>
-        <result column="Role_flag" property="roleFlag" jdbcType="VARCHAR"/>
-        <result column="Role_desc" property="roleDesc" jdbcType="VARCHAR"/>
-        <result column="creater" property="creater" jdbcType="VARCHAR"/>
-        <result column="create_date" property="createDate" jdbcType="VARCHAR"/>
-    </resultMap>
-
-    <sql id="baseColumnList">
-        Id,
-        Role_code,
-        Role_name,
-        Role_level,
-        Proj_key,
-        Role_desc,
-        Creater,
+  <resultMap id="BaseResultMap" type="com.future.entity.permission.FuPermissionRole">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="role_code" jdbcType="VARCHAR" property="roleCode" />
+    <result column="role_name" jdbcType="VARCHAR" property="roleName" />
+    <result column="role_level" jdbcType="TINYINT" property="roleLevel" />
+    <result column="role_status" jdbcType="TINYINT" property="roleStatus" />
+    <result column="role_sign" jdbcType="TINYINT" property="roleSign" />
+    <result column="proj_key" jdbcType="TINYINT" property="projKey" />
+    <result column="role_desc" jdbcType="VARCHAR" property="roleDesc" />
+    <result column="creater" jdbcType="VARCHAR" property="creater" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="modify_date" jdbcType="TIMESTAMP" property="modifyDate" />
+    <result column="role_default" jdbcType="TINYINT" property="roleDefault" />
+  </resultMap>
+  <resultMap id="Role" type="com.future.pojo.vo.permission.FuPermissionRoleVO">
+    <id column="Id" property="id" jdbcType="INTEGER"/>
+    <result column="Role_code" property="roleCode" jdbcType="VARCHAR"/>
+    <result column="Role_name" property="roleName" jdbcType="VARCHAR"/>
+    <result column="Role_level" property="roleLevel" jdbcType="INTEGER"/>
+    <result column="proj_key" jdbcType="TINYINT" property="projKey" />
+    <result column="Role_desc" property="roleDesc" jdbcType="VARCHAR"/>
+    <result column="role_status" jdbcType="TINYINT" property="roleStatus" />
+    <result column="role_sign" jdbcType="TINYINT" property="roleSign" />
+    <result column="role_default" jdbcType="TINYINT" property="roleDefault" />
+    <result column="creater" property="creater" jdbcType="VARCHAR"/>
+    <result column="create_date" property="createDate" jdbcType="VARCHAR"/>
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, role_code, role_name, role_level, role_status, role_sign, proj_key, role_desc, 
+    creater, create_date, modify_date, role_default
+  </sql>
+  <sql id="baseColumnList">
+    id, role_code, role_name, role_level, role_status, role_sign, proj_key, role_desc,
+    creater, create_date, modify_date, role_default
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from fu_permission_role
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from fu_permission_role
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.future.entity.permission.FuPermissionRole">
+    insert into fu_permission_role (id, role_code, role_name, 
+      role_level, role_status, role_sign, 
+      proj_key, role_desc, creater, 
+      create_date, modify_date, role_default
+      )
+    values (#{id,jdbcType=INTEGER}, #{roleCode,jdbcType=VARCHAR}, #{roleName,jdbcType=VARCHAR}, 
+      #{roleLevel,jdbcType=TINYINT}, #{roleStatus,jdbcType=TINYINT}, #{roleSign,jdbcType=TINYINT}, 
+      #{projKey,jdbcType=TINYINT}, #{roleDesc,jdbcType=VARCHAR}, #{creater,jdbcType=VARCHAR}, 
+      #{createDate,jdbcType=TIMESTAMP}, #{modifyDate,jdbcType=TIMESTAMP}, #{roleDefault,jdbcType=TINYINT}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.future.entity.permission.FuPermissionRole">
+    insert into fu_permission_role
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="roleCode != null">
+        role_code,
+      </if>
+      <if test="roleName != null">
+        role_name,
+      </if>
+      <if test="roleLevel != null">
+        role_level,
+      </if>
+      <if test="roleStatus != null">
+        role_status,
+      </if>
+      <if test="roleSign != null">
+        role_sign,
+      </if>
+      <if test="projKey != null">
+        proj_key,
+      </if>
+      <if test="roleDesc != null">
+        role_desc,
+      </if>
+      <if test="creater != null">
+        creater,
+      </if>
+      <if test="createDate != null">
         create_date,
-        modify_date
-    </sql>
+      </if>
+      <if test="modifyDate != null">
+        modify_date,
+      </if>
+      <if test="roleDefault != null">
+        role_default,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="roleCode != null">
+        #{roleCode,jdbcType=VARCHAR},
+      </if>
+      <if test="roleName != null">
+        #{roleName,jdbcType=VARCHAR},
+      </if>
+      <if test="roleLevel != null">
+        #{roleLevel,jdbcType=TINYINT},
+      </if>
+      <if test="roleStatus != null">
+        #{roleStatus,jdbcType=TINYINT},
+      </if>
+      <if test="roleSign != null">
+        #{roleSign,jdbcType=TINYINT},
+      </if>
+      <if test="projKey != null">
+        #{projKey,jdbcType=TINYINT},
+      </if>
+      <if test="roleDesc != null">
+        #{roleDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="creater != null">
+        #{creater,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null">
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyDate != null">
+        #{modifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="roleDefault != null">
+        #{roleDefault,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.future.entity.permission.FuPermissionRole">
+    update fu_permission_role
+    <set>
+      <if test="roleCode != null">
+        role_code = #{roleCode,jdbcType=VARCHAR},
+      </if>
+      <if test="roleName != null">
+        role_name = #{roleName,jdbcType=VARCHAR},
+      </if>
+      <if test="roleLevel != null">
+        role_level = #{roleLevel,jdbcType=TINYINT},
+      </if>
+      <if test="roleStatus != null">
+        role_status = #{roleStatus,jdbcType=TINYINT},
+      </if>
+      <if test="roleSign != null">
+        role_sign = #{roleSign,jdbcType=TINYINT},
+      </if>
+      <if test="projKey != null">
+        proj_key = #{projKey,jdbcType=TINYINT},
+      </if>
+      <if test="roleDesc != null">
+        role_desc = #{roleDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="creater != null">
+        creater = #{creater,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null">
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyDate != null">
+        modify_date = #{modifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="roleDefault != null">
+        role_default = #{roleDefault,jdbcType=TINYINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.future.entity.permission.FuPermissionRole">
+    update fu_permission_role
+    set role_code = #{roleCode,jdbcType=VARCHAR},
+      role_name = #{roleName,jdbcType=VARCHAR},
+      role_level = #{roleLevel,jdbcType=TINYINT},
+      role_status = #{roleStatus,jdbcType=TINYINT},
+      role_sign = #{roleSign,jdbcType=TINYINT},
+      proj_key = #{projKey,jdbcType=TINYINT},
+      role_desc = #{roleDesc,jdbcType=VARCHAR},
+      creater = #{creater,jdbcType=VARCHAR},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      modify_date = #{modifyDate,jdbcType=TIMESTAMP},
+      role_default = #{roleDefault,jdbcType=TINYINT}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <!-- 通过角色BO查询 -->
+  <select id="selectPageList" parameterType="com.future.pojo.bo.permission.FuPermissionRoleBO" resultType="com.future.pojo.vo.permission.FuPermissionRoleVO">
+    SELECT
+    tpr.Id,
+    Role_code,
+    Role_name,
+    Role_level,
+    Role_sign,
+    role_status,
+    tpr.Proj_key,
+    Role_desc,
+    tpr.Creater,
+    tpr.create_date,
+    tpp.Proj_name
+    FROM fu_permission_role tpr
+    LEFT JOIN fu_permission_project tpp ON tpp.Proj_key = tpr.Proj_key
+    WHERE Role_status = 1 AND Role_sign = 2
+    AND Role_level = 3
+    AND tpp.Proj_status = 1
+    <if test="projKeys != null and projKeys.size > 0">
+      AND tpr.Proj_key
+      <foreach collection="projKeys" item="projKey" open="IN (" close=")" separator=",">
+        #{projKey}
+      </foreach>
+    </if>
+    <if test="roleBO.roleName != null and roleBO.roleName != ''">
+      AND Role_name LIKE CONCAT('%', #{roleBO.roleName,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="roleBO.creater != null and roleBO.creater != ''">
+      AND tpr.Creater = #{roleBO.creater}
+    </if>
+    <if test="roleBO.roleLevel != null and roleBO.roleLevel != ''">
+      AND Role_level = #{roleBO.roleLevel}
+    </if>
+    <if test="roleBO.projKey != null and roleBO.projKey != ''">
+      AND tpr.Proj_key = #{roleBO.projKey}
+    </if>
+    ORDER BY tpr.Id desc
+  </select>
 
-    <!-- 通过角色BO查询 -->
-    <select id="selectPageList" parameterType="com.future.pojo.bo.permission.FuPermissionRoleBO" resultType="com.future.pojo.vo.permission.FuPermissionRoleVO">
-        SELECT
-        tpr.Id,
-        Role_code,
-        Role_name,
-        Role_level,
-        Role_sign,
-        role_status,
-        tpr.Proj_key,
-        Role_desc,
-        tpr.Creater,
-        tpr.create_date,
-        tpp.Proj_name
-        FROM fu_permission_role tpr
-        LEFT JOIN fu_permission_project tpp ON tpp.Proj_key = tpr.Proj_key
-        WHERE Role_status = 1 AND Role_sign = 2
-        AND Role_level = 3
-        AND tpp.Proj_status = 1
-        <if test="projKeys != null and projKeys.size > 0">
-            AND tpr.Proj_key
-            <foreach collection="projKeys" item="projKey" open="IN (" close=")" separator=",">
-                #{projKey}
-            </foreach>
-        </if>
-        <if test="roleBO.roleName != null and roleBO.roleName != ''">
-            AND Role_name LIKE CONCAT('%', #{roleBO.roleName,jdbcType=VARCHAR},'%')
-        </if>
-        <if test="roleBO.creater != null and roleBO.creater != ''">
-            AND tpr.Creater = #{roleBO.creater}
-        </if>
-        <if test="roleBO.roleLevel != null and roleBO.roleLevel != ''">
-            AND Role_level = #{roleBO.roleLevel}
-        </if>
-        <if test="roleBO.projKey != null and roleBO.projKey != ''">
-            AND tpr.Proj_key = #{roleBO.projKey}
-        </if>
-        ORDER BY tpr.Id desc
-    </select>
+  <!-- 查询全部角色，超级管理员 -->
+  <select id="selectAllPageList" parameterType="com.future.pojo.bo.permission.FuPermissionRoleBO" resultType="com.future.pojo.vo.permission.FuPermissionRoleVO">
+    SELECT
+    tpr.Id,
+    Role_code,
+    Role_name,
+    Role_level,
+    Role_sign,
+    role_status,
+    tpr.Proj_key,
+    Role_desc,
+    tpr.Creater,
+    tpr.create_date,
+    tpp.Proj_name
+    FROM fu_permission_role tpr
+    LEFT JOIN fu_permission_project tpp ON tpp.Proj_key = tpr.Proj_key
+    WHERE Role_status = 1 AND tpp.Proj_status = 1
+    <if test="roleBO.roleName != null and roleBO.roleName != ''">
+      AND Role_name LIKE CONCAT('%', #{roleBO.roleName,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="roleBO.creater != null and roleBO.creater != ''">
+      AND tpr.Creater = #{roleBO.creater}
+    </if>
+    <if test="roleBO.roleLevel != null and roleBO.roleLevel != ''">
+      AND Role_level = #{roleBO.roleLevel}
+    </if>
+    <if test="roleBO.projKey != null and roleBO.projKey != ''">
+      AND tpr.Proj_key = #{roleBO.projKey}
+    </if>
+    ORDER BY tpr.Id desc
+  </select>
 
-    <!-- 查询全部角色，超级管理员 -->
-    <select id="selectAllPageList" parameterType="com.future.pojo.bo.permission.FuPermissionRoleBO" resultType="com.future.pojo.vo.permission.FuPermissionRoleVO">
-        SELECT
-        tpr.Id,
-        Role_code,
-        Role_name,
-        Role_level,
-        Role_sign,
-        role_status,
-        tpr.Proj_key,
-        Role_desc,
-        tpr.Creater,
-        tpr.create_date,
-        tpp.Proj_name
-        FROM fu_permission_role tpr
-        LEFT JOIN fu_permission_project tpp ON tpp.Proj_key = tpr.Proj_key
-        WHERE Role_status = 1 AND tpp.Proj_status = 1
-        <if test="roleBO.roleName != null and roleBO.roleName != ''">
-            AND Role_name LIKE CONCAT('%', #{roleBO.roleName,jdbcType=VARCHAR},'%')
-        </if>
-        <if test="roleBO.creater != null and roleBO.creater != ''">
-            AND tpr.Creater = #{roleBO.creater}
-        </if>
-        <if test="roleBO.roleLevel != null and roleBO.roleLevel != ''">
-            AND Role_level = #{roleBO.roleLevel}
-        </if>
-        <if test="roleBO.projKey != null and roleBO.projKey != ''">
-            AND tpr.Proj_key = #{roleBO.projKey}
-        </if>
-        ORDER BY tpr.Id desc
-    </select>
+  <!-- 通过工程项目KEY查询 -->
+  <select id="selectByProjKey" resultMap="Role">
+    SELECT
+    <include refid="baseColumnList"/>
+    FROM fu_permission_role
+    WHERE  Role_status =1
+    <if test="projKey != null">
+      AND Proj_key = #{projKey,jdbcType=INTEGER}
+    </if>
+  </select>
 
-    <!-- 通过工程项目KEY查询 -->
-    <select id="selectByProjKey" resultMap="Role">
-        SELECT
-        <include refid="baseColumnList"/>
-        FROM fu_permission_role
-        WHERE  Role_status =1
-        <if test="projKey != null">
-            AND Proj_key = #{projKey,jdbcType=INTEGER}
-        </if>
-    </select>
+  <!-- 通过工程项目KEY集合查询 -->
+  <select id="selectByProjKeys" resultMap="Role">
+    SELECT
+    <include refid="baseColumnList"/>
+    FROM fu_permission_role
+    WHERE  Role_status =1
+    <if test="projKeys != null and projKeys.size > 0">
+      AND Proj_key
+      <foreach collection="projKeys" item="projKey" open="IN (" close=")" separator=",">
+        #{projKey,jdbcType=INTEGER}
+      </foreach>
+    </if>
+  </select>
 
-    <!-- 通过工程项目KEY集合查询 -->
-    <select id="selectByProjKeys" resultMap="Role">
-        SELECT
-        <include refid="baseColumnList"/>
-        FROM fu_permission_role
-        WHERE  Role_status =1
-        <if test="projKeys != null and projKeys.size > 0">
-            AND Proj_key
-            <foreach collection="projKeys" item="projKey" open="IN (" close=")" separator=",">
-                #{projKey,jdbcType=INTEGER}
-            </foreach>
-        </if>
-    </select>
+  <!-- 通过主键集合删除 -->
+  <update id="deleteByIds">
+    UPDATE fu_permission_role
+    SET Role_status = 0
+    WHERE Id IN
+    <foreach collection="ids" item="id" open="(" close=")" separator=",">
+      #{id,jdbcType=INTEGER}
+    </foreach>
+  </update>
 
-    <!-- 通过主键集合删除 -->
-    <update id="deleteByIds">
-        UPDATE fu_permission_role
-        SET Role_status = 0
-        WHERE Id IN
-        <foreach collection="ids" item="id" open="(" close=")" separator=",">
-            #{id,jdbcType=INTEGER}
-        </foreach>
-    </update>
-
-    <!-- 通过角色名称以及主键集合查询所关联的角色信息集合 -->
-    <select id="selectByRoleNameAndIds" resultMap="Role">
-        SELECT
-        <include refid="baseColumnList"/>
-        FROM fu_permission_role
-        WHERE  Role_status =1
-        <if test="roleName != null and roleName != ''">
-            AND Role_name LIKE CONCAT ('%', #{roleName}, '%')
-        </if>
-        <if test="ids != null and ids.size > 0">
-            AND Proj_key
-            <foreach collection="ids" item="id" open="IN (" close=")" separator=",">
-                #{id,jdbcType=INTEGER}
-            </foreach>
-        </if>
-    </select>
-
+  <!-- 通过角色名称以及主键集合查询所关联的角色信息集合 -->
+  <select id="selectByRoleNameAndIds" resultMap="Role">
+    SELECT
+    <include refid="baseColumnList"/>
+    FROM fu_permission_role
+    WHERE  Role_status =1
+    <if test="roleName != null and roleName != ''">
+      AND Role_name LIKE CONCAT ('%', #{roleName}, '%')
+    </if>
+    <if test="ids != null and ids.size > 0">
+      AND Proj_key
+      <foreach collection="ids" item="id" open="IN (" close=")" separator=",">
+        #{id,jdbcType=INTEGER}
+      </foreach>
+    </if>
+  </select>
 </mapper>

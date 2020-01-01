@@ -341,6 +341,7 @@
   <select id="selectUserMTAccByCondition" parameterType="java.util.Map" resultType="com.future.pojo.bo.order.UserMTAccountBO">
     SELECT
     a.id accountId,
+    acc.id,
     acc.mt_acc_id mtAccId,
     acc.is_signal isSignal,
     acc.is_chief isChief,
@@ -392,8 +393,8 @@
       <if test="userId != null">
         and acc.user_id = #{userId,jdbcType=INTEGER}
       </if>
-      <if test="accountId != null">
-        and  acc.id = #{accountId,jdbcType=INTEGER}
+      <if test="id != null">
+        and  acc.id = #{id,jdbcType=INTEGER}
       </if>
       <if test="mtAccId != null">
         and acc.mt_acc_id = #{mtAccId,jdbcType=INTEGER}

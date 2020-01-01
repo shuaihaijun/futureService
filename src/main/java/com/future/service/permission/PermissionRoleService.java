@@ -39,9 +39,6 @@ import java.util.List;
 @Service
 public class PermissionRoleService extends ServiceImpl<FuPermissionRoleMapper, FuPermissionRole> {
 
-
-    @Autowired
-    private PermissionProjectService permissionProjectService;
     @Autowired
     private FuPermissionRoleMapper fuPermissionRoleMapper;
     @Autowired
@@ -52,6 +49,8 @@ public class PermissionRoleService extends ServiceImpl<FuPermissionRoleMapper, F
     private PermissionUserRoleService permissionUserRoleService;
     @Autowired
     UserCommonService userCommonService;
+    @Value("${newUserRoleId}")
+    public String newUserRoleId;
 
     /**
      * 新增角色信息
@@ -314,4 +313,16 @@ public class PermissionRoleService extends ServiceImpl<FuPermissionRoleMapper, F
         return list;
     }
 
+
+    /**
+     * 根据projectId获取默认角色
+     * @param projectId
+     * @return
+     */
+    public FuPermissionRole getDefaultRoleByProject(Integer projectId){
+        if(projectId==null){
+            projectId= 0;
+        }
+        return selectOne(new EntityWrapper<FuPermissionRole>().eq(FuPermissionRole.PROJ_KEY,projectId).and().eq(FuPermissionRole.ROLE_DEFAULT,1));
+    }
 }

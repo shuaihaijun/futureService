@@ -15,6 +15,8 @@ public class FuUser {
     public static final String IS_VERIFIED = "is_verified";
     public static final String IS_ACCOUNT = "is_account";
     public static final String INTRODUCER = "introducer";
+    public static final String EMAIL = "email";
+    public static final String MOBILE = "mobile";
     /**
      *
      */
@@ -645,4 +647,5 @@ public class FuUser {
     public void setModifyDate(Date modifyDate) {
         this.modifyDate = modifyDate;
     }
+
 }

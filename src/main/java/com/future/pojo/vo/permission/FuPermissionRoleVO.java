@@ -65,6 +65,12 @@ public class FuPermissionRoleVO implements Serializable {
      */
     @ApiModelProperty(value = "角色标识  1：特殊角色  2：普通角色")
     private Integer roleSign;
+
+    /**
+     * 新用户默认角色  0：否  1：是
+     */
+    @ApiModelProperty(value = "新用户默认角色  0：否  1：是")
+    private Integer roleDefault;
     /**
      * 创建人姓名
      */

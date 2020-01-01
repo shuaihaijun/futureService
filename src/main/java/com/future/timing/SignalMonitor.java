@@ -34,7 +34,7 @@ public class SignalMonitor {
     /**
      * 监听信号源 （监听周期 0.2秒）
      */
-    @Scheduled(cron = "* * * 1 * ?")
+//    @Scheduled(cron = "* * * 1 * ?")
     public void monitor(){
         //从缓存中查询信号源列表
         try(ZContext zContext=new ZContext()) {

@@ -113,7 +113,7 @@ public class FuOrderFollowInfoService extends ServiceImpl<FuOrderFollowInfoMappe
         /*查询用户历史订单*/
         Map acountMap=new HashMap();
         if(!StringUtils.isEmpty(accountId)){
-            acountMap.put("accountId",accountId);
+            acountMap.put("id",accountId);
         }else {
             /*默认查询主账户号*/
             acountMap.put("userId",userId);
@@ -124,6 +124,7 @@ public class FuOrderFollowInfoService extends ServiceImpl<FuOrderFollowInfoMappe
             log.error("根据时间段查询用户历史订单|用户MT4账户未绑定！");
             throw new BusinessException("根据时间段查询用户历史订单|用户MT4账户未绑定！");
         }
+        // todo 考虑多账户问题
         Integer userType=mts.get(0).getUserType();
         String server=String.valueOf(mts.get(0).getServerName());
         String mtAccId=String.valueOf(mts.get(0).getMtAccId());
@@ -194,7 +195,7 @@ public class FuOrderFollowInfoService extends ServiceImpl<FuOrderFollowInfoMappe
             /*默认查询主账户号*/
             acountMap.put("username",username);
         }else {
-            acountMap.put("accountId",accountId);
+            acountMap.put("id",accountId);
         }
         /*查询用户账户信息*/
         List<UserMTAccountBO> mts= fuAccountMtService.getUserMTAccByCondition(acountMap);
@@ -202,6 +203,7 @@ public class FuOrderFollowInfoService extends ServiceImpl<FuOrderFollowInfoMappe
             log.error("根据时间段查询用户历史订单|用户MT4账户未绑定！");
             throw new BusinessException("根据时间段查询用户历史订单|用户MT4账户未绑定！");
         }
+        //TODO 多账户需要考虑
         String server=String.valueOf(mts.get(0).getServerName());
         String mtAccId=String.valueOf(mts.get(0).getMtAccId());
         String mtPassword=String.valueOf(mts.get(0).getMtPasswordTrade());

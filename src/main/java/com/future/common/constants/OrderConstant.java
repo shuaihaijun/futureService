@@ -30,6 +30,7 @@ public class OrderConstant {
 	public static final int ORDER_TYPE_SELLLIMIT=3;
 	public static final int ORDER_TYPE_BUYSTOP=4;
 	public static final int ORDER_TYPE_SELLSTOP=5;
+	public static final int ORDER_TYPE_DEPOSIT=6;
 
 	//跟单状态（0 已完结，1 进行中）
 	public static final int ORDER_FOLLOW_ORDERS_STATE_DONE=0;

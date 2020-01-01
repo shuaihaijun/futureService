@@ -34,7 +34,7 @@ public class FollowMonitor {
     /**
      * 监听信号源
      */
-    @Scheduled(cron = "* * * 1 * ?")
+//    @Scheduled(cron = "* * * 1 * ?")
     public void monitor(){
         //从缓存中查询信号源列表
         try(ZContext zContext=new ZContext()) {

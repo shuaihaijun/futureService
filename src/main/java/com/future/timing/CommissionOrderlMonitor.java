@@ -51,15 +51,15 @@ public class CommissionOrderlMonitor {
     /**
      * 监听信号源 （每天晚上1点开始触发同步）
      */
-    @Scheduled(cron = "0 0 1 * * ?")
+    @Scheduled(cron = "0 0 2 * * ?")
     public void monitor(){
 
         Map conditionMap=new HashMap();
         /*已验证的 合作平台的 MT账户*/
         conditionMap.put("isAccount", CommonConstant.COMMON_YES);
         conditionMap.put("isChief",CommonConstant.COMMON_YES);
-        Date daySumBegin= DateUtil.getFutureDate(new Date(),-11);
-//        Date daySumBegin=new Date();
+//        Date daySumBegin= DateUtil.getFutureDate(new Date(),-30);
+        Date daySumBegin=new Date();
         List<FuAccountCommissionFlow> flows=new ArrayList<>();
         FuAccountCommission accountCommission=new FuAccountCommission();
         PageInfoHelper helper = new PageInfoHelper();

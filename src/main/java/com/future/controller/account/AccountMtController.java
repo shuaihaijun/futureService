@@ -42,7 +42,7 @@ public class AccountMtController {
         String accountId=requestMap.getString("accountId");
         Map conditonMap=new HashMap();
         if(!StringUtils.isEmpty(accountId)){
-            conditonMap.put("accountId",accountId);
+            conditonMap.put("id",accountId);
         }else if(!StringUtils.isEmpty(username) || !StringUtils.isEmpty(userId)){
             /*默认查询主账户号*/
             conditonMap.put("userId",userId);
@@ -79,7 +79,7 @@ public class AccountMtController {
         String accountId=requestMap.getString("accountId");
         Map conditonMap=new HashMap();
         if(!StringUtils.isEmpty(accountId)){
-            conditonMap.put("accountId",accountId);
+            conditonMap.put("id",accountId);
         }else if(!StringUtils.isEmpty(username) || !StringUtils.isEmpty(userId)){
             /*默认查询主账户号*/
             conditonMap.put("userId",userId);
@@ -131,7 +131,7 @@ public class AccountMtController {
             conditonMap.put("mtAccId",mtAccId);
         }
         if(!StringUtils.isEmpty(accountId)){
-            conditonMap.put("accountId",accountId);
+            conditonMap.put("id",accountId);
         }
         List<UserMTAccountBO> accouts=  fuAccountMtService.queryUsersMtAccount(conditonMap);
 

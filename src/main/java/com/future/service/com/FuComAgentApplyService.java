@@ -308,8 +308,7 @@ public class FuComAgentApplyService extends ServiceImpl<FuComAgentApplyMapper,Fu
                         user.setUserType(AgentConstant.AGENT_TYPE_MIB);
                         agent.setAgentType(AgentConstant.AGENT_TYPE_MIB);
                         userRole.setRoleId(UserRoleCode.USER_ROLE_MIB.code());
-                    }
-                    if(user.getUserType()==AgentConstant.AGENT_TYPE_MIB){
+                    }else if(user.getUserType()==AgentConstant.AGENT_TYPE_MIB){
                         user.setUserType(AgentConstant.AGENT_TYPE_PIB);
                         agent.setAgentType(AgentConstant.AGENT_TYPE_PIB);
                         userRole.setRoleId(UserRoleCode.USER_ROLE_PIB.code());
@@ -326,8 +325,7 @@ public class FuComAgentApplyService extends ServiceImpl<FuComAgentApplyMapper,Fu
                         user.setUserType(AgentConstant.AGENT_TYPE_MIB);
                         agent.setAgentType(AgentConstant.AGENT_TYPE_MIB);
                         userRole.setRoleId(UserRoleCode.USER_ROLE_MIB.code());
-                    }
-                    if(user.getUserType()==AgentConstant.AGENT_TYPE_MIB){
+                    }else if(user.getUserType()==AgentConstant.AGENT_TYPE_MIB){
                         user.setUserType(AgentConstant.AGENT_TYPE_IB);
                         agent.setAgentType(AgentConstant.AGENT_TYPE_IB);
                         userRole.setRoleId(UserRoleCode.USER_ROLE_IB.code());

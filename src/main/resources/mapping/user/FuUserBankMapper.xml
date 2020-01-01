@@ -5,14 +5,17 @@
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="user_id" jdbcType="INTEGER" property="userId" />
     <result column="bank_name" jdbcType="VARCHAR" property="bankName" />
+    <result column="host_name" jdbcType="VARCHAR" property="hostName" />
     <result column="code" jdbcType="VARCHAR" property="code" />
     <result column="card_adress" jdbcType="VARCHAR" property="cardAdress" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime" />
     <result column="is_chief" jdbcType="TINYINT" property="isChief" />
+    <result column="is_checked" jdbcType="TINYINT" property="isChecked" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, user_id, bank_name, code, card_adress, create_time, modify_time, is_chief
+    id, user_id, bank_name, host_name, code, card_adress, create_time, modify_time, is_chief, 
+    is_checked
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -26,11 +29,13 @@
   </delete>
   <insert id="insert" parameterType="com.future.entity.user.FuUserBank">
     insert into fu_user_bank (id, user_id, bank_name, 
-      code, card_adress, create_time, 
-      modify_time, is_chief)
+      host_name, code, card_adress, 
+      create_time, modify_time, is_chief, 
+      is_checked)
     values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{bankName,jdbcType=VARCHAR}, 
-      #{code,jdbcType=VARCHAR}, #{cardAdress,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{modifyTime,jdbcType=TIMESTAMP}, #{isChief,jdbcType=TINYINT})
+      #{hostName,jdbcType=VARCHAR}, #{code,jdbcType=VARCHAR}, #{cardAdress,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{modifyTime,jdbcType=TIMESTAMP}, #{isChief,jdbcType=TINYINT}, 
+      #{isChecked,jdbcType=TINYINT})
   </insert>
   <insert id="insertSelective" parameterType="com.future.entity.user.FuUserBank">
     insert into fu_user_bank
@@ -43,6 +48,9 @@
       </if>
       <if test="bankName != null">
         bank_name,
+      </if>
+      <if test="hostName != null">
+        host_name,
       </if>
       <if test="code != null">
         code,
@@ -59,6 +67,9 @@
       <if test="isChief != null">
         is_chief,
       </if>
+      <if test="isChecked != null">
+        is_checked,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -69,6 +80,9 @@
       </if>
       <if test="bankName != null">
         #{bankName,jdbcType=VARCHAR},
+      </if>
+      <if test="hostName != null">
+        #{hostName,jdbcType=VARCHAR},
       </if>
       <if test="code != null">
         #{code,jdbcType=VARCHAR},
@@ -85,6 +99,9 @@
       <if test="isChief != null">
         #{isChief,jdbcType=TINYINT},
       </if>
+      <if test="isChecked != null">
+        #{isChecked,jdbcType=TINYINT},
+      </if>
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.future.entity.user.FuUserBank">
@@ -95,6 +112,9 @@
       </if>
       <if test="bankName != null">
         bank_name = #{bankName,jdbcType=VARCHAR},
+      </if>
+      <if test="hostName != null">
+        host_name = #{hostName,jdbcType=VARCHAR},
       </if>
       <if test="code != null">
         code = #{code,jdbcType=VARCHAR},
@@ -111,6 +131,9 @@
       <if test="isChief != null">
         is_chief = #{isChief,jdbcType=TINYINT},
       </if>
+      <if test="isChecked != null">
+        is_checked = #{isChecked,jdbcType=TINYINT},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -118,11 +141,13 @@
     update fu_user_bank
     set user_id = #{userId,jdbcType=INTEGER},
       bank_name = #{bankName,jdbcType=VARCHAR},
+      host_name = #{hostName,jdbcType=VARCHAR},
       code = #{code,jdbcType=VARCHAR},
       card_adress = #{cardAdress,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       modify_time = #{modifyTime,jdbcType=TIMESTAMP},
-      is_chief = #{isChief,jdbcType=TINYINT}
+      is_chief = #{isChief,jdbcType=TINYINT},
+      is_checked = #{isChecked,jdbcType=TINYINT}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

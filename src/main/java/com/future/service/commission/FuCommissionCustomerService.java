@@ -172,7 +172,12 @@ public class FuCommissionCustomerService extends ServiceImpl<FuCommissionCustome
         /*for(FuCommissionCustomer commissionCustomer:commissions){
             fuCommissionCustomerMapper.insertSelective(commissionCustomer);
         }*/
-
+        FuUser user= adminService.selectById(levelUserId);
+        if(user.getUserType()==fuUser.getUserType()){
+           // 同级别 只计算直推（1级）
+            return;
+        }
+        // TODO 确定
         /*继续下一级别*/
         if(level.equals(CommissionConstant.COMMISSION_USER_LEVEL_THIRD)){
             return;

@@ -156,7 +156,7 @@ public class FuOrderCustomerService extends ServiceImpl<FuOrderCustomerMapper, F
                         if(followInfo!=null){
                             /*跟单时 已处理过的数据=*/
                             continue;
-                        };
+                        }
                         /*转换订单*/
                         FuOrderCustomer customerInfo= ConvertUtil.convertOrderCustomer(fuOrderInfo);
                         customerInfo.setUserId(userId);
@@ -164,9 +164,17 @@ public class FuOrderCustomerService extends ServiceImpl<FuOrderCustomerMapper, F
                         customerInfo.setMtServerId(userMTAccountBO.getServerId());
                         customerInfo.setMtServerName(accountInfo.getServer());
                         customerInfo.setOrderState(OrderConstant.ORDER_STATE_CLOSE);
-                        customers.add(customerInfo);
+
                         /*保存用户自交易订单*/
                         fuOrderCustomerMapper.insertSelective(customerInfo);
+                        //计算出入金
+                        if(customerInfo.getOrderType()==OrderConstant.ORDER_TYPE_DEPOSIT){
+                            //TODO  计算出入金
+                        }
+                        if(customerInfo.getOrderType()==OrderConstant.ORDER_TYPE_BUY
+                            ||customerInfo.getOrderType()==OrderConstant.ORDER_TYPE_SELL){
+                            customers.add(customerInfo);
+                        }
                     }
                     /*用户自交易订单 计算代理佣金*/
                     fuCommissionCustomerService.dealUserOrderCommission(userId,customers);

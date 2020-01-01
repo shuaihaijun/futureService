@@ -119,12 +119,6 @@ public class FuAccountMtService extends ServiceImpl<FuAccountMtMapper, FuAccount
 
         FuAccountMt fuAccountMt=JSONObject.toJavaObject(jsonData,FuAccountMt.class);
 
-        log.info(jsonData.toJSONString());
-
-        if(!ObjectUtils.isEmpty(jsonData.get("accountId"))){
-            fuAccountMt.setId(jsonData.getInteger("accountId"));
-        }
-
         /*校验必要参数*/
         if(fuAccountMt.getUserId()==null
                 ||fuAccountMt.getUserId()==0){
@@ -153,8 +147,14 @@ public class FuAccountMtService extends ServiceImpl<FuAccountMtMapper, FuAccount
         fuAccountMt.setBrokerId(server.getBrokerId());
         fuAccountMt.setBrokerName(server.getBrokerName());
 
+        FuAccountMt mt=selectOne(new EntityWrapper<FuAccountMt>().eq(FuAccountMt.MT_ACC_ID,fuAccountMt.getMtAccId())
+                .and().eq(FuAccountMt.USER_ID,fuAccountMt.getUserId()));
+
         /*保存账户信息*/
         if(fuAccountMt.getId()!=null&&fuAccountMt.getId()>0){
+            fuAccountMtMapper.updateByPrimaryKeySelective(fuAccountMt);
+        }else if(mt!=null){
+            fuAccountMt.setId(mt.getId());
             fuAccountMtMapper.updateByPrimaryKeySelective(fuAccountMt);
         }else {
             fuAccountMtMapper.insertSelective(fuAccountMt);

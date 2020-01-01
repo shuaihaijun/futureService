@@ -5,14 +5,15 @@ import java.math.BigDecimal;
 /*用户MT账户BO*/
 public class UserMTAccountBO {
 
-    private Integer accountId;//账户id
+    private Integer id;//用户社区MT账户id
+    private Integer accountId;//用户社区账户id
+    private String mtAccId;//mt平台账号
     private Integer userId;//用户id
     private Integer serverId;//服务器ID
     private Integer brokerId;//经纪人ID
     private String brokerName;//代理名称
     private int serverState;//服务器状态
     private String serverName;//服务器名称
-    private String mtAccId;//mt平台账号
     private String mtPasswordTrade;//交易密码
     private String mtPasswordWatch;//观摩密码
     private int passwordTradeChecked;//交易密码是否已校验（0 否，1是
@@ -365,5 +366,13 @@ public class UserMTAccountBO {
 
     public void setPlatType(Integer platType) {
         this.platType = platType;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 }

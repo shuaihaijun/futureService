@@ -101,6 +101,7 @@ public class FuUserFollowsService extends ServiceImpl<FuUserFollowsMapper, FuUse
         Map conMap=new HashMap();
         conMap.put("userId",userId);
         FuProductSignal signal=fuProductSignalMapper.selectByPrimaryKey(Integer.parseInt(signalId));
+        //todo 考虑多账户问题
         List<UserMTAccountBO> userAccounts= fuAccountMtService.getUserMTAccByCondition(conMap);
         if(ObjectUtils.isEmpty(signal)){
             log.error("根据信号源ID 查询信号源失败！");

@@ -5,18 +5,12 @@ import com.future.entity.permission.FuPermissionRole;
 import com.future.pojo.bo.permission.FuPermissionRoleBO;
 import com.future.pojo.vo.permission.FuPermissionRoleVO;
 import org.apache.ibatis.annotations.Param;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-/**
- * 角色模块Mapper接口
- *
- * @author Admin
- * @version: 1.0
- */
-@Repository
-public interface FuPermissionRoleMapper extends BaseMapper<FuPermissionRole> {
+@Component
+public interface FuPermissionRoleMapper  extends BaseMapper<FuPermissionRole> {
 
     /**
      * 通过主键集合删除角色信息
@@ -67,5 +61,15 @@ public interface FuPermissionRoleMapper extends BaseMapper<FuPermissionRole> {
      * @return 分页数据
      */
     List<FuPermissionRoleVO> selectPageList(@Param("roleBO") FuPermissionRoleBO fuPermissionRoleBO, @Param("projKeys") List<Integer> projKeys);
+    int deleteByPrimaryKey(Integer id);
 
+    Integer insert(FuPermissionRole record);
+
+    int insertSelective(FuPermissionRole record);
+
+    FuPermissionRole selectByPrimaryKey(Integer id);
+
+    int updateByPrimaryKeySelective(FuPermissionRole record);
+
+    int updateByPrimaryKey(FuPermissionRole record);
 }

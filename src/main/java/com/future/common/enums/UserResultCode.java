@@ -21,6 +21,7 @@ public enum UserResultCode implements ResultCode {
     MEMBER_IMPROVING_MASTER_POST_INFO(200008, "请先完善人员信息！"),
     USER_PASSWORD_ERROR(200009, "用户名或密码错误！"),
     USER_STATE_EXCEPTION(200010, "用户状态异常！"),
+    USER_INTRODUCE_NOTEXIST_ERROR(200010, "用户邀请码不存在！"),
     PASSWORD_ERROR(200110, "用户密码错误！");
 
     /**
