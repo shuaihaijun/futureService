@@ -10,6 +10,7 @@ public class FuPermissionRole {
 
     public static String PROJ_KEY= "proj_Key";
     public static String ROLE_DEFAULT= "role_default";
+    public static String ROLE_SIGN= "role_sign";
     /**
      * 主键
      */
@@ -37,7 +38,7 @@ public class FuPermissionRole {
     private Integer roleStatus;
 
     /**
-     * 角色类型 1、特殊角色 2、普通角色
+     * 角色用户类型（user,userType）
      */
     private Integer roleSign;
 
@@ -152,16 +153,16 @@ public class FuPermissionRole {
     }
 
     /**
-     * 角色类型 1、特殊角色 2、普通角色
-     * @return role_sign 角色类型 1、特殊角色 2、普通角色
+     * 角色用户类型（user,userType）
+     * @return role_sign 角色用户类型（user,userType）
      */
     public Integer getRoleSign() {
         return roleSign;
     }
 
     /**
-     * 角色类型 1、特殊角色 2、普通角色
-     * @param roleSign 角色类型 1、特殊角色 2、普通角色
+     * 角色用户类型（user,userType）
+     * @param roleSign 角色用户类型（user,userType）
      */
     public void setRoleSign(Integer roleSign) {
         this.roleSign = roleSign;

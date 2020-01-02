@@ -8,7 +8,6 @@ import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.future.common.constants.AgentConstant;
 import com.future.common.constants.SignalConstant;
 import com.future.common.enums.GlobalResultCode;
-import com.future.common.enums.UserResultCode;
 import com.future.common.enums.UserRoleCode;
 import com.future.common.exception.BusinessException;
 import com.future.common.exception.DataConflictException;
@@ -18,25 +17,30 @@ import com.future.common.util.StringUtils;
 import com.future.entity.account.FuAccountInfo;
 import com.future.entity.com.FuComAgent;
 import com.future.entity.com.FuComAgentApply;
+import com.future.entity.permission.FuPermissionRole;
+import com.future.entity.permission.FuPermissionUserProject;
 import com.future.entity.permission.FuPermissionUserRole;
 import com.future.entity.product.FuProductSignalApply;
 import com.future.entity.user.FuUser;
 import com.future.mapper.com.FuComAgentApplyMapper;
-import com.future.mapper.com.FuComAgentMapper;
 import com.future.service.account.FuAccountCommissionService;
 import com.future.service.account.FuAccountInfoService;
+import com.future.service.permission.PermissionRoleService;
+import com.future.service.permission.PermissionUserProjectService;
 import com.future.service.permission.PermissionUserRoleService;
 import com.future.service.user.AdminService;
 import com.future.service.user.UserCommonService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 @Service
@@ -54,6 +58,10 @@ public class FuComAgentApplyService extends ServiceImpl<FuComAgentApplyMapper,Fu
     FuComAgentService fuComAgentService;
     @Autowired
     PermissionUserRoleService permissionUserRoleService;
+    @Autowired
+    PermissionUserProjectService permissionUserProjectService;
+    @Autowired
+    PermissionRoleService permissionRoleService;
     @Autowired
     FuComAgentApplyMapper agentApplyMapper;
     @Autowired
@@ -99,7 +107,7 @@ public class FuComAgentApplyService extends ServiceImpl<FuComAgentApplyMapper,Fu
         }
 
         if(!ObjectUtils.isEmpty(conditionMap.get("id"))){
-            wrapper.eq(FuComAgentApply.ID,String.valueOf(conditionMap.get("id")));
+            wrapper.eq(FuComAgentApply.AGENT_ID,String.valueOf(conditionMap.get("id")));
         }
         if(!ObjectUtils.isEmpty(conditionMap.get("agentName"))){
             wrapper.eq(FuComAgentApply.AGENT_NAME,String.valueOf(conditionMap.get("agentName")));
@@ -261,7 +269,6 @@ public class FuComAgentApplyService extends ServiceImpl<FuComAgentApplyMapper,Fu
             if(state== AgentConstant.AGENT_APPLY_STATE_DONE){
                 /*审核通过*/
                 agentApply.setApplyState(AgentConstant.AGENT_APPLY_STATE_DONE);
-
                 FuComAgent agent= new FuComAgent();
                 BeanUtil.copyProperties(agentApply,agent);
                 /*初始化代理数据*/
@@ -272,6 +279,9 @@ public class FuComAgentApplyService extends ServiceImpl<FuComAgentApplyMapper,Fu
                     log.error("查询用户信息错误！");
                     throw new BusinessException("查询用户信息错误！");
                 }
+                Integer agentType=AgentConstant.AGENT_TYPE_IB;
+                FuPermissionUserProject userProject= permissionUserProjectService.selectOne(new EntityWrapper<FuPermissionUserProject>()
+                        .eq(FuPermissionUserProject.USER_ID,user.getId()));
                 FuPermissionUserRole userRole=permissionUserRoleService.selectOne((new EntityWrapper<FuPermissionUserRole>().eq(FuPermissionUserRole.USER_ID,agentApply.getUserId())));
                 if(userRole==null){
                     log.error("查询用户信息错误！");
@@ -292,9 +302,7 @@ public class FuComAgentApplyService extends ServiceImpl<FuComAgentApplyMapper,Fu
                     agent.setAgentType(AgentConstant.AGENT_TYPE_IB);
                     /**/
                     user.setUserType(AgentConstant.AGENT_TYPE_IB);
-
-                    /*设置角色信息*/
-                    userRole.setRoleId(UserRoleCode.USER_ROLE_IB.code());
+                    agentType=AgentConstant.AGENT_TYPE_IB;
                     fuComAgentService.insertSelective(agent);
 
                 }else if(agentApply.getApplyType().equals(AgentConstant.AGENT_APPLY_TYPE_UP)){
@@ -307,13 +315,16 @@ public class FuComAgentApplyService extends ServiceImpl<FuComAgentApplyMapper,Fu
                     if(user.getUserType()==AgentConstant.AGENT_TYPE_IB){
                         user.setUserType(AgentConstant.AGENT_TYPE_MIB);
                         agent.setAgentType(AgentConstant.AGENT_TYPE_MIB);
-                        userRole.setRoleId(UserRoleCode.USER_ROLE_MIB.code());
+                        agentType=AgentConstant.AGENT_TYPE_MIB;
                     }else if(user.getUserType()==AgentConstant.AGENT_TYPE_MIB){
                         user.setUserType(AgentConstant.AGENT_TYPE_PIB);
                         agent.setAgentType(AgentConstant.AGENT_TYPE_PIB);
-                        userRole.setRoleId(UserRoleCode.USER_ROLE_PIB.code());
+                        agentType=AgentConstant.AGENT_TYPE_PIB;
                     }
                     fuComAgentService.updateById(agent);
+                    /*设置角色信息*/
+                    FuPermissionRole defaultRole= permissionRoleService.getRoleByProject(userProject.getProjKey(),AgentConstant.AGENT_TYPE_IB);
+                    userRole.setRoleId(defaultRole.getId());
                 }else if(agentApply.getApplyType().equals(AgentConstant.AGENT_APPLY_TYPE_DOWN)){
                     //降级
                     if(user.getUserType()!=AgentConstant.AGENT_TYPE_PIB&&user.getUserType()!=AgentConstant.AGENT_TYPE_MIB){
@@ -324,22 +335,27 @@ public class FuComAgentApplyService extends ServiceImpl<FuComAgentApplyMapper,Fu
                     if(user.getUserType()==AgentConstant.AGENT_TYPE_PIB){
                         user.setUserType(AgentConstant.AGENT_TYPE_MIB);
                         agent.setAgentType(AgentConstant.AGENT_TYPE_MIB);
-                        userRole.setRoleId(UserRoleCode.USER_ROLE_MIB.code());
+                        agentType=AgentConstant.AGENT_TYPE_MIB;
                     }else if(user.getUserType()==AgentConstant.AGENT_TYPE_MIB){
                         user.setUserType(AgentConstant.AGENT_TYPE_IB);
                         agent.setAgentType(AgentConstant.AGENT_TYPE_IB);
-                        userRole.setRoleId(UserRoleCode.USER_ROLE_IB.code());
+                        agentType=AgentConstant.AGENT_TYPE_IB;
                     }
                     fuComAgentService.updateById(agent);
                 }else {
                     log.error("审核状态错误！");
                     throw new DataConflictException(GlobalResultCode.PARAM_IS_INVALID,"核状态错误！");
                 }
+                /*设置角色信息*/
+                FuPermissionRole defaultRole= permissionRoleService.getRoleByProject(userProject.getProjKey(),agentType);
+                if(defaultRole!=null){
+                    userRole.setRoleId(defaultRole.getId());
+                    /*分配相关角色*/
+                    permissionUserRoleService.updateById(userRole);
+                }
 
                 /*变更用户类型*/
                 adminService.updateById(user);
-                /*分配相关角色*/
-                permissionUserRoleService.updateById(userRole);
             }else if(state==SignalConstant.SIGNAL_APPLY_STATE_UNPASS){
                 /*审核未通过*/
                 agentApply.setApplyState(AgentConstant.AGENT_APPLY_STATE_FAIL);

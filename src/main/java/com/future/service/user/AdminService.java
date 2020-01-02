@@ -12,6 +12,7 @@ import com.future.common.enums.GlobalResultCode;
 import com.future.common.enums.ResultCode;
 import com.future.common.enums.UserResultCode;
 import com.future.common.exception.*;
+import com.future.common.helper.PageInfoHelper;
 import com.future.common.result.ResultMsg;
 import com.future.common.util.CommonUtil;
 import com.future.common.util.FileUtil;
@@ -32,6 +33,7 @@ import com.future.service.com.FuComAgentService;
 import com.future.service.permission.PermissionRoleService;
 import com.future.service.permission.PermissionUserProjectService;
 import com.future.service.permission.PermissionUserRoleService;
+import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -267,7 +269,7 @@ public class AdminService extends ServiceImpl<FuUserMapper,FuUser> {
 
 
         /*设置普通用户角色*/
-        FuPermissionRole defaultRole= permissionRoleService.getDefaultRoleByProject(userProject.getProjKey());
+        FuPermissionRole defaultRole= permissionRoleService.getDefaultRoleByProject(userProject.getProjKey(),newUser.getUserType());
         FuPermissionUserRole userRole=new FuPermissionUserRole();
         userRole.setUserId(newUser.getId());
         if(defaultRole==null){
@@ -627,5 +629,49 @@ public class AdminService extends ServiceImpl<FuUserMapper,FuUser> {
             throw new ParameterInvalidException("查询用户介绍人信息 参数为空！");
         }
         return fuUserMapper.findUserIntroducer(userId);
+    }
+
+    /**
+     * 根据介绍人查询用户列表
+     * @param condition
+     * @return
+     */
+    public PageInfo<FuUser> queryAgentUserList(FuUser user, PageInfoHelper helper){
+        /*判断查询条件*/
+        if(user == null||user.getIntroducer()==null){
+            log.error("查询用户列表,获取参数为空！");
+            throw new ParameterInvalidException("查询用户列表,获取参数为空！");
+        }
+
+        EntityWrapper<FuUser> wrapper=new EntityWrapper<FuUser>();
+        if(user.getId()!=null ){
+            wrapper.eq(FuUser.USER_ID,user.getId());
+        }
+        if(user.getUsername()!=null ){
+            wrapper.eq(FuUser.USER_NAME,user.getUsername());
+        }
+        if(user.getUserType()!=null){
+            wrapper.eq(FuUser.USER_TYPE,user.getUserType());
+        }
+        if(user.getUserState()!=null){
+            wrapper.eq(FuUser.USER_STATE,user.getUserState());
+        }
+        if(user.getIsVerified()!=null){
+            wrapper.eq(FuUser.IS_VERIFIED,user.getIsVerified());
+        }
+        if(user.getIsAccount()!=null){
+            wrapper.eq(FuUser.IS_ACCOUNT,user.getIsAccount());
+        }
+        if(user.getIntroducer()!=null){
+            wrapper.eq(FuUser.INTRODUCER,user.getIntroducer());
+        }
+
+        if(helper==null){
+            helper=new PageInfoHelper();
+        }
+        PageHelper.startPage(helper.getPageNo(),helper.getPageSize());
+        List<FuUser> users= selectList(wrapper);
+
+        return new PageInfo<FuUser>(users);
     }
 }

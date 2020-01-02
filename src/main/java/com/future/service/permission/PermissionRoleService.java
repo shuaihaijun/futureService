@@ -2,6 +2,7 @@ package com.future.service.permission;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.future.common.constants.UserConstant;
 import com.future.common.enums.GlobalResultCode;
 import com.future.common.enums.RmsResultCode;
 import com.future.common.exception.BusinessException;
@@ -86,12 +87,12 @@ public class PermissionRoleService extends ServiceImpl<FuPermissionRoleMapper, F
         user = new AdminInfo();
         permissionRole.setCreater(user.getAdminName());
         boolean isSuccess = true;
-        if (permissionRole.getId()>0) {
+        if (permissionRole.getId()!=null&&permissionRole.getId()>0) {
             /*修改*/
             isSuccess = updateById(permissionRole);
         }else {
             // 保存
-            isSuccess = insert(permissionRole);
+            fuPermissionRoleMapper.insertSelective(permissionRole);
         }
         if (!isSuccess) {
             throw new BusinessException(RmsResultCode.PERMISSION_ROLE_DATA_SAVE_FAILURE);
@@ -317,12 +318,53 @@ public class PermissionRoleService extends ServiceImpl<FuPermissionRoleMapper, F
     /**
      * 根据projectId获取默认角色
      * @param projectId
+     * @param userType
      * @return
      */
-    public FuPermissionRole getDefaultRoleByProject(Integer projectId){
+    public FuPermissionRole getDefaultRoleByProject(Integer projectId,Integer userType){
         if(projectId==null){
             projectId= 0;
         }
-        return selectOne(new EntityWrapper<FuPermissionRole>().eq(FuPermissionRole.PROJ_KEY,projectId).and().eq(FuPermissionRole.ROLE_DEFAULT,1));
+        if(userType==null){
+            userType= UserConstant.USER_TYPE_NORMAL;
+        }
+        FuPermissionRole role= selectOne(new EntityWrapper<FuPermissionRole>().eq(FuPermissionRole.PROJ_KEY,projectId).and().eq(FuPermissionRole.ROLE_SIGN,userType));
+        if(role!=null){
+            return role;
+        }
+        //没查到默认普通角色
+        if(userType!=UserConstant.USER_TYPE_NORMAL){
+            userType= UserConstant.USER_TYPE_NORMAL;
+            role= selectOne(new EntityWrapper<FuPermissionRole>().eq(FuPermissionRole.PROJ_KEY,projectId).and().eq(FuPermissionRole.ROLE_SIGN,userType));
+            if(role!=null){
+                return role;
+            }
+        }
+        //没查到 默认社区普通角色
+        projectId= 0;
+        userType= UserConstant.USER_TYPE_NORMAL;
+        role= selectOne(new EntityWrapper<FuPermissionRole>().eq(FuPermissionRole.PROJ_KEY,projectId).and().eq(FuPermissionRole.ROLE_SIGN,userType));
+        if(role!=null){
+            return role;
+        }else {
+            return null;
+        }
+    }
+
+    /**
+     * 根据projectId获取角色
+     * @param projectId
+     * @param userType
+     * @return
+     */
+    public FuPermissionRole getRoleByProject(Integer projectId,Integer userType){
+        if(projectId==null){
+            return null;
+        }
+        if(userType==null){
+            return null;
+        }
+        FuPermissionRole role= selectOne(new EntityWrapper<FuPermissionRole>().eq(FuPermissionRole.PROJ_KEY,projectId).and().eq(FuPermissionRole.ROLE_SIGN,userType));
+        return role;
     }
 }

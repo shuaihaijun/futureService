@@ -14,6 +14,8 @@ import com.future.common.exception.DataConflictException;
 import com.future.common.util.ConvertUtil;
 import com.future.common.util.StringUtils;
 import com.future.entity.account.FuAccountInfo;
+import com.future.entity.permission.FuPermissionRole;
+import com.future.entity.permission.FuPermissionUserProject;
 import com.future.entity.permission.FuPermissionUserRole;
 import com.future.entity.product.FuProductSignal;
 import com.future.entity.product.FuProductSignalApply;
@@ -23,6 +25,8 @@ import com.future.mapper.product.FuProductSignalMapper;
 import com.future.service.account.FuAccountCommissionService;
 import com.future.service.account.FuAccountInfoService;
 import com.future.service.account.FuAccountMtService;
+import com.future.service.permission.PermissionRoleService;
+import com.future.service.permission.PermissionUserProjectService;
 import com.future.service.permission.PermissionUserRoleService;
 import com.future.service.user.AdminService;
 import org.slf4j.Logger;
@@ -56,6 +60,10 @@ public class FuProductSignalApplyService extends ServiceImpl<FuProductSignalAppl
     FuAccountInfoService fuAccountInfoService;
     @Autowired
     FuAccountCommissionService fuAccountCommissionService;
+    @Autowired
+    PermissionUserProjectService permissionUserProjectService;
+    @Autowired
+    PermissionRoleService permissionRoleService;
     @Autowired
     AdminService adminService;
     @Autowired
@@ -318,13 +326,20 @@ public class FuProductSignalApplyService extends ServiceImpl<FuProductSignalAppl
                     log.error("查询用户信息错误！");
                     throw new BusinessException("查询用户信息错误！");
                 }
-                user.setUserType(UserConstant.USER_TYPE_SIGNAL);
-                userRole.setRoleId(UserRoleCode.USER_ROLE_SIGNAL.code());
+                /*查询用户所属项目*/
+                FuPermissionUserProject userProject= permissionUserProjectService.selectOne(new EntityWrapper<FuPermissionUserProject>()
+                        .eq(FuPermissionUserProject.USER_ID,user.getId()));
+                /*设置角色信息*/
+                FuPermissionRole defaultRole= permissionRoleService.getRoleByProject(userProject.getProjKey(),UserConstant.USER_TYPE_SIGNAL);
+                if(defaultRole!=null){
+                    userRole.setRoleId(defaultRole.getId());
+                    /*分配相关角色*/
+                    permissionUserRoleService.updateById(userRole);
+                }
 
                 /*变更用户类型*/
+                user.setUserType(UserConstant.USER_TYPE_SIGNAL);
                 adminService.updateById(user);
-                /*分配信号源角色*/
-                permissionUserRoleService.updateById(userRole);
 
                 /*修改绑定MT账号状态  isSignal=1、 设置端口等 */
                 fuAccountMtService.checkSignalMtAccount(apply.getUserId(),apply.getServerName(),apply.getMtAccId());

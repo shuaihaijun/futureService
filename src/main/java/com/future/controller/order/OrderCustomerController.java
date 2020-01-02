@@ -10,6 +10,7 @@ import com.future.common.util.StringUtils;
 import com.future.common.util.ThreadCache;
 import com.future.entity.order.FuOrderCustomer;
 import com.future.service.order.FuOrderCustomerService;
+import com.future.service.user.UserCommonService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,8 @@ public class OrderCustomerController {
 
     @Autowired
     FuOrderCustomerService fuOrderCustomerService;
+    @Autowired
+    UserCommonService userCommonService;
 
     //获得Mt历史订单操作
     @RequestMapping(value= "/getOrderCustomer",method=RequestMethod.POST)
@@ -53,7 +56,14 @@ public class OrderCustomerController {
         page.setSize(pageSize);
         page.setCurrent(pageNum);
         EntityWrapper<FuOrderCustomer> wrapper=new EntityWrapper<FuOrderCustomer>();
-        if(!StringUtils.isEmpty(requestMap.getString("userId"))){
+
+        String userId="";
+        if(!StringUtils.isEmpty(requestMap.getString("operUserId"))){
+            if(!userCommonService.isAdministrator(String.valueOf(requestMap.getString("operUserId")))){
+                // 不是管理员管理员
+                wrapper.eq(FuOrderCustomer.USER_ID,requestMap.getString("operUserId"));
+            }
+        }else if(!StringUtils.isEmpty(requestMap.getString("userId"))){
             wrapper.eq(FuOrderCustomer.USER_ID,requestMap.getString("userId"));
         }
         if(!StringUtils.isEmpty(requestMap.getString("orderId"))){

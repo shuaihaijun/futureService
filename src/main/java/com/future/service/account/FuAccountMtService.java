@@ -147,8 +147,11 @@ public class FuAccountMtService extends ServiceImpl<FuAccountMtMapper, FuAccount
         fuAccountMt.setBrokerId(server.getBrokerId());
         fuAccountMt.setBrokerName(server.getBrokerName());
 
-        FuAccountMt mt=selectOne(new EntityWrapper<FuAccountMt>().eq(FuAccountMt.MT_ACC_ID,fuAccountMt.getMtAccId())
-                .and().eq(FuAccountMt.USER_ID,fuAccountMt.getUserId()));
+        FuAccountMt mt=selectOne(new EntityWrapper<FuAccountMt>().eq(FuAccountMt.MT_ACC_ID,fuAccountMt.getMtAccId()));
+        if(mt!=null && mt.getUserId()!=null&& mt.getUserId()!=fuAccountMt.getUserId()){
+            log.error("该账户已经被绑定，请重新选择账户！");
+            throw new ParameterInvalidException("该账户已经被绑定，请重新选择账户！");
+        }
 
         /*保存账户信息*/
         if(fuAccountMt.getId()!=null&&fuAccountMt.getId()>0){

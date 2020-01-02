@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.future.common.exception.DataConflictException;
 import com.future.common.helper.PageInfoHelper;
+import com.future.common.util.StringUtils;
 import com.future.entity.com.FuComAgent;
 import com.future.entity.user.FuUserBank;
 import com.future.mapper.com.FuComAgentMapper;
@@ -41,7 +42,7 @@ public class FuUserBankService extends ServiceImpl<FuUserBankMapper, FuUserBank>
 
         FuUserBank bank=new FuUserBank();
         if(id!=null && id>0){
-            bank=selectOne(new EntityWrapper<FuUserBank>().eq(FuUserBank.ID,id));
+            bank=selectOne(new EntityWrapper<FuUserBank>().eq(FuUserBank.Bank_ID,id));
         }else {
             bank=selectOne(new EntityWrapper<FuUserBank>().eq(FuUserBank.USER_ID,userId));
         }
@@ -86,6 +87,25 @@ public class FuUserBankService extends ServiceImpl<FuUserBankMapper, FuUserBank>
         if(bank.getId()!=null&&bank.getId()>0){
             return updateBankSelective(bank);
         }
+
+        FuUserBank userBank= selectOne(new EntityWrapper<FuUserBank>().eq(FuUserBank.USER_ID,bank.getUserId()));
+        if(userBank!=null&&userBank.getId()!=null){
+            bank.setId(userBank.getId());
+            return updateBankSelective(bank);
+        }
+
+        if(StringUtils.isEmpty(bank.getBankName())){
+            log.error("银行名称为空！");
+            throw new DataConflictException("银行名称为空！！");
+        }
+        if(StringUtils.isEmpty(bank.getCode())){
+            log.error("银行卡为空！");
+            throw new DataConflictException("银行卡为空！！");
+        }
+        if(StringUtils.isEmpty(bank.getHostName())){
+            log.error("银行户主为空！");
+            throw new DataConflictException("银行户主为空！！");
+        }
         return fuUserBankMapper.insertSelective(bank);
     }
 
@@ -103,6 +123,6 @@ public class FuUserBankService extends ServiceImpl<FuUserBankMapper, FuUserBank>
             log.error("ID为空！");
             throw new DataConflictException("ID为空！");
         }
-        return updateBankSelective(bank);
+        return fuUserBankMapper.updateByPrimaryKey(bank);
     }
 }

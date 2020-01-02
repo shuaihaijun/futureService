@@ -7,7 +7,7 @@ import java.util.Date;
 
 public class FuComAgent {
 
-    public static final String ID = "id";
+    public static final String AGENT_ID = "id";
     public static final String AGENT_NAME = "agent_name";
     public static final String AGENT_TYPE = "agent_type";
     public static final String AGENT_LEVEL = "agent_level";

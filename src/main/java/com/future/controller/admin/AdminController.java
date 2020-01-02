@@ -4,14 +4,14 @@ import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.future.common.enums.GlobalResultCode;
 import com.future.common.exception.ParameterInvalidException;
+import com.future.common.helper.PageInfoHelper;
+import com.future.common.result.RequestParams;
 import com.future.common.util.ThreadCache;
 import com.future.entity.user.FuUser;
 import com.future.service.user.AdminService;
+import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
@@ -116,5 +116,14 @@ public class AdminController{
         String passwordNew=requestMap.getString("passwordNew");
         adminService.updatePassword(userId,username,password,passwordNew);
         return true;
+    }
+
+    //查询用户列表
+    @RequestMapping(value= "/queryAgentUserList",method=RequestMethod.POST)
+    public @ResponseBody
+    PageInfo<FuUser> queryAgentUserList(@RequestBody RequestParams<FuUser> requestParams) {
+        FuUser fuUser = requestParams.getParams();
+        PageInfoHelper helper = requestParams.getPageInfoHelper();
+        return adminService.queryAgentUserList(fuUser,helper);
     }
 }

@@ -113,25 +113,35 @@ public class FuCommissionCustomerService extends ServiceImpl<FuCommissionCustome
         }
 
         /*查询第n级客户*/
-        FuUser fuUser= adminService.findUserIntroducer(levelUserId);
-        if(fuUser==null||fuUser.getId()==0){
+        FuUser nextUser= adminService.findUserIntroducer(levelUserId);
+        if(nextUser==null||nextUser.getId()==0){
             /*该用户无推荐用户（自助注册有用/升级过猛用户）*/
             log.info("用户："+levelUserId+"无推荐人！计算上级佣金失败！");
             return;
         }
+        FuUser currentUser= adminService.selectById(levelUserId);
+        if(currentUser.getUserType()==nextUser.getUserType()&&level>CommissionConstant.COMMISSION_USER_LEVEL_FIRST){
+            // 当前用户跟下一个用户同级别时，直属用户返佣， 递推第二级第三级不返佣不返佣（社区返佣部分 会给同级返佣10%）
+            level++;
+            /*往上计算一级佣金*/
+            dealCommissionLevel(nextUser.getId(),CommissionConstant.COMMISSION_TYPE_AGENT,CommissionConstant.COMMISSION_ORDER_TYPE_CUSTOMER,
+                    CommissionConstant.COMMISSION_RATE_TYPE_LOTS,level,commissions);
+            return;
+        }
+
         Map conditionMap =new HashMap();
-        conditionMap.put(FuAccountInfo.USER_ID,fuUser.getId());
+        conditionMap.put(FuAccountInfo.USER_ID,nextUser.getId());
         List<FuAccountInfo> accountInfos= fuAccountInfoService.selectByMap(conditionMap);
         if(accountInfos==null || accountInfos.size()==0){
             log.error("处理用户自交易订单佣金,查询用户账户为空！");
-            throw new BusinessException("处理用户自交易订单佣金,查询用户账户为空！userId+"+fuUser.getId());
+            throw new BusinessException("处理用户自交易订单佣金,查询用户账户为空！userId+"+nextUser.getId());
         }
 
         /*根据客户登记查询返佣等级*/
         Map condtionMap =new HashMap();
         condtionMap.put(FuCommissionLevel.COMMISSION_TYPE,commissionType);
         condtionMap.put(FuCommissionLevel.ORDER_TYPE,orderType);
-        condtionMap.put(FuCommissionLevel.COMMISSION_USER_TYPE,fuUser.getUserType());
+        condtionMap.put(FuCommissionLevel.COMMISSION_USER_TYPE,nextUser.getUserType());
         condtionMap.put(FuCommissionLevel.COMMISSION_USER_LEVEL,level);
         condtionMap.put(FuCommissionLevel.RATE_TYPE,rateType);
         List<FuCommissionLevel> commissionLevels= fuCommissionLevelSevice.selectByMap(condtionMap);
@@ -146,8 +156,8 @@ public class FuCommissionCustomerService extends ServiceImpl<FuCommissionCustome
         /*根据返佣等级计算佣金*/
         for(FuCommissionCustomer commission:commissions ){
             commission.setCommissionType(commissionType);
-            commission.setCommissionUserId(fuUser.getId());
-            commission.setCommissionUserType(fuUser.getUserType());
+            commission.setCommissionUserId(nextUser.getId());
+            commission.setCommissionUserType(nextUser.getUserType());
             commission.setCommissionUserLevel(level);
             commission.setCommissionAccountId(accountInfos.get(0).getId());
             commission.setCommissionRateType(rateType);
@@ -168,16 +178,7 @@ public class FuCommissionCustomerService extends ServiceImpl<FuCommissionCustome
         }
 
         insertBatch(commissions);
-//        /*保存数据*/
-        /*for(FuCommissionCustomer commissionCustomer:commissions){
-            fuCommissionCustomerMapper.insertSelective(commissionCustomer);
-        }*/
-        FuUser user= adminService.selectById(levelUserId);
-        if(user.getUserType()==fuUser.getUserType()){
-           // 同级别 只计算直推（1级）
-            return;
-        }
-        // TODO 确定
+
         /*继续下一级别*/
         if(level.equals(CommissionConstant.COMMISSION_USER_LEVEL_THIRD)){
             return;
@@ -185,8 +186,8 @@ public class FuCommissionCustomerService extends ServiceImpl<FuCommissionCustome
             level++;
         }
 
-        /*计算上一级佣金*/
-        dealCommissionLevel(fuUser.getId(),CommissionConstant.COMMISSION_TYPE_AGENT,CommissionConstant.COMMISSION_ORDER_TYPE_CUSTOMER,
+        /*往上计算一级佣金*/
+        dealCommissionLevel(nextUser.getId(),CommissionConstant.COMMISSION_TYPE_AGENT,CommissionConstant.COMMISSION_ORDER_TYPE_CUSTOMER,
                 CommissionConstant.COMMISSION_RATE_TYPE_LOTS,level,commissions);
     }
 

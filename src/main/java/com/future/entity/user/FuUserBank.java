@@ -8,7 +8,7 @@ import java.util.Date;
 public class FuUserBank {
 
 
-    public static String ID="id";
+    public static String Bank_ID="id";
     public static String USER_ID="user_id";
     /**
      * 

@@ -10,7 +10,6 @@ import com.future.common.exception.BusinessException;
 import com.future.common.exception.DataConflictException;
 import com.future.common.util.ConvertUtil;
 import com.future.common.util.PageBean;
-import com.future.entity.com.FuComDictionary;
 import com.future.entity.com.FuComServer;
 import com.future.mapper.com.FuComServerMapper;
 import org.slf4j.Logger;
@@ -20,7 +19,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Service
@@ -58,7 +56,7 @@ public class FuComServerService extends ServiceImpl<FuComServerMapper,FuComServe
             Page<FuComServer> page = pageBean.getPage(conditionMap);
 
             if (!ObjectUtils.isEmpty(conditionMap.get("id"))) {
-                wrapper.eq(FuComServer.ID, conditionMap.get("id"));
+                wrapper.eq(FuComServer.SERVER_ID, conditionMap.get("id"));
             }
             if (!ObjectUtils.isEmpty(conditionMap.get("serverName"))) {
                 wrapper.eq(FuComServer.SERVER_NAME, conditionMap.get("serverName"));

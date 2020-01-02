@@ -4,7 +4,6 @@ import com.future.common.constants.AgentConstant;
 import com.future.common.constants.CommonConstant;
 import com.future.common.constants.UserConstant;
 import com.future.common.helper.PageInfoHelper;
-import com.future.common.util.DateUtil;
 import com.future.entity.account.FuAccountCommission;
 import com.future.entity.account.FuAccountCommissionFlow;
 import com.future.entity.com.FuComAgent;
@@ -21,7 +20,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Service;
 
 import java.util.*;
 

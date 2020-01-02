@@ -15,6 +15,9 @@ import com.future.entity.account.FuAccountCommission;
 import com.future.entity.account.FuAccountCommissionFlow;
 import com.future.entity.account.FuAccountInfo;
 import com.future.entity.com.FuComAgent;
+import com.future.entity.permission.FuPermissionRole;
+import com.future.entity.permission.FuPermissionUserProject;
+import com.future.entity.permission.FuPermissionUserRole;
 import com.future.entity.user.FuUser;
 import com.future.mapper.com.FuComAgentMapper;
 import com.future.pojo.bo.order.UserMTAccountBO;
@@ -22,12 +25,16 @@ import com.future.service.account.FuAccountCommissionFlowService;
 import com.future.service.account.FuAccountCommissionService;
 import com.future.service.account.FuAccountInfoService;
 import com.future.service.account.FuAccountMtService;
+import com.future.service.permission.PermissionRoleService;
+import com.future.service.permission.PermissionUserProjectService;
+import com.future.service.permission.PermissionUserRoleService;
 import com.future.service.user.AdminService;
 import com.github.pagehelper.PageHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
 import java.math.BigDecimal;
@@ -51,6 +58,12 @@ public class FuComAgentService extends ServiceImpl<FuComAgentMapper,FuComAgent> 
     FuAccountInfoService fuAccountInfoService;
     @Autowired
     FuAccountCommissionService fuAccountCommissionService;
+    @Autowired
+    PermissionRoleService permissionRoleService;
+    @Autowired
+    PermissionUserProjectService permissionUserProjectService;
+    @Autowired
+    PermissionUserRoleService permissionUserRoleService;
 
     /**
      * 根据条件查找代理信息
@@ -79,7 +92,7 @@ public class FuComAgentService extends ServiceImpl<FuComAgentMapper,FuComAgent> 
         page.setCurrent(pageNum);
 
         if(!ObjectUtils.isEmpty(conditionMap.get("id"))){
-            wrapper.eq(FuComAgent.ID,String.valueOf(conditionMap.get("id")));
+            wrapper.eq(FuComAgent.AGENT_ID,String.valueOf(conditionMap.get("id")));
         }
         if(!ObjectUtils.isEmpty(conditionMap.get("userId"))){
             wrapper.eq(FuComAgent.USER_ID,String.valueOf(conditionMap.get("userId")));
@@ -237,6 +250,7 @@ public class FuComAgentService extends ServiceImpl<FuComAgentMapper,FuComAgent> 
      * 根据用户账户信息 判断代理升级
      * @param accountBO
      */
+    @Transactional(rollbackFor = Exception.class)
     public void agentUpgrade(UserMTAccountBO accountBO){
 
         /*判断代理是否可升级*/
@@ -348,10 +362,24 @@ public class FuComAgentService extends ServiceImpl<FuComAgentMapper,FuComAgent> 
             agent.setAgentType(agentType);
 
             /*修改用户类型 userType*/
-            FuUser user=new FuUser();
-            user.setId(accountBO.getUserId());
+            FuUser user=adminService.selectById(accountBO.getUserId());
             user.setUserType(agentType);
             adminService.updateAdmin(user);
+
+            /*修改代理角色*/
+            FuPermissionUserProject userProject= permissionUserProjectService.selectOne(new EntityWrapper<FuPermissionUserProject>()
+                    .eq(FuPermissionUserProject.USER_ID,user.getId()));
+            FuPermissionRole defaultRole= permissionRoleService.getRoleByProject(userProject.getProjKey(),agentType);
+            if(defaultRole!=null){
+                FuPermissionUserRole userRole= permissionUserRoleService.selectOne(new EntityWrapper<FuPermissionUserRole>().eq(FuPermissionUserRole.USER_ID,user.getId()));
+                if(userRole!=null){
+                    userRole.setRoleId(defaultRole.getId());
+                    permissionUserRoleService.updateById(userRole);
+                }else {
+                    log.error("查询用户角色失败！");
+                    throw new BusinessException("查询用户角色失败！");
+                }
+            }
 
             /*修改代理类型 agent*/
             fuComAgentMapper.updateByPrimaryKeySelective(agent);
