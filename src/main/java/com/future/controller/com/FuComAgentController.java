@@ -167,4 +167,24 @@ public class FuComAgentController {
         }
         return fuComAgentService.findAgentByCondition(requestMap);
     }
+
+
+    @RequestMapping("/getAgentById")
+    public @ResponseBody FuComAgent getAgentById(){
+        // 获取请求参数
+        String requestJSONStr = ThreadCache.getPostRequestParams();
+        JSONObject requestMap = JSONObject.parseObject(requestJSONStr);
+        if(ObjectUtils.isEmpty(requestJSONStr)){
+            log.error("数据为空！");
+            throw new DataConflictException("数据为空！");
+        }
+
+        String applyId=requestMap.getString("id");
+        if(StringUtils.isEmpty(applyId)){
+            log.error("ID数据为空！");
+            throw new DataConflictException("ID数据为空！");
+        }
+
+        return fuComAgentService.selectById(applyId);
+    }
 }

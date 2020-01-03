@@ -322,9 +322,6 @@ public class FuComAgentApplyService extends ServiceImpl<FuComAgentApplyMapper,Fu
                         agentType=AgentConstant.AGENT_TYPE_PIB;
                     }
                     fuComAgentService.updateById(agent);
-                    /*设置角色信息*/
-                    FuPermissionRole defaultRole= permissionRoleService.getRoleByProject(userProject.getProjKey(),AgentConstant.AGENT_TYPE_IB);
-                    userRole.setRoleId(defaultRole.getId());
                 }else if(agentApply.getApplyType().equals(AgentConstant.AGENT_APPLY_TYPE_DOWN)){
                     //降级
                     if(user.getUserType()!=AgentConstant.AGENT_TYPE_PIB&&user.getUserType()!=AgentConstant.AGENT_TYPE_MIB){
@@ -352,6 +349,8 @@ public class FuComAgentApplyService extends ServiceImpl<FuComAgentApplyMapper,Fu
                     userRole.setRoleId(defaultRole.getId());
                     /*分配相关角色*/
                     permissionUserRoleService.updateById(userRole);
+                }else {
+                    log.warn("未匹配到相关数据：根据projkey userType未找到相关角色信息！");
                 }
 
                 /*变更用户类型*/

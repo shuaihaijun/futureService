@@ -1,13 +1,16 @@
 package com.future.service.user;
 
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.future.common.util.RedisManager;
 import com.future.entity.com.FuComAgent;
 import com.future.mapper.com.FuComAgentMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import javax.xml.ws.soap.Addressing;
 import java.util.Arrays;
 
 
@@ -18,6 +21,8 @@ public class UserCommonService extends ServiceImpl<FuComAgentMapper,FuComAgent> 
 
     @Value("${SUPER_ADMINISTRATOR}")
     private String superAdministrator;
+    @Autowired
+    RedisManager redisManager;
 
     /**
      * 判断用户是否是管理员
@@ -31,6 +36,16 @@ public class UserCommonService extends ServiceImpl<FuComAgentMapper,FuComAgent> 
             contains = Arrays.asList(superAdministrators).contains(userId);
         }
         return contains;
+    }
+
+    /**
+     * 判断是否是管理员
+     * @param userId
+     * @param projKey
+     * @return
+     */
+    public boolean isAdministrator(Integer userId,Integer projKey){
+        return true;
     }
 
 }

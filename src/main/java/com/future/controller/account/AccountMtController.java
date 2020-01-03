@@ -2,8 +2,10 @@ package com.future.controller.account;
 
 import com.alibaba.druid.util.StringUtils;
 import com.alibaba.fastjson.JSONObject;
+import com.future.common.constants.RedisConstant;
 import com.future.common.enums.GlobalResultCode;
 import com.future.common.exception.ParameterInvalidException;
+import com.future.common.util.RedisManager;
 import com.future.common.util.ThreadCache;
 import com.future.pojo.bo.order.UserMTAccountBO;
 import com.future.service.account.FuAccountMtService;
@@ -28,6 +30,8 @@ public class AccountMtController {
 
     @Autowired
     FuAccountMtService fuAccountMtService;
+    @Autowired
+    RedisManager redisManager;
 
     //获取MT账户信息
     @RequestMapping(value= "/getUserMtAccountByCondition",method=RequestMethod.POST)
@@ -56,8 +60,6 @@ public class AccountMtController {
             throw new ParameterInvalidException(GlobalResultCode.PARAM_NOT_COMPLETE);
         }
         List<UserMTAccountBO> accouts=  fuAccountMtService.getUserMTAccByCondition(conditonMap);
-
-        log.info(accouts.size()+"");
 
         if(accouts.size()>0){
             return accouts.get(0);
@@ -92,9 +94,16 @@ public class AccountMtController {
         }else {
             throw new ParameterInvalidException(GlobalResultCode.PARAM_NOT_COMPLETE);
         }
-        List<UserMTAccountBO> accouts=  fuAccountMtService.getUserMTAccByCondition(conditonMap);
-
-        return  accouts;
+        List<UserMTAccountBO> accounts=  fuAccountMtService.getUserMTAccByCondition(conditonMap);
+        String userAccout="";
+        Integer accountState=0;
+        /*循环设置状态*/
+        for(int i=0;i<accounts.size();i++){
+            userAccout=accounts.get(i).getServerName()+"&"+accounts.get(i).getMtAccId();
+            accountState=(Integer) redisManager.hget(RedisConstant.ACCOUNT_CONNECT_STATE,userAccout);
+            accounts.get(i).setConnectState(accountState==null?0:accountState);
+        }
+        return  accounts;
     }
 
     //获取MT账户信息

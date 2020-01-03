@@ -123,6 +123,6 @@ public class FuUserBankService extends ServiceImpl<FuUserBankMapper, FuUserBank>
             log.error("ID为空！");
             throw new DataConflictException("ID为空！");
         }
-        return fuUserBankMapper.updateByPrimaryKey(bank);
+        return fuUserBankMapper.updateByPrimaryKeySelective(bank);
     }
 }

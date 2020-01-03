@@ -78,7 +78,6 @@ newUserRoleId: 6
 #超级管理员id集合 Administrator,使用逗号分隔
 SUPER_ADMINISTRATOR: 37
 
-
 logging:
   level:
     com.future.mapper: debug
