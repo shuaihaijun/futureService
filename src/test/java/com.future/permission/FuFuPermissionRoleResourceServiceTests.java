@@ -5,6 +5,7 @@ import com.future.pojo.bo.BasicBO;
 import com.future.pojo.bo.permission.FuPermissionRoleResourceBO;
 import com.future.service.permission.PermissionRoleResourceService;
 import com.google.common.collect.Lists;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import java.util.List;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
+@Ignore
 public class FuFuPermissionRoleResourceServiceTests {
 
     private LogUtil log = LogUtil.logger(this);

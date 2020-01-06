@@ -7,6 +7,7 @@ import com.future.pojo.vo.permission.FuPermissionRoleVO;
 import com.future.service.permission.PermissionRoleService;
 import com.github.pagehelper.PageInfo;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ import java.util.List;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @Slf4j
+@Ignore
 public class FuPermissionRoleServiceTests {
 
     @Autowired

@@ -3,6 +3,7 @@ package com.future.controller.admin;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.future.common.enums.GlobalResultCode;
+import com.future.common.exception.DataConflictException;
 import com.future.common.exception.ParameterInvalidException;
 import com.future.common.helper.PageInfoHelper;
 import com.future.common.result.RequestParams;
@@ -10,6 +11,8 @@ import com.future.common.util.ThreadCache;
 import com.future.entity.user.FuUser;
 import com.future.service.user.AdminService;
 import com.github.pagehelper.PageInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,6 +21,8 @@ import java.util.Map;
 @RestController
 @RequestMapping("/admin")
 public class AdminController{
+
+    Logger log= LoggerFactory.getLogger(AdminController.class);
 
     @Autowired
     AdminService adminService;
@@ -125,5 +130,17 @@ public class AdminController{
         FuUser fuUser = requestParams.getParams();
         PageInfoHelper helper = requestParams.getPageInfoHelper();
         return adminService.queryAgentUserList(fuUser,helper);
+    }
+
+    //修改用户介绍人信息
+    @RequestMapping(value= "/updateUserIntroducer",method=RequestMethod.POST)
+    public @ResponseBody boolean updateUserIntroducer(@RequestBody RequestParams<FuUser> requestParams) {
+        FuUser fuUser = requestParams.getParams();
+        if(fuUser==null){
+            log.error("修改用户介绍人信息,传入参数为空！");
+            throw new DataConflictException(GlobalResultCode.PARAM_NULL_POINTER);
+        }
+        adminService.updateUserIntroducer(fuUser.getId(),fuUser.getIntroducer());
+        return true;
     }
 }

@@ -9,9 +9,9 @@ spring:
     #  数据设置
   datasource:
     name: test
-    url: jdbc:mysql://127.0.0.1:3306/test?useUnicode=true&characterEncoding=utf8&allowMultiQueries=true&serverTimezone=GMT%2B8
+    url: jdbc:mysql://47.96.165.40:3306/preprod?useUnicode=true&characterEncoding=utf8&allowMultiQueries=true&serverTimezone=GMT%2B8
     username: root
-    password: shuaige
+    password: Admin123!
     # 使用druid数据源
     type: com.alibaba.druid.pool.DruidDataSource
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -61,13 +61,13 @@ swagger:
 
 # constant
 #用户服务器地址
-userTermServerHost: 127.0.0.1
+userTermServerHost: 47.96.165.40
 userTermServerPort: 7788
 #主机服务器地址
-pubServerUrl: 127.0.0.1
+pubServerUrl: 47.96.165.40
 pubServerPort: 6666
 #用户服务器地址
-pubUserServerUrl1: 127.0.0.1
+pubUserServerUrl1: 47.96.165.40
 pubUserServerUrl2: 127.0.0.1
 pubUserServerPort: 7788
 #图片保存路径
@@ -76,8 +76,8 @@ imageFilePath: D:\image\
 newUserRoleId: 6
 
 #超级管理员id集合 Administrator,使用逗号分隔
-SUPER_ADMINISTRATOR: 37
-PROJECT_ADMINISTRATOR: 47
+SUPER_ADMINISTRATOR: 37,38
+PROJECT_ADMINISTRATOR: 38
 
 logging:
   level:

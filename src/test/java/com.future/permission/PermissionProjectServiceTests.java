@@ -7,6 +7,7 @@ import com.future.pojo.vo.permission.FuPermissionProjectVO;
 import com.future.service.permission.PermissionProjectService;
 import com.github.pagehelper.PageInfo;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.BeanUtils;
@@ -21,6 +22,7 @@ import java.util.Map;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @Slf4j
+@Ignore
 public class PermissionProjectServiceTests {
 
     @Autowired

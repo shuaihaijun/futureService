@@ -3,9 +3,9 @@ package com.future;
 import com.jfx.Broker;
 
 public class TestDemoAccount {
-    public final static Broker MT_4_SERVER = new Broker("5*91.109.206.235:443");
-    public final static String MT_4_USER = "9007162";
-    public final static String MT_4_PASSWORD = "ibiq4mnf";
+    public final static Broker MT_4_SERVER = new Broker("USGFX-Demo");
+    public final static String MT_4_USER = "1100531439";
+    public final static String MT_4_PASSWORD = "4xgrrfh";
 
     public static final String JFX_ACTIVATION_KEY = System.getProperty("nj4x_activation_key", "209083576");  //box=825604286 -> 209083576
     public static final String NJ4X_MT5_ACTIVATION_KEY = System.getProperty("nj4x_mt5_activation_key", "3542556695");// box=825604286 -> 3542556695

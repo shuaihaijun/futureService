@@ -482,6 +482,8 @@ public class AdminService extends ServiceImpl<FuUserMapper,FuUser> {
         if(condition.getString("userState")!=null
                 &&!condition.getString("userState").equals("")){
             wrapper.eq(FuUser.USER_STATE,condition.getInteger("userState"));
+        }else {
+            wrapper.eq(FuUser.USER_STATE,UserConstant.USER_STATE_NORMAL);
         }
         if(condition.getString("isVerified")!=null
                 &&!condition.getString("isVerified").equals("")){
@@ -673,5 +675,55 @@ public class AdminService extends ServiceImpl<FuUserMapper,FuUser> {
         List<FuUser> users= selectList(wrapper);
 
         return new PageInfo<FuUser>(users);
+    }
+
+
+    /**
+     * 修改用户介绍人信息
+     * @param userId
+     * @param introducer
+     */
+    @Transactional
+    public void  updateUserIntroducer(Integer userId,Integer introducer){
+        if(userId==null || userId==0|| introducer==null||introducer==0){
+            log.error("修改用户介绍人信息,数据为空！");
+            throw new DataConflictException(GlobalResultCode.PARAM_VERIFY_ERROR);
+        }
+        FuUser user=new FuUser();
+        user.setId(userId);
+        user.setModifyDate(new Date());
+        user.setIntroducer(introducer);
+
+        FuUser introduceUser=selectOne(new EntityWrapper<FuUser>().eq(FuUser.USER_ID,introducer));
+        if(introduceUser==null){
+            log.error("介绍人不存在，请检查数据！");
+            throw new DataConflictException("介绍人不存在，请检查数据！");
+        }
+
+        /*改变用户所属资源组*/
+        /*查询推荐人所属资源组*/
+        FuPermissionUserProject introducerProject= permissionUserProjectService.selectOne(new EntityWrapper<FuPermissionUserProject>()
+                .eq(FuPermissionUserProject.USER_ID,introducer));
+        if(introducerProject!=null){
+            log.error("介绍人资源组不存在，请检查数据！");
+            throw new DataConflictException("介绍人资源组不存在，请检查数据！");
+        }
+
+        FuPermissionUserProject userProject= permissionUserProjectService.selectOne(new EntityWrapper<FuPermissionUserProject>()
+                .eq(FuPermissionUserProject.USER_ID,userId));
+        if(userProject==null){
+            userProject=new FuPermissionUserProject();
+            userProject.setUserId(userId);
+            userProject.setProjKey(introducerProject.getProjKey());
+            userProject.setModifyDate(new Date());
+            userProject.setCreateDate(new Date());
+            permissionUserProjectService.insert(userProject);
+        }
+        userProject.setModifyDate(new Date());
+        userProject.setProjKey(introducerProject.getProjKey());
+        permissionUserProjectService.updateById(userProject);
+
+        /*修改用户数据！*/
+        fuUserMapper.updateByPrimaryKeySelective(user);
     }
 }

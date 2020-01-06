@@ -21,6 +21,8 @@ public class UserCommonService extends ServiceImpl<FuComAgentMapper,FuComAgent> 
 
     @Value("${SUPER_ADMINISTRATOR}")
     private String superAdministrator;
+    @Value("${PROJECT_ADMINISTRATOR}")
+    private String projectAdministrator;
     @Autowired
     RedisManager redisManager;
 
@@ -44,8 +46,14 @@ public class UserCommonService extends ServiceImpl<FuComAgentMapper,FuComAgent> 
      * @param projKey
      * @return
      */
-    public boolean isAdministrator(Integer userId,Integer projKey){
-        return true;
+    public boolean isProjectAdministrator(Integer userId,Integer projKey){
+        //获取配置文件中超级管理员，判断当前登录用户是否为超级管理员,true为超管
+        String[] superAdministrators = projectAdministrator.split(",");
+        boolean contains = false;
+        if (userId != null && superAdministrators != null) {
+            contains = Arrays.asList(superAdministrators).contains(userId.toString());
+        }
+        return contains;
     }
 
 }

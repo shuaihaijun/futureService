@@ -30,7 +30,7 @@ public class MtOrderTest {
     @Test
     public void testGetHistoryOrder(){
         Date dateFrom= DateUtil.toDateTimeFromString("2019-06-10 10:00:00");
-        Date dateTo= DateUtil.toDateTimeFromString("2019-06-11 05:00:00");
+        Date dateTo= DateUtil.toDateTimeFromString("2022-06-11 05:00:00");
         mtOrderService.getOrders(TestDemoAccount.MT_4_SERVER,TestDemoAccount.MT_4_USER,TestDemoAccount.MT_4_PASSWORD, SelectionPool.MODE_HISTORY,dateFrom,dateTo,null);
     }
 

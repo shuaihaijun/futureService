@@ -4,6 +4,7 @@ import com.future.common.util.LogUtil;
 import com.future.pojo.bo.permission.FuPermissionUserRoleBO;
 import com.future.service.permission.PermissionUserRoleService;
 import com.google.common.collect.Lists;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import java.util.List;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
+@Ignore
 public class FuPermissionUserRoleServiceTests {
 
     private LogUtil log = LogUtil.logger(this);

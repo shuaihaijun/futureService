@@ -94,6 +94,8 @@ public class FuAccountCommissionService extends ServiceImpl<FuAccountCommissionM
         }
         if(commission.getAccountState()!=null){
             wrapper.eq(FuAccountCommission.ACCOUNT_STATE,commission.getAccountState());
+        }else {
+            wrapper.eq(FuAccountCommission.ACCOUNT_STATE,AccountConstant.ACCOUNT_STATE_NORMAL);
         }
 
         if(helper==null){
@@ -232,7 +234,7 @@ public class FuAccountCommissionService extends ServiceImpl<FuAccountCommissionM
             throw new BusinessException("计算佣金日结,佣金账户查询为空！");
         }
 
-        BigDecimal commissionMoney=new BigDecimal(0);//'佣金余额'
+        BigDecimal commissionMoney=new BigDecimal(0);//'佣金余额'updateByPrimaryKeySelective
         BigDecimal commissionSourceMoney=new BigDecimal(0);//''源发生金额''
         BigDecimal commissionSourceLots=new BigDecimal(0);//''源发生手数''
 
