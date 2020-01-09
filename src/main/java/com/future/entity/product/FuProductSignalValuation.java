@@ -7,12 +7,10 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 public class FuProductSignalValuation {
-
-
     public static String SIGNAL_ID="signal_id";
 
     /**
-     * 
+     *
      */
     @TableId(type = IdType.AUTO)
     private Integer id;
@@ -20,7 +18,7 @@ public class FuProductSignalValuation {
     /**
      * 信号源ID
      */
-    private Integer signalid;
+    private Integer signalId;
 
     /**
      * 评估时间
@@ -30,7 +28,7 @@ public class FuProductSignalValuation {
     /**
      * 评估等级
      */
-    private Integer level;
+    private Byte level;
 
     /**
      * 稳健性
@@ -85,18 +83,18 @@ public class FuProductSignalValuation {
 
     /**
      * 信号源ID
-     * @return signalId 信号源ID
+     * @return signal_id 信号源ID
      */
-    public Integer getSignalid() {
-        return signalid;
+    public Integer getSignalId() {
+        return signalId;
     }
 
     /**
      * 信号源ID
-     * @param signalid 信号源ID
+     * @param signalId 信号源ID
      */
-    public void setSignalid(Integer signalid) {
-        this.signalid = signalid;
+    public void setSignalId(Integer signalId) {
+        this.signalId = signalId;
     }
 
     /**
@@ -119,7 +117,7 @@ public class FuProductSignalValuation {
      * 评估等级
      * @return level 评估等级
      */
-    public Integer getLevel() {
+    public Byte getLevel() {
         return level;
     }
 
@@ -127,7 +125,7 @@ public class FuProductSignalValuation {
      * 评估等级
      * @param level 评估等级
      */
-    public void setLevel(Integer level) {
+    public void setLevel(Byte level) {
         this.level = level;
     }
 

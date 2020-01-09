@@ -29,10 +29,10 @@ public class FuProductSignalValuationService extends ServiceImpl<FuProductSignal
             throw new ParameterInvalidException(GlobalResultCode.PARAM_NULL_POINTER);
         }
 
-        List<FuProductSignalValuation> list= selectList(new EntityWrapper<FuProductSignalValuation>().eq(FuProductSignalValuation.SIGNAL_ID,signalId));
-        if(list==null||list.size()==0){
+        FuProductSignalValuation valuation= selectOne(new EntityWrapper<FuProductSignalValuation>().eq(FuProductSignalValuation.SIGNAL_ID,signalId));
+        if(valuation==null||valuation.getId()==null){
             return null;
         }
-        return list.get(0);
+        return valuation;
     }
 }

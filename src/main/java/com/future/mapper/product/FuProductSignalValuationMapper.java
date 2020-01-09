@@ -2,7 +2,9 @@ package com.future.mapper.product;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.future.entity.product.FuProductSignalValuation;
+import org.springframework.stereotype.Component;
 
+@Component
 public interface FuProductSignalValuationMapper extends BaseMapper<FuProductSignalValuation> {
     int deleteByPrimaryKey(Integer id);
 

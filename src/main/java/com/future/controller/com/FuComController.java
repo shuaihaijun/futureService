@@ -1,5 +1,7 @@
 package com.future.controller.com;
 
+import com.alibaba.fastjson.JSONObject;
+import com.future.common.util.ThreadCache;
 import com.future.service.com.FuComService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,7 +36,10 @@ public class FuComController {
     }
 
     @RequestMapping(value = "/getActive")
-    public @ResponseBody Map getActive(@RequestPart(value = "picture") MultipartFile file) {
+    public @ResponseBody Map getActive(){
+        // 获取请求参数
+        String requestJSONStr = ThreadCache.getPostRequestParams();
+        JSONObject requestMap = JSONObject.parseObject(requestJSONStr);
         Map resultMap = new HashMap();
         resultMap.put("userTotel",76734);
         resultMap.put("userActive",5334);

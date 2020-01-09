@@ -3,7 +3,7 @@
 <mapper namespace="com.future.mapper.product.FuProductSignalValuationMapper">
   <resultMap id="BaseResultMap" type="com.future.entity.product.FuProductSignalValuation">
     <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="signalId" jdbcType="INTEGER" property="signalid" />
+    <result column="signal_id" jdbcType="INTEGER" property="signalId" />
     <result column="valuation_date" jdbcType="TIMESTAMP" property="valuationDate" />
     <result column="level" jdbcType="TINYINT" property="level" />
     <result column="steady_score" jdbcType="DECIMAL" property="steadyScore" />
@@ -15,7 +15,7 @@
     <result column="meno" jdbcType="VARCHAR" property="meno" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, signalId, valuation_date, level, steady_score, profit_score, risk_control_score, 
+    id, signal_id, valuation_date, level, steady_score, profit_score, risk_control_score, 
     fund_size_score, non_fluke_profit_score, score, meno
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
@@ -29,11 +29,11 @@
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.future.entity.product.FuProductSignalValuation">
-    insert into fu_product_signal_valuation (id, signalId, valuation_date, 
+    insert into fu_product_signal_valuation (id, signal_id, valuation_date, 
       level, steady_score, profit_score, 
       risk_control_score, fund_size_score, non_fluke_profit_score, 
       score, meno)
-    values (#{id,jdbcType=INTEGER}, #{signalid,jdbcType=INTEGER}, #{valuationDate,jdbcType=TIMESTAMP}, 
+    values (#{id,jdbcType=INTEGER}, #{signalId,jdbcType=INTEGER}, #{valuationDate,jdbcType=TIMESTAMP}, 
       #{level,jdbcType=TINYINT}, #{steadyScore,jdbcType=DECIMAL}, #{profitScore,jdbcType=DECIMAL}, 
       #{riskControlScore,jdbcType=DECIMAL}, #{fundSizeScore,jdbcType=DECIMAL}, #{nonFlukeProfitScore,jdbcType=DECIMAL}, 
       #{score,jdbcType=DECIMAL}, #{meno,jdbcType=VARCHAR})
@@ -44,8 +44,8 @@
       <if test="id != null">
         id,
       </if>
-      <if test="signalid != null">
-        signalId,
+      <if test="signalId != null">
+        signal_id,
       </if>
       <if test="valuationDate != null">
         valuation_date,
@@ -79,8 +79,8 @@
       <if test="id != null">
         #{id,jdbcType=INTEGER},
       </if>
-      <if test="signalid != null">
-        #{signalid,jdbcType=INTEGER},
+      <if test="signalId != null">
+        #{signalId,jdbcType=INTEGER},
       </if>
       <if test="valuationDate != null">
         #{valuationDate,jdbcType=TIMESTAMP},
@@ -114,8 +114,8 @@
   <update id="updateByPrimaryKeySelective" parameterType="com.future.entity.product.FuProductSignalValuation">
     update fu_product_signal_valuation
     <set>
-      <if test="signalid != null">
-        signalId = #{signalid,jdbcType=INTEGER},
+      <if test="signalId != null">
+        signal_id = #{signalId,jdbcType=INTEGER},
       </if>
       <if test="valuationDate != null">
         valuation_date = #{valuationDate,jdbcType=TIMESTAMP},
@@ -149,7 +149,7 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="com.future.entity.product.FuProductSignalValuation">
     update fu_product_signal_valuation
-    set signalId = #{signalid,jdbcType=INTEGER},
+    set signal_id = #{signalId,jdbcType=INTEGER},
       valuation_date = #{valuationDate,jdbcType=TIMESTAMP},
       level = #{level,jdbcType=TINYINT},
       steady_score = #{steadyScore,jdbcType=DECIMAL},

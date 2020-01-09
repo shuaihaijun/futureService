@@ -460,11 +460,10 @@
       m.margin
     FROM
         fu_product_signal s
-    LEFT JOIN fu_product_signal_valuation v ON s.id = v.signalId
+    LEFT JOIN fu_product_signal_valuation v ON s.id = v.signal_id
     LEFT JOIN fu_user u ON s.user_id = u.id
     LEFT JOIN fu_account_mt m ON s.user_id=m.user_id and s.mt_acc_id=m.mt_acc_id
     where 1=1
-    <trim prefixOverrides="and">
       <if test="userId != null">
         and s.user_id = #{userId,jdbcType=INTEGER}
       </if>
@@ -480,52 +479,5 @@
       <if test="level != null">
         and v.LEVEL = #{level,jdbcType=INTEGER}
       </if>
-    </trim>
-  </select>
-
-  <select id="queryFollowUsers" parameterType="java.util.Map" resultType="com.future.pojo.vo.signal.FuFollowUserVO">
-    SELECT
-        f.user_id userId,
-        f.signal_id signalId,
-        f.user_server_name userServerName,
-        f.user_mt_acc_id userMtAccId,
-        f.signal_server_name signalServerName,
-        f.signal_mt_acc_id signalMtAccId,
-        f.create_date createDate,
-        f.modify_date modifyDate,
-        f.rule_type ruleType,
-        f.amount,
-        u.username,
-        u.real_name realName,
-        u.ref_name refName,
-        u.introducer,
-        u.recommend,
-        u.sex,
-        u.follow_level followLevel,
-        u.avatar_url avatarUrl,
-        m.leverage,
-        m.balance,
-        m.credit,
-        m.profit,
-        m.equity,
-        m.margin
-    FROM
-        fu_user_follows f
-    LEFT JOIN fu_user u ON f.user_id = u.id
-    LEFT JOIN fu_product_signal s ON f.signal_id = s.id
-    LEFT JOIN fu_account_mt m ON f.user_id = m.user_id
-    AND f.user_mt_acc_id = m.mt_acc_id
-    where 1=1
-    <trim prefixOverrides="and">
-      <if test="userId != null">
-        and f.user_id = #{userId,jdbcType=INTEGER}
-      </if>
-      <if test="signalId != null">
-        and f.id = #{signalId,jdbcType=INTEGER}
-      </if>
-      <if test="ruleState != null">
-        and f.rule_state = #{ruleState,jdbcType=INTEGER}
-      </if>
-    </trim>
   </select>
 </mapper>

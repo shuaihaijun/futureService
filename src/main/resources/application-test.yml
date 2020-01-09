@@ -1,6 +1,6 @@
 #端口设置
 server:
-  port: 8088
+  port: 8188
 
 #基础设置
 spring:
@@ -71,12 +71,13 @@ pubUserServerUrl1: 47.96.165.40
 pubUserServerUrl2: 127.0.0.1
 pubUserServerPort: 7788
 #图片保存路径
-imageFilePath: D:\image\
+imageFilePath: D:\testImage\
 #新用户角色ID
 newUserRoleId: 6
 
 #超级管理员id集合 Administrator,使用逗号分隔
 SUPER_ADMINISTRATOR: 37
+PROJECT_ADMINISTRATOR: 38
 
 logging:
   level:
