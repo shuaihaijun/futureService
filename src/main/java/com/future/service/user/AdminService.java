@@ -175,7 +175,9 @@ public class AdminService extends ServiceImpl<FuUserMapper,FuUser> {
             log.error("保存用户信息,两次输入的密码不一致！");
             throw new ParameterInvalidException("保存用户信息,两次输入的密码不一致！");
         }
-        if(userJson.getString("introducer")==null||!StringUtils.isNumber(userJson.getString("introducer"))){
+        if(userJson.get("introducer")!=null
+                &&!userJson.getString("introducer").equals("")
+                &&!StringUtils.isNumber(userJson.getString("introducer"))){
             log.error("保存用户信息,推荐码错误！");
             throw new ParameterInvalidException("保存用户信息,推荐码错误！");
         }
