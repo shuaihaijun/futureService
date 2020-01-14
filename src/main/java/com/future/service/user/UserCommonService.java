@@ -34,11 +34,54 @@ public class UserCommonService extends ServiceImpl<FuComAgentMapper,FuComAgent> 
     @Autowired
     RedisManager redisManager;
 
-    /*@Value("${SUPER_ADMINISTRATOR}")
+    @Value("${SUPER_ADMINISTRATOR}")
     private String superAdministrator;
     @Value("${PROJECT_ADMINISTRATOR}")
     private String projectAdministrator;
-    */
+
+    /**
+     * 判断用户是否是管理员
+     * @param userId
+     */
+    public boolean isAdministrator(Integer userId){
+        if(userId==null||userId==0){
+            return false;
+        }
+        //获取配置文件中超级管理员，判断当前登录用户是否为超级管理员,true为超管
+        String addminId=userId.toString();
+        String[] superAdministrators = superAdministrator.split(",");
+        boolean contains = false;
+        if (superAdministrators != null) {
+            contains = Arrays.asList(superAdministrators).contains(addminId);
+        }
+        if(!contains){
+            //获取配置文件中超级管理员，判断当前登录用户是否为超级管理员,true为超管
+            superAdministrators = projectAdministrator.split(",");
+            if (superAdministrators != null) {
+                contains = Arrays.asList(superAdministrators).contains(addminId);
+            }
+        }
+        return contains;
+    }
+
+    /**
+     * 判断用户是否是管理员
+     * @param userId
+     */
+    public boolean isSuperAdministrator(Integer userId){
+        if(userId==null||userId==0){
+            return false;
+        }
+        //获取配置文件中超级管理员，判断当前登录用户是否为超级管理员,true为超管
+        String addminId=userId.toString();
+        String[] superAdministrators = superAdministrator.split(",");
+        boolean contains = false;
+        if (superAdministrators != null) {
+            contains = Arrays.asList(superAdministrators).contains(addminId);
+        }
+        return contains;
+    }
+
     /**
      * 判断用户是否是超级管理员
      * @param userId
@@ -59,13 +102,6 @@ public class UserCommonService extends ServiceImpl<FuComAgentMapper,FuComAgent> 
             return true;
         }
         return false;
-       /*
-        String[] superAdministrators = superAdministrator.split(",");
-        boolean contains = false;
-        if (userId != null && superAdministrators != null) {
-            contains = Arrays.asList(superAdministrators).contains(userId);
-        }
-        return contains;*/
     }
 
 

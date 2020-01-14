@@ -176,7 +176,6 @@ public class PermissionResourceService extends ServiceImpl<FuPermissionResourceM
             }*/
             result = fuPermissionResourceMapper.selectPageList(fuPermissionResourceBO, porjKeys);
         }
-        System.out.println(resourceVOS.getTotal());
         return resourceVOS;
     }
 

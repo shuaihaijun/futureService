@@ -79,8 +79,7 @@ public class FuPermissionResourceServiceTests {
         PageInfoHelper pageInfoHelper = new PageInfoHelper();
         pageInfoHelper.setPageNo(1);
         pageInfoHelper.setPageSize(5);
-        PageInfo<FuPermissionResourceVO> pageInfo = permissionResourceService.findPageList(fuPermissionResourceBO, pageInfoHelper);
-        log.info(pageInfo.toString());
+        permissionResourceService.findPageList(fuPermissionResourceBO, pageInfoHelper);
     }
 
     /**

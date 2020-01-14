@@ -459,18 +459,6 @@ public class AdminService extends ServiceImpl<FuUserMapper,FuUser> {
             throw new ParameterInvalidException("查询用户列表,获取参数为空！");
         }
 
-        /*int pageSize=0;
-        int pageNum=20;
-        if(!com.future.common.util.StringUtils.isEmpty(condition.getString("pageSize"))){
-            pageSize=Integer.parseInt(condition.getString("pageSize"));
-        }
-        if(!com.future.common.util.StringUtils.isEmpty(condition.getString("pageNum"))){
-            pageNum=Integer.parseInt(condition.getString("pageNum"));
-        }
-        Page page=new Page();
-        page.setSize(pageSize);
-        page.setCurrent(pageNum);*/
-
         if(helper==null){
             helper=new PageInfoHelper();
         }
@@ -479,40 +467,39 @@ public class AdminService extends ServiceImpl<FuUserMapper,FuUser> {
         if(userMap.get("userId")!=null){
             wrapper.eq(FuUser.USER_ID,userMap.get("userId"));
         }
-        /*if(condition.getString("userId")!=null
-            &&!condition.getString("userId").equals("")){
-            wrapper.eq(FuUser.USER_ID,condition.getString("userId"));
+        if(userMap.get("userId")!=null
+            &&!String.valueOf(userMap.get("userId")).equals("")){
+            wrapper.eq(FuUser.USER_ID,userMap.get("userId"));
         }
-        if(condition.getString("username")!=null
-                &&!condition.getString("username").equals("")){
-            wrapper.eq(FuUser.USER_NAME,condition.getString("username"));
+        if(userMap.get("username")!=null
+                &&!String.valueOf(userMap.get("username")).equals("")){
+            wrapper.eq(FuUser.USER_NAME,userMap.get("username"));
         }
-        if(condition.getString("userType")!=null
-                &&!condition.getString("userType").equals("")){
-            wrapper.eq(FuUser.USER_TYPE,condition.getString("userType"));
+        if(userMap.get("userType")!=null
+                &&!String.valueOf(userMap.get("userType")).equals("")){
+            wrapper.eq(FuUser.USER_TYPE,userMap.get("userType"));
         }
-        if(condition.getString("userState")!=null
-                &&!condition.getString("userState").equals("")){
-            wrapper.eq(FuUser.USER_STATE,condition.getInteger("userState"));
+        if(userMap.get("userState")!=null
+                &&!String.valueOf(userMap.get("userState")).equals("")){
+            wrapper.eq(FuUser.USER_STATE,userMap.get("userState"));
         }else {
             wrapper.eq(FuUser.USER_STATE,UserConstant.USER_STATE_NORMAL);
         }
-        if(condition.getString("isVerified")!=null
-                &&!condition.getString("isVerified").equals("")){
-            wrapper.eq(FuUser.IS_VERIFIED,condition.getString("isVerified"));
+        if(userMap.get("isVerified")!=null
+                &&!String.valueOf(userMap.get("isVerified")).equals("")){
+            wrapper.eq(FuUser.IS_VERIFIED,userMap.get("isVerified"));
         }
-        if(condition.getString("isAccount")!=null
-                &&!condition.getString("isAccount").equals("")){
-            wrapper.eq(FuUser.IS_ACCOUNT,condition.getString("isAccount"));
+        if(userMap.get("isAccount")!=null
+                &&!String.valueOf(userMap.get("isAccount")).equals("")){
+            wrapper.eq(FuUser.IS_ACCOUNT,userMap.get("isAccount"));
         }
-        if(condition.getString("introducer")!=null
-                &&!condition.getString("introducer").equals("")){
-            wrapper.eq(FuUser.INTRODUCER,condition.getString("introducer"));
-        }*/
+        if(userMap.get("introducer")!=null
+                &&!String.valueOf(userMap.get("introducer")).equals("")){
+            wrapper.eq(FuUser.INTRODUCER,userMap.get("introducer"));
+        }
 
         com.github.pagehelper.Page<FuUser> userPage= PageHelper.startPage(helper.getPageNo(),helper.getPageSize());
         selectList(wrapper);
-//        Page<FuUser> pageInfo=selectPage(page,wrapper);
 
         return userPage;
     }
