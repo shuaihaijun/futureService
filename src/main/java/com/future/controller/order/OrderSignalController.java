@@ -55,6 +55,9 @@ public class OrderSignalController {
         if(!StringUtils.isEmpty(requestMap.getString("userId"))){
             wrapper.eq(FuOrderSignal.USER_ID,requestMap.getString("userId"));
         }
+        if(!StringUtils.isEmpty(requestMap.getString("signalId"))){
+            wrapper.eq(FuOrderSignal.SIGNAL_ID,requestMap.getString("signalId"));
+        }
         if(!StringUtils.isEmpty(requestMap.getString("orderId"))){
             wrapper.eq(FuOrderSignal.ORDER_ID,requestMap.getString("orderId"));
         }

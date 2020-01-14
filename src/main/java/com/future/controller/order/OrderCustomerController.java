@@ -59,7 +59,7 @@ public class OrderCustomerController {
 
         String userId="";
         if(!StringUtils.isEmpty(requestMap.getString("operUserId"))){
-            if(!userCommonService.isAdministrator(String.valueOf(requestMap.getString("operUserId")))){
+            if(!userCommonService.isAdministrator(Integer.parseInt(String.valueOf(requestMap.getString("operUserId"))))){
                 // 不是管理员管理员
                 wrapper.eq(FuOrderCustomer.USER_ID,requestMap.getString("operUserId"));
             }

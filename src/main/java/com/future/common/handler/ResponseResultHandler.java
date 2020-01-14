@@ -5,6 +5,7 @@ import com.future.common.result.DefaultErrorResult;
 import com.future.common.util.AnnotationUtil;
 import com.future.common.util.ResultUtil;
 import com.future.common.util.StringUtils;
+import com.github.pagehelper.Page;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
@@ -52,6 +53,9 @@ public class ResponseResultHandler implements ResponseBodyAdvice<Object>, Initia
             return body;
         } else if (body instanceof PageInfo) {
             PageInfo<?> page = (PageInfo<?>) body;
+            return ResultUtil.success(page);
+        } else if (body instanceof Page) {
+            Page<?> page = (Page<?>) body;
             return ResultUtil.success(page);
         }
         return ResultUtil.success(body);

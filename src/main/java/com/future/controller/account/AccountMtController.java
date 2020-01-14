@@ -100,7 +100,7 @@ public class AccountMtController {
         /*循环设置状态*/
         for(int i=0;i<accounts.size();i++){
             userAccout=accounts.get(i).getServerName()+"&"+accounts.get(i).getMtAccId();
-            accountState=(Integer) redisManager.hget(RedisConstant.ACCOUNT_CONNECT_STATE,userAccout);
+            accountState=(Integer) redisManager.hget(RedisConstant.H_ACCOUNT_CONNECT_STATE,userAccout);
             accounts.get(i).setConnectState(accountState==null?0:accountState);
         }
         return  accounts;

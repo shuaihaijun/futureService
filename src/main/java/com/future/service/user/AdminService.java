@@ -3,7 +3,6 @@ package com.future.service.user;
 import com.alibaba.druid.util.StringUtils;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
-import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.future.common.constants.CommonConstant;
 import com.future.common.constants.RedisConstant;
@@ -33,6 +32,7 @@ import com.future.service.com.FuComAgentService;
 import com.future.service.permission.PermissionRoleService;
 import com.future.service.permission.PermissionUserProjectService;
 import com.future.service.permission.PermissionUserRoleService;
+import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.slf4j.Logger;
@@ -105,7 +105,7 @@ public class AdminService extends ServiceImpl<FuUserMapper,FuUser> {
         }
 
         /*设置session 用户+token,回头价格session共享*/
-        String token=UUID.randomUUID().toString();
+        String token=CommonUtil.getUUID();
         AdminInfo adminInfo = new AdminInfo();
         adminInfo.setAdminId(fuUser.getId());
         adminInfo.setAdminLogin(fuUser.getUsername());
@@ -117,7 +117,7 @@ public class AdminService extends ServiceImpl<FuUserMapper,FuUser> {
         RequestContextHolderUtil.setAdminInfo(adminInfo);
         RequestContextHolderUtil.setAdmintoken(token);
         /*为了解决跨域问题，把token放到redis中*/
-        redisManager.hset(RedisConstant.USER_LOGIN_TOKEN,fuUser.getId().toString(),token);
+        redisManager.hset(RedisConstant.H_USER_LOGIN_TOKEN,fuUser.getId().toString(),token);
 
         /*返回数据填充*/
         Map userMap=new HashMap();
@@ -155,7 +155,7 @@ public class AdminService extends ServiceImpl<FuUserMapper,FuUser> {
         RequestContextHolderUtil.removeAdminInfo();
         RequestContextHolderUtil.removeAdmintoken();
         /*为了解决跨域问题，把token放到redis中*/
-        redisManager.hdel(RedisConstant.USER_LOGIN_TOKEN,fuUser.getId().toString());
+        redisManager.hdel(RedisConstant.H_USER_LOGIN_TOKEN,fuUser.getId().toString());
     }
 
     /**
@@ -174,6 +174,10 @@ public class AdminService extends ServiceImpl<FuUserMapper,FuUser> {
         if(!userJson.getString("password").equals(userJson.getString("password2"))){
             log.error("保存用户信息,两次输入的密码不一致！");
             throw new ParameterInvalidException("保存用户信息,两次输入的密码不一致！");
+        }
+        if(userJson.getString("introducer")==null||!StringUtils.isNumber(userJson.getString("introducer"))){
+            log.error("保存用户信息,推荐码错误！");
+            throw new ParameterInvalidException("保存用户信息,推荐码错误！");
         }
 
         Map registeredInfo=new HashMap();
@@ -442,20 +446,20 @@ public class AdminService extends ServiceImpl<FuUserMapper,FuUser> {
      * @param condition
      * @return
      */
-    public Page<FuUser> queryUserList(JSONObject condition){
+    public Page<FuUser> queryUserList(Map userMap, PageInfoHelper helper){
         /*判断查询条件*/
-        if(condition == null || condition.toJSONString().equalsIgnoreCase("")){
+        if(userMap == null||userMap.get("operUserId")==null){
             log.error("查询用户列表,获取参数为空！");
             throw new ParameterInvalidException("查询用户列表,获取参数为空！");
         }
         /*判断权限*/
-        /*String operUserId=condition.getString("operUserId");
+        String operUserId=String.valueOf(userMap.get("operUserId"));
         if(StringUtils.isEmpty(operUserId)){
             log.error("查询用户列表,用户未登录！");
             throw new ParameterInvalidException("查询用户列表,获取参数为空！");
-        }*/
+        }
 
-        int pageSize=0;
+        /*int pageSize=0;
         int pageNum=20;
         if(!com.future.common.util.StringUtils.isEmpty(condition.getString("pageSize"))){
             pageSize=Integer.parseInt(condition.getString("pageSize"));
@@ -465,9 +469,17 @@ public class AdminService extends ServiceImpl<FuUserMapper,FuUser> {
         }
         Page page=new Page();
         page.setSize(pageSize);
-        page.setCurrent(pageNum);
+        page.setCurrent(pageNum);*/
+
+        if(helper==null){
+            helper=new PageInfoHelper();
+        }
+
         EntityWrapper<FuUser> wrapper=new EntityWrapper<FuUser>();
-        if(condition.getString("userId")!=null
+        if(userMap.get("userId")!=null){
+            wrapper.eq(FuUser.USER_ID,userMap.get("userId"));
+        }
+        /*if(condition.getString("userId")!=null
             &&!condition.getString("userId").equals("")){
             wrapper.eq(FuUser.USER_ID,condition.getString("userId"));
         }
@@ -496,10 +508,13 @@ public class AdminService extends ServiceImpl<FuUserMapper,FuUser> {
         if(condition.getString("introducer")!=null
                 &&!condition.getString("introducer").equals("")){
             wrapper.eq(FuUser.INTRODUCER,condition.getString("introducer"));
-        }
-        Page<FuUser> pageInfo=selectPage(page,wrapper);
+        }*/
 
-        return pageInfo;
+        com.github.pagehelper.Page<FuUser> userPage= PageHelper.startPage(helper.getPageNo(),helper.getPageSize());
+        selectList(wrapper);
+//        Page<FuUser> pageInfo=selectPage(page,wrapper);
+
+        return userPage;
     }
     /**
      * 根据状态分页查询用户信息

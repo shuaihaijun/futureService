@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * 文件上传工具类
@@ -46,11 +47,17 @@ public class FileUtil {
                 System.out.println("目录不存在，创建目录:" + filePath);
                 thePath.mkdir();
             }
+
+            //重新生成文件名称
+            String fileOName=file.getOriginalFilename();
+            String fileType=fileOName.substring(fileOName.lastIndexOf("."),fileOName.length());
+            String fileName= CommonUtil.getUUID()+fileType;
+
             //准备目标路径
-            File dest = new File(filePath,file.getOriginalFilename());
+            File dest = new File(filePath,fileName);
             file.transferTo(dest);
             //返回路径
-            return file.getOriginalFilename();
+            return fileName;
         } catch (IOException e) {
             throw new BusinessException(e);
         }

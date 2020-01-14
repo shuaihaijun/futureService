@@ -224,6 +224,8 @@ public class FuProductSignalApplyService extends ServiceImpl<FuProductSignalAppl
         /*组装信息*/
         FuProductSignalApply signal=setSignal(signalMap);
 
+        //todo  判断该信号源是否满足申请条件
+
         /*默认数据填充*/
         signal.setCreateDate(new Date());
         signal.setApplyState(SignalConstant.SIGNAL_APPLY_STATE_SAVE);
@@ -290,79 +292,72 @@ public class FuProductSignalApplyService extends ServiceImpl<FuProductSignalAppl
             throw new DataConflictException(GlobalResultCode.PARAM_NULL_POINTER,"传入数据为空!");
         }
         /*组装信息*/
-        try {
-            FuProductSignalApply signalApply=new FuProductSignalApply();
-            signalApply.setId(signalId);
-            if(state== SignalConstant.SIGNAL_APPLY_STATE_NORMAL){
-                /*审核通过*/
-                FuProductSignalApply apply=findSignalApplyById(signalId);
-                if(ObjectUtils.isEmpty(apply)){
-                    log.error("查询申请信息错误！");
-                    throw new BusinessException("查询申请信息错误！");
-                }
-                FuProductSignal signal=ConvertUtil.convertSignal(apply);
-                signal.setCheckDate(new Date());
-                signal.setCreateDate(new Date());
-                signal.setModifyDate(new Date());
-
-                /*建立社区佣金账户*/
-                Map conditionMap =new HashMap();
-                conditionMap.put(FuProductSignalApply.USER_ID,signal.getUserId());
-                List<FuAccountInfo> accountInfos= fuAccountInfoService.selectByMap(conditionMap);
-                if(accountInfos==null || accountInfos.size()==0){
-                    log.error("查询社区账户信息错误！");
-                    throw new BusinessException("查询社区账户信息错误！");
-                }
-                fuAccountCommissionService.initAccountCommission(signal.getUserId(),accountInfos.get(0).getId());
-
-                /*变更用户类型*/
-                FuUser user=adminService.selectById(signal.getUserId());
-                if(user==null){
-                    log.error("查询用户信息错误！");
-                    throw new BusinessException("查询用户信息错误！");
-                }
-                FuPermissionUserRole userRole=permissionUserRoleService.selectOne((new EntityWrapper<FuPermissionUserRole>().eq(FuPermissionUserRole.USER_ID,signal.getUserId())));
-                if(userRole==null){
-                    log.error("查询用户信息错误！");
-                    throw new BusinessException("查询用户信息错误！");
-                }
-                /*查询用户所属项目*/
-                FuPermissionUserProject userProject= permissionUserProjectService.selectOne(new EntityWrapper<FuPermissionUserProject>()
-                        .eq(FuPermissionUserProject.USER_ID,user.getId()));
-                /*设置角色信息*/
-                FuPermissionRole defaultRole= permissionRoleService.getRoleByProject(userProject.getProjKey(),UserConstant.USER_TYPE_SIGNAL);
-                if(defaultRole!=null){
-                    userRole.setRoleId(defaultRole.getId());
-                    /*分配相关角色*/
-                    permissionUserRoleService.updateById(userRole);
-                }
-
-                /*变更用户类型*/
-                user.setUserType(UserConstant.USER_TYPE_SIGNAL);
-                adminService.updateById(user);
-
-                /*修改绑定MT账号状态  isSignal=1、 设置端口等 */
-                fuAccountMtService.checkSignalMtAccount(apply.getUserId(),apply.getServerName(),apply.getMtAccId());
-                /*保存信号源*/
-                fuProductSignalMapper.insertSelective(signal);
-                signalApply.setApplyState(SignalConstant.SIGNAL_APPLY_STATE_NORMAL);
-
-            }else if(state==SignalConstant.SIGNAL_APPLY_STATE_UNPASS){
-                /*审核未通过*/
-                signalApply.setApplyState(SignalConstant.SIGNAL_APPLY_STATE_UNPASS);
-            }else {
-                log.error("审核状态错误！");
-                throw new DataConflictException(GlobalResultCode.PARAM_IS_INVALID,"核状态错误！");
+        FuProductSignalApply signalApply=new FuProductSignalApply();
+        signalApply.setId(signalId);
+        if(state== SignalConstant.SIGNAL_APPLY_STATE_NORMAL){
+            /*审核通过*/
+            FuProductSignalApply apply=findSignalApplyById(signalId);
+            if(ObjectUtils.isEmpty(apply)){
+                log.error("查询申请信息错误！");
+                throw new BusinessException("查询申请信息错误！");
             }
-            signalApply.setRemarks(mesage);
-            /*修改数据*/
-            updateById(signalApply);
+            FuProductSignal signal=ConvertUtil.convertSignal(apply);
+            signal.setCheckDate(new Date());
+            signal.setCreateDate(new Date());
+            signal.setModifyDate(new Date());
 
-        }catch (Exception e){
-            log.error(e.getMessage(),e);
-            throw new BusinessException(e);
+            /*建立社区佣金账户*/
+            Map conditionMap =new HashMap();
+            conditionMap.put(FuProductSignalApply.USER_ID,signal.getUserId());
+            List<FuAccountInfo> accountInfos= fuAccountInfoService.selectByMap(conditionMap);
+            if(accountInfos==null || accountInfos.size()==0){
+                log.error("查询社区账户信息错误！");
+                throw new BusinessException("查询社区账户信息错误！");
+            }
+            fuAccountCommissionService.initAccountCommission(signal.getUserId(),accountInfos.get(0).getId());
+
+            /*变更用户类型*/
+            FuUser user=adminService.selectById(signal.getUserId());
+            if(user==null){
+                log.error("查询用户信息错误！");
+                throw new BusinessException("查询用户信息错误！");
+            }
+            FuPermissionUserRole userRole=permissionUserRoleService.selectOne((new EntityWrapper<FuPermissionUserRole>().eq(FuPermissionUserRole.USER_ID,signal.getUserId())));
+            if(userRole==null){
+                log.error("查询用户角色信息错误！");
+                throw new BusinessException("查询用户角色信息错误！");
+            }
+            /*查询用户所属项目*/
+            FuPermissionUserProject userProject= permissionUserProjectService.selectOne(new EntityWrapper<FuPermissionUserProject>()
+                    .eq(FuPermissionUserProject.USER_ID,user.getId()));
+            /*设置角色信息*/
+            FuPermissionRole defaultRole= permissionRoleService.getRoleByProject(userProject.getProjKey(),UserConstant.USER_TYPE_SIGNAL);
+            if(defaultRole!=null){
+                userRole.setRoleId(defaultRole.getId());
+                /*分配相关角色*/
+                permissionUserRoleService.updateById(userRole);
+            }
+
+            /*变更用户类型*/
+            user.setUserType(UserConstant.USER_TYPE_SIGNAL);
+            adminService.updateById(user);
+
+            /*修改绑定MT账号状态  isSignal=1、 设置端口等 */
+            fuAccountMtService.checkSignalMtAccount(apply.getUserId(),apply.getServerName(),apply.getMtAccId());
+            /*保存信号源*/
+            fuProductSignalMapper.insertSelective(signal);
+            signalApply.setApplyState(SignalConstant.SIGNAL_APPLY_STATE_NORMAL);
+
+        }else if(state==SignalConstant.SIGNAL_APPLY_STATE_UNPASS){
+            /*审核未通过*/
+            signalApply.setApplyState(SignalConstant.SIGNAL_APPLY_STATE_UNPASS);
+        }else {
+            log.error("审核状态错误！");
+            throw new DataConflictException(GlobalResultCode.PARAM_IS_INVALID,"核状态错误！");
         }
-
+        signalApply.setRemarks(mesage);
+        /*修改数据*/
+        updateById(signalApply);
     }
 
     /**

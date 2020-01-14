@@ -1,7 +1,6 @@
 package com.future.controller.admin;
 
 import com.alibaba.fastjson.JSONObject;
-import com.baomidou.mybatisplus.plugins.Page;
 import com.future.common.enums.GlobalResultCode;
 import com.future.common.exception.DataConflictException;
 import com.future.common.exception.ParameterInvalidException;
@@ -10,6 +9,7 @@ import com.future.common.result.RequestParams;
 import com.future.common.util.ThreadCache;
 import com.future.entity.user.FuUser;
 import com.future.service.user.AdminService;
+import com.github.pagehelper.Page;
 import com.github.pagehelper.PageInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -74,12 +74,11 @@ public class AdminController{
 
     //查询用户列表
     @RequestMapping(value= "/queryUserList",method=RequestMethod.POST)
-    public @ResponseBody
-    Page<FuUser> queryUserList(){
+    public @ResponseBody Page<FuUser> queryUserList(@RequestBody RequestParams<Map> requestParams) {
+        Map userMap = requestParams.getParams();
+        PageInfoHelper helper = requestParams.getPageInfoHelper();
         // 获取请求参数
-        String requestJSONStr = ThreadCache.getPostRequestParams();
-        JSONObject requestMap = JSONObject.parseObject(requestJSONStr);
-        return adminService.queryUserList(requestMap);
+        return adminService.queryUserList(userMap,helper);
     }
 
     //查询用户 by id or name

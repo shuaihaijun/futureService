@@ -6,12 +6,17 @@ package com.future.common.constants;
 public class RedisConstant {
 
 	/*follow*/
-	public static final String FOLLOW_LIST_KEY="followList";
+	public static final String H_FOLLOW_LIST_KEY="followList";
 
 	/*mtAccount connect state*/
-	public static final String ACCOUNT_CONNECT_STATE="accountConnectState";
+	public static final String H_ACCOUNT_CONNECT_STATE="accountConnectState";
 
 	/*user login token*/
-	public static final String USER_LOGIN_TOKEN="userLoginToken";
+	public static final String H_USER_LOGIN_TOKEN="userLoginToken";
+
+	/*user info*/
+	public static final String H_USER_INFO="userInfo";
+	/*user project*/
+	public static final String H_USER_PROJ="userProj";
 
 }

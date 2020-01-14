@@ -23,6 +23,7 @@ import com.future.pojo.bo.Node;
 import com.future.pojo.bo.permission.FuPermissionResourceBO;
 import com.future.pojo.vo.permission.FuPermissionResourceVO;
 import com.future.pojo.vo.permission.FuPermissionRoleVO;
+import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Lists;
@@ -135,7 +136,7 @@ public class PermissionResourceService extends ServiceImpl<FuPermissionResourceM
      * @param helper               分页条件
      * @return 分页对象
      */
-    public PageInfo<FuPermissionResourceVO> findPageList(FuPermissionResourceBO fuPermissionResourceBO, PageInfoHelper helper) {
+    public Page<FuPermissionResourceVO> findPageList(FuPermissionResourceBO fuPermissionResourceBO, PageInfoHelper helper) {
         //验证参数对象是否为空
         /*if (fuPermissionResourceBO == null) {
             throw new BusinessException(GlobalResultCode.PARAM_NULL_POINTER);
@@ -164,7 +165,7 @@ public class PermissionResourceService extends ServiceImpl<FuPermissionResourceM
         if (helper == null) {
             helper = new PageInfoHelper();
         }
-        PageHelper.startPage(helper.getPageNo(), helper.getPageSize());
+        Page<FuPermissionResourceVO> resourceVOS =PageHelper.startPage(helper.getPageNo(), helper.getPageSize());
         List<FuPermissionResourceVO> result = Lists.newArrayList();
         //超级管理员用户查看全部内容，其他用户获取当前有拥有的工程项目
         if (contains) {
@@ -175,7 +176,8 @@ public class PermissionResourceService extends ServiceImpl<FuPermissionResourceM
             }*/
             result = fuPermissionResourceMapper.selectPageList(fuPermissionResourceBO, porjKeys);
         }
-        return new PageInfo(result);
+        System.out.println(resourceVOS.getTotal());
+        return resourceVOS;
     }
 
     /**

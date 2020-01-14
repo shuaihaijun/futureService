@@ -110,24 +110,26 @@ public class ProductSignalController {
 
     //删除申请信息
     @RequestMapping(value= "/signalFollowsRemove",method=RequestMethod.POST)
-    public @ResponseBody void signalFollowsRemove(){
+    public @ResponseBody boolean signalFollowsRemove(){
         // 获取请求参数
         String requestJSONStr = ThreadCache.getPostRequestParams();
         JSONObject requestMap = JSONObject.parseObject(requestJSONStr);
         Map conditionMap = requestMap.getInnerMap();
         /*校验参数*/
         fuUserFollowsService.signalFollowsRemove(conditionMap);
+        return true;
     }
 
     //信号源订阅信息保存/修改
     @RequestMapping(value= "/signalFollowsSaveOrUpdate",method=RequestMethod.POST)
-    public @ResponseBody void signalFollowsSaveOrUpdate(){
+    public @ResponseBody boolean signalFollowsSaveOrUpdate(){
         // 获取请求参数
         String requestJSONStr = ThreadCache.getPostRequestParams();
         JSONObject requestMap = JSONObject.parseObject(requestJSONStr);
         Map conditionMap = requestMap.getInnerMap();
         /*校验参数*/
         fuUserFollowsService.signalFollowsSaveOrUpdate(conditionMap);
+        return true;
     }
 
     //查询跟单信息

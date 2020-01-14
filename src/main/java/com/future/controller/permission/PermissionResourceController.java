@@ -12,6 +12,7 @@ import com.future.pojo.bo.BasicBO;
 import com.future.pojo.bo.permission.FuPermissionResourceBO;
 import com.future.pojo.vo.permission.FuPermissionResourceVO;
 import com.future.service.permission.PermissionResourceService;
+import com.github.pagehelper.Page;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -76,11 +77,10 @@ public class PermissionResourceController {
      */
     @ApiOperation(value = "权限信息分页查询", notes = "权限信息分页查询")
     @PostMapping(value = "/queryPage")
-    public PageInfo<FuPermissionResourceVO> queryPage(@RequestBody RequestParams<FuPermissionResourceBO> requestParams) {
+    public Page<FuPermissionResourceVO> queryPage(@RequestBody RequestParams<FuPermissionResourceBO> requestParams) {
         FuPermissionResourceBO permenuBO = requestParams.getParams();
         PageInfoHelper helper = requestParams.getPageInfoHelper();
-        PageInfo<FuPermissionResourceVO> resultPage = permissionResourceService.findPageList(permenuBO, helper);
-        return resultPage;
+        return permissionResourceService.findPageList(permenuBO, helper);
     }
 
     /**

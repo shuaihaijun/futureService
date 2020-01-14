@@ -131,7 +131,7 @@ public class FuOrderFollowInfoService extends ServiceImpl<FuOrderFollowInfoMappe
         String mtPassword=String.valueOf(mts.get(0).getMtPasswordTrade());
 
         /*验证用户链接状态*/
-        Integer connectSate=(Integer) redisManager.hget(RedisConstant.ACCOUNT_CONNECT_STATE,server+"&"+mtAccId);
+        Integer connectSate=(Integer) redisManager.hget(RedisConstant.H_ACCOUNT_CONNECT_STATE,server+"&"+mtAccId);
         if(connectSate==null || connectSate==0){
             log.error("根据时间段查询用户历史订单,用户MT4账户未登录！");
             throw new BusinessException("根据时间段查询用户历史订单,用户MT4账户未登录！");

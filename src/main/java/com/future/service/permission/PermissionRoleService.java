@@ -199,7 +199,7 @@ public class PermissionRoleService extends ServiceImpl<FuPermissionRoleMapper, F
         //获取当前登录用户信息
 //        AdminInfo user = RequestContextHolderUtil.getAdminInfo();
         //获取配置文件中超级管理员，判断当前登录用户是否为超级管理员,true为超管
-        boolean contains = userCommonService.isAdministrator(fuPermissionRoleBO.getUserId().toString());
+        boolean contains = userCommonService.isAdministrator(fuPermissionRoleBO.getUserId());
 
         //由于分页组件默认执行startPage的第一个sql，因此提前单独执行
         List<Integer> porjKeys = null;
@@ -301,7 +301,7 @@ public class PermissionRoleService extends ServiceImpl<FuPermissionRoleMapper, F
             user = new AdminInfo();
             user.setAdminId(1);
             //获取配置文件中超级管理员，判断当前登录用户是否为超级管理员,true为超管
-            boolean contains = userCommonService.isAdministrator(user.getAdminId().toString());;
+            boolean contains = userCommonService.isAdministrator(user.getAdminId());;
             
             if (contains) {
                 list = fuPermissionRoleMapper.selectByProjKey(null);

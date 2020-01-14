@@ -224,13 +224,7 @@ public class PermissionRoleResourceService extends ServiceImpl<FuPermissionRoleR
         List<Integer> roles= permissionUserRoleService.findRoleIdsByUserId(userId);
 
         //获取配置文件中超级管理员，判断当前登录用户是否为超级管理员,true为超管
-        boolean contains = userCommonService.isAdministrator(userId.toString());
-
-        /*判断是否是资源团队管理员*/
-        if(userCommonService.isProjectAdministrator(userId,null)){
-            // TODO
-            contains=false;
-        }
+        boolean contains = userCommonService.isAdministrator(userId,0);
 
         //声明权限结构树
         List<Node> permenuList=new ArrayList<>();

@@ -131,7 +131,7 @@ public class ProductSignalApplyController {
     }
     //提交审核信息
     @RequestMapping(value= "/reviewProductSignal",method=RequestMethod.POST)
-    public @ResponseBody void submitCheck(){
+    public @ResponseBody boolean submitCheck(){
         // 获取请求参数
         String requestJSONStr = ThreadCache.getPostRequestParams();
         JSONObject requestMap = JSONObject.parseObject(requestJSONStr);
@@ -140,5 +140,6 @@ public class ProductSignalApplyController {
         String message=requestMap.getString("message");
         /*校验参数*/
         fuProductSignalApplyService.reviewProductSignal(Integer.parseInt(signalId),Integer.parseInt(state),message);
+        return true;
     }
 }

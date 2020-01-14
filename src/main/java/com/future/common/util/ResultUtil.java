@@ -140,4 +140,23 @@ public class ResultUtil {
         result.setPage(page);
         return result;
     }
+
+    public static <T> PlatformResult<T> success(com.github.pagehelper.Page<T> pageInfo) {
+        Page page = new Page();
+        page.setPageNo(pageInfo.getPageNum());
+        page.setPageSize(pageInfo.getPageSize());
+        page.setTotal(pageInfo.getTotal());
+        page.setTotalPages(pageInfo.getPages());
+        page.setSize(pageInfo.getPageSize());
+
+        PlatformResult<T> result = new PlatformResult<>();
+        GlobalResultCode success = GlobalResultCode.SUCCESS;
+        result.setStatus(success.code());
+        result.setMsg(success.message());
+        Map<String, Object> resultMap = new HashMap<>();
+        resultMap.put(DEFAULT_KEY, pageInfo.getResult());
+        result.setContent((T) resultMap);
+        result.setPage(page);
+        return result;
+    }
 }

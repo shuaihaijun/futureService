@@ -88,7 +88,7 @@ public class FuAccountMtService extends ServiceImpl<FuAccountMtMapper, FuAccount
         if(condition.get("operUserId")!=null){
             String operUserId=String.valueOf(condition.get("operUserId"));
             /*非管理员用户 只能查询自己的数据*/
-            if(!userCommonService.isAdministrator(operUserId)){
+            if(!userCommonService.isAdministrator(Integer.parseInt(operUserId))){
                 condition.put("userId",operUserId);
             }
         }
@@ -101,7 +101,7 @@ public class FuAccountMtService extends ServiceImpl<FuAccountMtMapper, FuAccount
         /*循环设置状态*/
         for(int i=0;i<accounts.size();i++){
             userAccout=accounts.get(i).getServerName()+"&"+accounts.get(i).getMtAccId();
-            accountState=(Integer) redisManager.hget(RedisConstant.ACCOUNT_CONNECT_STATE,userAccout);
+            accountState=(Integer) redisManager.hget(RedisConstant.H_ACCOUNT_CONNECT_STATE,userAccout);
             accounts.get(i).setConnectState(accountState==null?0:accountState);
         }
         return accounts;
@@ -240,7 +240,7 @@ public class FuAccountMtService extends ServiceImpl<FuAccountMtMapper, FuAccount
             Broker broker = new Broker(mtServer);
             /*1 、连接数据*/
             if(!mtAccountService.getConnect(strategy,broker,mtAccId,password)){
-                redisManager.hset(RedisConstant.ACCOUNT_CONNECT_STATE,stateKey, CommonConstant.COMMON_NO);
+                redisManager.hset(RedisConstant.H_ACCOUNT_CONNECT_STATE,stateKey, CommonConstant.COMMON_NO);
                 log.error("user connect failed");
                 return false;
             }
@@ -250,7 +250,7 @@ public class FuAccountMtService extends ServiceImpl<FuAccountMtMapper, FuAccount
             }
 
             /*3、修改缓存中的状态*/
-            redisManager.hset(RedisConstant.ACCOUNT_CONNECT_STATE,stateKey, CommonConstant.COMMON_YES);
+            redisManager.hset(RedisConstant.H_ACCOUNT_CONNECT_STATE,stateKey, CommonConstant.COMMON_YES);
         }catch (Exception e){
             log.error(e.getMessage(),e);
             throw new BusinessException(e);
@@ -315,7 +315,7 @@ public class FuAccountMtService extends ServiceImpl<FuAccountMtMapper, FuAccount
             }
             /*修改缓存中的状态*/
             String stateKey=mtServer+"&"+mtAccId;
-            redisManager.hset(RedisConstant.ACCOUNT_CONNECT_STATE,stateKey, CommonConstant.COMMON_NO);
+            redisManager.hset(RedisConstant.H_ACCOUNT_CONNECT_STATE,stateKey, CommonConstant.COMMON_NO);
         }catch (Exception e){
             log.error(e.getMessage(),e);
             throw new BusinessException(e);
@@ -360,7 +360,7 @@ public class FuAccountMtService extends ServiceImpl<FuAccountMtMapper, FuAccount
             }
             /*修改缓存中的状态*/
             String stateKey=mtServer+"&"+mtAccId;
-            redisManager.hset(RedisConstant.ACCOUNT_CONNECT_STATE,stateKey, CommonConstant.COMMON_YES);
+            redisManager.hset(RedisConstant.H_ACCOUNT_CONNECT_STATE,stateKey, CommonConstant.COMMON_YES);
         }catch (Exception e){
             log.error(e.getMessage(),e);
             throw new BusinessException(e);
@@ -402,7 +402,7 @@ public class FuAccountMtService extends ServiceImpl<FuAccountMtMapper, FuAccount
             }
             /*修改缓存中的状态*/
             String stateKey=mtServer+"&"+mtAccId;
-            redisManager.hset(RedisConstant.ACCOUNT_CONNECT_STATE,stateKey, CommonConstant.COMMON_NO);
+            redisManager.hset(RedisConstant.H_ACCOUNT_CONNECT_STATE,stateKey, CommonConstant.COMMON_NO);
         }catch (Exception e){
             log.error(e.getMessage(),e);
             throw new BusinessException(e);

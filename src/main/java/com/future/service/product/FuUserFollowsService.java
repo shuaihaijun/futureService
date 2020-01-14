@@ -72,7 +72,7 @@ public class FuUserFollowsService extends ServiceImpl<FuUserFollowsMapper, FuUse
         if(conditionMap.get("operUserId")!=null){
             String operUserId=String.valueOf(conditionMap.get("operUserId"));
             /*非管理员用户 只能查询自己的数据*/
-            if(!userCommonService.isAdministrator(operUserId)){
+            if(!userCommonService.isAdministrator(Integer.parseInt(operUserId))){
                 conditionMap.put("userId",operUserId);
             }
         }
@@ -105,11 +105,11 @@ public class FuUserFollowsService extends ServiceImpl<FuUserFollowsMapper, FuUse
         List<UserMTAccountBO> userAccounts= fuAccountMtService.getUserMTAccByCondition(conMap);
         if(ObjectUtils.isEmpty(signal)){
             log.error("根据信号源ID 查询信号源失败！");
-            throw new ParameterInvalidException(GlobalResultCode.PARAM_IS_INVALID);
+            throw new ParameterInvalidException("根据信号源ID 查询信号源失败！");
         }
         if(ObjectUtils.isEmpty(userAccounts)){
             log.error("根据用户ID 查询用户账户信息失败！");
-            throw new ParameterInvalidException(GlobalResultCode.PARAM_IS_INVALID);
+            throw new ParameterInvalidException("根据用户ID 查询用户账户信息失败！");
         }
 
         /*校验是否已存在*/
@@ -138,23 +138,23 @@ public class FuUserFollowsService extends ServiceImpl<FuUserFollowsMapper, FuUse
         follows.setSignalServerName(signal.getServerName());
         follows.setSignalMtAccId(signal.getMtAccId());
         follows.setRuleState(0);
-        if(!StringUtils.isEmpty(dataMap.get("ruleType"))){
+        if(!ObjectUtils.isEmpty(dataMap.get("ruleType"))){
             follows.setRuleType(Integer.parseInt(String.valueOf(dataMap.get("ruleType"))));
         }
-        if(!StringUtils.isEmpty(dataMap.get("amount"))){
+        if(!ObjectUtils.isEmpty(dataMap.get("amount"))){
             follows.setAmount(new BigDecimal(String.valueOf(dataMap.get("amount"))));
         }
-        if(!StringUtils.isEmpty(dataMap.get("'limitUpperAmount"))){
-            follows.setLimitUpperAmount(new BigDecimal(String.valueOf(dataMap.get("'limitUpperAmount"))));
+        if(!ObjectUtils.isEmpty(dataMap.get("limitUpperAmount"))){
+            follows.setLimitUpperAmount(new BigDecimal(String.valueOf(dataMap.get("limitUpperAmount"))));
         }
-        if(!StringUtils.isEmpty(dataMap.get("'accountEquityAmount'"))){
-            follows.setAccountEquityAmount(new BigDecimal(String.valueOf(dataMap.get("'accountEquityAmount'"))));
+        if(!ObjectUtils.isEmpty(dataMap.get("accountEquityAmount"))){
+            follows.setAccountEquityAmount(new BigDecimal(String.valueOf(dataMap.get("accountEquityAmount"))));
         }
-        if(!StringUtils.isEmpty(dataMap.get("'accountEquityPercentage'"))){
-            follows.setAccountEquityPercentage(new BigDecimal(String.valueOf(dataMap.get("'accountEquityPercentage'"))));
+        if(!ObjectUtils.isEmpty(dataMap.get("accountEquityPercentage"))){
+            follows.setAccountEquityPercentage(new BigDecimal(String.valueOf(dataMap.get("accountEquityPercentage"))));
         }
-        if(!StringUtils.isEmpty(dataMap.get("'followAlarmAmount'"))){
-            follows.setFollowAlarmAmount(new BigDecimal(String.valueOf(dataMap.get("'followAlarmAmount'"))));
+        if(!ObjectUtils.isEmpty(dataMap.get("followAlarmAmount"))){
+            follows.setFollowAlarmAmount(new BigDecimal(String.valueOf(dataMap.get("followAlarmAmount"))));
         }
 
         if(isNew){

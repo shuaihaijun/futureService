@@ -98,7 +98,7 @@ public class FuComAgentApplyService extends ServiceImpl<FuComAgentApplyMapper,Fu
         }
         String operUserId=String.valueOf(conditionMap.get("operUserId"));
         //获取配置文件中超级管理员，判断当前登录用户是否为超级管理员,true为超管
-        boolean contains =  userCommonService.isAdministrator(operUserId);
+        boolean contains =  userCommonService.isAdministrator(Integer.parseInt(operUserId));
         if(!contains){
             //该用户只能查询自己的数据
             wrapper.eq(FuComAgentApply.USER_ID,operUserId);
