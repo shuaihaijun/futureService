@@ -21,6 +21,8 @@ import com.future.entity.user.FuUser;
 import com.future.mapper.account.FuAccountCommissionMapper;
 import com.future.service.commission.FuCommissionCustomerService;
 import com.future.service.user.AdminService;
+import com.future.service.user.UserCommonService;
+import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.omg.PortableInterceptor.INACTIVE;
@@ -45,6 +47,8 @@ public class FuAccountCommissionService extends ServiceImpl<FuAccountCommissionM
     FuAccountCommissionFlowService fuAccountCommissionFlowService;
     @Autowired
     FuAccountWithdrawService fuAccountWithdrawService;
+    @Autowired
+    UserCommonService userCommonService;
     @Autowired
     AdminService adminService;
     @Value("${SUPER_ADMINISTRATOR}")
@@ -82,18 +86,57 @@ public class FuAccountCommissionService extends ServiceImpl<FuAccountCommissionM
      * 获取佣金账户
      * @return
      */
-    public PageInfo<FuAccountCommission> getPageAccountCommisson(FuAccountCommission commission, PageInfoHelper helper){
+    public Page<FuAccountCommission> getPageAccountCommisson(Map commissionMap, PageInfoHelper helper){
+
+        /*判断查询条件*/
+        if(commissionMap == null||commissionMap.get("operUserId")==null){
+            log.error("查询用户列表,获取参数为空！");
+            throw new ParameterInvalidException("查询用户列表,获取参数为空！");
+        }
+        /*判断权限*/
+        String operUserId=String.valueOf(commissionMap.get("operUserId"));
+        if(com.alibaba.druid.util.StringUtils.isEmpty(operUserId)){
+            log.error("查询用户列表,用户未登录！");
+            throw new ParameterInvalidException("查询用户列表,获取参数为空！");
+        }
+        Integer operUserProj=userCommonService.getUserProjKey(Integer.parseInt(operUserId));
+        Boolean isProjAdmin=userCommonService.isAdministrator(Integer.parseInt(operUserId),operUserProj);
+        if(operUserProj==null){
+            log.error("查询用户列表,用户权限有误！");
+            throw new ParameterInvalidException("查询用户列表,用户权限有误！");
+        }
+
+        if(isProjAdmin&&operUserProj==0){
+            /*超管查询*/
+            return queryAccountCommission(commissionMap,helper);
+        }else if(isProjAdmin){
+            /*资源组管理员查找*/
+            commissionMap.put("projKey",operUserProj);
+            return queryAccountCommissionByProject(commissionMap,helper);
+        }else {
+            /*普通用户查找*/
+            commissionMap.put("userId",operUserId);
+            return queryAccountCommission(commissionMap,helper);
+        }
+    }
+
+    /**
+     * 查询用户佣金账户列表
+     * @param commissionMap
+     * @param helper
+     * @return
+     */
+    public Page<FuAccountCommission> queryAccountCommission(Map commissionMap, PageInfoHelper helper){
 
         Wrapper<FuAccountCommission> wrapper=new EntityWrapper<>();
-
-        if(commission.getUserId()!=null){
-            wrapper.eq(FuAccountCommission.USER_ID,commission.getUserId());
+        if(commissionMap.get("userId")!=null){
+            wrapper.eq(FuAccountCommission.USER_ID,commissionMap.get("userId"));
         }
-        if(commission.getAccountId()!=null){
-            wrapper.eq(FuAccountCommission.ACCOUNT_ID,commission.getAccountId());
+        if(commissionMap.get("accountId")!=null){
+            wrapper.eq(FuAccountCommission.ACCOUNT_ID,commissionMap.get("accountId"));
         }
-        if(commission.getAccountState()!=null){
-            wrapper.eq(FuAccountCommission.ACCOUNT_STATE,commission.getAccountState());
+        if(commissionMap.get("accountState")!=null){
+            wrapper.eq(FuAccountCommission.ACCOUNT_STATE,commissionMap.get("accountState"));
         }else {
             wrapper.eq(FuAccountCommission.ACCOUNT_STATE,AccountConstant.ACCOUNT_STATE_NORMAL);
         }
@@ -101,9 +144,26 @@ public class FuAccountCommissionService extends ServiceImpl<FuAccountCommissionM
         if(helper==null){
             helper=new PageInfoHelper();
         }
-        PageHelper.startPage(helper.getPageNo(),helper.getPageSize());
-        List<FuAccountCommission> commissions= selectList(wrapper);
-        return new PageInfo<>(commissions);
+        Page<FuAccountCommission> commissions=PageHelper.startPage(helper.getPageNo(),helper.getPageSize());
+        selectList(wrapper);
+        return commissions;
+    }
+
+
+    /**
+     * 以资源组为单位查询用户佣金账户列表
+     * @param commissionMap
+     * @param helper
+     * @return
+     */
+    public Page<FuAccountCommission> queryAccountCommissionByProject(Map commissionMap, PageInfoHelper helper){
+
+        if(helper==null){
+            helper=new PageInfoHelper();
+        }
+        Page<FuAccountCommission> commissions=PageHelper.startPage(helper.getPageNo(),helper.getPageSize());
+        fuAccountCommissionMapper.queryAccountCommissionByProject(commissionMap);
+        return commissions;
     }
 
     /**

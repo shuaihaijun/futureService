@@ -209,4 +209,63 @@
       agent_type = #{agentType,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  <select id="queryAgentApplyByProjCondition" parameterType="java.util.Map" resultMap="BaseResultMap">
+    SELECT
+      a.id,
+      a.apply_type,
+      a.user_id,
+      a.agent_id,
+      a.agent_level,
+      a.apply_level,
+      a.apply_reason,
+      a.apply_desc,
+      a.apply_state,
+      a.check_desc,
+      a.create_date,
+      a.apply_date,
+      a.check_date,
+      a.agent_name,
+      a.agent_type
+    FROM
+      fu_com_agent_apply a
+    LEFT JOIN fu_permission_userproject p ON a.user_id = p.user_id
+    WHERE
+      1=1
+      <if test="id != null">
+        and a.id = #{id,jdbcType=INTEGER}
+      </if>
+      <if test="userId != null">
+        and a.user_id = #{userId,jdbcType=INTEGER}
+      </if>
+      <if test="projKey != null">
+        and p.proj_key = #{projKey,jdbcType=INTEGER}
+      </if>
+      <if test="agentName != null">
+        and a.agent_name = #{agentName,jdbcType=VARCHAR}
+      </if>
+      <if test="agentType != null">
+        and a.agent_type = #{agentType,jdbcType=TINYINT}
+      </if>
+      <if test="createDate != null">
+        and a.create_date = #{createDate,jdbcType=TIMESTAMP}
+      </if>
+      <if test="checkDate != null">
+        and a.check_date = #{checkDate,jdbcType=TIMESTAMP}
+      </if>
+      <if test="applyDate != null">
+        and a.apply_date = #{applyDate,jdbcType=TIMESTAMP}
+      </if>
+      <if test="agentLevel != null">
+        and a.agent_level = #{agentLevel,jdbcType=TINYINT}
+      </if>
+      <if test="applyType != null">
+        and a.apply_type = #{applyType,jdbcType=TINYINT}
+      </if>
+      <if test="applyLevel != null">
+        and a.apply_level = #{applyLevel,jdbcType=TINYINT}
+      </if>
+      <if test="applyState != null">
+        and a.apply_state = #{applyState,jdbcType=TINYINT}
+      </if>
+  </select>
 </mapper>

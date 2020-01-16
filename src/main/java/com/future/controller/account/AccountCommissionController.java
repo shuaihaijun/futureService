@@ -7,10 +7,8 @@ import com.future.common.helper.PageInfoHelper;
 import com.future.common.result.RequestParams;
 import com.future.common.util.ThreadCache;
 import com.future.entity.account.FuAccountCommission;
-import com.future.entity.commission.FuCommissionLevel;
 import com.future.service.account.FuAccountCommissionService;
-import com.future.service.commission.FuCommissionLevelSevice;
-import com.github.pagehelper.PageInfo;
+import com.github.pagehelper.Page;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,11 +30,11 @@ public class AccountCommissionController {
     //获取佣金账户
     @RequestMapping(value= "/getPageAccountCommisson",method=RequestMethod.POST)
     public @ResponseBody
-    PageInfo<FuAccountCommission> getPageAccountCommisson(@RequestBody RequestParams<FuAccountCommission> requestParams){
+    Page<FuAccountCommission> getPageAccountCommisson(@RequestBody RequestParams<Map> requestParams){
         // 获取请求参数
-        FuAccountCommission commission = requestParams.getParams();
+        Map commissionMap = requestParams.getParams();
         PageInfoHelper helper = requestParams.getPageInfoHelper();
-        return fuAccountCommissionService.getPageAccountCommisson(commission,helper);
+        return fuAccountCommissionService.getPageAccountCommisson(commissionMap,helper);
     }
 
     //根据ID佣金账户

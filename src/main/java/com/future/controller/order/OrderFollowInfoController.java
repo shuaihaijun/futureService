@@ -14,7 +14,6 @@ import com.future.service.order.FuOrderFollowInfoService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -50,46 +49,6 @@ public class OrderFollowInfoController {
         }
         /*条件查询日期不能超过1周*/
         return orderService.geMTtHistoryOrders(userId,username,accountId, DateUtil.toDate(dateFrom),DateUtil.toDate(dataTo),"");
-    }
-    //获得Mt在仓订单操作
-    @RequestMapping(value= "/getMTAliveOrders",method=RequestMethod.POST)
-    public @ResponseBody
-    List<FuOrderFollowInfo> getMTAliveOrders(){
-        // 获取请求参数
-        String requestJSONStr = ThreadCache.getPostRequestParams();
-        JSONObject requestMap = JSONObject.parseObject(requestJSONStr);
-        String accountId=requestMap.getString("accountId");
-        String username=requestMap.getString("username");
-        String userId=requestMap.getString("userId");
-        String orderSymbol=requestMap.getString("orderSymbol");
-        String orderOpenDate=requestMap.getString("orderOpenDate");
-        String dateFrom="";
-        String dataTo="";
-
-        if(StringUtils.isEmpty(userId)&&StringUtils.isEmpty(username)){
-            log.error("查询时 用户数据不能为空！");
-            new DataConflictException(GlobalResultCode.PARAM_NULL_POINTER,"查询时 用户数据不能为空！");
-        }
-        if(StringUtils.isEmpty(orderOpenDate)){
-            log.error("查询时间段不能为空！");
-            new DataConflictException(GlobalResultCode.PARAM_NULL_POINTER,"查询时间段不能为空！");
-        }
-        if(ObjectUtils.isEmpty(requestMap.getString("orderOpenDate"))||requestMap.getString("orderOpenDate").indexOf(",")<0){
-            log.error("查询时间段必须包含起、始时间！");
-            new DataConflictException(GlobalResultCode.PARAM_NULL_POINTER,"查询时间段必须包含起、始时间！");
-        }else {
-            //时间段
-            JSONArray dateOpen=requestMap.getJSONArray("orderOpenDate");
-            if(dateOpen.size()!=2){
-                log.error("建仓时间段数据传入错误！"+requestMap.getString("orderOpenDate"));
-                throw new DataConflictException("建仓时间段数据传入错误！"+requestMap.getString("orderOpenDate"));
-            }
-            dateFrom=dateOpen.getString(0);
-            dataTo=dateOpen.getString(1);
-        }
-        /*条件查询日期范围不能超过1周*/
-
-        return orderService.getMTAliveOrders(userId,username,accountId, DateUtil.toDate(dateFrom),DateUtil.toDate(dataTo),orderSymbol);
     }
 
     //获得社区跟随订单

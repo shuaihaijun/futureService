@@ -5,18 +5,17 @@ import com.alibaba.fastjson.JSONObject;
 import com.future.common.constants.RedisConstant;
 import com.future.common.enums.GlobalResultCode;
 import com.future.common.exception.ParameterInvalidException;
+import com.future.common.helper.PageInfoHelper;
+import com.future.common.result.RequestParams;
 import com.future.common.util.RedisManager;
 import com.future.common.util.ThreadCache;
 import com.future.pojo.bo.order.UserMTAccountBO;
 import com.future.service.account.FuAccountMtService;
-import com.github.pagehelper.PageInfo;
+import com.github.pagehelper.Page;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
@@ -109,42 +108,10 @@ public class AccountMtController {
     //获取MT账户信息
     @RequestMapping(value= "/queryUsersMtAccount",method=RequestMethod.POST)
     public @ResponseBody
-    PageInfo<UserMTAccountBO> queryUsersMtAccount(){
-        // 获取请求参数
-        String requestJSONStr = ThreadCache.getPostRequestParams();
-        JSONObject requestMap = JSONObject.parseObject(requestJSONStr);
-        String userId=requestMap.getString("userId");
-        String operUserId=requestMap.getString("operUserId");
-        String username=requestMap.getString("username");
-        String brokerName=requestMap.getString("brokerName");
-        String serverName=requestMap.getString("serverName");
-        String mtAccId=requestMap.getString("mtAccId");
-        String accountId=requestMap.getString("accountId");
-        Map conditonMap=new HashMap();
-        if(!StringUtils.isEmpty(userId)){
-            conditonMap.put("userId",userId);
-        }
-        if(!StringUtils.isEmpty(operUserId)){
-            conditonMap.put("operUserId",operUserId);
-        }
-        if(!StringUtils.isEmpty(username)){
-            conditonMap.put("username",username);
-        }
-        if(!StringUtils.isEmpty(brokerName)){
-            conditonMap.put("brokerName",brokerName);
-        }
-        if(!StringUtils.isEmpty(serverName)){
-            conditonMap.put("serverName",serverName);
-        }
-        if(!StringUtils.isEmpty(mtAccId)){
-            conditonMap.put("mtAccId",mtAccId);
-        }
-        if(!StringUtils.isEmpty(accountId)){
-            conditonMap.put("id",accountId);
-        }
-        List<UserMTAccountBO> accouts=  fuAccountMtService.queryUsersMtAccount(conditonMap);
-
-        return  new PageInfo<UserMTAccountBO>(accouts);
+    Page<UserMTAccountBO> queryUsersMtAccount(@RequestBody RequestParams<Map> requestParams) {
+        Map accountMap = requestParams.getParams();
+        PageInfoHelper helper = requestParams.getPageInfoHelper();
+        return fuAccountMtService.queryUsersMtAccount(accountMap,helper);
     }
 
     //保存MT账户信息

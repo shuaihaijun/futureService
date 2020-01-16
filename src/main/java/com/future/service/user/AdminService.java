@@ -68,6 +68,8 @@ public class AdminService extends ServiceImpl<FuUserMapper,FuUser> {
     @Autowired
     PermissionRoleService permissionRoleService;
     @Autowired
+    UserCommonService userCommonService;
+    @Autowired
     RedisManager redisManager;
     @Value("${newUserRoleId}")
     public Integer newUserRoleId;
@@ -174,6 +176,10 @@ public class AdminService extends ServiceImpl<FuUserMapper,FuUser> {
         if(!userJson.getString("password").equals(userJson.getString("password2"))){
             log.error("保存用户信息,两次输入的密码不一致！");
             throw new ParameterInvalidException("保存用户信息,两次输入的密码不一致！");
+        }
+        if(userJson.get("introducer")==null){
+            log.error("保存用户信息,推荐码不能为空！");
+            throw new ParameterInvalidException("保存用户信息,推荐码不能为空！");
         }
         if(userJson.get("introducer")!=null
                 &&!userJson.getString("introducer").equals("")
@@ -460,17 +466,45 @@ public class AdminService extends ServiceImpl<FuUserMapper,FuUser> {
             log.error("查询用户列表,用户未登录！");
             throw new ParameterInvalidException("查询用户列表,获取参数为空！");
         }
+        Integer operUserProj=userCommonService.getUserProjKey(Integer.parseInt(operUserId));
+        Boolean isProjAdmin=userCommonService.isAdministrator(Integer.parseInt(operUserId),operUserProj);
+        if(operUserProj==null){
+            log.error("查询用户列表,用户权限有误！");
+            throw new ParameterInvalidException("查询用户列表,用户权限有误！");
+        }
 
-        if(helper==null){
-            helper=new PageInfoHelper();
+        if(isProjAdmin&&operUserProj==0){
+            /*超管查询*/
+            return queryAllUser(userMap,helper);
+        }else if(isProjAdmin){
+            /*资源组管理员查找*/
+            userMap.put("projKey",operUserProj);
+            return findUserByCondition(userMap,helper);
+        }else {
+            /*普通用户查找*/
+            userMap.put("userId",operUserId);
+            return queryAllUser(userMap,helper);
+        }
+    }
+
+
+    /**
+     * 全范围查询用户数据（不涉及权限）
+     * @param userMap
+     * @param helper
+     * @return
+     */
+    public Page<FuUser> queryAllUser(Map userMap, PageInfoHelper helper){
+        /*判断查询条件*/
+        if(userMap == null||userMap.get("operUserId")==null){
+            log.error("查询用户列表,获取参数为空！");
+            throw new ParameterInvalidException("查询用户列表,获取参数为空！");
         }
 
         EntityWrapper<FuUser> wrapper=new EntityWrapper<FuUser>();
-        if(userMap.get("userId")!=null){
-            wrapper.eq(FuUser.USER_ID,userMap.get("userId"));
-        }
+
         if(userMap.get("userId")!=null
-            &&!String.valueOf(userMap.get("userId")).equals("")){
+                &&!String.valueOf(userMap.get("userId")).equals("")){
             wrapper.eq(FuUser.USER_ID,userMap.get("userId"));
         }
         if(userMap.get("username")!=null
@@ -500,11 +534,16 @@ public class AdminService extends ServiceImpl<FuUserMapper,FuUser> {
             wrapper.eq(FuUser.INTRODUCER,userMap.get("introducer"));
         }
 
-        com.github.pagehelper.Page<FuUser> userPage= PageHelper.startPage(helper.getPageNo(),helper.getPageSize());
+        if(helper==null){
+            helper=new PageInfoHelper();
+        }
+        Page<FuUser> userPage= PageHelper.startPage(helper.getPageNo(),helper.getPageSize());
         selectList(wrapper);
 
         return userPage;
     }
+
+
     /**
      * 根据状态分页查询用户信息
      * @param userType
@@ -513,8 +552,18 @@ public class AdminService extends ServiceImpl<FuUserMapper,FuUser> {
      * @param isVerified
      * @return
      */
-    public PageInfo findByCondition(int userType, int userState, int isAccount, int isVerified){
-        return null;
+    public Page<FuUser> findUserByCondition(Map userMap, PageInfoHelper helper){
+        /*判断查询条件*/
+        if(userMap == null||userMap.get("operUserId")==null){
+            log.error("查询用户列表,获取参数为空！");
+            throw new ParameterInvalidException("查询用户列表,获取参数为空！");
+        }
+        if(helper==null){
+            helper=new PageInfoHelper();
+        }
+        Page<FuUser> userPage= PageHelper.startPage(helper.getPageNo(),helper.getPageSize());
+        fuUserMapper.queryUserListByCondition(userMap);
+        return userPage;
     }
 
 

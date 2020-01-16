@@ -83,7 +83,7 @@ public class UserCommonService extends ServiceImpl<FuComAgentMapper,FuComAgent> 
     }
 
     /**
-     * 判断用户是否是超级管理员
+     * 判断用户是否是项目组管理员
      * @param userId
      */
     public boolean isAdministrator(Integer userId,Integer projKey){

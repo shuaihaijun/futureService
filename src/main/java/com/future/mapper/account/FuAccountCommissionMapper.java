@@ -4,6 +4,9 @@ import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.future.entity.account.FuAccountCommission;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+import java.util.Map;
+
 @Component
 public interface FuAccountCommissionMapper extends BaseMapper<FuAccountCommission> {
     int deleteByPrimaryKey(Integer id);
@@ -17,4 +20,6 @@ public interface FuAccountCommissionMapper extends BaseMapper<FuAccountCommissio
     int updateByPrimaryKeySelective(FuAccountCommission record);
 
     int updateByPrimaryKey(FuAccountCommission record);
+
+    List<FuAccountCommission> queryAccountCommissionByProject(Map condition);
 }

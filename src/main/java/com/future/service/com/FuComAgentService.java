@@ -2,15 +2,17 @@ package com.future.service.com;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
-import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
-import com.future.common.constants.*;
+import com.future.common.constants.AccountConstant;
+import com.future.common.constants.AgentConstant;
+import com.future.common.constants.CommissionConstant;
+import com.future.common.constants.UserConstant;
 import com.future.common.enums.GlobalResultCode;
 import com.future.common.exception.BusinessException;
 import com.future.common.exception.DataConflictException;
+import com.future.common.exception.ParameterInvalidException;
 import com.future.common.helper.PageInfoHelper;
 import com.future.common.util.ConvertUtil;
-import com.future.common.util.StringUtils;
 import com.future.entity.account.FuAccountCommission;
 import com.future.entity.account.FuAccountCommissionFlow;
 import com.future.entity.account.FuAccountInfo;
@@ -29,7 +31,10 @@ import com.future.service.permission.PermissionRoleService;
 import com.future.service.permission.PermissionUserProjectService;
 import com.future.service.permission.PermissionUserRoleService;
 import com.future.service.user.AdminService;
+import com.future.service.user.UserCommonService;
+import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import io.swagger.models.auth.In;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +43,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 @Service
@@ -64,32 +72,17 @@ public class FuComAgentService extends ServiceImpl<FuComAgentMapper,FuComAgent> 
     PermissionUserProjectService permissionUserProjectService;
     @Autowired
     PermissionUserRoleService permissionUserRoleService;
+    @Autowired
+    UserCommonService userCommonService;
 
     /**
      * 根据条件查找代理信息
      * @param conditionMap
      * @return
      */
-    public Page<FuComAgent> findAgentByCondition(Map conditionMap){
+    public Page<FuComAgent> findAgentByCondition(Map conditionMap, PageInfoHelper helper){
         /*校验信息*/
-        Page<FuComAgent> page=new Page<FuComAgent>();
         Wrapper<FuComAgent> wrapper=new EntityWrapper<FuComAgent>();
-
-        int pageSize=20;
-        int pageNum=1;
-
-        if(StringUtils.isEmpty(pageSize)||StringUtils.isEmpty(pageNum)){
-            log.error("分页数据为空！");
-            new DataConflictException(GlobalResultCode.PARAM_NULL_POINTER,"分页数据为空！");
-        }
-        if(!StringUtils.isEmpty(String.valueOf(conditionMap.get("pageSize")))){
-            pageSize=Integer.parseInt(String.valueOf(conditionMap.get("pageSize")));
-        }
-        if(!StringUtils.isEmpty(String.valueOf(conditionMap.get("pageNum")))){
-            pageNum=Integer.parseInt(String.valueOf(conditionMap.get("pageNum")));
-        }
-        page.setSize(pageSize);
-        page.setCurrent(pageNum);
 
         if(!ObjectUtils.isEmpty(conditionMap.get("id"))){
             wrapper.eq(FuComAgent.AGENT_ID,String.valueOf(conditionMap.get("id")));
@@ -110,12 +103,70 @@ public class FuComAgentService extends ServiceImpl<FuComAgentMapper,FuComAgent> 
             wrapper.eq(FuComAgent.AGENT_LEVEL,String.valueOf(conditionMap.get("agentLevel")));
         }
 
-        try {
-            return selectPage(page,wrapper);
-        }catch (Exception e){
-            log.error(e.getMessage(),e);
-            throw new BusinessException(e);
+        if(helper==null){
+            helper=new PageInfoHelper();
         }
+        Page<FuComAgent> agenets= PageHelper.startPage(helper.getPageNo(),helper.getPageSize());
+        selectList(wrapper);
+        return agenets;
+    }
+
+    /**
+     * 根据条件查询代理信息
+     * @param agentConditon
+     * @param helper
+     * @return
+     */
+    public Page<FuComAgent> queryAgentPage(Map agentConditon,PageInfoHelper helper){
+        /*判断查询条件*/
+        if(agentConditon == null||agentConditon.get("operUserId")==null){
+            log.error("查询用户列表,获取参数为空！");
+            throw new ParameterInvalidException("查询用户列表,获取参数为空！");
+        }
+        /*判断权限*/
+        String operUserId=String.valueOf(agentConditon.get("operUserId"));
+        if(com.alibaba.druid.util.StringUtils.isEmpty(operUserId)){
+            log.error("查询用户列表,用户未登录！");
+            throw new ParameterInvalidException("查询用户列表,获取参数为空！");
+        }
+        Integer operUserProj=userCommonService.getUserProjKey(Integer.parseInt(operUserId));
+        Boolean isProjAdmin=userCommonService.isAdministrator(Integer.parseInt(operUserId),operUserProj);
+        if(operUserProj==null){
+            log.error("查询用户列表,用户权限有误！");
+            throw new ParameterInvalidException("查询用户列表,用户权限有误！");
+        }
+
+        if(isProjAdmin&&operUserProj==0){
+            /*超管查询*/
+            return findAgentByCondition(agentConditon,helper);
+        }else if(isProjAdmin){
+            /*资源组管理员查找*/
+            agentConditon.put("projKey",operUserProj);
+            return findAgentByProjCondtion(agentConditon,helper);
+        }else {
+            /*普通用户查找*/
+            agentConditon.put("userId",operUserId);
+            return findAgentByCondition(agentConditon,helper);
+        }
+    }
+
+    /**
+     * 根据proj获取代理信息
+     * @param agentConditon
+     * @param helper
+     */
+    public Page<FuComAgent> findAgentByProjCondtion(Map agentConditon,PageInfoHelper helper){
+        /*判断查询条件*/
+        if(agentConditon == null||agentConditon.get("operUserId")==null){
+            log.error("查询代理信息列表,获取参数为空！");
+            throw new ParameterInvalidException("查询代理信息列表,获取参数为空！");
+        }
+        if(helper==null){
+            helper=new PageInfoHelper();
+        }
+        Page<FuComAgent> userPage= PageHelper.startPage(helper.getPageNo(),helper.getPageSize());
+        fuComAgentMapper.queryAgentByProjCondition(agentConditon);
+        return userPage;
     }
 
     /**
@@ -162,18 +213,35 @@ public class FuComAgentService extends ServiceImpl<FuComAgentMapper,FuComAgent> 
             throw new DataConflictException(GlobalResultCode.PARAM_NULL_POINTER,"代理描述不能为空！");
         }
 
-        try {
-            /*组装信息*/
-            FuComAgent agent=(FuComAgent)ConvertUtil.MapToJavaBean((HashMap) agentMap,FuComAgent.class);
-            agent.setCreateDate(new Date());
-            agent.setModifyDate(new Date());
-            agent.setApplyDate(new Date());
-            /*默认数据填充*/
-            return fuComAgentMapper.insertSelective(agent);
-        }catch (Exception e){
-            log.error(e.getMessage(),e);
-            throw new BusinessException(e);
+        /*组装信息*/
+        FuComAgent agent=(FuComAgent)ConvertUtil.MapToJavaBean((HashMap) agentMap,FuComAgent.class);
+        agent.setCreateDate(new Date());
+        agent.setModifyDate(new Date());
+        agent.setApplyDate(new Date());
+        /*默认数据填充*/
+
+        /*校验数据是否已存在*/
+        FuComAgent oldAgent=findAgentByUserId(agent.getUserId());
+        if(oldAgent!=null&&oldAgent.getUserId()>0){
+            log.error("改用户代理信息已存在，请检查数据！");
+            throw new BusinessException("改用户代理信息已存在，请检查数据！");
         }
+
+        return fuComAgentMapper.insertSelective(agent);
+
+    }
+
+    /**
+     * 根据用户ID获取代理信息
+     * @return
+     */
+    public  FuComAgent findAgentByUserId(Integer userId){
+        if(userId==null || userId==0){
+            return null;
+        }
+        Wrapper<FuComAgent> wrapper=new EntityWrapper<>();
+        wrapper.eq(FuComAgent.USER_ID,userId);
+        return selectOne(wrapper);
     }
 
     /**
@@ -498,6 +566,12 @@ public class FuComAgentService extends ServiceImpl<FuComAgentMapper,FuComAgent> 
      * @param agent
      */
     public void insertSelective(FuComAgent agent){
+        /*校验数据是否已存在*/
+        FuComAgent oldAgent=findAgentByUserId(agent.getUserId());
+        if(oldAgent!=null&&oldAgent.getUserId()>0){
+            log.error("改用户代理信息已存在，请检查数据！");
+            throw new BusinessException("改用户代理信息已存在，请检查数据！");
+        }
         fuComAgentMapper.insertSelective(agent);
     }
 }

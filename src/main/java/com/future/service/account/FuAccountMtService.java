@@ -10,6 +10,7 @@ import com.future.common.constants.UserConstant;
 import com.future.common.enums.GlobalResultCode;
 import com.future.common.exception.BusinessException;
 import com.future.common.exception.ParameterInvalidException;
+import com.future.common.helper.PageInfoHelper;
 import com.future.common.util.ConvertUtil;
 import com.future.common.util.RedisManager;
 import com.future.common.util.StringUtils;
@@ -24,6 +25,8 @@ import com.future.service.com.FuComServerService;
 import com.future.service.com.FuComService;
 import com.future.service.mt.MTAccountService;
 import com.future.service.user.UserCommonService;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.jfx.AccountInfo;
 import com.jfx.Broker;
 import com.jfx.strategy.Strategy;
@@ -35,6 +38,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -83,28 +87,54 @@ public class FuAccountMtService extends ServiceImpl<FuAccountMtMapper, FuAccount
      * @param condition
      * @return
      */
-    public List<UserMTAccountBO> queryUsersMtAccount(Map condition){
+    public Page<UserMTAccountBO> queryUsersMtAccount(Map condition, PageInfoHelper helper){
 
-        if(condition.get("operUserId")!=null){
-            String operUserId=String.valueOf(condition.get("operUserId"));
-            /*非管理员用户 只能查询自己的数据*/
-            if(!userCommonService.isAdministrator(Integer.parseInt(operUserId))){
-                condition.put("userId",operUserId);
-            }
+        /*判断查询条件*/
+        if(condition == null||condition.get("operUserId")==null){
+            log.error("查询用户列表,获取参数为空！");
+            throw new ParameterInvalidException("查询用户列表,获取参数为空！");
+        }
+        /*判断权限*/
+        String operUserId=String.valueOf(condition.get("operUserId"));
+        if(com.alibaba.druid.util.StringUtils.isEmpty(operUserId)){
+            log.error("查询用户列表,用户未登录！");
+            throw new ParameterInvalidException("查询用户列表,获取参数为空！");
+        }
+        Integer operUserProj=userCommonService.getUserProjKey(Integer.parseInt(operUserId));
+        Boolean isProjAdmin=userCommonService.isAdministrator(Integer.parseInt(operUserId),operUserProj);
+        if(operUserProj==null){
+            log.error("查询用户列表,用户权限有误！");
+            throw new ParameterInvalidException("查询用户列表,用户权限有误！");
         }
 
         /*查询账户值*/
-        List<UserMTAccountBO> accounts= fuAccountMtMapper.selectUserMTAccByCondition(condition);
+        List<UserMTAccountBO> accounts=new ArrayList<UserMTAccountBO>();
+        if(helper==null){
+            helper=new PageInfoHelper();
+        }
+        Page<UserMTAccountBO> accountPage=PageHelper.startPage(helper.getPageNo(),helper.getPageSize());
+        if(isProjAdmin&&operUserProj==0){
+            /*超管查询*/
+            accounts= fuAccountMtMapper.selectUserMTAccByCondition(condition);
+        }else if(isProjAdmin){
+            /*资源组管理员查找*/
+            condition.put("projKey",operUserProj);
+            accounts= fuAccountMtMapper.selectUserMTAccByProjectCondition(condition);
+        }else {
+            /*普通用户查找*/
+            condition.put("userId",operUserId);
+            accounts= fuAccountMtMapper.selectUserMTAccByCondition(condition);
+        }
 
         String userAccout="";
         Integer accountState=0;
         /*循环设置状态*/
-        for(int i=0;i<accounts.size();i++){
-            userAccout=accounts.get(i).getServerName()+"&"+accounts.get(i).getMtAccId();
+        for(int i=0;i<accountPage.getResult().size();i++){
+            userAccout=accountPage.getResult().get(i).getServerName()+"&"+accountPage.getResult().get(i).getMtAccId();
             accountState=(Integer) redisManager.hget(RedisConstant.H_ACCOUNT_CONNECT_STATE,userAccout);
-            accounts.get(i).setConnectState(accountState==null?0:accountState);
+            accountPage.getResult().get(i).setConnectState(accountState==null?0:accountState);
         }
-        return accounts;
+        return accountPage;
     }
 
     /**

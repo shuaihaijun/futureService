@@ -2,21 +2,26 @@ package com.future.controller.com;
 
 
 import com.alibaba.fastjson.JSONObject;
-import com.baomidou.mybatisplus.plugins.Page;
 import com.future.common.exception.DataConflictException;
+import com.future.common.helper.PageInfoHelper;
+import com.future.common.result.RequestParams;
 import com.future.common.util.StringUtils;
 import com.future.common.util.ThreadCache;
 import com.future.entity.com.FuComAgent;
 import com.future.entity.com.FuComAgentApply;
 import com.future.service.com.FuComAgentApplyService;
 import com.future.service.com.FuComAgentService;
+import com.github.pagehelper.Page;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.ObjectUtils;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping("/agent")
@@ -49,15 +54,10 @@ public class FuComAgentController {
 
     @RequestMapping("/queryAgentApply")
     public @ResponseBody
-    Page<FuComAgentApply> queryAgentApply(){
-        // 获取请求参数
-        String requestJSONStr = ThreadCache.getPostRequestParams();
-        JSONObject requestMap = JSONObject.parseObject(requestJSONStr);
-        if(ObjectUtils.isEmpty(requestJSONStr)){
-            log.error("数据为空！");
-            throw new DataConflictException("数据为空！");
-        }
-        return fuComAgentApplyService.findAgentApplyByCondition(requestMap);
+    Page<FuComAgentApply> queryAgentApply(@RequestBody RequestParams<Map> requestParams) {
+        Map agentCondition = requestParams.getParams();
+        PageInfoHelper helper = requestParams.getPageInfoHelper();
+        return fuComAgentApplyService.queryAgentPage(agentCondition,helper);
     }
 
     @RequestMapping("/getAgentApplyById")
@@ -157,15 +157,11 @@ public class FuComAgentController {
 
     @RequestMapping("/queryAgent")
     public @ResponseBody
-    Page<FuComAgent> queryAgent(){
+    Page<FuComAgent> queryAgent(@RequestBody RequestParams<Map> requestParams) {
+        Map agentCondition = requestParams.getParams();
+        PageInfoHelper helper = requestParams.getPageInfoHelper();
         // 获取请求参数
-        String requestJSONStr = ThreadCache.getPostRequestParams();
-        JSONObject requestMap = JSONObject.parseObject(requestJSONStr);
-        if(ObjectUtils.isEmpty(requestJSONStr)){
-            log.error("数据为空！");
-            throw new DataConflictException("数据为空！");
-        }
-        return fuComAgentService.findAgentByCondition(requestMap);
+        return fuComAgentService.queryAgentPage(agentCondition,helper);
     }
 
 

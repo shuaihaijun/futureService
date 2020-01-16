@@ -199,4 +199,40 @@
       account_state = #{accountState,jdbcType=TINYINT}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  <select id="queryAccountCommissionByProject" parameterType="java.util.Map" resultType="com.future.entity.account.FuAccountCommission">
+    SELECT
+      c.id AS id,
+      c.create_date AS createDate,
+      c.modify_date AS modifyDate,
+      c.user_id AS userId,
+      c.account_id AS accountId,
+      c.commission_money AS commissionMoney,
+      c.commission_paid AS commissionPaid,
+      c.commission_total AS commissionTotal,
+      c.commission_source_money AS commissionSourceMoney,
+      c.commission_source_lots AS commissionSourceLots,
+      c.commission_level AS commissionLevel,
+      c.commission_rate AS commissionRate,
+      c.commission_debt_amt AS commissionDebtAmt,
+      c.account_state AS accountState
+    FROM
+      fu_account_commission c LEFT JOIN fu_permission_userproject p on c.user_id=p.user_id
+    where
+      1 = 1
+      <if test="userId != null">
+        and c.user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="accountId != null">
+        and c.account_id = #{accountId,jdbcType=INTEGER},
+      </if>
+      <if test="commissionLevel != null">
+        and c.commission_level = #{commissionLevel,jdbcType=TINYINT},
+      </if>
+      <if test="accountState != null">
+        and c.account_state = #{accountState,jdbcType=TINYINT},
+      </if>
+      <if test="projKey != null">
+        and p.proj_key = #{projKey,jdbcType=INTEGER}
+      </if>
+  </select>
 </mapper>

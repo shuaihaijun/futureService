@@ -18,5 +18,7 @@ public class RedisConstant {
 	public static final String H_USER_INFO="userInfo";
 	/*user project*/
 	public static final String H_USER_PROJ="userProj";
+	/*user admin*/
+	public static final String H_USER_ADMIN="userAdmin";
 
 }

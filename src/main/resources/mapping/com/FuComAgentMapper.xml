@@ -185,4 +185,58 @@
       apply_date = #{applyDate,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  <select id="queryAgentByProjCondition" parameterType="java.util.Map" resultMap="BaseResultMap">
+    SELECT
+      a.id,
+      a.agent_name,
+      a.agent_type,
+      a.agent_level,
+      a.apply_desc,
+      a.agent_number,
+      a.agent_state,
+      a.group_name,
+      a.COMMENT,
+      a.user_id,
+      a.create_date,
+      a.modify_date,
+      a.apply_date
+    FROM
+      fu_com_agent a
+    LEFT JOIN fu_permission_userproject p ON a.user_id = p.user_id
+    WHERE
+      1=1
+        <if test="id != null">
+          and a.id = #{id,jdbcType=INTEGER}
+        </if>
+        <if test="agentName != null">
+          and a.agent_name = #{agentName,jdbcType=VARCHAR}
+        </if>
+        <if test="agentType != null">
+          and a.agent_type = #{agentType,jdbcType=TINYINT}
+        </if>
+        <if test="agentLevel != null">
+          and a.agent_level = #{agentLevel,jdbcType=TINYINT}
+        </if>
+        <if test="agentState != null">
+          and a.agent_state = #{agentState,jdbcType=TINYINT}
+        </if>
+        <if test="groupName != null">
+          and a.group_name = #{groupName,jdbcType=VARCHAR}
+        </if>
+        <if test="userId != null">
+          and a.user_id = #{userId,jdbcType=INTEGER}
+        </if>
+        <if test="createDate != null">
+          and a.create_date = #{createDate,jdbcType=TIMESTAMP}
+        </if>
+        <if test="modifyDate != null">
+          and a.modify_date = #{modifyDate,jdbcType=TIMESTAMP}
+        </if>
+        <if test="applyDate != null">
+          and a.apply_date = #{applyDate,jdbcType=TIMESTAMP}
+        </if>
+        <if test="projKey != null">
+          and p.proj_key = #{projKey,jdbcType=INTEGER}
+        </if>
+  </select>
 </mapper>

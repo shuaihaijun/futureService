@@ -359,4 +359,79 @@
         order_close_date desc
     LIMIT 0,1
   </select>
+  <select id="queryCustomerOrderByProject" parameterType="java.util.Map" resultType="com.future.entity.order.FuOrderCustomer">
+    SELECT
+      o.id AS id,
+      o.create_date AS createDate,
+      o.modify_date AS modifyDate,
+      o.user_id AS userId,
+      o.mt_server_id AS mtServerId,
+      o.mt_server_name AS mtServerName,
+      o.mt_acc_id AS mtAccId,
+      o.order_id AS orderId,
+      o.order_symbol AS orderSymbol,
+      o.order_lots AS orderLots,
+      o.order_type AS orderType,
+      o.order_state AS orderState,
+      o.order_stoploss AS orderStoploss,
+      o.order_profit AS orderProfit,
+      o.order_swap AS orderSwap,
+      o.order_commission AS orderCommission,
+      o.order_superior AS orderSuperior,
+      o.order_expiration AS orderExpiration,
+      o.order_magic AS orderMagic,
+      o.order_open_price AS orderOpenPrice,
+      o.order_open_date AS orderOpenDate,
+      o.order_trade_operation AS orderTradeOperation,
+      o.order_trade_type AS orderTradeType,
+      o.order_close_price AS orderClosePrice,
+      o.order_close_date AS orderCloseDate,
+      o.`comment`
+    FROM
+      fu_order_customer o LEFT JOIN fu_permission_userproject p on o.user_id=p.user_id
+    where
+      1 = 1
+    <if test="userId != null">
+      and o.user_id = #{userId,jdbcType=INTEGER}
+    </if>
+    <if test="mtServerName != null">
+      and o.mt_server_name = #{mtServerName,jdbcType=VARCHAR}
+    </if>
+    <if test="mtAccId != null">
+      and o.mt_acc_id = #{mtAccId,jdbcType=VARCHAR}
+    </if>
+    <if test="orderId != null">
+      and o.order_id = #{orderId,jdbcType=VARCHAR}
+    </if>
+    <if test="orderSymbol != null">
+      and o.order_symbol = #{orderSymbol,jdbcType=VARCHAR}
+    </if>
+    <if test="orderType != null">
+      and o.order_type = #{orderType,jdbcType=TINYINT}
+    </if>
+    <if test="orderSuperior != null">
+      and  o.order_superior = #{orderSuperior,jdbcType=VARCHAR}
+    </if>
+    <if test="orderOpenDate != null">
+      and o.order_open_date = #{orderOpenDate,jdbcType=TIMESTAMP}
+    </if>
+    <if test="orderOpenDateBegin != null">
+      and o.order_open_date &gt;= #{orderOpenDateBegin,jdbcType=TIMESTAMP}
+    </if>
+    <if test="orderOpenDateEnd != null">
+      and o.order_open_date &lt;= #{orderOpenDateEnd,jdbcType=TIMESTAMP}
+    </if>
+    <if test="orderCloseDate != null">
+      and o.order_close_date = #{orderCloseDate,jdbcType=TIMESTAMP}
+    </if>
+    <if test="orderCloseDateBegin != null">
+      and o.order_close_date &gt;= #{orderCloseDateBegin,jdbcType=TIMESTAMP}
+    </if>
+    <if test="orderCloseDateEnd != null">
+      and o.order_close_date &lt;= #{orderCloseDateEnd,jdbcType=TIMESTAMP}
+    </if>
+    <if test="projKey != null">
+      and p.proj_key = #{projKey,jdbcType=INTEGER}
+    </if>
+  </select>
 </mapper>

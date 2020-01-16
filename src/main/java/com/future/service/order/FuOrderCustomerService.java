@@ -1,13 +1,20 @@
 package com.future.service.order;
 
-import com.baomidou.mybatisplus.plugins.Page;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.future.common.constants.OrderConstant;
 import com.future.common.constants.UserConstant;
+import com.future.common.enums.GlobalResultCode;
 import com.future.common.exception.BusinessException;
 import com.future.common.exception.DataConflictException;
+import com.future.common.exception.ParameterInvalidException;
+import com.future.common.helper.PageInfoHelper;
 import com.future.common.util.ConvertUtil;
+import com.future.common.util.DateUtil;
 import com.future.common.util.StringUtils;
+import com.future.common.util.ThreadCache;
 import com.future.entity.order.FuOrderCustomer;
 import com.future.entity.order.FuOrderFollowInfo;
 import com.future.mapper.order.FuOrderCustomerMapper;
@@ -17,6 +24,10 @@ import com.future.service.commission.FuCommissionCustomerService;
 import com.future.service.mt.MTOrderService;
 import com.future.service.mt.MTStrategy;
 import com.future.service.product.FuUserFollowsService;
+import com.future.service.user.UserCommonService;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.jfx.AccountInfo;
 import com.jfx.Broker;
 import com.jfx.SelectionPool;
@@ -45,6 +56,8 @@ public class FuOrderCustomerService extends ServiceImpl<FuOrderCustomerMapper, F
     FuCommissionCustomerService fuCommissionCustomerService;
     @Autowired
     FuUserFollowsService fuUserFollowsService;
+    @Autowired
+    UserCommonService userCommonService;
     @Autowired
     FuOrderCustomerMapper fuOrderCustomerMapper;
 
@@ -211,5 +224,205 @@ public class FuOrderCustomerService extends ServiceImpl<FuOrderCustomerMapper, F
         conditionMap.put("",requestMap.get("orderCloseDate"));
 
         return null;
+    }
+
+    public PageInfo<FuOrderFollowInfo> getMTAliveOrders(Map conditionMap, PageInfoHelper helper){
+        // 获取请求参数
+        String accountId="";
+        String username="";
+        String userId="";
+        String orderSymbol="";
+        String orderOpenDate="";
+        String dateFrom="";
+        String dataTo="";
+
+        if(conditionMap.get("accountId")!=null){
+            accountId=String.valueOf(conditionMap.get("accountId"));
+        }
+        if(conditionMap.get("username")!=null){
+            username=String.valueOf(conditionMap.get("username"));
+        }
+        if(conditionMap.get("userId")!=null){
+            userId=String.valueOf(conditionMap.get("userId"));
+        }
+        if(conditionMap.get("orderSymbol")!=null){
+            orderSymbol=String.valueOf(conditionMap.get("orderSymbol"));
+        }
+        if(conditionMap.get("orderOpenDate")!=null){
+            orderOpenDate=String.valueOf(conditionMap.get("orderOpenDate"));
+        }
+
+        if(conditionMap == null||conditionMap.get("operUserId")==null){
+            log.error("查询用户列表,获取参数为空！");
+            throw new ParameterInvalidException("查询用户列表,获取参数为空！");
+        }
+        /*判断权限*/
+        String operUserId=String.valueOf(conditionMap.get("operUserId"));
+        if(com.alibaba.druid.util.StringUtils.isEmpty(operUserId)){
+            log.error("查询用户列表,用户未登录！");
+            throw new ParameterInvalidException("查询用户列表,获取参数为空！");
+        }
+        Integer operUserProj=userCommonService.getUserProjKey(Integer.parseInt(operUserId));
+        Boolean isProjAdmin=userCommonService.isAdministrator(Integer.parseInt(operUserId),operUserProj);
+        if(operUserProj==null){
+            log.error("查询用户列表,用户权限有误！");
+            throw new ParameterInvalidException("查询用户列表,用户权限有误！");
+        }
+        if(isProjAdmin&&operUserProj==0){
+            /*超管查询*/
+        }else if(isProjAdmin){
+            /*资源组管理员查找*/
+            Integer userProj=userCommonService.getUserProjKey(Integer.parseInt(userId));
+            if(!operUserProj.equals(userProj)){
+                log.error("无权限查看该用户数据，请检查用户ID！");
+                throw new ParameterInvalidException("无权限查看该用户数据，请检查用户ID！");
+            }
+            conditionMap.put("projKey",operUserProj);
+        }else {
+            /*普通用户查找*/
+            userId=operUserId;
+        }
+
+        if(StringUtils.isEmpty(userId)&&StringUtils.isEmpty(username)){
+            log.error("查询时 用户数据不能为空！");
+            new DataConflictException(GlobalResultCode.PARAM_NULL_POINTER,"查询时 用户数据不能为空！");
+        }
+        if(StringUtils.isEmpty(orderOpenDate)){
+            log.error("查询时间段不能为空！");
+            new DataConflictException(GlobalResultCode.PARAM_NULL_POINTER,"查询时间段不能为空！");
+        }
+        if(ObjectUtils.isEmpty(orderOpenDate)||orderOpenDate.indexOf(",")<0){
+            log.error("查询时间段必须包含起、始时间！");
+            new DataConflictException(GlobalResultCode.PARAM_NULL_POINTER,"查询时间段必须包含起、始时间！");
+        }else {
+            //时间段
+            List dateList=(List) conditionMap.get("orderOpenDate");
+            if(dateList.size()!=2){
+                log.error("建仓时间段数据传入错误！"+conditionMap.get("orderOpenDate"));
+                throw new DataConflictException(GlobalResultCode.PARAM_VERIFY_ERROR,"建仓时间段数据传入错误！"+conditionMap.get("orderOpenDate"));
+            }
+            dateFrom=String.valueOf(dateList.get(0));
+            dataTo=String.valueOf(dateList.get(1));
+        }
+        /*条件查询日期范围不能超过1周*/
+
+        List<FuOrderFollowInfo> orders= fuOrderFollowInfoService.getMTAliveOrders(userId,username,accountId, DateUtil.toDate(dateFrom),DateUtil.toDate(dataTo),orderSymbol);
+        return new PageInfo<FuOrderFollowInfo>(orders);
+    }
+
+    /**
+     * 根据条件查询用户历史交易订单
+     * @param conditionMap
+     * @param helper
+     * @return
+     */
+    public Page<FuOrderCustomer> queryOrderCustomer(Map conditionMap, PageInfoHelper helper){
+        /*判断查询条件*/
+        if(conditionMap == null||conditionMap.get("operUserId")==null){
+            log.error("查询用户列表,获取参数为空！");
+            throw new ParameterInvalidException("查询用户列表,获取参数为空！");
+        }
+        /*判断权限*/
+        String operUserId=String.valueOf(conditionMap.get("operUserId"));
+        if(com.alibaba.druid.util.StringUtils.isEmpty(operUserId)){
+            log.error("查询用户列表,用户未登录！");
+            throw new ParameterInvalidException("查询用户列表,获取参数为空！");
+        }
+        Integer operUserProj=userCommonService.getUserProjKey(Integer.parseInt(operUserId));
+        Boolean isProjAdmin=userCommonService.isAdministrator(Integer.parseInt(operUserId),operUserProj);
+        if(operUserProj==null){
+            log.error("查询用户列表,用户权限有误！");
+            throw new ParameterInvalidException("查询用户列表,用户权限有误！");
+        }
+
+        if(isProjAdmin&&operUserProj==0){
+            /*超管查询*/
+            return findOrderCustomerByCondition(conditionMap,helper);
+        }else if(isProjAdmin){
+            /*资源组管理员查找*/
+            conditionMap.put("projKey",operUserProj);
+            return findOrderCustomerByProject(conditionMap,helper);
+        }else {
+            /*普通用户查找*/
+            conditionMap.put("userId",operUserId);
+            return findOrderCustomerByCondition(conditionMap,helper);
+        }
+    }
+
+    /**
+     * 根据project查询用户历史订单
+     * @param conditionMap
+     * @param helper
+     * @return
+     */
+    public Page<FuOrderCustomer> findOrderCustomerByProject(Map conditionMap, PageInfoHelper helper){
+        if(conditionMap.get("projKey")==null){
+            log.error("根据project查询用户历史订单失败，数据为空！");
+        }
+        if(helper==null){
+            helper=new PageInfoHelper();
+        }
+        Page<FuOrderCustomer> orders=PageHelper.startPage(helper.getPageNo(),helper.getPageSize());
+        fuOrderCustomerMapper.queryCustomerOrderByProject(conditionMap);
+        return orders;
+    }
+
+    /**
+     * 根据条件查询用户历史订单（单标查询）
+     * @param conditionMap
+     * @param helper
+     * @return
+     */
+    public Page<FuOrderCustomer> findOrderCustomerByCondition(Map conditionMap, PageInfoHelper helper){
+
+        EntityWrapper<FuOrderCustomer> wrapper=new EntityWrapper<FuOrderCustomer>();
+
+        if(!ObjectUtils.isEmpty(conditionMap.get("userId"))){
+            wrapper.eq(FuOrderCustomer.USER_ID,conditionMap.get("userId"));
+        }
+        if(!ObjectUtils.isEmpty(conditionMap.get("orderId"))){
+            wrapper.eq(FuOrderCustomer.ORDER_ID,conditionMap.get("orderId"));
+        }
+        if(!ObjectUtils.isEmpty(conditionMap.get("orderSymbol"))){
+            wrapper.eq(FuOrderCustomer.ORDER_SYMBOL,conditionMap.get("orderSymbol"));
+        }
+        if(!ObjectUtils.isEmpty(conditionMap.get("orderType"))){
+            wrapper.eq(FuOrderCustomer.ORDER_TYPE,conditionMap.get("orderType"));
+        }
+        if(!ObjectUtils.isEmpty(conditionMap.get("orderOpenDate"))){
+            if(String.valueOf(conditionMap.get("orderOpenDate")).indexOf(",")<0){
+                wrapper.eq(FuOrderCustomer.ORDER_OPEN_DATE,conditionMap.get("orderOpenDate"));
+            }else {
+                //时间段
+                List dateList=(List) conditionMap.get("orderOpenDate");
+                if(dateList.size()!=2){
+                    log.error("建仓时间段数据传入错误！"+conditionMap.get("orderOpenDate"));
+                    throw new DataConflictException(GlobalResultCode.PARAM_VERIFY_ERROR,"建仓时间段数据传入错误！"+conditionMap.get("orderOpenDate"));
+                }
+                wrapper.gt(FuOrderCustomer.ORDER_OPEN_DATE,dateList.get(0));
+                wrapper.lt(FuOrderCustomer.ORDER_OPEN_DATE,dateList.get(1));
+            }
+        }
+        if(!ObjectUtils.isEmpty(conditionMap.get("orderCloseDate"))){
+            if(String.valueOf(conditionMap.get("orderCloseDate")).indexOf(",")<0){
+                wrapper.eq(FuOrderCustomer.ORDER_OPEN_DATE,conditionMap.get("orderCloseDate"));
+            }else {
+                //时间段
+                List dateList=(List) conditionMap.get("orderOpenDate");
+                if(dateList.size()!=2){
+                    log.error("平仓时间段数据传入错误！"+conditionMap.get("orderCloseDate"));
+                    throw new DataConflictException(GlobalResultCode.PARAM_VERIFY_ERROR,"平仓时间段数据传入错误！"+conditionMap.get("orderCloseDate"));
+                }
+                wrapper.gt(FuOrderCustomer.ORDER_CLOSE_DATE,dateList.get(0));
+                wrapper.lt(FuOrderCustomer.ORDER_CLOSE_DATE,dateList.get(1));
+            }
+        }
+
+        if(helper==null){
+            helper=new PageInfoHelper();
+        }
+        Page<FuOrderCustomer> orders=PageHelper.startPage(helper.getPageNo(),helper.getPageSize());
+        selectList(wrapper);
+        return orders;
     }
 }

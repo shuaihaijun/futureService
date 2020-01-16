@@ -508,4 +508,95 @@
       </if>
     </trim>
   </update>
+  <select id="selectUserMTAccByProjectCondition" parameterType="java.util.Map" resultType="com.future.pojo.bo.order.UserMTAccountBO">
+    SELECT
+    a.id accountId,
+    acc.id,
+    acc.mt_acc_id mtAccId,
+    acc.is_signal isSignal,
+    acc.is_chief isChief,
+    acc.account_type accountType,
+    acc.account_state accountState,
+    acc.plat_type platType,
+    acc.mt_password_trade mtPasswordTrade,
+    acc.mt_password_watch mtPasswordWatch,
+    acc.password_watch_checked passwordWatchChecked,
+    acc.password_trade_checked passwordTradeChecked,
+    acc.mt_acc_url mtAccUrl,
+    acc.mt_acc_port mtAccPort,
+    acc.account_url accountUrl,
+    acc.account_port accountPort,
+    acc.leverage leverage,
+    acc.balance balance,
+    acc.credit credit,
+    acc.profit profit,
+    acc.equity equity,
+    acc.margin margin,
+    u.id userId,
+    u.username,
+    u.real_name realName,
+    u.ref_name refName,
+    u.user_state userState,
+    u.user_type userType,
+    u.email,
+    u.mobile,
+    u.introducer,
+    s.id serverId,
+    s.server_name serverName,
+    s.broker_id brokerId,
+    s.broker_name brokerName,
+    s.server_state serverState
+    FROM
+    fu_account_mt acc
+    LEFT JOIN fu_account_info a on a.user_id=acc.user_id
+    LEFT JOIN fu_user u on u.id=acc.user_id
+    LEFT JOIN fu_com_server s on acc.server_id=s.id
+    LEFT JOIN fu_permission_userproject p ON acc.user_id = p.user_id
+    where
+    <trim prefixOverrides="and">
+      1 = 1
+      <if test="username != null">
+        and u.username = #{username,jdbcType=VARCHAR}
+      </if>
+      <if test="mobile != null">
+        and u.mobile = #{mobile,jdbcType=VARCHAR}
+      </if>
+      <if test="userId != null">
+        and acc.user_id = #{userId,jdbcType=INTEGER}
+      </if>
+      <if test="id != null">
+        and  acc.id = #{id,jdbcType=INTEGER}
+      </if>
+      <if test="mtAccId != null">
+        and acc.mt_acc_id = #{mtAccId,jdbcType=INTEGER}
+      </if>
+      <if test="isChief != null">
+        and acc.is_chief = #{isChief,jdbcType=TINYINT}
+      </if>
+      <if test="isSignal != null">
+        and acc.is_signal = #{isSignal,jdbcType=TINYINT}
+      </if>
+      <if test="accountType != null">
+        and acc.account_type = #{accountType,jdbcType=TINYINT}
+      </if>
+      <if test="serverName != null">
+        and  s.server_name = #{serverName,jdbcType=VARCHAR}
+      </if>
+      <if test="brokerName != null">
+        and s.broker_name = #{brokerName,jdbcType=VARCHAR}
+      </if>
+      <if test="isAccount != null">
+        and u.is_account = #{isAccount,jdbcType=INTEGER}
+      </if>
+      <if test="introducer != null">
+        and u.introducer = #{introducer,jdbcType=INTEGER}
+      </if>
+      <if test="userState != null">
+        and u.user_state = #{userState,jdbcType=INTEGER}
+      </if>
+      <if test="projKey != null">
+        and p.proj_key = #{projKey,jdbcType=INTEGER}
+      </if>
+    </trim>
+  </select>
 </mapper>
