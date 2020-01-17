@@ -114,9 +114,10 @@ public class FuOrderFollowInfoService extends ServiceImpl<FuOrderFollowInfoMappe
         Map acountMap=new HashMap();
         if(!StringUtils.isEmpty(accountId)){
             acountMap.put("id",accountId);
-        }else {
+        }else if(!StringUtils.isEmpty(userId)){
             /*默认查询主账户号*/
             acountMap.put("userId",userId);
+        }else {
             acountMap.put("username",username);
         }
         List<UserMTAccountBO> mts= fuAccountMtService.getUserMTAccByCondition(acountMap);

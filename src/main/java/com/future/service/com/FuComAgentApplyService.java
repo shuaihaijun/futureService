@@ -199,6 +199,37 @@ public class FuComAgentApplyService extends ServiceImpl<FuComAgentApplyMapper,Fu
             throw new DataConflictException(GlobalResultCode.PARAM_NULL_POINTER,"代理描述不能为空！");
         }
 
+        /*判断权限*/
+        String operUserId=String.valueOf(agentMap.get("operUserId"));
+        String userId=String.valueOf(agentMap.get("userId"));
+        if(com.alibaba.druid.util.StringUtils.isEmpty(operUserId)){
+            log.error("查询用户列表,用户未登录！");
+            throw new ParameterInvalidException("查询用户列表,获取参数为空！");
+        }
+        if(!operUserId.equals(userId)){
+            //非用户本人提交申请
+            Integer operUserProj=userCommonService.getUserProjKey(Integer.parseInt(operUserId));
+            Boolean isProjAdmin=userCommonService.isAdministrator(Integer.parseInt(operUserId),operUserProj);
+            if(operUserProj==null){
+                log.error("查询用户列表,用户权限有误！");
+                throw new ParameterInvalidException("查询用户列表,用户权限有误！");
+            }
+            if(isProjAdmin&&operUserProj==0){
+                /*超管*/
+            }else if(isProjAdmin){
+                /*资源组管理员申请*/
+                Integer userProj=userCommonService.getUserProjKey(Integer.parseInt(userId));
+                if(!operUserProj.equals(userProj)){
+                    log.error("无权限操作该用户数据，请检查用户ID！");
+                    throw new ParameterInvalidException("无权限操作该用户数据，请检查用户ID！");
+                }
+            }else {
+                /*普通用户非自己申请*/
+                log.error("无权限操作该用户数据，请检查用户ID！");
+                throw new ParameterInvalidException("无权限操作该用户数据，请检查用户ID！");
+            }
+        }
+
         /*组装信息*/
         //将对象转换成为字符串
         String str = JSON.toJSONString(agentMap);
