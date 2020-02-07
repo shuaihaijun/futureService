@@ -7,6 +7,7 @@ import com.future.common.helper.PageInfoHelper;
 import com.future.common.result.RequestParams;
 import com.future.common.util.ThreadCache;
 import com.future.entity.account.FuAccountCommission;
+import com.future.entity.account.FuAccountWithdrawApply;
 import com.future.service.account.FuAccountCommissionService;
 import com.github.pagehelper.Page;
 import org.slf4j.Logger;
@@ -60,17 +61,5 @@ public class AccountCommissionController {
         return fuAccountCommissionService.getAccountCommissonByUserId(commission.getUserId());
     }
 
-    //根据userID佣金账户
-    @RequestMapping(value= "/accountCommissonWithdraw",method=RequestMethod.POST)
-    public @ResponseBody boolean accountCommissonWithdraw() {
-        // 获取请求参数
-        String requestJSONStr = ThreadCache.getPostRequestParams();
-        JSONObject requestMap = JSONObject.parseObject(requestJSONStr);
-        Integer userId=requestMap.getInteger("userId");
-        Integer accountId=requestMap.getInteger("accountId");
-        Integer operId=requestMap.getInteger("operId");
-        BigDecimal commissionMoney=requestMap.getBigDecimal("commissionMoney");
-        fuAccountCommissionService.accountCommissonWithdraw(userId,accountId,operId,commissionMoney);
-        return true;
-    }
+
 }

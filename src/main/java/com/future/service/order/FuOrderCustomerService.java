@@ -417,6 +417,7 @@ public class FuOrderCustomerService extends ServiceImpl<FuOrderCustomerMapper, F
                 wrapper.lt(FuOrderCustomer.ORDER_CLOSE_DATE,dateList.get(1));
             }
         }
+        wrapper.orderBy(FuOrderCustomer.ORDER_CLOSE_DATE,false);
 
         if(helper==null){
             helper=new PageInfoHelper();

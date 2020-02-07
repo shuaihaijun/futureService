@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.future.mapper.account.FuAccountWithdrawApplyMapper">
+  <resultMap id="BaseResultMap" type="com.future.entity.account.FuAccountWithdrawApply">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="account_id" jdbcType="INTEGER" property="accountId" />
+    <result column="username" jdbcType="VARCHAR" property="username" />
+    <result column="ref_name" jdbcType="VARCHAR" property="refName" />
+    <result column="apply_user_id" jdbcType="INTEGER" property="applyUserId" />
+    <result column="apply_state" jdbcType="TINYINT" property="applyState" />
+    <result column="withdraw_type" jdbcType="TINYINT" property="withdrawType" />
+    <result column="withdraw_amount" jdbcType="DECIMAL" property="withdrawAmount" />
+    <result column="bank_name" jdbcType="VARCHAR" property="bankName" />
+    <result column="bank_code" jdbcType="VARCHAR" property="bankCode" />
+    <result column="hostName" jdbcType="VARCHAR" property="hostname" />
+    <result column="apply_date" jdbcType="TIMESTAMP" property="applyDate" />
+    <result column="check_date" jdbcType="TIMESTAMP" property="checkDate" />
+    <result column="check_desc" jdbcType="VARCHAR" property="checkDesc" />
+    <result column="comment" jdbcType="VARCHAR" property="comment" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, create_date, user_id, account_id, username, ref_name, apply_user_id, apply_state, 
+    withdraw_type, withdraw_amount, bank_name, bank_code, hostName, apply_date, check_date, 
+    check_desc, comment
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from fu_account_withdraw_apply
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from fu_account_withdraw_apply
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.future.entity.account.FuAccountWithdrawApply">
+    insert into fu_account_withdraw_apply (id, create_date, user_id, 
+      account_id, username, ref_name, 
+      apply_user_id, apply_state, withdraw_type, 
+      withdraw_amount, bank_name, bank_code, 
+      hostName, apply_date, check_date, 
+      check_desc, comment)
+    values (#{id,jdbcType=INTEGER}, #{createDate,jdbcType=TIMESTAMP}, #{userId,jdbcType=INTEGER}, 
+      #{accountId,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, #{refName,jdbcType=VARCHAR}, 
+      #{applyUserId,jdbcType=INTEGER}, #{applyState,jdbcType=TINYINT}, #{withdrawType,jdbcType=TINYINT}, 
+      #{withdrawAmount,jdbcType=DECIMAL}, #{bankName,jdbcType=VARCHAR}, #{bankCode,jdbcType=VARCHAR}, 
+      #{hostname,jdbcType=VARCHAR}, #{applyDate,jdbcType=TIMESTAMP}, #{checkDate,jdbcType=TIMESTAMP}, 
+      #{checkDesc,jdbcType=VARCHAR}, #{comment,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.future.entity.account.FuAccountWithdrawApply">
+    insert into fu_account_withdraw_apply
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="createDate != null">
+        create_date,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="accountId != null">
+        account_id,
+      </if>
+      <if test="username != null">
+        username,
+      </if>
+      <if test="refName != null">
+        ref_name,
+      </if>
+      <if test="applyUserId != null">
+        apply_user_id,
+      </if>
+      <if test="applyState != null">
+        apply_state,
+      </if>
+      <if test="withdrawType != null">
+        withdraw_type,
+      </if>
+      <if test="withdrawAmount != null">
+        withdraw_amount,
+      </if>
+      <if test="bankName != null">
+        bank_name,
+      </if>
+      <if test="bankCode != null">
+        bank_code,
+      </if>
+      <if test="hostname != null">
+        hostName,
+      </if>
+      <if test="applyDate != null">
+        apply_date,
+      </if>
+      <if test="checkDate != null">
+        check_date,
+      </if>
+      <if test="checkDesc != null">
+        check_desc,
+      </if>
+      <if test="comment != null">
+        comment,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null">
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="accountId != null">
+        #{accountId,jdbcType=INTEGER},
+      </if>
+      <if test="username != null">
+        #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="refName != null">
+        #{refName,jdbcType=VARCHAR},
+      </if>
+      <if test="applyUserId != null">
+        #{applyUserId,jdbcType=INTEGER},
+      </if>
+      <if test="applyState != null">
+        #{applyState,jdbcType=TINYINT},
+      </if>
+      <if test="withdrawType != null">
+        #{withdrawType,jdbcType=TINYINT},
+      </if>
+      <if test="withdrawAmount != null">
+        #{withdrawAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="bankName != null">
+        #{bankName,jdbcType=VARCHAR},
+      </if>
+      <if test="bankCode != null">
+        #{bankCode,jdbcType=VARCHAR},
+      </if>
+      <if test="hostname != null">
+        #{hostname,jdbcType=VARCHAR},
+      </if>
+      <if test="applyDate != null">
+        #{applyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="checkDate != null">
+        #{checkDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="checkDesc != null">
+        #{checkDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="comment != null">
+        #{comment,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.future.entity.account.FuAccountWithdrawApply">
+    update fu_account_withdraw_apply
+    <set>
+      <if test="createDate != null">
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="accountId != null">
+        account_id = #{accountId,jdbcType=INTEGER},
+      </if>
+      <if test="username != null">
+        username = #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="refName != null">
+        ref_name = #{refName,jdbcType=VARCHAR},
+      </if>
+      <if test="applyUserId != null">
+        apply_user_id = #{applyUserId,jdbcType=INTEGER},
+      </if>
+      <if test="applyState != null">
+        apply_state = #{applyState,jdbcType=TINYINT},
+      </if>
+      <if test="withdrawType != null">
+        withdraw_type = #{withdrawType,jdbcType=TINYINT},
+      </if>
+      <if test="withdrawAmount != null">
+        withdraw_amount = #{withdrawAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="bankName != null">
+        bank_name = #{bankName,jdbcType=VARCHAR},
+      </if>
+      <if test="bankCode != null">
+        bank_code = #{bankCode,jdbcType=VARCHAR},
+      </if>
+      <if test="hostname != null">
+        hostName = #{hostname,jdbcType=VARCHAR},
+      </if>
+      <if test="applyDate != null">
+        apply_date = #{applyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="checkDate != null">
+        check_date = #{checkDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="checkDesc != null">
+        check_desc = #{checkDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="comment != null">
+        comment = #{comment,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.future.entity.account.FuAccountWithdrawApply">
+    update fu_account_withdraw_apply
+    set create_date = #{createDate,jdbcType=TIMESTAMP},
+      user_id = #{userId,jdbcType=INTEGER},
+      account_id = #{accountId,jdbcType=INTEGER},
+      username = #{username,jdbcType=VARCHAR},
+      ref_name = #{refName,jdbcType=VARCHAR},
+      apply_user_id = #{applyUserId,jdbcType=INTEGER},
+      apply_state = #{applyState,jdbcType=TINYINT},
+      withdraw_type = #{withdrawType,jdbcType=TINYINT},
+      withdraw_amount = #{withdrawAmount,jdbcType=DECIMAL},
+      bank_name = #{bankName,jdbcType=VARCHAR},
+      bank_code = #{bankCode,jdbcType=VARCHAR},
+      hostName = #{hostname,jdbcType=VARCHAR},
+      apply_date = #{applyDate,jdbcType=TIMESTAMP},
+      check_date = #{checkDate,jdbcType=TIMESTAMP},
+      check_desc = #{checkDesc,jdbcType=VARCHAR},
+      comment = #{comment,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="findWithdrawApplyByProjCondtion" parameterType="java.util.Map" resultMap="BaseResultMap">
+    SELECT
+        a.id,
+        a.create_date,
+        a.user_id,
+        a.account_id,
+        a.username,
+        a.ref_name,
+        a.apply_user_id,
+        a.apply_state,
+        a.withdraw_type,
+        a.withdraw_amount,
+        a.bank_name,
+        a.bank_code,
+        a.hostName,
+        a.apply_date,
+        a.check_date,
+        a.check_desc,
+        a.COMMENT
+    FROM
+        fu_account_withdraw_apply a
+    LEFT JOIN fu_permission_userproject p ON a.user_id = p.user_id
+    where 1=1
+      <if test="id != null">
+        and a.id = #{id,jdbcType=INTEGER}
+      </if>
+      <if test="userId != null">
+        and a.user_id = #{userId,jdbcType=INTEGER}
+      </if>
+      <if test="accountId != null">
+        and a.account_id = #{accountId,jdbcType=INTEGER}
+      </if>
+      <if test="username != null">
+        and a.username = #{username,jdbcType=VARCHAR}
+      </if>
+      <if test="refName != null">
+        and a.ref_name = #{refName,jdbcType=VARCHAR}
+      </if>
+      <if test="applyUserId != null">
+        and a.apply_user_id = #{applyUserId,jdbcType=INTEGER}
+      </if>
+      <if test="applyState != null">
+        and a.apply_state = #{applyState,jdbcType=TINYINT}
+      </if>
+      <if test="withdrawType != null">
+        and a.withdraw_type = #{withdrawType,jdbcType=TINYINT}
+      </if>
+      <if test="withdrawAmount != null">
+        and a.withdraw_amount = #{withdrawAmount,jdbcType=DECIMAL}
+      </if>
+      <if test="bankName != null">
+        and a.bank_name = #{bankName,jdbcType=VARCHAR}
+      </if>
+      <if test="bankCode != null">
+        and a.bank_code = #{bankCode,jdbcType=VARCHAR}
+      </if>
+      <if test="hostname != null">
+        and a.hostName = #{hostname,jdbcType=VARCHAR}
+      </if>
+      <if test="applyDate != null">
+        and a.apply_date = #{applyDate,jdbcType=TIMESTAMP}
+      </if>
+      <if test="checkDate != null">
+        and a.check_date = #{checkDate,jdbcType=TIMESTAMP}
+      </if>
+      <if test="checkDesc != null">
+        and a.check_desc = #{checkDesc,jdbcType=VARCHAR}
+      </if>
+      <if test="comment != null">
+        and a.comment = #{comment,jdbcType=VARCHAR}
+      </if>
+      <if test="projKey != null">
+        and p.proj_key = #{projKey,jdbcType=INTEGER}
+      </if>
+      order by id desc
+  </select>
+</mapper>

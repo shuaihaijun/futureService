@@ -433,5 +433,6 @@
     <if test="projKey != null">
       and p.proj_key = #{projKey,jdbcType=INTEGER}
     </if>
+    order by o.order_close_date desc
   </select>
 </mapper>

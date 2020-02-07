@@ -27,4 +27,11 @@ public class CommonConstant {
 	/*状态 （1 有效，0 无效）*/
 	public static final int COMMON_STATE_USABLE = 1;
 	public static final int COMMON_STATE_INVALID = 0;
+
+
+	//	 申请状态（ 0 完成，1 暂存，2 待审，3 未通过）
+	public static final int APPLY_STATE_DONE = 0;
+	public static final int APPLY_STATE_SAVE = 1;
+	public static final int APPLY_STATE_CHECK = 2;
+	public static final int APPLY_STATE_FAIL = 3;
 }

@@ -1,5 +1,7 @@
 package com.future.service.account;
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.future.common.constants.AccountConstant;
 import com.future.entity.account.FuAccountInfo;
@@ -8,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 import java.util.HashMap;
 import java.util.List;
@@ -48,4 +51,22 @@ public class FuAccountInfoService extends ServiceImpl<FuAccountInfoMapper, FuAcc
         fuAccountInfoMapper.insertSelective(acc);
     }
 
+    /**
+     * 根据用户ID查询账户信息
+     * @param userId
+     * @return
+     */
+    public FuAccountInfo findByUserId(Integer userId){
+        if(userId==null||userId==0){
+            log.error("根据用户ID查询账户信息,用户ID为空！");
+            return null;
+        }
+        Wrapper<FuAccountInfo> wrapper=new EntityWrapper<>();
+        FuAccountInfo accountInfo=selectOne(new EntityWrapper<FuAccountInfo>().eq(FuAccountInfo.USER_ID,userId));
+        if(ObjectUtils.isEmpty(accountInfo)){
+            log.error("查询代理人 社区账户失败！userId:"+userId);
+            return null;
+        }
+        return accountInfo;
+    }
 }
