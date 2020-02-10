@@ -6,9 +6,8 @@ import com.future.common.exception.ParameterInvalidException;
 import com.future.common.helper.PageInfoHelper;
 import com.future.common.result.RequestParams;
 import com.future.common.util.ThreadCache;
-import com.future.entity.account.FuAccountCommission;
+import com.future.entity.account.FuAccountWithdraw;
 import com.future.entity.account.FuAccountWithdrawApply;
-import com.future.service.account.FuAccountCommissionService;
 import com.future.service.account.FuAccountWithdrawService;
 import com.github.pagehelper.Page;
 import org.slf4j.Logger;
@@ -43,6 +42,33 @@ public class AccountWithdrawController {
         return true;
     }
 
+    //佣金账户 佣金提取申请查询
+    @RequestMapping(value= "/commissonWithdrawQuery",method=RequestMethod.POST)
+    public @ResponseBody Page<FuAccountWithdraw> commissonWithdrawQuery(@RequestBody RequestParams<Map> requestParams){
+        // 获取请求参数
+        Map queryMap = requestParams.getParams();
+        PageInfoHelper helper = requestParams.getPageInfoHelper();
+        // 获取请求参数
+        if(queryMap==null||queryMap.get("operId")==null){
+            log.error("佣金提取申请,参数为空");
+            throw new ParameterInvalidException(GlobalResultCode.PARAM_NULL_POINTER);
+        }
+        return fuAccountWithdrawService.commissonWithdrawQuery(queryMap,helper);
+    }
+
+    //佣金账户 佣金提取申请查询
+    @RequestMapping(value= "/findCommissonWithdrawApplyById",method=RequestMethod.POST)
+    public @ResponseBody FuAccountWithdrawApply findCommissonWithdrawApplyById(@RequestBody RequestParams<FuAccountWithdrawApply> requestParams){
+        // 获取请求参数
+        FuAccountWithdrawApply withdraw = requestParams.getParams();
+        // 获取请求参数
+        if(withdraw==null||withdraw.getId()==null){
+            log.error("佣金提取申请查询,参数为空");
+            throw new ParameterInvalidException(GlobalResultCode.PARAM_NULL_POINTER);
+        }
+        return fuAccountWithdrawService.findCommissonWithdrawApplyById(withdraw);
+    }
+
     //佣金账户 佣金提取申请保存
     @RequestMapping(value= "/commissonWithdrawApplySave",method=RequestMethod.POST)
     public @ResponseBody boolean commissonWithdrawApplySave(@RequestBody RequestParams<FuAccountWithdrawApply> requestParams){
@@ -57,14 +83,42 @@ public class AccountWithdrawController {
         return true;
     }
 
+    //佣金账户 佣金提取申请修改
+    @RequestMapping(value= "/commissonWithdrawApplyUpdate",method=RequestMethod.POST)
+    public @ResponseBody boolean commissonWithdrawApplyUpdate(@RequestBody RequestParams<FuAccountWithdrawApply> requestParams){
+        // 获取请求参数
+        FuAccountWithdrawApply commission = requestParams.getParams();
+        // 获取请求参数
+        if(commission==null||commission.getUserId()==null||commission.getUserId()==0){
+            log.error("佣金提取申请,userID为空");
+            throw new ParameterInvalidException(GlobalResultCode.PARAM_NULL_POINTER);
+        }
+        fuAccountWithdrawService.commissonWithdrawApplyUpdate(commission);
+        return true;
+    }
+
+    //佣金账户 佣金提取申请删除
+    @RequestMapping(value= "/commissonWithdrawApplyDelete",method=RequestMethod.POST)
+    public @ResponseBody boolean commissonWithdrawApplyDelete(@RequestBody RequestParams<FuAccountWithdrawApply> requestParams){
+        // 获取请求参数
+        FuAccountWithdrawApply commission = requestParams.getParams();
+        // 获取请求参数
+        if(commission==null||commission.getId()==null||commission.getId()==0){
+            log.error("佣金删除申请,ID为空");
+            throw new ParameterInvalidException(GlobalResultCode.PARAM_NULL_POINTER);
+        }
+        fuAccountWithdrawService.commissonWithdrawApplyDelete(commission);
+        return true;
+    }
+
     //佣金账户 佣金提取申请提交
     @RequestMapping(value= "/commissonWithdrawApplySubmit",method=RequestMethod.POST)
     public @ResponseBody boolean commissonWithdrawApplySubmit(@RequestBody RequestParams<FuAccountWithdrawApply> requestParams){
         // 获取请求参数
         FuAccountWithdrawApply commission = requestParams.getParams();
         // 获取请求参数
-        if(commission==null||commission.getUserId()==null||commission.getUserId()==0){
-            log.error("佣金提取申请,userID为空");
+        if(commission==null||commission.getId()==null||commission.getId()==0){
+            log.error("佣金提取申请,ID为空");
             throw new ParameterInvalidException(GlobalResultCode.PARAM_NULL_POINTER);
         }
         fuAccountWithdrawService.commissonWithdrawApplySubmit(commission);

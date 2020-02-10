@@ -1,10 +1,12 @@
 package com.future.service.account;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.future.common.constants.CommissionConstant;
 import com.future.common.constants.CommonConstant;
-import com.future.common.constants.GlobalConstant;
 import com.future.common.enums.GlobalResultCode;
 import com.future.common.exception.BusinessException;
 import com.future.common.exception.DataConflictException;
@@ -16,7 +18,6 @@ import com.future.entity.account.FuAccountCommission;
 import com.future.entity.account.FuAccountInfo;
 import com.future.entity.account.FuAccountWithdraw;
 import com.future.entity.account.FuAccountWithdrawApply;
-import com.future.entity.com.FuComAgent;
 import com.future.entity.user.FuUser;
 import com.future.entity.user.FuUserBank;
 import com.future.mapper.account.FuAccountWithdrawApplyMapper;
@@ -26,7 +27,6 @@ import com.future.service.user.FuUserBankService;
 import com.future.service.user.UserCommonService;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
-import io.swagger.models.auth.In;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,6 +63,87 @@ public class FuAccountWithdrawService extends ServiceImpl<FuAccountWithdrawMappe
      * @param helper
      * @return
      */
+    public Page<FuAccountWithdraw> commissonWithdrawQuery(Map queryCondition, PageInfoHelper helper){
+        /*判断查询条件*/
+        if(queryCondition == null||queryCondition.get("operId")==null){
+            log.error("查询申请列表,获取参数为空！");
+            throw new ParameterInvalidException("查询申请列表,获取参数为空！");
+        }
+        /*判断权限*/
+        String operId=String.valueOf(queryCondition.get("operId"));
+        if(StringUtils.isEmpty(operId)){
+            log.error("查询申请列表,操作人信息为空！");
+            throw new ParameterInvalidException("查询申请列表,操作人信息为空！");
+        }
+        Integer operUserProj=userCommonService.getUserProjKey(Integer.parseInt(operId));
+        Boolean isProjAdmin=userCommonService.isAdministrator(Integer.parseInt(operId),operUserProj);
+        if(operUserProj==null){
+            log.error("查询申请列表,用户权限有误！");
+            throw new ParameterInvalidException("查询申请列表,用户权限有误！");
+        }
+
+        Wrapper<FuAccountWithdraw> wrapper=new EntityWrapper<>();
+        if(queryCondition.get("userId")!=null){
+            wrapper.eq(FuAccountWithdraw.USER_ID,queryCondition.get("userId"));
+        }
+        if(queryCondition.get("withdrawTime")!=null){
+            String wtime=String.valueOf(queryCondition.get("withdrawTime"));
+            if(String.valueOf(queryCondition.get("withdrawTime")).indexOf(",")<0){
+                wrapper.eq(FuAccountWithdraw.WITHDRAW_TIME,wtime);
+            }else {
+                //时间段
+                JSONArray dateOpen= JSON.parseArray(JSON.toJSONString(queryCondition.get("withdrawTime")));
+                if(dateOpen.size()!=2){
+                    log.error("时间段数据传入错误！"+wtime);
+                    throw new DataConflictException(GlobalResultCode.PARAM_VERIFY_ERROR,"时间段数据传入错误！"+wtime);
+                }
+                wrapper.gt(FuAccountWithdraw.WITHDRAW_TIME,dateOpen.getString(0));
+                wrapper.lt(FuAccountWithdraw.WITHDRAW_TIME,dateOpen.getString(1));
+            }
+        }
+        wrapper.orderBy("id desc");
+
+        Page<FuAccountWithdraw> withdraws;
+        if(helper==null){
+            helper=new PageInfoHelper();
+        }
+        if(isProjAdmin&&operUserProj==0){
+            /*超管查询*/
+            withdraws=PageHelper.startPage(helper.getPageNo(),helper.getPageSize());
+            fuAccountWithdrawMapper.selectList(wrapper);
+            return withdraws;
+        }else if(isProjAdmin){
+            /*资源组管理员查找*/
+            queryCondition.put("projKey",operUserProj);
+            return findWithdrawByProjCondtion(queryCondition,helper);
+        }else {
+            /*普通用户查找*/
+            wrapper.eq(FuAccountWithdraw.USER_ID,operId);
+            withdraws=PageHelper.startPage(helper.getPageNo(),helper.getPageSize());
+            fuAccountWithdrawMapper.selectList(wrapper);
+            return withdraws;
+        }
+    }
+
+    /**
+     * 根据ID 查询佣金申请信息
+     * @param apply
+     * @return
+     */
+    public FuAccountWithdrawApply findCommissonWithdrawApplyById(FuAccountWithdrawApply apply){
+        if(apply==null||apply.getId()==null){
+            log.error("佣金提取申请查询,参数为空");
+            throw new ParameterInvalidException(GlobalResultCode.PARAM_NULL_POINTER);
+        }
+        return fuAccountWithdrawApplyMapper.selectByPrimaryKey(apply.getId());
+    }
+
+    /**
+     * 根据条件查询佣金提取申请信息
+     * @param queryCondition
+     * @param helper
+     * @return
+     */
     public Page<FuAccountWithdrawApply> commissonWithdrawApplyQuery(Map queryCondition, PageInfoHelper helper){
         /*判断查询条件*/
         if(queryCondition == null||queryCondition.get("operUserId")==null){
@@ -82,14 +163,56 @@ public class FuAccountWithdrawService extends ServiceImpl<FuAccountWithdrawMappe
             throw new ParameterInvalidException("查询申请列表,用户权限有误！");
         }
 
+        /*查询跳进*/
+        Wrapper<FuAccountWithdrawApply> wrapper=new EntityWrapper<>();
+        if(queryCondition.get("userId")!=null&&!StringUtils.isEmpty(String.valueOf(queryCondition.get("userId")))){
+            wrapper.eq(FuAccountWithdrawApply.USER_ID,queryCondition.get("userId"));
+        }
+        if(queryCondition.get("applyUserId")!=null&&!StringUtils.isEmpty(String.valueOf(queryCondition.get("applyUserId")))){
+            wrapper.eq(FuAccountWithdrawApply.APPLY_USER_ID,queryCondition.get("applyUserId"));
+        }
+        if(queryCondition.get("applyState")!=null&&!StringUtils.isEmpty(String.valueOf(queryCondition.get("applyState")))){
+            wrapper.eq(FuAccountWithdrawApply.APPLY_STATE,queryCondition.get("applyState"));
+        }
+        if(queryCondition.get("applyDate")!=null){
+            String applyDate=String.valueOf(queryCondition.get("applyDate"));
+            if(applyDate.indexOf(",")<0){
+                wrapper.eq(FuAccountWithdrawApply.APPLY_DATE,applyDate);
+            }else {
+                //时间段
+                JSONArray dateOpen= JSON.parseArray(JSON.toJSONString(queryCondition.get("applyDate")));
+                if(dateOpen.size()!=2){
+                    log.error("时间段数据传入错误！"+applyDate);
+                    throw new DataConflictException(GlobalResultCode.PARAM_VERIFY_ERROR,"时间段数据传入错误！"+applyDate);
+                }
+                wrapper.gt(FuAccountWithdrawApply.APPLY_DATE,dateOpen.getString(0));
+                wrapper.lt(FuAccountWithdrawApply.APPLY_DATE,dateOpen.getString(1));
+            }
+        }
+        if(queryCondition.get("checkDate")!=null){
+            String checkDate=String.valueOf(queryCondition.get("checkDate"));
+            if(checkDate.indexOf(",")<0){
+                wrapper.eq(FuAccountWithdrawApply.CHECK_DATE,checkDate);
+            }else {
+                //时间段
+                JSONArray dateOpen= JSON.parseArray(JSON.toJSONString(queryCondition.get("checkDate")));
+                if(dateOpen.size()!=2){
+                    log.error("时间段数据传入错误！"+checkDate);
+                    throw new DataConflictException(GlobalResultCode.PARAM_VERIFY_ERROR,"时间段数据传入错误！"+checkDate);
+                }
+                wrapper.gt(FuAccountWithdrawApply.CHECK_DATE,dateOpen.getString(0));
+                wrapper.lt(FuAccountWithdrawApply.CHECK_DATE,dateOpen.getString(1));
+            }
+        }
+        wrapper.orderBy("id desc");
         Page<FuAccountWithdrawApply> applies;
         if(helper==null){
             helper=new PageInfoHelper();
         }
         if(isProjAdmin&&operUserProj==0){
             /*超管查询*/
-            applies=PageHelper.startPage(helper.getPageNo(),helper.getPageSize(),"id desc");
-            fuAccountWithdrawApplyMapper.selectByMap(queryCondition);
+            applies=PageHelper.startPage(helper.getPageNo(),helper.getPageSize());
+            fuAccountWithdrawApplyMapper.selectList(wrapper);
             return applies;
         }else if(isProjAdmin){
             /*资源组管理员查找*/
@@ -98,10 +221,30 @@ public class FuAccountWithdrawService extends ServiceImpl<FuAccountWithdrawMappe
         }else {
             /*普通用户查找*/
             queryCondition.put("userId",operUserId);
-            applies=PageHelper.startPage(helper.getPageNo(),helper.getPageSize(),"id desc");
-            fuAccountWithdrawApplyMapper.selectByMap(queryCondition);
+            wrapper.eq(FuAccountWithdrawApply.USER_ID,operUserId);
+            applies=PageHelper.startPage(helper.getPageNo(),helper.getPageSize());
+            fuAccountWithdrawApplyMapper.selectList(wrapper);
             return applies;
         }
+    }
+
+    /**
+     * 根据proj获取申请信息
+     * @param queryCondition
+     * @param helper
+     */
+    public Page<FuAccountWithdraw> findWithdrawByProjCondtion(Map queryCondition,PageInfoHelper helper){
+        /*判断查询条件*/
+        if(queryCondition == null||queryCondition.get("projKey")==null){
+            log.error("查询申请列表,获取参数为空！");
+            throw new ParameterInvalidException("查询申请列表,获取参数为空！");
+        }
+        if(helper==null){
+            helper=new PageInfoHelper();
+        }
+        Page<FuAccountWithdraw> userPage= PageHelper.startPage(helper.getPageNo(),helper.getPageSize());
+        fuAccountWithdrawMapper.findWithdrawByProjCondtion(queryCondition);
+        return userPage;
     }
 
     /**
@@ -183,7 +326,26 @@ public class FuAccountWithdrawService extends ServiceImpl<FuAccountWithdrawMappe
             throw new BusinessException("佣金提取,该用户无提取佣金权限！");
         }
 
+        FuUser fuUser=adminService.selectById(userId);
+        if(fuUser==null){
+            log.error("佣金提取,无该用户信息！");
+            throw new BusinessException("佣金提取,无该用户信息！");
+        }
+        FuUserBank userBank= fuUserBankService.getBankByUserId(null,userId);
+        if(userBank==null){
+            log.error("佣金提取,无该用户银行卡信息！");
+            throw new BusinessException("佣金提取,无该用户银行卡信息！");
+        }
+
         FuAccountWithdraw withdraw=new FuAccountWithdraw();
+
+        withdraw.setUsername(fuUser.getUsername());
+        withdraw.setRefName(fuUser.getRefName());
+        withdraw.setBankName(userBank.getBankName());
+        withdraw.setBankCode(userBank.getCode());
+        withdraw.setHostName(userBank.getHostName());
+
+        withdraw.setOperUserId(operId);
         withdraw.setUserId(userId);
         withdraw.setAccountId(commission.getAccountId());
         withdraw.setWithdrawType(CommissionConstant.COMMISSION_WITHDRAW_TYPE_COMMISSION);
@@ -216,15 +378,39 @@ public class FuAccountWithdrawService extends ServiceImpl<FuAccountWithdrawMappe
             throw new DataConflictException(GlobalResultCode.PARAM_NULL_POINTER);
         }
 
+        if(apply.getId()!=null && apply.getId()>0){
+            //修改
+            return commissonWithdrawApplyUpdate(apply);
+        }
         if(apply.getUserId()==null||apply.getUserId()==0
                 ||apply.getApplyUserId()==null||apply.getApplyUserId()==0){
-            log.error("佣金提取申请保存,参数为空！");
+            log.error("佣金提取申请保存,用户参数为空！");
             throw new DataConflictException(GlobalResultCode.PARAM_NULL_POINTER);
         }
-
         if(apply.getWithdrawAmount()==null||apply.getWithdrawAmount().compareTo(new BigDecimal(0))==0){
             log.error("佣金提取申请保存,提取金额为空！");
             throw new DataConflictException("佣金提取申请保存,提取金额为空！");
+        }
+        /*校验金额是否超过*/
+        FuAccountCommission commission=fuAccountCommissionService.getAccountCommissonByUserId(apply.getUserId());
+        if(commission==null){
+            log.error("佣金提取申请保存,查询佣金数据失败！");
+            throw new DataConflictException("佣金提取申请保存,查询佣金数据失败！");
+        }
+        if(apply.getWithdrawAmount().compareTo(commission.getCommissionMoney())>0){
+            log.error("佣金提取申请保存,提取金额超过佣金余额，请检查！");
+            throw new DataConflictException("佣金提取申请保存,提取金额超过佣金余额，请检查！");
+        }
+
+        /*校验唯一性*/
+        /*校验数据是否已存在！*/
+        Wrapper<FuAccountWithdrawApply> wrapper=new EntityWrapper<>();
+        wrapper.eq(FuAccountWithdrawApply.USER_ID,apply.getUserId());
+        wrapper.ne(FuAccountWithdrawApply.APPLY_STATE, CommonConstant.APPLY_STATE_DONE);
+        List<FuAccountWithdrawApply> applies= fuAccountWithdrawApplyMapper.selectList(wrapper);
+        if(applies!=null&&applies.size()>0){
+            log.warn("该用户已在申请队列中，请检查您的数据！");
+            throw new DataConflictException("该用户已在申请队列中，请检查您的数据！");
         }
 
         /*用户信息*/
@@ -244,7 +430,7 @@ public class FuAccountWithdrawService extends ServiceImpl<FuAccountWithdrawMappe
         }
         apply.setBankName(bank.getBankName());
         apply.setBankCode(bank.getCode());
-        apply.setHostname(bank.getHostName());
+        apply.setHostName(bank.getHostName());
 
         /*账户id*/
         FuAccountInfo accountInfo=fuAccountInfoService.findByUserId(apply.getUserId());
@@ -256,6 +442,77 @@ public class FuAccountWithdrawService extends ServiceImpl<FuAccountWithdrawMappe
 
         apply.setApplyState(CommonConstant.APPLY_STATE_SAVE);
         fuAccountWithdrawApplyMapper.insertSelective(apply);
+        return true;
+    }
+
+    /**
+     * 佣金账户 佣金提取申请修改
+     * @param apply
+     * @return
+     */
+    public boolean commissonWithdrawApplyUpdate(FuAccountWithdrawApply apply){
+        if(apply==null||apply.getId()<=0){
+            log.error("佣金提取申请修改，参数为空！");
+            throw new DataConflictException("佣金提取申请修改，参数为空！");
+        }
+
+        FuAccountWithdrawApply withdrawApply= fuAccountWithdrawApplyMapper.selectByPrimaryKey(apply.getId());
+        if(withdrawApply==null){
+            log.error("佣金提取申请修改,查询数据失败!");
+            throw new DataConflictException("佣金提取申请修改,查询数据失败!");
+        }
+        /*校验金额是否超过*/
+        FuAccountCommission commission=fuAccountCommissionService.getAccountCommissonByUserId(apply.getUserId());
+        if(commission==null){
+            log.error("佣金提取申请保存,查询佣金数据失败！");
+            throw new DataConflictException("佣金提取申请保存,查询佣金数据失败！");
+        }
+        if(apply.getWithdrawAmount().compareTo(commission.getCommissionMoney())>0){
+            log.error("佣金提取申请保存,提取金额超过佣金余额，请检查！");
+            throw new DataConflictException("佣金提取申请保存,提取金额超过佣金余额，请检查！");
+        }
+        /*判断状态*/
+        if(withdrawApply.getApplyState()==CommonConstant.APPLY_STATE_DONE
+                ||withdrawApply.getApplyState()==CommonConstant.APPLY_STATE_CHECK){
+            //暂存和待审核状态的不能修改
+            log.error("佣金提取申请修改,暂存和待审核状态的不能修改!");
+            throw new DataConflictException("佣金提取申请修改,暂存和待审核状态的不能修改!");
+        }
+
+        fuAccountWithdrawApplyMapper.updateByPrimaryKeySelective(apply);
+        return true;
+    }
+
+    /**
+     * 佣金账户 佣金提取申请删除
+     * @param apply
+     * @return
+     */
+    public boolean commissonWithdrawApplyDelete(FuAccountWithdrawApply apply){
+        if(apply==null||apply.getId()<=0){
+            log.error("佣金提取申请删除，参数为空！");
+            throw new DataConflictException("佣金提取申请删除，参数为空！");
+        }
+
+        FuAccountWithdrawApply withdrawApply= fuAccountWithdrawApplyMapper.selectByPrimaryKey(apply.getId());
+        if(withdrawApply==null){
+            log.error("佣金提取申请删除,查询数据失败!");
+            throw new DataConflictException("佣金提取申请删除,查询数据失败!");
+        }
+        /*判断状态*/
+        if(withdrawApply.getApplyState()!=CommonConstant.APPLY_STATE_SAVE){
+            //只有暂存状态才能做删除操作
+            log.error("佣金提取申请删除,只有暂存状态才能做删除操作!");
+            throw new DataConflictException("佣金提取申请删除,只有暂存状态才能做删除操作!");
+        }
+
+        /*只能本人删除数据*/
+        /*if(!apply.getUserId().equals(apply.getApplyUserId())){
+            log.error("佣金提取申请删除,只能申请人操作!");
+            throw new DataConflictException("佣金提取申请删除,只能申请人操作!");
+        }*/
+
+        fuAccountWithdrawApplyMapper.deleteByPrimaryKey(apply.getId());
         return true;
     }
 
@@ -282,7 +539,7 @@ public class FuAccountWithdrawService extends ServiceImpl<FuAccountWithdrawMappe
         oldApply.setApplyDate(new Date());
         oldApply.setApplyState(CommonConstant.APPLY_STATE_CHECK);
 
-        fuAccountWithdrawApplyMapper.updateByPrimaryKey(oldApply);
+        fuAccountWithdrawApplyMapper.updateByPrimaryKeySelective(oldApply);
 
         return true;
     }

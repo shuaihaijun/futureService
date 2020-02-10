@@ -14,7 +14,7 @@
     <result column="withdraw_amount" jdbcType="DECIMAL" property="withdrawAmount" />
     <result column="bank_name" jdbcType="VARCHAR" property="bankName" />
     <result column="bank_code" jdbcType="VARCHAR" property="bankCode" />
-    <result column="hostName" jdbcType="VARCHAR" property="hostname" />
+    <result column="host_name" jdbcType="VARCHAR" property="hostName" />
     <result column="apply_date" jdbcType="TIMESTAMP" property="applyDate" />
     <result column="check_date" jdbcType="TIMESTAMP" property="checkDate" />
     <result column="check_desc" jdbcType="VARCHAR" property="checkDesc" />
@@ -22,7 +22,7 @@
   </resultMap>
   <sql id="Base_Column_List">
     id, create_date, user_id, account_id, username, ref_name, apply_user_id, apply_state, 
-    withdraw_type, withdraw_amount, bank_name, bank_code, hostName, apply_date, check_date, 
+    withdraw_type, withdraw_amount, bank_name, bank_code, host_name, apply_date, check_date, 
     check_desc, comment
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
@@ -40,13 +40,13 @@
       account_id, username, ref_name, 
       apply_user_id, apply_state, withdraw_type, 
       withdraw_amount, bank_name, bank_code, 
-      hostName, apply_date, check_date, 
+      host_name, apply_date, check_date, 
       check_desc, comment)
     values (#{id,jdbcType=INTEGER}, #{createDate,jdbcType=TIMESTAMP}, #{userId,jdbcType=INTEGER}, 
       #{accountId,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, #{refName,jdbcType=VARCHAR}, 
       #{applyUserId,jdbcType=INTEGER}, #{applyState,jdbcType=TINYINT}, #{withdrawType,jdbcType=TINYINT}, 
       #{withdrawAmount,jdbcType=DECIMAL}, #{bankName,jdbcType=VARCHAR}, #{bankCode,jdbcType=VARCHAR}, 
-      #{hostname,jdbcType=VARCHAR}, #{applyDate,jdbcType=TIMESTAMP}, #{checkDate,jdbcType=TIMESTAMP}, 
+      #{hostName,jdbcType=VARCHAR}, #{applyDate,jdbcType=TIMESTAMP}, #{checkDate,jdbcType=TIMESTAMP}, 
       #{checkDesc,jdbcType=VARCHAR}, #{comment,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.future.entity.account.FuAccountWithdrawApply">
@@ -88,8 +88,8 @@
       <if test="bankCode != null">
         bank_code,
       </if>
-      <if test="hostname != null">
-        hostName,
+      <if test="hostName != null">
+        host_name,
       </if>
       <if test="applyDate != null">
         apply_date,
@@ -141,8 +141,8 @@
       <if test="bankCode != null">
         #{bankCode,jdbcType=VARCHAR},
       </if>
-      <if test="hostname != null">
-        #{hostname,jdbcType=VARCHAR},
+      <if test="hostName != null">
+        #{hostName,jdbcType=VARCHAR},
       </if>
       <if test="applyDate != null">
         #{applyDate,jdbcType=TIMESTAMP},
@@ -194,8 +194,8 @@
       <if test="bankCode != null">
         bank_code = #{bankCode,jdbcType=VARCHAR},
       </if>
-      <if test="hostname != null">
-        hostName = #{hostname,jdbcType=VARCHAR},
+      <if test="hostName != null">
+        host_name = #{hostName,jdbcType=VARCHAR},
       </if>
       <if test="applyDate != null">
         apply_date = #{applyDate,jdbcType=TIMESTAMP},
@@ -225,7 +225,7 @@
       withdraw_amount = #{withdrawAmount,jdbcType=DECIMAL},
       bank_name = #{bankName,jdbcType=VARCHAR},
       bank_code = #{bankCode,jdbcType=VARCHAR},
-      hostName = #{hostname,jdbcType=VARCHAR},
+      host_name = #{hostName,jdbcType=VARCHAR},
       apply_date = #{applyDate,jdbcType=TIMESTAMP},
       check_date = #{checkDate,jdbcType=TIMESTAMP},
       check_desc = #{checkDesc,jdbcType=VARCHAR},
@@ -233,7 +233,7 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
   <select id="findWithdrawApplyByProjCondtion" parameterType="java.util.Map" resultMap="BaseResultMap">
-    SELECT
+      SELECT
         a.id,
         a.create_date,
         a.user_id,
@@ -246,66 +246,66 @@
         a.withdraw_amount,
         a.bank_name,
         a.bank_code,
-        a.hostName,
+        a.host_name,
         a.apply_date,
         a.check_date,
         a.check_desc,
         a.COMMENT
-    FROM
+      FROM
         fu_account_withdraw_apply a
-    LEFT JOIN fu_permission_userproject p ON a.user_id = p.user_id
-    where 1=1
-      <if test="id != null">
-        and a.id = #{id,jdbcType=INTEGER}
-      </if>
-      <if test="userId != null">
-        and a.user_id = #{userId,jdbcType=INTEGER}
-      </if>
-      <if test="accountId != null">
-        and a.account_id = #{accountId,jdbcType=INTEGER}
-      </if>
-      <if test="username != null">
-        and a.username = #{username,jdbcType=VARCHAR}
-      </if>
-      <if test="refName != null">
-        and a.ref_name = #{refName,jdbcType=VARCHAR}
-      </if>
-      <if test="applyUserId != null">
-        and a.apply_user_id = #{applyUserId,jdbcType=INTEGER}
-      </if>
-      <if test="applyState != null">
-        and a.apply_state = #{applyState,jdbcType=TINYINT}
-      </if>
-      <if test="withdrawType != null">
-        and a.withdraw_type = #{withdrawType,jdbcType=TINYINT}
-      </if>
-      <if test="withdrawAmount != null">
-        and a.withdraw_amount = #{withdrawAmount,jdbcType=DECIMAL}
-      </if>
-      <if test="bankName != null">
-        and a.bank_name = #{bankName,jdbcType=VARCHAR}
-      </if>
-      <if test="bankCode != null">
-        and a.bank_code = #{bankCode,jdbcType=VARCHAR}
-      </if>
-      <if test="hostname != null">
-        and a.hostName = #{hostname,jdbcType=VARCHAR}
-      </if>
-      <if test="applyDate != null">
-        and a.apply_date = #{applyDate,jdbcType=TIMESTAMP}
-      </if>
-      <if test="checkDate != null">
-        and a.check_date = #{checkDate,jdbcType=TIMESTAMP}
-      </if>
-      <if test="checkDesc != null">
-        and a.check_desc = #{checkDesc,jdbcType=VARCHAR}
-      </if>
-      <if test="comment != null">
-        and a.comment = #{comment,jdbcType=VARCHAR}
-      </if>
-      <if test="projKey != null">
-        and p.proj_key = #{projKey,jdbcType=INTEGER}
-      </if>
-      order by id desc
+      LEFT JOIN fu_permission_userproject p ON a.user_id = p.user_id
+      where 1=1
+        <if test="id != null">
+          and a.id = #{id,jdbcType=INTEGER}
+        </if>
+        <if test="userId != null">
+          and a.user_id = #{userId,jdbcType=INTEGER}
+        </if>
+        <if test="accountId != null">
+          and a.account_id = #{accountId,jdbcType=INTEGER}
+        </if>
+        <if test="username != null">
+          and a.username = #{username,jdbcType=VARCHAR}
+        </if>
+        <if test="refName != null">
+          and a.ref_name = #{refName,jdbcType=VARCHAR}
+        </if>
+        <if test="applyUserId != null">
+          and a.apply_user_id = #{applyUserId,jdbcType=INTEGER}
+        </if>
+        <if test="applyState != null">
+          and a.apply_state = #{applyState,jdbcType=TINYINT}
+        </if>
+        <if test="withdrawType != null">
+          and a.withdraw_type = #{withdrawType,jdbcType=TINYINT}
+        </if>
+        <if test="withdrawAmount != null">
+          and a.withdraw_amount = #{withdrawAmount,jdbcType=DECIMAL}
+        </if>
+        <if test="bankName != null">
+          and a.bank_name = #{bankName,jdbcType=VARCHAR}
+        </if>
+        <if test="bankCode != null">
+          and a.bank_code = #{bankCode,jdbcType=VARCHAR}
+        </if>
+        <if test="hostName != null">
+          and a.host_name = #{hostName,jdbcType=VARCHAR}
+        </if>
+        <if test="applyDate != null">
+          and a.apply_date = #{applyDate,jdbcType=TIMESTAMP}
+        </if>
+        <if test="checkDate != null">
+          and a.check_date = #{checkDate,jdbcType=TIMESTAMP}
+        </if>
+        <if test="checkDesc != null">
+          and a.check_desc = #{checkDesc,jdbcType=VARCHAR}
+        </if>
+        <if test="comment != null">
+          and a.comment = #{comment,jdbcType=VARCHAR}
+        </if>
+        <if test="projKey != null">
+          and p.proj_key = #{projKey,jdbcType=INTEGER}
+        </if>
+        order by id desc
   </select>
 </mapper>

@@ -7,6 +7,13 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 public class FuAccountWithdrawApply {
+
+    public static final String USER_ID = "user_id";
+    public static final String APPLY_USER_ID = "apply_user_id";
+    public static final String APPLY_STATE = "apply_state";
+    public static final String APPLY_DATE = "apply_date";
+    public static final String CHECK_DATE = "check_date";
+
     /**
      * 
      */
@@ -71,7 +78,7 @@ public class FuAccountWithdrawApply {
     /**
      * 户主姓名
      */
-    private String hostname;
+    private String hostName;
 
     /**
      * 申请时间
@@ -287,18 +294,18 @@ public class FuAccountWithdrawApply {
 
     /**
      * 户主姓名
-     * @return hostName 户主姓名
+     * @return host_name 户主姓名
      */
-    public String getHostname() {
-        return hostname;
+    public String getHostName() {
+        return hostName;
     }
 
     /**
      * 户主姓名
-     * @param hostname 户主姓名
+     * @param hostName 户主姓名
      */
-    public void setHostname(String hostname) {
-        this.hostname = hostname == null ? null : hostname.trim();
+    public void setHostName(String hostName) {
+        this.hostName = hostName == null ? null : hostName.trim();
     }
 
     /**

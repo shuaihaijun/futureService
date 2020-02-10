@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.future.entity.account.FuAccountWithdraw;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+import java.util.Map;
 @Component
 public interface FuAccountWithdrawMapper extends BaseMapper<FuAccountWithdraw> {
     int deleteByPrimaryKey(Integer id);
@@ -17,4 +19,6 @@ public interface FuAccountWithdrawMapper extends BaseMapper<FuAccountWithdraw> {
     int updateByPrimaryKeySelective(FuAccountWithdraw record);
 
     int updateByPrimaryKey(FuAccountWithdraw record);
+
+    List<FuAccountWithdraw> findWithdrawByProjCondtion(Map condition);
 }

@@ -7,8 +7,11 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 public class FuAccountWithdraw {
+    public static final String USER_ID = "user_id";
+    public static final String OPER_USER_ID = "oper_user_id";
+    public static final String WITHDRAW_TIME = "withdraw_time";
     /**
-     * 
+     *
      */
     @TableId(type = IdType.AUTO)
     private Integer id;
@@ -19,14 +22,24 @@ public class FuAccountWithdraw {
     private Date createDate;
 
     /**
+     * 操作人ID
+     */
+    private Integer operUserId;
+
+    /**
      * 用户ID
      */
     private Integer userId;
 
     /**
-     * 姓名
+     * 账号
      */
-    private String name;
+    private String username;
+
+    /**
+     * 昵称
+     */
+    private String refName;
 
     /**
      * 账户ID
@@ -54,9 +67,9 @@ public class FuAccountWithdraw {
     private String bankCode;
 
     /**
-     * 区域
+     * 户主姓名
      */
-    private String bankArea;
+    private String hostName;
 
     /**
      * 操作前余额
@@ -121,6 +134,22 @@ public class FuAccountWithdraw {
     }
 
     /**
+     * 操作人ID
+     * @return oper_user_id 操作人ID
+     */
+    public Integer getOperUserId() {
+        return operUserId;
+    }
+
+    /**
+     * 操作人ID
+     * @param operUserId 操作人ID
+     */
+    public void setOperUserId(Integer operUserId) {
+        this.operUserId = operUserId;
+    }
+
+    /**
      * 用户ID
      * @return user_id 用户ID
      */
@@ -137,19 +166,35 @@ public class FuAccountWithdraw {
     }
 
     /**
-     * 姓名
-     * @return name 姓名
+     * 账号
+     * @return username 账号
      */
-    public String getName() {
-        return name;
+    public String getUsername() {
+        return username;
     }
 
     /**
-     * 姓名
-     * @param name 姓名
+     * 账号
+     * @param username 账号
      */
-    public void setName(String name) {
-        this.name = name == null ? null : name.trim();
+    public void setUsername(String username) {
+        this.username = username == null ? null : username.trim();
+    }
+
+    /**
+     * 昵称
+     * @return ref_name 昵称
+     */
+    public String getRefName() {
+        return refName;
+    }
+
+    /**
+     * 昵称
+     * @param refName 昵称
+     */
+    public void setRefName(String refName) {
+        this.refName = refName == null ? null : refName.trim();
     }
 
     /**
@@ -233,19 +278,19 @@ public class FuAccountWithdraw {
     }
 
     /**
-     * 区域
-     * @return bank_area 区域
+     * 户主姓名
+     * @return host_name 户主姓名
      */
-    public String getBankArea() {
-        return bankArea;
+    public String getHostName() {
+        return hostName;
     }
 
     /**
-     * 区域
-     * @param bankArea 区域
+     * 户主姓名
+     * @param hostName 户主姓名
      */
-    public void setBankArea(String bankArea) {
-        this.bankArea = bankArea == null ? null : bankArea.trim();
+    public void setHostName(String hostName) {
+        this.hostName = hostName == null ? null : hostName.trim();
     }
 
     /**
