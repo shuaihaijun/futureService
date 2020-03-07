@@ -53,10 +53,10 @@ public class FuProductSignalService extends ServiceImpl<FuProductSignalMapper,Fu
             log.error("分页数据为空！");
             new DataConflictException(GlobalResultCode.PARAM_NULL_POINTER,"分页数据为空！");
         }
-        if(!StringUtils.isEmpty(String.valueOf(conditionMap.get("pageSize")))){
+        if(conditionMap.get("pageSize")!=null){
             pageSize=Integer.parseInt(String.valueOf(conditionMap.get("pageSize")));
         }
-        if(!StringUtils.isEmpty(String.valueOf(conditionMap.get("pageNum")))){
+        if(conditionMap.get("pageNum")!=null){
             pageNum=Integer.parseInt(String.valueOf(conditionMap.get("pageNum")));
         }
         page.setSize(pageSize);
@@ -156,10 +156,10 @@ public class FuProductSignalService extends ServiceImpl<FuProductSignalMapper,Fu
             log.error("分页数据为空！");
             new DataConflictException("分页数据为空！");
         }
-        if(!StringUtils.isEmpty(requestMap.getString("pageSize"))){
+        if(requestMap.getString("pageSize")!=null){
             pageSize=Integer.parseInt(requestMap.getString("pageSize"));
         }
-        if(!StringUtils.isEmpty(requestMap.getString("pageNum"))){
+        if(requestMap.getString("pageNum")!=null){
             pageNum=Integer.parseInt(requestMap.getString("pageNum"));
         }
         Map conditionMap =requestMap.getInnerMap();

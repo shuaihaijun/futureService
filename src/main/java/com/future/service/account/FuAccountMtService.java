@@ -21,9 +21,8 @@ import com.future.mapper.account.FuAccountMtMapper;
 import com.future.mapper.product.FuProductSignalMapper;
 import com.future.mapper.user.FuUserMapper;
 import com.future.pojo.bo.order.UserMTAccountBO;
+import com.future.service.bak.BakMTAccountService;
 import com.future.service.com.FuComServerService;
-import com.future.service.com.FuComService;
-import com.future.service.mt.MTAccountService;
 import com.future.service.user.UserCommonService;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
@@ -53,7 +52,7 @@ public class FuAccountMtService extends ServiceImpl<FuAccountMtMapper, FuAccount
     @Autowired
     FuUserMapper fuUserMapper;
     @Autowired
-    MTAccountService mtAccountService;
+    BakMTAccountService bakMtAccountService;
     @Autowired
     FuProductSignalMapper fuProductSignalMapper;
     @Autowired
@@ -269,7 +268,7 @@ public class FuAccountMtService extends ServiceImpl<FuAccountMtMapper, FuAccount
             Strategy strategy=new Strategy();
             Broker broker = new Broker(mtServer);
             /*1 、连接数据*/
-            if(!mtAccountService.getConnect(strategy,broker,mtAccId,password)){
+            if(!bakMtAccountService.getConnect(strategy,broker,mtAccId,password)){
                 redisManager.hset(RedisConstant.H_ACCOUNT_CONNECT_STATE,stateKey, CommonConstant.COMMON_NO);
                 log.error("user connect failed");
                 return false;
@@ -339,7 +338,7 @@ public class FuAccountMtService extends ServiceImpl<FuAccountMtMapper, FuAccount
             Strategy strategy=new Strategy();
             Broker broker = new Broker(mtServer);
             /*连接数据*/
-            if(!mtAccountService.disConnect(strategy,broker,mtAccId,password)){
+            if(!bakMtAccountService.disConnect(strategy,broker,mtAccId,password)){
                 log.error("user disconnect failed");
                 return false;
             }
@@ -384,7 +383,7 @@ public class FuAccountMtService extends ServiceImpl<FuAccountMtMapper, FuAccount
             Strategy strategy=new Strategy();
             Broker broker = new Broker(mtServer);
             /*连接数据*/
-            if(!mtAccountService.getConnect(strategy,broker,mtAccId,password)){
+            if(!bakMtAccountService.getConnect(strategy,broker,mtAccId,password)){
                 log.error("user connect failed");
                 return false;
             }
@@ -426,7 +425,7 @@ public class FuAccountMtService extends ServiceImpl<FuAccountMtMapper, FuAccount
             Strategy strategy=new Strategy();
             Broker broker = new Broker(mtServer);
             /*连接数据*/
-            if(!mtAccountService.disConnect(strategy,broker,mtAccId,password)){
+            if(!bakMtAccountService.disConnect(strategy,broker,mtAccId,password)){
                 log.error("user connect failed");
                 return false;
             }

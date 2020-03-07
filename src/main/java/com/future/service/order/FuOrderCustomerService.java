@@ -1,7 +1,5 @@
 package com.future.service.order;
 
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.future.common.constants.OrderConstant;
@@ -14,16 +12,15 @@ import com.future.common.helper.PageInfoHelper;
 import com.future.common.util.ConvertUtil;
 import com.future.common.util.DateUtil;
 import com.future.common.util.StringUtils;
-import com.future.common.util.ThreadCache;
 import com.future.entity.order.FuOrderCustomer;
 import com.future.entity.order.FuOrderFollowInfo;
 import com.future.mapper.order.FuOrderCustomerMapper;
 import com.future.pojo.bo.order.UserMTAccountBO;
 import com.future.service.account.FuAccountMtService;
 import com.future.service.commission.FuCommissionCustomerService;
-import com.future.service.mt.MTOrderService;
-import com.future.service.mt.MTStrategy;
-import com.future.service.product.FuUserFollowsService;
+import com.future.service.bak.BakMTOrderService;
+import com.future.service.bak.BakMTStrategy;
+import com.future.service.user.FuUserFollowsService;
 import com.future.service.user.UserCommonService;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
@@ -51,7 +48,7 @@ public class FuOrderCustomerService extends ServiceImpl<FuOrderCustomerMapper, F
     @Autowired
     FuOrderFollowInfoService fuOrderFollowInfoService;
     @Autowired
-    MTOrderService mtOrderService;
+    BakMTOrderService bakMtOrderService;
     @Autowired
     FuCommissionCustomerService fuCommissionCustomerService;
     @Autowired
@@ -143,11 +140,11 @@ public class FuOrderCustomerService extends ServiceImpl<FuOrderCustomerMapper, F
                     continue;
                 }
                 broker=new Broker(server);
-                MTStrategy strategy=new MTStrategy();
+                BakMTStrategy strategy=new BakMTStrategy();
                 strategy.setMtData(broker,mtAccountId,password);
                 strategy.setServerData(userMTAccountBO.getAccountUrl(),userMTAccountBO.getAccountPort());
 
-                Map orderAndAccount=mtOrderService.getOrderAndAccountInfo(strategy, SelectionPool.MODE_HISTORY,lastCLostTime,new Date(),null);
+                Map orderAndAccount= bakMtOrderService.getOrderAndAccountInfo(strategy, SelectionPool.MODE_HISTORY,lastCLostTime,new Date(),null);
                 /*只同步已完成的订单*/
                 fuOrderInfos=(List<FuOrderFollowInfo>)orderAndAccount.get("orders");
                 /*跟新 userId 的 mtAccId 账户信息*/

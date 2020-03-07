@@ -1,4 +1,4 @@
-package com.future.service.follow;
+package com.future.service.bak;
 
 import com.alibaba.fastjson.JSONObject;
 import com.future.common.constants.CommonConstant;
@@ -38,10 +38,11 @@ import java.util.Map;
 /**
  *  跟随者逻辑处理
  */
+@Deprecated
 @Service
-public class FollowService{
+public class BakFollowService {
 
-    Logger log= LoggerFactory.getLogger(FollowService.class);
+    Logger log= LoggerFactory.getLogger(BakFollowService.class);
 
     @Autowired
     RedisManager redisManager;
@@ -110,7 +111,7 @@ public class FollowService{
             /*拼接信号源信息*/
             signalArray=signalArray+fuAccountMts.get(0).getAccountUrl()+":"+fuAccountMts.get(0).getAccountPort()+":"+signalAccountInfo+";";
             /*拼接跟随规则信息*/
-            ruleList=ruleList+signalAccountInfo+":"+follow.getRuleType()+":"+follow.getAmount()+";";
+            ruleList=ruleList+signalAccountInfo+":"+follow.getFollowType()+":"+follow.getFollowAmount()+";";
             userMtAccMap.clear();
         }
         if(signalArray.length()>0 && userFollows.size()>0){
@@ -194,7 +195,7 @@ public class FollowService{
         for(Map map:followList){
             // followAccout = mtServer&mtAccout
             String followAccout=String.valueOf(map.get("followAccout"));
-            FollowDealThread dealThread=new FollowDealThread();
+            BakFollowDealThread dealThread=new BakFollowDealThread();
             dealThread.setFollowData(followAccout,signalAccount,action,orderJson);
             /*多线程跑起来*/
             dealThread.run();

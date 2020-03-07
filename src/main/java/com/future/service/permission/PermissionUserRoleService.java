@@ -183,10 +183,10 @@ public class PermissionUserRoleService extends ServiceImpl<FuPermissionUserRoleM
         if(StringUtils.isEmpty(pageSize)||StringUtils.isEmpty(pageNum)){
             log.warn("分页数据为空！");
         }else {
-            if(!StringUtils.isEmpty(requestMap.getString("pageSize"))){
+            if(requestMap.getString("pageSize")!=null){
                 pageSize=Integer.parseInt(requestMap.getString("pageSize"));
             }
-            if(!StringUtils.isEmpty(requestMap.getString("pageNum"))){
+            if(requestMap.getString("pageNum")!=null){
                 pageNum=Integer.parseInt(requestMap.getString("pageNum"));
             }
         }

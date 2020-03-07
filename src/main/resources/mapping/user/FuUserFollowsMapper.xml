@@ -9,24 +9,29 @@
     <result column="user_mt_acc_id" jdbcType="VARCHAR" property="userMtAccId" />
     <result column="signal_server_name" jdbcType="VARCHAR" property="signalServerName" />
     <result column="signal_mt_acc_id" jdbcType="VARCHAR" property="signalMtAccId" />
-    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
-    <result column="modify_date" jdbcType="TIMESTAMP" property="modifyDate" />
-    <result column="rule_type" jdbcType="TINYINT" property="ruleType" />
-    <result column="amount" jdbcType="DECIMAL" property="amount" />
-    <result column="rule_state" jdbcType="TINYINT" property="ruleState" />
-    <result column="limit_upper_amount" jdbcType="DECIMAL" property="limitUpperAmount" />
-    <result column="account_equity_amount" jdbcType="DECIMAL" property="accountEquityAmount" />
-    <result column="account_equity_percentage" jdbcType="DECIMAL" property="accountEquityPercentage" />
+    <result column="follow_state" jdbcType="TINYINT" property="followState" />
+    <result column="follow_direct" jdbcType="TINYINT" property="followDirect" />
+    <result column="follow_mode" jdbcType="TINYINT" property="followMode" />
+    <result column="follow_type" jdbcType="TINYINT" property="followType" />
+    <result column="follow_amount" jdbcType="DECIMAL" property="followAmount" />
     <result column="follow_max_amount" jdbcType="DECIMAL" property="followMaxAmount" />
+    <result column="follow_min_amount" jdbcType="DECIMAL" property="followMinAmount" />
     <result column="follow_alarm_amount" jdbcType="DECIMAL" property="followAlarmAmount" />
+    <result column="follow_max_hands" jdbcType="DECIMAL" property="followMaxHands" />
+    <result column="follow_min_hands" jdbcType="DECIMAL" property="followMinHands" />
     <result column="follow_alarm_lose" jdbcType="DECIMAL" property="followAlarmLose" />
     <result column="follow_alarm_level" jdbcType="DECIMAL" property="followAlarmLevel" />
+    <result column="account_equity_percentage" jdbcType="DECIMAL" property="accountEquityPercentage" />
+    <result column="account_equity_amount" jdbcType="DECIMAL" property="accountEquityAmount" />
+    <result column="modify_date" jdbcType="TIMESTAMP" property="modifyDate" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
   </resultMap>
   <sql id="Base_Column_List">
     id, user_id, signal_id, user_server_name, user_mt_acc_id, signal_server_name, signal_mt_acc_id, 
-    create_date, modify_date, rule_type, amount, rule_state, limit_upper_amount, account_equity_amount, 
-    account_equity_percentage, follow_max_amount, follow_alarm_amount, follow_alarm_lose, 
-    follow_alarm_level
+    follow_state, follow_direct, follow_mode, follow_type, follow_amount, follow_max_amount, 
+    follow_min_amount, follow_alarm_amount, follow_max_hands, follow_min_hands, follow_alarm_lose, 
+    follow_alarm_level, account_equity_percentage, account_equity_amount, modify_date, 
+    create_date
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -41,19 +46,21 @@
   <insert id="insert" parameterType="com.future.entity.user.FuUserFollows">
     insert into fu_user_follows (id, user_id, signal_id, 
       user_server_name, user_mt_acc_id, signal_server_name, 
-      signal_mt_acc_id, create_date, modify_date, 
-      rule_type, amount, rule_state, 
-      limit_upper_amount, account_equity_amount, 
-      account_equity_percentage, follow_max_amount, 
-      follow_alarm_amount, follow_alarm_lose, follow_alarm_level
+      signal_mt_acc_id, follow_state, follow_direct, 
+      follow_mode, follow_type, follow_amount, 
+      follow_max_amount, follow_min_amount, follow_alarm_amount, 
+      follow_max_hands, follow_min_hands, follow_alarm_lose, 
+      follow_alarm_level, account_equity_percentage, 
+      account_equity_amount, modify_date, create_date
       )
     values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{signalId,jdbcType=INTEGER}, 
       #{userServerName,jdbcType=VARCHAR}, #{userMtAccId,jdbcType=VARCHAR}, #{signalServerName,jdbcType=VARCHAR}, 
-      #{signalMtAccId,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, #{modifyDate,jdbcType=TIMESTAMP}, 
-      #{ruleType,jdbcType=TINYINT}, #{amount,jdbcType=DECIMAL}, #{ruleState,jdbcType=TINYINT}, 
-      #{limitUpperAmount,jdbcType=DECIMAL}, #{accountEquityAmount,jdbcType=DECIMAL}, 
-      #{accountEquityPercentage,jdbcType=DECIMAL}, #{followMaxAmount,jdbcType=DECIMAL}, 
-      #{followAlarmAmount,jdbcType=DECIMAL}, #{followAlarmLose,jdbcType=DECIMAL}, #{followAlarmLevel,jdbcType=DECIMAL}
+      #{signalMtAccId,jdbcType=VARCHAR}, #{followState,jdbcType=TINYINT}, #{followDirect,jdbcType=TINYINT}, 
+      #{followMode,jdbcType=TINYINT}, #{followType,jdbcType=TINYINT}, #{followAmount,jdbcType=DECIMAL}, 
+      #{followMaxAmount,jdbcType=DECIMAL}, #{followMinAmount,jdbcType=DECIMAL}, #{followAlarmAmount,jdbcType=DECIMAL}, 
+      #{followMaxHands,jdbcType=DECIMAL}, #{followMinHands,jdbcType=DECIMAL}, #{followAlarmLose,jdbcType=DECIMAL}, 
+      #{followAlarmLevel,jdbcType=DECIMAL}, #{accountEquityPercentage,jdbcType=DECIMAL}, 
+      #{accountEquityAmount,jdbcType=DECIMAL}, #{modifyDate,jdbcType=TIMESTAMP}, #{createDate,jdbcType=TIMESTAMP}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.future.entity.user.FuUserFollows">
@@ -80,41 +87,53 @@
       <if test="signalMtAccId != null">
         signal_mt_acc_id,
       </if>
-      <if test="createDate != null">
-        create_date,
+      <if test="followState != null">
+        follow_state,
       </if>
-      <if test="modifyDate != null">
-        modify_date,
+      <if test="followDirect != null">
+        follow_direct,
       </if>
-      <if test="ruleType != null">
-        rule_type,
+      <if test="followMode != null">
+        follow_mode,
       </if>
-      <if test="amount != null">
-        amount,
+      <if test="followType != null">
+        follow_type,
       </if>
-      <if test="ruleState != null">
-        rule_state,
-      </if>
-      <if test="limitUpperAmount != null">
-        limit_upper_amount,
-      </if>
-      <if test="accountEquityAmount != null">
-        account_equity_amount,
-      </if>
-      <if test="accountEquityPercentage != null">
-        account_equity_percentage,
+      <if test="followAmount != null">
+        follow_amount,
       </if>
       <if test="followMaxAmount != null">
         follow_max_amount,
       </if>
+      <if test="followMinAmount != null">
+        follow_min_amount,
+      </if>
       <if test="followAlarmAmount != null">
         follow_alarm_amount,
+      </if>
+      <if test="followMaxHands != null">
+        follow_max_hands,
+      </if>
+      <if test="followMinHands != null">
+        follow_min_hands,
       </if>
       <if test="followAlarmLose != null">
         follow_alarm_lose,
       </if>
       <if test="followAlarmLevel != null">
         follow_alarm_level,
+      </if>
+      <if test="accountEquityPercentage != null">
+        account_equity_percentage,
+      </if>
+      <if test="accountEquityAmount != null">
+        account_equity_amount,
+      </if>
+      <if test="modifyDate != null">
+        modify_date,
+      </if>
+      <if test="createDate != null">
+        create_date,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -139,41 +158,53 @@
       <if test="signalMtAccId != null">
         #{signalMtAccId,jdbcType=VARCHAR},
       </if>
-      <if test="createDate != null">
-        #{createDate,jdbcType=TIMESTAMP},
+      <if test="followState != null">
+        #{followState,jdbcType=TINYINT},
       </if>
-      <if test="modifyDate != null">
-        #{modifyDate,jdbcType=TIMESTAMP},
+      <if test="followDirect != null">
+        #{followDirect,jdbcType=TINYINT},
       </if>
-      <if test="ruleType != null">
-        #{ruleType,jdbcType=TINYINT},
+      <if test="followMode != null">
+        #{followMode,jdbcType=TINYINT},
       </if>
-      <if test="amount != null">
-        #{amount,jdbcType=DECIMAL},
+      <if test="followType != null">
+        #{followType,jdbcType=TINYINT},
       </if>
-      <if test="ruleState != null">
-        #{ruleState,jdbcType=TINYINT},
-      </if>
-      <if test="limitUpperAmount != null">
-        #{limitUpperAmount,jdbcType=DECIMAL},
-      </if>
-      <if test="accountEquityAmount != null">
-        #{accountEquityAmount,jdbcType=DECIMAL},
-      </if>
-      <if test="accountEquityPercentage != null">
-        #{accountEquityPercentage,jdbcType=DECIMAL},
+      <if test="followAmount != null">
+        #{followAmount,jdbcType=DECIMAL},
       </if>
       <if test="followMaxAmount != null">
         #{followMaxAmount,jdbcType=DECIMAL},
       </if>
+      <if test="followMinAmount != null">
+        #{followMinAmount,jdbcType=DECIMAL},
+      </if>
       <if test="followAlarmAmount != null">
         #{followAlarmAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="followMaxHands != null">
+        #{followMaxHands,jdbcType=DECIMAL},
+      </if>
+      <if test="followMinHands != null">
+        #{followMinHands,jdbcType=DECIMAL},
       </if>
       <if test="followAlarmLose != null">
         #{followAlarmLose,jdbcType=DECIMAL},
       </if>
       <if test="followAlarmLevel != null">
         #{followAlarmLevel,jdbcType=DECIMAL},
+      </if>
+      <if test="accountEquityPercentage != null">
+        #{accountEquityPercentage,jdbcType=DECIMAL},
+      </if>
+      <if test="accountEquityAmount != null">
+        #{accountEquityAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="modifyDate != null">
+        #{modifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createDate != null">
+        #{createDate,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
@@ -198,41 +229,53 @@
       <if test="signalMtAccId != null">
         signal_mt_acc_id = #{signalMtAccId,jdbcType=VARCHAR},
       </if>
-      <if test="createDate != null">
-        create_date = #{createDate,jdbcType=TIMESTAMP},
+      <if test="followState != null">
+        follow_state = #{followState,jdbcType=TINYINT},
       </if>
-      <if test="modifyDate != null">
-        modify_date = #{modifyDate,jdbcType=TIMESTAMP},
+      <if test="followDirect != null">
+        follow_direct = #{followDirect,jdbcType=TINYINT},
       </if>
-      <if test="ruleType != null">
-        rule_type = #{ruleType,jdbcType=TINYINT},
+      <if test="followMode != null">
+        follow_mode = #{followMode,jdbcType=TINYINT},
       </if>
-      <if test="amount != null">
-        amount = #{amount,jdbcType=DECIMAL},
+      <if test="followType != null">
+        follow_type = #{followType,jdbcType=TINYINT},
       </if>
-      <if test="ruleState != null">
-        rule_state = #{ruleState,jdbcType=TINYINT},
-      </if>
-      <if test="limitUpperAmount != null">
-        limit_upper_amount = #{limitUpperAmount,jdbcType=DECIMAL},
-      </if>
-      <if test="accountEquityAmount != null">
-        account_equity_amount = #{accountEquityAmount,jdbcType=DECIMAL},
-      </if>
-      <if test="accountEquityPercentage != null">
-        account_equity_percentage = #{accountEquityPercentage,jdbcType=DECIMAL},
+      <if test="followAmount != null">
+        follow_amount = #{followAmount,jdbcType=DECIMAL},
       </if>
       <if test="followMaxAmount != null">
         follow_max_amount = #{followMaxAmount,jdbcType=DECIMAL},
       </if>
+      <if test="followMinAmount != null">
+        follow_min_amount = #{followMinAmount,jdbcType=DECIMAL},
+      </if>
       <if test="followAlarmAmount != null">
         follow_alarm_amount = #{followAlarmAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="followMaxHands != null">
+        follow_max_hands = #{followMaxHands,jdbcType=DECIMAL},
+      </if>
+      <if test="followMinHands != null">
+        follow_min_hands = #{followMinHands,jdbcType=DECIMAL},
       </if>
       <if test="followAlarmLose != null">
         follow_alarm_lose = #{followAlarmLose,jdbcType=DECIMAL},
       </if>
       <if test="followAlarmLevel != null">
         follow_alarm_level = #{followAlarmLevel,jdbcType=DECIMAL},
+      </if>
+      <if test="accountEquityPercentage != null">
+        account_equity_percentage = #{accountEquityPercentage,jdbcType=DECIMAL},
+      </if>
+      <if test="accountEquityAmount != null">
+        account_equity_amount = #{accountEquityAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="modifyDate != null">
+        modify_date = #{modifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createDate != null">
+        create_date = #{createDate,jdbcType=TIMESTAMP},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
@@ -245,61 +288,65 @@
       user_mt_acc_id = #{userMtAccId,jdbcType=VARCHAR},
       signal_server_name = #{signalServerName,jdbcType=VARCHAR},
       signal_mt_acc_id = #{signalMtAccId,jdbcType=VARCHAR},
-      create_date = #{createDate,jdbcType=TIMESTAMP},
-      modify_date = #{modifyDate,jdbcType=TIMESTAMP},
-      rule_type = #{ruleType,jdbcType=TINYINT},
-      amount = #{amount,jdbcType=DECIMAL},
-      rule_state = #{ruleState,jdbcType=TINYINT},
-      limit_upper_amount = #{limitUpperAmount,jdbcType=DECIMAL},
-      account_equity_amount = #{accountEquityAmount,jdbcType=DECIMAL},
-      account_equity_percentage = #{accountEquityPercentage,jdbcType=DECIMAL},
+      follow_state = #{followState,jdbcType=TINYINT},
+      follow_direct = #{followDirect,jdbcType=TINYINT},
+      follow_mode = #{followMode,jdbcType=TINYINT},
+      follow_type = #{followType,jdbcType=TINYINT},
+      follow_amount = #{followAmount,jdbcType=DECIMAL},
       follow_max_amount = #{followMaxAmount,jdbcType=DECIMAL},
+      follow_min_amount = #{followMinAmount,jdbcType=DECIMAL},
       follow_alarm_amount = #{followAlarmAmount,jdbcType=DECIMAL},
+      follow_max_hands = #{followMaxHands,jdbcType=DECIMAL},
+      follow_min_hands = #{followMinHands,jdbcType=DECIMAL},
       follow_alarm_lose = #{followAlarmLose,jdbcType=DECIMAL},
-      follow_alarm_level = #{followAlarmLevel,jdbcType=DECIMAL}
+      follow_alarm_level = #{followAlarmLevel,jdbcType=DECIMAL},
+      account_equity_percentage = #{accountEquityPercentage,jdbcType=DECIMAL},
+      account_equity_amount = #{accountEquityAmount,jdbcType=DECIMAL},
+      modify_date = #{modifyDate,jdbcType=TIMESTAMP},
+      create_date = #{createDate,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
   <select id="queryFollowUsers" parameterType="java.util.Map" resultType="com.future.pojo.vo.signal.FuFollowUserVO">
     SELECT
-    f.user_id userId,
-    f.signal_id signalId,
-    f.user_server_name userServerName,
-    f.user_mt_acc_id userMtAccId,
-    f.signal_server_name signalServerName,
-    f.signal_mt_acc_id signalMtAccId,
-    f.create_date createDate,
-    f.modify_date modifyDate,
-    f.rule_type ruleType,
-    f.amount,
-    u.username,
-    u.real_name realName,
-    u.ref_name refName,
-    u.introducer,
-    u.recommend,
-    u.sex,
-    u.follow_level followLevel,
-    u.avatar_url avatarUrl,
-    m.leverage,
-    m.balance,
-    m.credit,
-    m.profit,
-    m.equity,
-    m.margin
+      f.user_id userId,
+      f.signal_id signalId,
+      f.user_server_name userServerName,
+      f.user_mt_acc_id userMtAccId,
+      f.signal_server_name signalServerName,
+      f.signal_mt_acc_id signalMtAccId,
+      f.create_date createDate,
+      f.modify_date modifyDate,
+      f.follow_type followType,
+      f.amount,
+      u.username,
+      u.real_name realName,
+      u.ref_name refName,
+      u.introducer,
+      u.recommend,
+      u.sex,
+      u.follow_level followLevel,
+      u.avatar_url avatarUrl,
+      m.leverage,
+      m.balance,
+      m.credit,
+      m.profit,
+      m.equity,
+      m.margin
     FROM
-    fu_user_follows f
-    LEFT JOIN fu_user u ON f.user_id = u.id
-    LEFT JOIN fu_product_signal s ON f.signal_id = s.id
-    LEFT JOIN fu_account_mt m ON f.user_id = m.user_id
-    AND f.user_mt_acc_id = m.mt_acc_id
+      fu_user_follows f
+      LEFT JOIN fu_user u ON f.user_id = u.id
+      LEFT JOIN fu_product_signal s ON f.signal_id = s.id
+      LEFT JOIN fu_account_mt m ON f.user_id = m.user_id
+      AND f.user_mt_acc_id = m.mt_acc_id
     where 1=1
-    <if test="userId != null">
-      and f.user_id = #{userId,jdbcType=INTEGER}
-    </if>
-    <if test="signalId != null">
-      and f.signal_id = #{signalId,jdbcType=INTEGER}
-    </if>
-    <if test="ruleState != null">
-      and f.rule_state = #{ruleState,jdbcType=INTEGER}
-    </if>
+      <if test="userId != null">
+        and f.user_id = #{userId,jdbcType=INTEGER}
+      </if>
+      <if test="signalId != null">
+        and f.signal_id = #{signalId,jdbcType=INTEGER}
+      </if>
+      <if test="followState != null">
+        and f.follow_state = #{followState,jdbcType=INTEGER}
+      </if>
   </select>
 </mapper>

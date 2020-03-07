@@ -1,4 +1,4 @@
-package com.future.service.mt;
+package com.future.service.bak;
 
 
 import com.alibaba.druid.util.StringUtils;
@@ -21,12 +21,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Deprecated
 @Service
-public class MTOrderService {
+public class BakMTOrderService {
 
-    Logger log = LoggerFactory.getLogger(MTAccountService.class);
+    Logger log = LoggerFactory.getLogger(BakMTAccountService.class);
     @Autowired
-    MTAccountService mtAccountService;
+    BakMTAccountService bakMtAccountService;
     @Value("${userTermServerHost}")
     public String userTermServerHost;
     @Value("${userTermServerPort}")
@@ -110,17 +111,17 @@ public class MTOrderService {
 
         try {
             System.out.println("========="+mtAccId+","+password);
-            MTStrategy mtStrategy=new MTStrategy();
-            mtStrategy.setMtData(broker,mtAccId,password);
-            mtStrategy.setServerData(userTermServerHost,userTermServerPort);
+            BakMTStrategy bakMtStrategy =new BakMTStrategy();
+            bakMtStrategy.setMtData(broker,mtAccId,password);
+            bakMtStrategy.setServerData(userTermServerHost,userTermServerPort);
             /*连接服务器*/
-            mtStrategy.init();
+            bakMtStrategy.init();
             /*连接数据*//*
             if(!mtStrategy.init(userTermServerHost,userTermServerPort,account)){
                 log.error("user connect failed, username:"+username);
                 throw new RuntimeException("user connect failed!");
             }*/
-            Map<Long, OrderInfo> userOrders=mtStrategy.orderGetAll(selectionPool, dateFrom,dateTo,symbol);
+            Map<Long, OrderInfo> userOrders= bakMtStrategy.orderGetAll(selectionPool, dateFrom,dateTo,symbol);
             return ConvertUtil.convertOrderInfo(userOrders);
 
         }catch (Exception e){
@@ -138,20 +139,20 @@ public class MTOrderService {
      * @param symbol
      * @return
      */
-    public List<FuOrderFollowInfo> getOrders(MTStrategy mtStrategy, SelectionPool selectionPool, Date dateFrom,Date dateTo,String symbol){
+    public List<FuOrderFollowInfo> getOrders(BakMTStrategy bakMtStrategy, SelectionPool selectionPool, Date dateFrom, Date dateTo, String symbol){
 
         if(ObjectUtils.isEmpty(selectionPool)){
             selectionPool= SelectionPool.MODE_HISTORY;
         }
 
         try {
-            if(!mtStrategy.checkData()){
+            if(!bakMtStrategy.checkData()){
                 log.error("获取MT账户信息 参数信息不全！");
                 throw new BusinessException("获取MT账户信息 参数信息不全！");
             }
             /*连接服务器*/
-            mtStrategy.init();
-            Map<Long, OrderInfo> userOrders=mtStrategy.orderGetAll(selectionPool, dateFrom,dateTo,symbol);
+            bakMtStrategy.init();
+            Map<Long, OrderInfo> userOrders= bakMtStrategy.orderGetAll(selectionPool, dateFrom,dateTo,symbol);
             return ConvertUtil.convertOrderInfo(userOrders);
 
         }catch (Exception e){
@@ -164,21 +165,21 @@ public class MTOrderService {
      * 获取MT账户信息
      * @return
      */
-    public AccountInfo getAccountInfo(MTStrategy mtStrategy){
+    public AccountInfo getAccountInfo(BakMTStrategy bakMtStrategy){
 
         try {
-            if(!mtStrategy.checkData()){
+            if(!bakMtStrategy.checkData()){
                 log.error("获取MT账户信息 参数信息不全！");
                 throw new BusinessException("获取MT账户信息 参数信息不全！");
             }
             /*连接服务器*/
-            mtStrategy.init();
+            bakMtStrategy.init();
             /*连接数据*//*
             if(!mtStrategy.init(userTermServerHost,userTermServerPort,account)){
                 log.error("user connect failed, username:"+username);
                 throw new RuntimeException("user connect failed!");
             }*/
-            return mtStrategy.accountInfo();
+            return bakMtStrategy.accountInfo();
 
         }catch (Exception e){
             log.error(e.getMessage(),e);
@@ -194,21 +195,21 @@ public class MTOrderService {
      * @param symbol
      * @return
      */
-    public Map getOrderAndAccountInfo(MTStrategy mtStrategy, SelectionPool selectionPool, Date dateFrom,Date dateTo,String symbol){
+    public Map getOrderAndAccountInfo(BakMTStrategy bakMtStrategy, SelectionPool selectionPool, Date dateFrom, Date dateTo, String symbol){
 
         if(ObjectUtils.isEmpty(selectionPool)){
             selectionPool= SelectionPool.MODE_HISTORY;
         }
 
         try {
-            if(!mtStrategy.checkData()){
+            if(!bakMtStrategy.checkData()){
                 log.error("获取MT账户信息 参数信息不全！");
                 throw new BusinessException("获取MT账户信息 参数信息不全！");
             }
             /*连接服务器*/
-            mtStrategy.init();
-            Map<Long, OrderInfo> userOrders=mtStrategy.orderGetAll(selectionPool, dateFrom,dateTo,symbol);
-            AccountInfo accountInfo= mtStrategy.accountInfo();
+            bakMtStrategy.init();
+            Map<Long, OrderInfo> userOrders= bakMtStrategy.orderGetAll(selectionPool, dateFrom,dateTo,symbol);
+            AccountInfo accountInfo= bakMtStrategy.accountInfo();
             List<FuOrderFollowInfo> orderFollowInfos= ConvertUtil.convertOrderInfo(userOrders);
             Map orderAndAccount = new HashMap();
             orderAndAccount.put("orders",orderFollowInfos);
@@ -264,7 +265,7 @@ public class MTOrderService {
 
         try {
             /*连接数据*/
-            if(!mtAccountService.getConnect(strategy,broker,username,password)){
+            if(!bakMtAccountService.getConnect(strategy,broker,username,password)){
                 log.error("user connect failed, username:"+username);
                 throw new RuntimeException("user connect failed!");
             }

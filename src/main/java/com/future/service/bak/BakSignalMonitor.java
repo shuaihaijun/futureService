@@ -1,13 +1,11 @@
-package com.future.timing;
+package com.future.service.bak;
 
 import com.future.common.exception.BusinessException;
-import com.future.service.follow.SignalService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.zeromq.SocketType;
 import org.zeromq.ZContext;
 import org.zeromq.ZMQ;
@@ -23,13 +21,12 @@ import java.util.Map;
  * @modified By：
  * @version: 1/0$
  */
-@Configuration
-@EnableScheduling
-public class SignalMonitor {
+@Deprecated
+public class BakSignalMonitor {
 
-    Logger log= LoggerFactory.getLogger(SignalMonitor.class);
+    Logger log= LoggerFactory.getLogger(BakSignalMonitor.class);
     @Autowired
-    SignalService signalService;
+    BakSignalService bakSignalService;
 
     /**
      * 监听信号源 （监听周期 0.2秒）
@@ -65,7 +62,7 @@ public class SignalMonitor {
                     //监听到订单后，转发给跟随者（跟随者会根据信号源账号配匹配）
                     pubSocket.send(reciveMsg,0);
                     //处理监听到的订单
-                    signalService.dealSignalReciveMsg(reciveMsg);
+                    bakSignalService.dealSignalReciveMsg(reciveMsg);
                 }
             }
 

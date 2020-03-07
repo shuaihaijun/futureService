@@ -86,10 +86,10 @@ public class FuProductSignalApplyService extends ServiceImpl<FuProductSignalAppl
             log.error("分页数据为空！");
             new DataConflictException(GlobalResultCode.PARAM_NULL_POINTER,"分页数据为空！");
         }
-        if(!StringUtils.isEmpty(String.valueOf(conditionMap.get("pageSize")))){
+        if(conditionMap.get("pageSize")!=null){
             pageSize=Integer.parseInt(String.valueOf(conditionMap.get("pageSize")));
         }
-        if(!StringUtils.isEmpty(String.valueOf(conditionMap.get("pageNum")))){
+        if(conditionMap.get("pageNum")!=null){
             pageNum=Integer.parseInt(String.valueOf(conditionMap.get("pageNum")));
         }
         page.setSize(pageSize);

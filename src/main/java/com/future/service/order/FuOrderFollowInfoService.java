@@ -12,7 +12,7 @@ import com.future.entity.order.FuOrderFollowInfo;
 import com.future.mapper.order.FuOrderFollowInfoMapper;
 import com.future.pojo.bo.order.UserMTAccountBO;
 import com.future.service.account.FuAccountMtService;
-import com.future.service.mt.MTOrderService;
+import com.future.service.bak.BakMTOrderService;
 import com.future.service.user.AdminService;
 import com.jfx.Broker;
 import com.jfx.TradeOperation;
@@ -32,7 +32,7 @@ public class FuOrderFollowInfoService extends ServiceImpl<FuOrderFollowInfoMappe
     @Autowired
     AdminService adminService;
     @Autowired
-    MTOrderService mtOrderService;
+    BakMTOrderService bakMtOrderService;
     @Autowired
     FuAccountMtService fuAccountMtService;
     @Autowired
@@ -145,9 +145,9 @@ public class FuOrderFollowInfoService extends ServiceImpl<FuOrderFollowInfoMappe
         Broker broker=new Broker(server);
         List<FuOrderFollowInfo> infos=new ArrayList<FuOrderFollowInfo>();
         if(isHistoryOrder){
-            infos= mtOrderService.getHistoryOrders(broker,mtAccId,mtPassword,dataFrom,dateTo,symbol);
+            infos= bakMtOrderService.getHistoryOrders(broker,mtAccId,mtPassword,dataFrom,dateTo,symbol);
         }else {
-            infos= mtOrderService.getAliveOrders(broker,mtAccId,mtPassword,dataFrom,dateTo,symbol);
+            infos= bakMtOrderService.getAliveOrders(broker,mtAccId,mtPassword,dataFrom,dateTo,symbol);
         }
 
         /*填充数据*/
@@ -216,10 +216,10 @@ public class FuOrderFollowInfoService extends ServiceImpl<FuOrderFollowInfoMappe
 
         if(isHistoryOrder){
             /*历史订单*/
-            return mtOrderService.getHistoryOrderByIndex(broker,mtAccId,mtPassword,index);
+            return bakMtOrderService.getHistoryOrderByIndex(broker,mtAccId,mtPassword,index);
         }else {
             /*在仓订单*/
-            return mtOrderService.getAliveOrderByIndex(broker,mtAccId,mtPassword,index);
+            return bakMtOrderService.getAliveOrderByIndex(broker,mtAccId,mtPassword,index);
         }
     }
 
@@ -277,6 +277,6 @@ public class FuOrderFollowInfoService extends ServiceImpl<FuOrderFollowInfoMappe
     public long sendOrder(String symbol, TradeOperation operate, double lots){
         /*返回订单号orderId*/
         /*有没有必要 保存该订单至数据库？*/
-        return mtOrderService.sendOrder(symbol,operate,lots);
+        return bakMtOrderService.sendOrder(symbol,operate,lots);
     }
 }

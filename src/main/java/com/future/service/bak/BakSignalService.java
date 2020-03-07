@@ -1,4 +1,4 @@
-package com.future.service.follow;
+package com.future.service.bak;
 
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.future.common.constants.FollowConstant;
@@ -28,12 +28,13 @@ import java.util.*;
 /**
  * 信号源处理逻辑
  */
+@Deprecated
 @Service
-public class SignalService extends ServiceImpl<FuOrderSignalMapper,FuOrderSignal> {
+public class BakSignalService extends ServiceImpl<FuOrderSignalMapper,FuOrderSignal> {
 
-    Logger log= LoggerFactory.getLogger(SignalService.class);
+    Logger log= LoggerFactory.getLogger(BakSignalService.class);
     @Autowired
-    FollowService followService;
+    BakFollowService bakFollowService;
     @Autowired
     FuOrderSignalMapper fuOrderSignalMapper;
     @Autowired

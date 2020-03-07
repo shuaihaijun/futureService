@@ -1,13 +1,11 @@
-package com.future.timing;
+package com.future.service.bak;
 
 import com.future.common.exception.BusinessException;
-import com.future.service.follow.SignalService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.zeromq.SocketType;
 import org.zeromq.ZContext;
 import org.zeromq.ZMQ;
@@ -23,13 +21,12 @@ import java.util.Map;
  * @modified By：
  * @version: 1/0$
  */
-@Configuration
-@EnableScheduling
-public class FollowMonitor {
+@Deprecated
+public class BakFollowMonitor {
 
-    Logger log= LoggerFactory.getLogger(FollowMonitor.class);
+    Logger log= LoggerFactory.getLogger(BakFollowMonitor.class);
     @Autowired
-    SignalService signalService;
+    BakSignalService bakSignalService;
 
     /**
      * 监听信号源
@@ -55,7 +52,7 @@ public class FollowMonitor {
                 if(reply!=null && reply.length>0){
                     reciveMsg=new String(reply);
                     //处理监听到的订单
-                    signalService.dealSignalReciveMsg(reciveMsg);
+                    bakSignalService.dealSignalReciveMsg(reciveMsg);
                 }
             }
         }catch (Exception e){

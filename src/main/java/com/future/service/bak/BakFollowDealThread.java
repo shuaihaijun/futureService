@@ -1,4 +1,4 @@
-package com.future.service.follow;
+package com.future.service.bak;
 
 import com.alibaba.fastjson.JSONObject;
 import com.future.common.constants.FollowConstant;
@@ -16,9 +16,10 @@ import java.math.BigDecimal;
  * @modified By：
  * @version: 1.0$
  */
-public class FollowDealThread extends Thread{
+@Deprecated
+public class BakFollowDealThread extends Thread{
 
-    Logger log = LoggerFactory.getLogger(FollowDealThread.class);
+    Logger log = LoggerFactory.getLogger(BakFollowDealThread.class);
 
     public String followAccount;
     public String action;

@@ -66,29 +66,29 @@ public class OrderFollowInfoController {
             log.error("分页数据为空！");
             new DataConflictException("分页数据为空！");
         }
-        if(!StringUtils.isEmpty(requestMap.getString("pageSize"))){
+        if(requestMap.getString("pageSize")!=null){
             pageSize=Integer.parseInt(requestMap.getString("pageSize"));
         }
-        if(!StringUtils.isEmpty(requestMap.getString("pageNum"))){
+        if(requestMap.getString("pageNum")!=null){
             pageNum=Integer.parseInt(requestMap.getString("pageNum"));
         }
         Page page=new Page();
         page.setSize(pageSize);
         page.setCurrent(pageNum);
         EntityWrapper<FuOrderFollowInfo> wrapper=new EntityWrapper<FuOrderFollowInfo>();
-        if(!StringUtils.isEmpty(requestMap.getString("userId"))){
+        if(requestMap.getString("userId")!=null){
             wrapper.eq(FuOrderFollowInfo.USER_ID,requestMap.getString("userId"));
         }
-        if(!StringUtils.isEmpty(requestMap.getString("signalId"))){
+        if(requestMap.getString("signalId")!=null){
             wrapper.eq(FuOrderFollowInfo.SIGNAL_ID,requestMap.getString("signalId"));
         }
-        if(!StringUtils.isEmpty(requestMap.getString("orderId"))){
+        if( requestMap.getString("orderId")!=null){
             wrapper.eq(FuOrderFollowInfo.ORDER_ID,requestMap.getString("orderId"));
         }
-        if(!StringUtils.isEmpty(requestMap.getString("signalOrderId"))){
+        if( requestMap.getString("signalOrderId")!=null){
             wrapper.eq(FuOrderFollowInfo.SIGNAL_ORDER_ID,requestMap.getString("signalOrderId"));
         }
-        if(!StringUtils.isEmpty(requestMap.getString("orderSymbol"))){
+        if( requestMap.getString("orderSymbol")!=null){
             wrapper.eq(FuOrderFollowInfo.ORDER_SYMBOL,requestMap.getString("orderSymbol"));
         }
         if(!StringUtils.isEmpty(requestMap.getString("orderType"))){

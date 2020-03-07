@@ -53,12 +53,12 @@ public class FuFollowUserVO {
     /**
      * 规则类型（0 按手数比例，1 按净值金额，2 按固定手数）
      */
-    private Integer ruleType;
+    private Integer followType;
 
     /**
      * 规则状态（0 正常，1  隐藏，2 废弃）
      */
-    private Integer ruleState;
+    private Integer followState;
 
     /**
      * 数量

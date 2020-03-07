@@ -1,4 +1,4 @@
-package com.future.service.mt;
+package com.future.service.bak;
 
 import com.jfx.Broker;
 import com.jfx.MT4Exception;
@@ -10,7 +10,8 @@ import org.springframework.util.StringUtils;
 
 import java.io.IOException;
 
-public class MTStrategy extends Strategy {
+@Deprecated
+public class BakMTStrategy extends Strategy {
 
     public Broker MT_4_SERVER ;//= new Broker("AETOS-Demo F");
     public String MT_4_USER;// = "2102261700";
@@ -44,7 +45,7 @@ public class MTStrategy extends Strategy {
      * @return
      * @throws MT4Exception
      */
-    public MTStrategy init() throws MT4Exception {
+    public BakMTStrategy init() throws MT4Exception {
         try {
             connect(HOST_URL, HOST_PORT, MT_4_SERVER, MT_4_USER, MT_4_PASSWORD);
             return this;

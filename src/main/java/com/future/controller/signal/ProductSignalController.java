@@ -10,7 +10,7 @@ import com.future.entity.product.FuProductSignalValuation;
 import com.future.entity.user.FuUserFollows;
 import com.future.pojo.vo.signal.FuFollowUserVO;
 import com.future.pojo.vo.signal.FuUserSignalVO;
-import com.future.service.product.FuUserFollowsService;
+import com.future.service.user.FuUserFollowsService;
 import com.future.service.product.FuProductSignalService;
 import com.future.service.product.FuProductSignalValuationService;
 import com.github.pagehelper.PageInfo;

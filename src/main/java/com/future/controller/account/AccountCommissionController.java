@@ -1,13 +1,10 @@
 package com.future.controller.account;
 
-import com.alibaba.fastjson.JSONObject;
 import com.future.common.enums.GlobalResultCode;
 import com.future.common.exception.ParameterInvalidException;
 import com.future.common.helper.PageInfoHelper;
 import com.future.common.result.RequestParams;
-import com.future.common.util.ThreadCache;
 import com.future.entity.account.FuAccountCommission;
-import com.future.entity.account.FuAccountWithdrawApply;
 import com.future.service.account.FuAccountCommissionService;
 import com.github.pagehelper.Page;
 import org.slf4j.Logger;
@@ -15,7 +12,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.math.BigDecimal;
 import java.util.Map;
 
 @RestController

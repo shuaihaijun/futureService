@@ -42,10 +42,10 @@ public class OrderSignalController {
             log.error("分页数据为空！");
             new DataConflictException("分页数据为空！");
         }
-        if(!StringUtils.isEmpty(requestMap.getString("pageSize"))){
+        if(requestMap.getString("pageSize")!=null){
             pageSize=Integer.parseInt(requestMap.getString("pageSize"));
         }
-        if(!StringUtils.isEmpty(requestMap.getString("pageNum"))){
+        if(requestMap.getString("pageNum")!=null){
             pageNum=Integer.parseInt(requestMap.getString("pageNum"));
         }
         Page page=new Page();

@@ -27,4 +27,12 @@ public class FollowConstant {
 	public static final String ACTION_CLOSE_MAGIC="CLOSE_MAGIC";
 
 
+
+	//跟单状态（0 正常，1  隐藏，2 废弃）
+	/*跟单状态 正常*/
+	public static final int FOLLOW_STATE_NORMAL=0;
+	/*跟单状态 隐藏*/
+	public static final int FOLLOW_STATE_HIDE=1;
+	/*跟单状态 废弃*/
+	public static final int FOLLOW_STATE_DELETE=2;
 }

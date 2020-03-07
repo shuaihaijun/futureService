@@ -1,9 +1,10 @@
-package com.future.service.product;
+package com.future.service.user;
 
 
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.baomidou.mybatisplus.toolkit.MapUtils;
+import com.future.common.constants.FollowConstant;
 import com.future.common.enums.GlobalResultCode;
 import com.future.common.exception.BusinessException;
 import com.future.common.exception.DataConflictException;
@@ -16,7 +17,7 @@ import com.future.mapper.user.FuUserFollowsMapper;
 import com.future.pojo.bo.order.UserMTAccountBO;
 import com.future.pojo.vo.signal.FuFollowUserVO;
 import com.future.service.account.FuAccountMtService;
-import com.future.service.user.UserCommonService;
+import com.future.service.product.FuProductSignalService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.slf4j.Logger;
@@ -66,8 +67,8 @@ public class FuUserFollowsService extends ServiceImpl<FuUserFollowsMapper, FuUse
         if(!StringUtils.isEmpty(conditionMap.get("signalMtAccId"))){
             serchMap.put(FuUserFollows.SIGNAL_MT_ACC_ID,conditionMap.get("signalMtAccId"));
         }
-        if(!StringUtils.isEmpty(conditionMap.get("ruleState"))){
-            serchMap.put(FuUserFollows.RULE_STATE,conditionMap.get("ruleState"));
+        if(!StringUtils.isEmpty(conditionMap.get("followState"))){
+            serchMap.put(FuUserFollows.FOLLOW_STATE,conditionMap.get("followState"));
         }
         if(conditionMap.get("operUserId")!=null){
             String operUserId=String.valueOf(conditionMap.get("operUserId"));
@@ -90,19 +91,21 @@ public class FuUserFollowsService extends ServiceImpl<FuUserFollowsMapper, FuUse
             log.error("查询跟随列表 参数为空！");
             throw new ParameterInvalidException(GlobalResultCode.PARAM_NULL_POINTER);
         }
-        if(StringUtils.isEmpty(dataMap.get("userId"))||StringUtils.isEmpty(dataMap.get("signalId"))){
+        if(dataMap.get("userId")==null
+                ||dataMap.get("mtAccId")==null||dataMap.get("signalId")==null){
             log.error("查询跟随列表 参数为空！");
             throw new ParameterInvalidException(GlobalResultCode.PARAM_NULL_POINTER);
         }
 
         String userId = String.valueOf(dataMap.get("userId"));
+        String mtAccId = String.valueOf(dataMap.get("mtAccId"));
         String signalId = String.valueOf(dataMap.get("signalId"));
 
         Map conMap=new HashMap();
         conMap.put("userId",userId);
-        FuProductSignal signal=fuProductSignalMapper.selectByPrimaryKey(Integer.parseInt(signalId));
-        //todo 考虑多账户问题
+        conMap.put("mtAccId",mtAccId);
         List<UserMTAccountBO> userAccounts= fuAccountMtService.getUserMTAccByCondition(conMap);
+        FuProductSignal signal=fuProductSignalMapper.selectByPrimaryKey(Integer.parseInt(signalId));
         if(ObjectUtils.isEmpty(signal)){
             log.error("根据信号源ID 查询信号源失败！");
             throw new ParameterInvalidException("根据信号源ID 查询信号源失败！");
@@ -111,6 +114,7 @@ public class FuUserFollowsService extends ServiceImpl<FuUserFollowsMapper, FuUse
             log.error("根据用户ID 查询用户账户信息失败！");
             throw new ParameterInvalidException("根据用户ID 查询用户账户信息失败！");
         }
+        UserMTAccountBO userMTAccountBO=userAccounts.get(0);
 
         /*校验是否已存在*/
         Boolean isNew=true;
@@ -121,31 +125,28 @@ public class FuUserFollowsService extends ServiceImpl<FuUserFollowsMapper, FuUse
         List<FuUserFollows> followList= fuUserFollowsMapper.selectByMap(followConditon);
         if(followList!=null && !followList.isEmpty() && followList.size()>0){
             // 根据条件查询到跟单关系 已存在
-            if(followList.get(0).getRuleState()!=0){
-                /*跟新*/
-                isNew=false;
-                follows=followList.get(0);
-            }else {
-                log.error("跟单关系已存在！");
-                throw new BusinessException(GlobalResultCode.DATA_ALREADY_EXISTED);
-            }
+            isNew=false;
+            follows=followList.get(0);
         }
 
-        follows.setUserId(userAccounts.get(0).getUserId());
+        follows.setUserId(userMTAccountBO.getUserId());
         follows.setSignalId(signal.getId());
-        follows.setUserServerName(userAccounts.get(0).getServerName());
-        follows.setUserMtAccId(userAccounts.get(0).getMtAccId());
+        follows.setUserServerName(userMTAccountBO.getServerName());
+        follows.setUserMtAccId(userMTAccountBO.getMtAccId());
         follows.setSignalServerName(signal.getServerName());
         follows.setSignalMtAccId(signal.getMtAccId());
-        follows.setRuleState(0);
-        if(!ObjectUtils.isEmpty(dataMap.get("ruleType"))){
-            follows.setRuleType(Integer.parseInt(String.valueOf(dataMap.get("ruleType"))));
+        follows.setFollowState(FollowConstant.FOLLOW_STATE_NORMAL);
+        if(!ObjectUtils.isEmpty(dataMap.get("followDirect"))){
+            follows.setFollowDirect(Integer.parseInt(String.valueOf(dataMap.get("followDirect"))));
         }
-        if(!ObjectUtils.isEmpty(dataMap.get("amount"))){
-            follows.setAmount(new BigDecimal(String.valueOf(dataMap.get("amount"))));
+        if(!ObjectUtils.isEmpty(dataMap.get("followMode"))){
+            follows.setFollowMode(Integer.parseInt(String.valueOf(dataMap.get("followMode"))));
         }
-        if(!ObjectUtils.isEmpty(dataMap.get("limitUpperAmount"))){
-            follows.setLimitUpperAmount(new BigDecimal(String.valueOf(dataMap.get("limitUpperAmount"))));
+        if(!ObjectUtils.isEmpty(dataMap.get("followType"))){
+            follows.setFollowType(Integer.parseInt(String.valueOf(dataMap.get("followType"))));
+        }
+        if(!ObjectUtils.isEmpty(dataMap.get("followAmount"))){
+            follows.setFollowAmount(new BigDecimal(String.valueOf(dataMap.get("followAmount"))));
         }
         if(!ObjectUtils.isEmpty(dataMap.get("accountEquityAmount"))){
             follows.setAccountEquityAmount(new BigDecimal(String.valueOf(dataMap.get("accountEquityAmount"))));
@@ -155,6 +156,18 @@ public class FuUserFollowsService extends ServiceImpl<FuUserFollowsMapper, FuUse
         }
         if(!ObjectUtils.isEmpty(dataMap.get("followAlarmAmount"))){
             follows.setFollowAlarmAmount(new BigDecimal(String.valueOf(dataMap.get("followAlarmAmount"))));
+        }
+        if(!ObjectUtils.isEmpty(dataMap.get("followMaxHands"))){
+            follows.setFollowMaxHands(new BigDecimal(String.valueOf(dataMap.get("followMaxHands"))));
+        }
+        if(!ObjectUtils.isEmpty(dataMap.get("followMinHands"))){
+            follows.setFollowMinHands(new BigDecimal(String.valueOf(dataMap.get("followMinHands"))));
+        }
+        if(!ObjectUtils.isEmpty(dataMap.get("followMaxAmount"))){
+            follows.setFollowMaxAmount(new BigDecimal(String.valueOf(dataMap.get("followMaxAmount"))));
+        }
+        if(!ObjectUtils.isEmpty(dataMap.get("followMinAmount"))){
+            follows.setFollowMinAmount(new BigDecimal(String.valueOf(dataMap.get("followMinAmount"))));
         }
 
         if(isNew){
@@ -177,17 +190,20 @@ public class FuUserFollowsService extends ServiceImpl<FuUserFollowsMapper, FuUse
             log.error("查询跟随列表 参数为空！");
             throw new ParameterInvalidException(GlobalResultCode.PARAM_NULL_POINTER);
         }
-        if(StringUtils.isEmpty(dataMap.get("userId"))||StringUtils.isEmpty(dataMap.get("signalId"))){
+        if(dataMap.get("userId")==null|| dataMap.get("signalId")==null
+                ||dataMap.get("mtAccId")==null){
             log.error("查询跟随列表 参数为空！");
             throw new ParameterInvalidException(GlobalResultCode.PARAM_NULL_POINTER);
         }
 
+        String mtAccId = String.valueOf(dataMap.get("mtAccId"));
         String userId = String.valueOf(dataMap.get("userId"));
         String signalId = String.valueOf(dataMap.get("signalId"));
         /*校验是否已存在*/
         FuUserFollows follows = new FuUserFollows();
         Map followConditon=new HashMap();
         followConditon.put(FuUserFollows.USER_ID,userId);
+        followConditon.put(FuUserFollows.USER_MT_ACC_ID,mtAccId);
         followConditon.put(FuUserFollows.SIGNAL_ID,signalId);
         List<FuUserFollows> followList= fuUserFollowsMapper.selectByMap(followConditon);
         if(followList!=null && !followList.isEmpty() && followList.size()>0){
@@ -196,7 +212,7 @@ public class FuUserFollowsService extends ServiceImpl<FuUserFollowsMapper, FuUse
             log.error("跟单关系不存在！");
             throw new BusinessException(GlobalResultCode.RESULE_DATA_NONE);
         }
-        follows.setRuleState(2);
+        follows.setFollowState(FollowConstant.FOLLOW_STATE_DELETE);
         follows.setModifyDate(new Date());
         fuUserFollowsMapper.updateByPrimaryKeySelective(follows);
     }
@@ -215,10 +231,10 @@ public class FuUserFollowsService extends ServiceImpl<FuUserFollowsMapper, FuUse
             log.error("分页数据为空！");
             new DataConflictException("分页数据为空！");
         }
-        if(!StringUtils.isEmpty(requestMap.getString("pageSize"))){
+        if(requestMap.getString("pageSize")!=null){
             pageSize=Integer.parseInt(requestMap.getString("pageSize"));
         }
-        if(!StringUtils.isEmpty(requestMap.getString("pageNum"))){
+        if(requestMap.getString("pageNum")!=null){
             pageNum=Integer.parseInt(requestMap.getString("pageNum"));
         }
 

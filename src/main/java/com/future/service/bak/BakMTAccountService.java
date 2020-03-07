@@ -1,4 +1,4 @@
-package com.future.service.mt;
+package com.future.service.bak;
 import com.future.common.util.DateUtil;
 import com.jfx.Broker;
 import com.jfx.strategy.Strategy;
@@ -8,10 +8,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
+@Deprecated
 @Service
-public class MTAccountService {
+public class BakMTAccountService {
 
-    Logger log = LoggerFactory.getLogger(MTAccountService.class);
+    Logger log = LoggerFactory.getLogger(BakMTAccountService.class);
     @Value("${userTermServerHost}")
     String userTermServerHost;
     @Value("${userTermServerPort}")

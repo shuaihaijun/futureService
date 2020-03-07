@@ -11,9 +11,9 @@ public class FuUserFollows {
     public static String USER_MT_ACC_ID="user_mt_acc_id";
     public static String SIGNAL_ID="signal_id";
     public static String SIGNAL_MT_ACC_ID="signal_mt_acc_id";
-    public static String RULE_STATE="rule_state";
+    public static String FOLLOW_STATE="follow_state";
     /**
-     * 
+     *
      */
     @TableId(type = IdType.AUTO)
     private Integer id;
@@ -49,44 +49,29 @@ public class FuUserFollows {
     private String signalMtAccId;
 
     /**
-     * 创建时间
+     * 跟单状态（0 正常，1  隐藏，2 废弃）
      */
-    private Date createDate;
+    private Integer followState;
 
     /**
-     * 修改时间
+     * 跟单方向（0 正向跟单，1  反向跟单）
      */
-    private Date modifyDate;
+    private Integer followDirect;
 
     /**
-     * 规则类型（0 按手数比例，1 按净值金额，2 按固定手数）
+     * 跟单模式（0 多空跟单，1 只跟多单，2 只跟空单）
      */
-    private Integer ruleType;
+    private Integer followMode;
 
     /**
-     * 数量
+     * 跟单类型（0 按手数比例，1 按净值金额，2 按固定手数）
      */
-    private BigDecimal amount;
+    private Integer followType;
 
     /**
-     * 规则状态（0 正常，1  隐藏，2 废弃）
+     * 跟单数量
      */
-    private Integer ruleState;
-
-    /**
-     * 单笔上限金额
-     */
-    private BigDecimal limitUpperAmount;
-
-    /**
-     * 账户最低安全净值
-     */
-    private BigDecimal accountEquityAmount;
-
-    /**
-     * 账户最低安全净值百分比
-     */
-    private BigDecimal accountEquityPercentage;
+    private BigDecimal followAmount;
 
     /**
      * 最大跟單金額
@@ -94,9 +79,24 @@ public class FuUserFollows {
     private BigDecimal followMaxAmount;
 
     /**
+     * 最小跟单金额
+     */
+    private BigDecimal followMinAmount;
+
+    /**
      * 预警金额
      */
     private BigDecimal followAlarmAmount;
+
+    /**
+     * 最大跟单手数
+     */
+    private BigDecimal followMaxHands;
+
+    /**
+     * 最小跟单手数
+     */
+    private BigDecimal followMinHands;
 
     /**
      * 预警损失百分比 （ 0.2 , 0.3）
@@ -108,6 +108,25 @@ public class FuUserFollows {
      */
     private BigDecimal followAlarmLevel;
 
+    /**
+     * 账户最低安全净值百分比
+     */
+    private BigDecimal accountEquityPercentage;
+
+    /**
+     * 账户最低安全净值
+     */
+    private BigDecimal accountEquityAmount;
+
+    /**
+     * 修改时间
+     */
+    private Date modifyDate;
+
+    /**
+     * 创建时间
+     */
+    private Date createDate;
 
     /**
      * 
@@ -222,131 +241,83 @@ public class FuUserFollows {
     }
 
     /**
-     * 创建时间
-     * @return create_date 创建时间
+     * 跟单状态（0 正常，1  隐藏，2 废弃）
+     * @return follow_state 跟单状态（0 正常，1  隐藏，2 废弃）
      */
-    public Date getCreateDate() {
-        return createDate;
+    public Integer getFollowState() {
+        return followState;
     }
 
     /**
-     * 创建时间
-     * @param createDate 创建时间
+     * 跟单状态（0 正常，1  隐藏，2 废弃）
+     * @param followState 跟单状态（0 正常，1  隐藏，2 废弃）
      */
-    public void setCreateDate(Date createDate) {
-        this.createDate = createDate;
+    public void setFollowState(Integer followState) {
+        this.followState = followState;
     }
 
     /**
-     * 修改时间
-     * @return modify_date 修改时间
+     * 跟单方向（0 正向跟单，1  反向跟单）
+     * @return follow_direct 跟单方向（0 正向跟单，1  反向跟单）
      */
-    public Date getModifyDate() {
-        return modifyDate;
+    public Integer getFollowDirect() {
+        return followDirect;
     }
 
     /**
-     * 修改时间
-     * @param modifyDate 修改时间
+     * 跟单方向（0 正向跟单，1  反向跟单）
+     * @param followDirect 跟单方向（0 正向跟单，1  反向跟单）
      */
-    public void setModifyDate(Date modifyDate) {
-        this.modifyDate = modifyDate;
+    public void setFollowDirect(Integer followDirect) {
+        this.followDirect = followDirect;
     }
 
     /**
-     * 规则类型（0 按手数比例，1 按净值金额，2 按固定手数）
-     * @return rule_type 规则类型（0 按手数比例，1 按净值金额，2 按固定手数）
+     * 跟单模式（0 多空跟单，1 只跟多单，2 只跟空单）
+     * @return follow_mode 跟单模式（0 多空跟单，1 只跟多单，2 只跟空单）
      */
-    public Integer getRuleType() {
-        return ruleType;
+    public Integer getFollowMode() {
+        return followMode;
     }
 
     /**
-     * 规则类型（0 按手数比例，1 按净值金额，2 按固定手数）
-     * @param ruleType 规则类型（0 按手数比例，1 按净值金额，2 按固定手数）
+     * 跟单模式（0 多空跟单，1 只跟多单，2 只跟空单）
+     * @param followMode 跟单模式（0 多空跟单，1 只跟多单，2 只跟空单）
      */
-    public void setRuleType(Integer ruleType) {
-        this.ruleType = ruleType;
+    public void setFollowMode(Integer followMode) {
+        this.followMode = followMode;
     }
 
     /**
-     * 数量
-     * @return amount 数量
+     * 跟单类型（0 按手数比例，1 按净值金额，2 按固定手数）
+     * @return follow_type 跟单类型（0 按手数比例，1 按净值金额，2 按固定手数）
      */
-    public BigDecimal getAmount() {
-        return amount;
+    public Integer getFollowType() {
+        return followType;
     }
 
     /**
-     * 数量
-     * @param amount 数量
+     * 跟单类型（0 按手数比例，1 按净值金额，2 按固定手数）
+     * @param followType 跟单类型（0 按手数比例，1 按净值金额，2 按固定手数）
      */
-    public void setAmount(BigDecimal amount) {
-        this.amount = amount;
+    public void setFollowType(Integer followType) {
+        this.followType = followType;
     }
 
     /**
-     * 规则状态（0 正常，1  隐藏，2 废弃）
-     * @return rule_state 规则状态（0 正常，1  隐藏，2 废弃）
+     * 跟单数量
+     * @return follow_amount 跟单数量
      */
-    public Integer getRuleState() {
-        return ruleState;
+    public BigDecimal getFollowAmount() {
+        return followAmount;
     }
 
     /**
-     * 规则状态（0 正常，1  隐藏，2 废弃）
-     * @param ruleState 规则状态（0 正常，1  隐藏，2 废弃）
+     * 跟单数量
+     * @param followAmount 跟单数量
      */
-    public void setRuleState(Integer ruleState) {
-        this.ruleState = ruleState;
-    }
-
-    /**
-     * 单笔上限金额
-     * @return limit_upper_amount 单笔上限金额
-     */
-    public BigDecimal getLimitUpperAmount() {
-        return limitUpperAmount;
-    }
-
-    /**
-     * 单笔上限金额
-     * @param limitUpperAmount 单笔上限金额
-     */
-    public void setLimitUpperAmount(BigDecimal limitUpperAmount) {
-        this.limitUpperAmount = limitUpperAmount;
-    }
-
-    /**
-     * 账户最低安全净值
-     * @return account_equity_amount 账户最低安全净值
-     */
-    public BigDecimal getAccountEquityAmount() {
-        return accountEquityAmount;
-    }
-
-    /**
-     * 账户最低安全净值
-     * @param accountEquityAmount 账户最低安全净值
-     */
-    public void setAccountEquityAmount(BigDecimal accountEquityAmount) {
-        this.accountEquityAmount = accountEquityAmount;
-    }
-
-    /**
-     * 账户最低安全净值百分比
-     * @return account_equity_percentage 账户最低安全净值百分比
-     */
-    public BigDecimal getAccountEquityPercentage() {
-        return accountEquityPercentage;
-    }
-
-    /**
-     * 账户最低安全净值百分比
-     * @param accountEquityPercentage 账户最低安全净值百分比
-     */
-    public void setAccountEquityPercentage(BigDecimal accountEquityPercentage) {
-        this.accountEquityPercentage = accountEquityPercentage;
+    public void setFollowAmount(BigDecimal followAmount) {
+        this.followAmount = followAmount;
     }
 
     /**
@@ -366,6 +337,22 @@ public class FuUserFollows {
     }
 
     /**
+     * 最小跟单金额
+     * @return follow_min_amount 最小跟单金额
+     */
+    public BigDecimal getFollowMinAmount() {
+        return followMinAmount;
+    }
+
+    /**
+     * 最小跟单金额
+     * @param followMinAmount 最小跟单金额
+     */
+    public void setFollowMinAmount(BigDecimal followMinAmount) {
+        this.followMinAmount = followMinAmount;
+    }
+
+    /**
      * 预警金额
      * @return follow_alarm_amount 预警金额
      */
@@ -379,6 +366,38 @@ public class FuUserFollows {
      */
     public void setFollowAlarmAmount(BigDecimal followAlarmAmount) {
         this.followAlarmAmount = followAlarmAmount;
+    }
+
+    /**
+     * 最大跟单手数
+     * @return follow_max_hands 最大跟单手数
+     */
+    public BigDecimal getFollowMaxHands() {
+        return followMaxHands;
+    }
+
+    /**
+     * 最大跟单手数
+     * @param followMaxHands 最大跟单手数
+     */
+    public void setFollowMaxHands(BigDecimal followMaxHands) {
+        this.followMaxHands = followMaxHands;
+    }
+
+    /**
+     * 最小跟单手数
+     * @return follow_min_hands 最小跟单手数
+     */
+    public BigDecimal getFollowMinHands() {
+        return followMinHands;
+    }
+
+    /**
+     * 最小跟单手数
+     * @param followMinHands 最小跟单手数
+     */
+    public void setFollowMinHands(BigDecimal followMinHands) {
+        this.followMinHands = followMinHands;
     }
 
     /**
@@ -411,5 +430,69 @@ public class FuUserFollows {
      */
     public void setFollowAlarmLevel(BigDecimal followAlarmLevel) {
         this.followAlarmLevel = followAlarmLevel;
+    }
+
+    /**
+     * 账户最低安全净值百分比
+     * @return account_equity_percentage 账户最低安全净值百分比
+     */
+    public BigDecimal getAccountEquityPercentage() {
+        return accountEquityPercentage;
+    }
+
+    /**
+     * 账户最低安全净值百分比
+     * @param accountEquityPercentage 账户最低安全净值百分比
+     */
+    public void setAccountEquityPercentage(BigDecimal accountEquityPercentage) {
+        this.accountEquityPercentage = accountEquityPercentage;
+    }
+
+    /**
+     * 账户最低安全净值
+     * @return account_equity_amount 账户最低安全净值
+     */
+    public BigDecimal getAccountEquityAmount() {
+        return accountEquityAmount;
+    }
+
+    /**
+     * 账户最低安全净值
+     * @param accountEquityAmount 账户最低安全净值
+     */
+    public void setAccountEquityAmount(BigDecimal accountEquityAmount) {
+        this.accountEquityAmount = accountEquityAmount;
+    }
+
+    /**
+     * 修改时间
+     * @return modify_date 修改时间
+     */
+    public Date getModifyDate() {
+        return modifyDate;
+    }
+
+    /**
+     * 修改时间
+     * @param modifyDate 修改时间
+     */
+    public void setModifyDate(Date modifyDate) {
+        this.modifyDate = modifyDate;
+    }
+
+    /**
+     * 创建时间
+     * @return create_date 创建时间
+     */
+    public Date getCreateDate() {
+        return createDate;
+    }
+
+    /**
+     * 创建时间
+     * @param createDate 创建时间
+     */
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
     }
 }
