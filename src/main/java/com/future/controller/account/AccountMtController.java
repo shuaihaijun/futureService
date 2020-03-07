@@ -2,6 +2,7 @@ package com.future.controller.account;
 
 import com.alibaba.druid.util.StringUtils;
 import com.alibaba.fastjson.JSONObject;
+import com.future.common.constants.CommonConstant;
 import com.future.common.constants.RedisConstant;
 import com.future.common.enums.GlobalResultCode;
 import com.future.common.exception.ParameterInvalidException;
@@ -15,6 +16,7 @@ import com.github.pagehelper.Page;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -95,12 +97,15 @@ public class AccountMtController {
         }
         List<UserMTAccountBO> accounts=  fuAccountMtService.getUserMTAccByCondition(conditonMap);
         String userAccout="";
-        Integer accountState=0;
+        Object clientId;
         /*循环设置状态*/
         for(int i=0;i<accounts.size();i++){
-            userAccout=accounts.get(i).getServerName()+"&"+accounts.get(i).getMtAccId();
-            accountState=(Integer) redisManager.hget(RedisConstant.H_ACCOUNT_CONNECT_STATE,userAccout);
-            accounts.get(i).setConnectState(accountState==null?0:accountState);
+            clientId=redisManager.hget(RedisConstant.H_ACCOUNT_CONNECT_INFO,mtAccId);
+            if(!ObjectUtils.isEmpty(clientId)&&(Integer)clientId>0){
+                accounts.get(i).setConnectState(CommonConstant.COMMON_YES);
+            }else {
+                accounts.get(i).setConnectState(CommonConstant.COMMON_NO);
+            }
         }
         return  accounts;
     }

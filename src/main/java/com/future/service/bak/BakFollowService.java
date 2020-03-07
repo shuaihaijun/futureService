@@ -189,7 +189,7 @@ public class BakFollowService {
         String orderJson= StringUtils.replace("'",signalOrder,null);
 
         // 获得信号源跟随者列表（缓存中获取）
-        String follows= JSONObject.toJSONString( redisManager.hget(RedisConstant.H_FOLLOW_LIST_KEY,signalAccount));
+        /*String follows= JSONObject.toJSONString( redisManager.hget(RedisConstant.H_FOLLOW_LIST_KEY,signalAccount));*/
 
         List<Map> followList = new ArrayList<>();
         for(Map map:followList){

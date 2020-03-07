@@ -22,4 +22,19 @@ public class GlobalConstant {
      */
     public static final String CONTENTTYPE_JSON_UTF_8 = "application/json;charset=utf-8";
 
+
+    // mt账户连接
+    public static final String TRADE_ACC_SET_CONNECT = "/trader/account/setAccountConnect";
+    // mt账户连接断开
+    public static final String TRADE_ACC_DIS_CONNECT = "/trader/account/setAccountDisConnect";
+    // mt账户连接
+    public static final String TRADE_ACC_SIGNAL_MONITOR = "/trader/account/setSignalMonitor";
+    // 获取用户close订单
+    public static final String TRADE_ORDER_CLOSE_ORDERS = "/trader/order/getUserCloseOrders";
+    // 获取用户close订单
+    public static final String TRADE_ORDER_CLOSE_ORDER = "/trader/order/getUserCloseOrderById";
+    // 获取用户open订单
+    public static final String TRADE_ORDER_OPEN_ORDERS = "/trader/order/getUserOpenOrders";
+    // 获取用户open订单
+    public static final String TRADE_ORDER_OPEN_ORDER = "/trader/order/getUserOpenOrderById";
 }

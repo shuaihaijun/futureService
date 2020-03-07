@@ -5,11 +5,8 @@ package com.future.common.constants;
  */
 public class RedisConstant {
 
-	/*follow*/
-	public static final String H_FOLLOW_LIST_KEY="followList";
-
-	/*mtAccount connect state*/
-	public static final String H_ACCOUNT_CONNECT_STATE="accountConnectState";
+	/*mtAccount connect state!!! 此key与tarder项目中的key同步 不可随意修改,这边只取 不存*/
+	public static final String H_ACCOUNT_CONNECT_INFO="tradeAccountConnectInfo";
 
 	/*user login token*/
 	public static final String H_USER_LOGIN_TOKEN="userLoginToken";

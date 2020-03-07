@@ -21,14 +21,12 @@ import com.future.mapper.account.FuAccountMtMapper;
 import com.future.mapper.product.FuProductSignalMapper;
 import com.future.mapper.user.FuUserMapper;
 import com.future.pojo.bo.order.UserMTAccountBO;
-import com.future.service.bak.BakMTAccountService;
 import com.future.service.com.FuComServerService;
+import com.future.service.trade.FuTradeAccountService;
 import com.future.service.user.UserCommonService;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.jfx.AccountInfo;
-import com.jfx.Broker;
-import com.jfx.strategy.Strategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,17 +46,17 @@ public class FuAccountMtService extends ServiceImpl<FuAccountMtMapper, FuAccount
     Logger log= LoggerFactory.getLogger(FuAccountMtService.class);
 
     @Autowired
+    FuComServerService fuComServerService;
+    @Autowired
+    UserCommonService userCommonService;
+    @Autowired
+    FuTradeAccountService fuTradeAccountService;
+    @Autowired
     FuAccountMtMapper fuAccountMtMapper;
     @Autowired
     FuUserMapper fuUserMapper;
     @Autowired
-    BakMTAccountService bakMtAccountService;
-    @Autowired
     FuProductSignalMapper fuProductSignalMapper;
-    @Autowired
-    FuComServerService fuComServerService;
-    @Autowired
-    UserCommonService userCommonService;
     @Autowired
     RedisManager redisManager;
     @Value("${pubUserServerUrl1}")
@@ -125,13 +123,17 @@ public class FuAccountMtService extends ServiceImpl<FuAccountMtMapper, FuAccount
             accounts= fuAccountMtMapper.selectUserMTAccByCondition(condition);
         }
 
-        String userAccout="";
-        Integer accountState=0;
+        String mtAccId="";
+        Object clientId=0;
         /*循环设置状态*/
         for(int i=0;i<accountPage.getResult().size();i++){
-            userAccout=accountPage.getResult().get(i).getServerName()+"&"+accountPage.getResult().get(i).getMtAccId();
-            accountState=(Integer) redisManager.hget(RedisConstant.H_ACCOUNT_CONNECT_STATE,userAccout);
-            accountPage.getResult().get(i).setConnectState(accountState==null?0:accountState);
+            mtAccId=accountPage.getResult().get(i).getMtAccId();
+            clientId=redisManager.hget(RedisConstant.H_ACCOUNT_CONNECT_INFO,mtAccId);
+            if(!ObjectUtils.isEmpty(clientId)&&(Integer)clientId>0){
+                accountPage.getResult().get(i).setConnectState(CommonConstant.COMMON_YES);
+            }else {
+                accountPage.getResult().get(i).setConnectState(CommonConstant.COMMON_NO);
+            }
         }
         return accountPage;
     }
@@ -262,24 +264,14 @@ public class FuAccountMtService extends ServiceImpl<FuAccountMtMapper, FuAccount
             //信号源用观摩密码验证
             password=accountMts.get(0).getMtPasswordWatch();
         }
-        String stateKey=mtServer+"&"+mtAccId;
-        /*登录MT账号*/
         try {
-            Strategy strategy=new Strategy();
-            Broker broker = new Broker(mtServer);
-            /*1 、连接数据*/
-            if(!bakMtAccountService.getConnect(strategy,broker,mtAccId,password)){
-                redisManager.hset(RedisConstant.H_ACCOUNT_CONNECT_STATE,stateKey, CommonConstant.COMMON_NO);
+            /*1/登录MT账号*/
+            int clientId= fuTradeAccountService.setMtAccountConnect(mtServer, Integer.parseInt(mtAccId),password);
+            if(clientId==0){
                 log.error("user connect failed");
                 return false;
             }
-            /*2 、监听初始化*/
-            if(accountMts.get(0).getUserType()== UserConstant.USER_TYPE_SIGNAL){
-
-            }
-
-            /*3、修改缓存中的状态*/
-            redisManager.hset(RedisConstant.H_ACCOUNT_CONNECT_STATE,stateKey, CommonConstant.COMMON_YES);
+            /*2 、监听初始化?*/
         }catch (Exception e){
             log.error(e.getMessage(),e);
             throw new BusinessException(e);
@@ -333,18 +325,13 @@ public class FuAccountMtService extends ServiceImpl<FuAccountMtMapper, FuAccount
             password=accountMts.get(0).getMtPasswordWatch();
         }
 
-        /*登录MT账号*/
+        /*断开MT账号*/
         try {
-            Strategy strategy=new Strategy();
-            Broker broker = new Broker(mtServer);
-            /*连接数据*/
-            if(!bakMtAccountService.disConnect(strategy,broker,mtAccId,password)){
+            boolean isClose= fuTradeAccountService.setMtAccountDisConnnect(mtServer, Integer.parseInt(mtAccId),password);
+            if(!isClose){
                 log.error("user disconnect failed");
                 return false;
             }
-            /*修改缓存中的状态*/
-            String stateKey=mtServer+"&"+mtAccId;
-            redisManager.hset(RedisConstant.H_ACCOUNT_CONNECT_STATE,stateKey, CommonConstant.COMMON_NO);
         }catch (Exception e){
             log.error(e.getMessage(),e);
             throw new BusinessException(e);
@@ -364,7 +351,6 @@ public class FuAccountMtService extends ServiceImpl<FuAccountMtMapper, FuAccount
         if(signalId ==null ||signalId==0 ){
             log.error("登录/连接MT账户,传入参数不完整！");
         }
-
         /*查出用户MT账户*/
         String mtServer="";
         String password="";
@@ -378,18 +364,15 @@ public class FuAccountMtService extends ServiceImpl<FuAccountMtMapper, FuAccount
         mtServer=signal.getServerName();
         password=signal.getMtPasswordWatch();
         mtAccId=signal.getMtAccId();
-        /*登录MT账号*/
+
         try {
-            Strategy strategy=new Strategy();
-            Broker broker = new Broker(mtServer);
-            /*连接数据*/
-            if(!bakMtAccountService.getConnect(strategy,broker,mtAccId,password)){
+            /*1/登录MT账号*/
+            int clientId= fuTradeAccountService.setMtSignalMonitor(mtServer, Integer.parseInt(mtAccId),password);
+            if(clientId==0){
                 log.error("user connect failed");
                 return false;
             }
-            /*修改缓存中的状态*/
-            String stateKey=mtServer+"&"+mtAccId;
-            redisManager.hset(RedisConstant.H_ACCOUNT_CONNECT_STATE,stateKey, CommonConstant.COMMON_YES);
+            /*2 、监听初始化?*/
         }catch (Exception e){
             log.error(e.getMessage(),e);
             throw new BusinessException(e);
@@ -421,17 +404,13 @@ public class FuAccountMtService extends ServiceImpl<FuAccountMtMapper, FuAccount
         password=signal.getMtPasswordWatch();
         mtAccId=signal.getMtAccId();
         /*登录MT账号*/
+        /*断开MT账号*/
         try {
-            Strategy strategy=new Strategy();
-            Broker broker = new Broker(mtServer);
-            /*连接数据*/
-            if(!bakMtAccountService.disConnect(strategy,broker,mtAccId,password)){
-                log.error("user connect failed");
+            boolean isClose= fuTradeAccountService.setMtAccountDisConnnect(mtServer, Integer.parseInt(mtAccId),password);
+            if(!isClose){
+                log.error("user disconnect failed");
                 return false;
             }
-            /*修改缓存中的状态*/
-            String stateKey=mtServer+"&"+mtAccId;
-            redisManager.hset(RedisConstant.H_ACCOUNT_CONNECT_STATE,stateKey, CommonConstant.COMMON_NO);
         }catch (Exception e){
             log.error(e.getMessage(),e);
             throw new BusinessException(e);
