@@ -383,6 +383,20 @@ public class DateUtil {
     /**
      * 获得将来的日期.如果 days > 0,返回将来的时间;否则，返回过去的时间
      *
+     * @param currDate 现在日期
+     * @param days     经过的天数
+     * @return 经过days天后的日期
+     */
+    public static long getFutureDate(long currDate, int days) {
+        long l1 = (long) days * ONE_DAY;
+
+        currDate += l1;
+        return currDate;
+    }
+
+    /**
+     * 获得将来的日期.如果 days > 0,返回将来的时间;否则，返回过去的时间
+     *
      * @param currDate 现在日期,字符型如2005-05-05 [14:32:10]
      * @param days     经过的天数
      * @return 经过days天后的日期

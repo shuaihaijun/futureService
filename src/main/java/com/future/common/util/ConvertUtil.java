@@ -1,5 +1,7 @@
 package com.future.common.util;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.future.entity.order.FuOrderCustomer;
 import com.future.entity.order.FuOrderFollowInfo;
 import com.future.entity.product.FuProductSignal;
@@ -326,6 +328,188 @@ public class ConvertUtil {
         return fuOrderInfo;
     }
 
+    /**
+     * 将jsonObject转换成Fuorderinfo
+     * @param orderInfo
+     * @return
+     */
+    public static FuOrderFollowInfo convertOrderInfo(JSONObject orderInfo){
+
+        if(ObjectUtils.isEmpty(orderInfo)){
+            return null;
+        }
+
+        FuOrderFollowInfo fuOrderInfo=new FuOrderFollowInfo();
+
+        fuOrderInfo.setUserMtAccId(orderInfo.getString("login"));
+        fuOrderInfo.setOrderId(orderInfo.getString("order"));
+        fuOrderInfo.setOrderType(orderInfo.getInteger("cmd"));
+
+        fuOrderInfo.setCreateDate(DateUtil.toDataFormTimeStamp(orderInfo.getInteger("close_time")));
+        fuOrderInfo.setOrderCloseDate(DateUtil.toDataFormTimeStamp(orderInfo.getInteger("close_time")));
+        fuOrderInfo.setOrderOpenDate(DateUtil.toDataFormTimeStamp(orderInfo.getInteger("open_time")));
+        fuOrderInfo.setOrderOpenPrice(new BigDecimal(orderInfo.getDouble("open_price")).setScale(6,BigDecimal.ROUND_HALF_UP));
+        fuOrderInfo.setOrderClosePrice(new BigDecimal(orderInfo.getDouble("close_price")).setScale(6,BigDecimal.ROUND_HALF_UP));
+        fuOrderInfo.setOrderExpiration(DateUtil.toDataFormTimeStamp(orderInfo.getInteger("expiration")));
+
+        fuOrderInfo.setOrderLots(new BigDecimal(orderInfo.getDouble("volume")*0.01).setScale(6,BigDecimal.ROUND_HALF_UP));
+        fuOrderInfo.setOrderSymbol(orderInfo.getString("symbol"));
+        fuOrderInfo.setComment(orderInfo.getString("comment"));
+
+        /*fuOrderInfo.setOrderTradeOperation(orderInfo.getType().val);*/
+        fuOrderInfo.setOrderProfit(new BigDecimal(orderInfo.getDouble("profit")).setScale(6,BigDecimal.ROUND_HALF_UP));
+        fuOrderInfo.setOrderStoploss(new BigDecimal(orderInfo.getDouble("stoploss")).setScale(6,BigDecimal.ROUND_HALF_UP));
+        fuOrderInfo.setOrderTakeprofit(new BigDecimal(orderInfo.getDouble("takeprofit")).setScale(6,BigDecimal.ROUND_HALF_UP));
+
+        fuOrderInfo.setOrderMagic(new BigDecimal(orderInfo.getInteger("magic")).setScale(6,BigDecimal.ROUND_HALF_UP));
+        fuOrderInfo.setOrderSwap(new BigDecimal(orderInfo.getDouble("storage")).setScale(6,BigDecimal.ROUND_HALF_UP));
+        fuOrderInfo.setOrderCommission(new BigDecimal(orderInfo.getDouble("commission")).setScale(6,BigDecimal.ROUND_HALF_UP));
+
+        return fuOrderInfo;
+    }
+
+    /**
+     * 将jsonObject转换成Fuorderinfo
+     * @param orderInfos
+     * @return
+     */
+    public static List<FuOrderFollowInfo> convertOrderInfos(JSONArray orderInfos){
+
+        if(ObjectUtils.isEmpty(orderInfos)||orderInfos.size()==0){
+            return null;
+        }
+        List<FuOrderFollowInfo> fuOrderFollowInfos=new ArrayList<>();
+        for(int i=0;i<orderInfos.size();i++){
+            JSONObject orderInfo=orderInfos.getJSONObject(i);
+            FuOrderFollowInfo fuOrderInfo=new FuOrderFollowInfo();
+
+            fuOrderInfo.setUserMtAccId(orderInfo.getString("login"));
+            fuOrderInfo.setOrderId(orderInfo.getString("order"));
+            fuOrderInfo.setOrderType(orderInfo.getInteger("cmd"));
+
+            fuOrderInfo.setCreateDate(DateUtil.toDataFormTimeStamp(orderInfo.getInteger("close_time")));
+            fuOrderInfo.setOrderCloseDate(DateUtil.toDataFormTimeStamp(orderInfo.getInteger("close_time")));
+            fuOrderInfo.setOrderOpenDate(DateUtil.toDataFormTimeStamp(orderInfo.getInteger("open_time")));
+            fuOrderInfo.setOrderOpenPrice(new BigDecimal(orderInfo.getDouble("open_price")).setScale(6,BigDecimal.ROUND_HALF_UP));
+            fuOrderInfo.setOrderClosePrice(new BigDecimal(orderInfo.getDouble("close_price")).setScale(6,BigDecimal.ROUND_HALF_UP));
+            fuOrderInfo.setOrderExpiration(DateUtil.toDataFormTimeStamp(orderInfo.getInteger("expiration")));
+
+            fuOrderInfo.setOrderLots(new BigDecimal(orderInfo.getDouble("volume")*0.01).setScale(6,BigDecimal.ROUND_HALF_UP));
+            fuOrderInfo.setOrderSymbol(orderInfo.getString("symbol"));
+            fuOrderInfo.setComment(orderInfo.getString("comment"));
+
+            /*fuOrderInfo.setOrderTradeOperation(orderInfo.getType().val);*/
+            fuOrderInfo.setOrderProfit(new BigDecimal(orderInfo.getDouble("profit")).setScale(6,BigDecimal.ROUND_HALF_UP));
+            fuOrderInfo.setOrderStoploss(new BigDecimal(orderInfo.getDouble("stoploss")).setScale(6,BigDecimal.ROUND_HALF_UP));
+            fuOrderInfo.setOrderTakeprofit(new BigDecimal(orderInfo.getDouble("takeprofit")).setScale(6,BigDecimal.ROUND_HALF_UP));
+
+            fuOrderInfo.setOrderMagic(new BigDecimal(orderInfo.getInteger("magic")).setScale(6,BigDecimal.ROUND_HALF_UP));
+            fuOrderInfo.setOrderSwap(new BigDecimal(orderInfo.getDouble("storage")).setScale(6,BigDecimal.ROUND_HALF_UP));
+            fuOrderInfo.setOrderCommission(new BigDecimal(orderInfo.getDouble("commission")).setScale(6,BigDecimal.ROUND_HALF_UP));
+            fuOrderFollowInfos.add(fuOrderInfo);
+        }
+
+        return fuOrderFollowInfos;
+    }
+
+    /**
+     * 将fuOrderInfo转换成FuOrderCustomer
+     * @param orderInfos
+     * @return
+     */
+    public static List<FuOrderCustomer> convertOrderCustomers(JSONArray orderInfos){
+
+        if(ObjectUtils.isEmpty(orderInfos)||orderInfos.size()==0){
+            return null;
+        }
+        List<FuOrderCustomer> customers=new ArrayList<>();
+        for(int i=0;i<orderInfos.size();i++) {
+            JSONObject orderInfo = orderInfos.getJSONObject(i);
+
+            FuOrderCustomer fuOrderCustomer=new FuOrderCustomer();
+            fuOrderCustomer.setModifyDate(new Date());
+
+            /*订单信息*/
+            fuOrderCustomer.setMtAccId(orderInfo.getString("login"));
+            fuOrderCustomer.setOrderId(orderInfo.getString("order"));
+            fuOrderCustomer.setOrderType(orderInfo.getInteger("cmd"));
+            fuOrderCustomer.setOrderLots(new BigDecimal(orderInfo.getDouble("volume")*0.01).setScale(6,BigDecimal.ROUND_HALF_UP));
+            fuOrderCustomer.setOrderSymbol(orderInfo.getString("symbol"));
+
+            /*时间 价格*/
+            fuOrderCustomer.setCreateDate(DateUtil.toDataFormTimeStamp(orderInfo.getInteger("close_time")));
+            fuOrderCustomer.setOrderCloseDate(DateUtil.toDataFormTimeStamp(orderInfo.getInteger("close_time")));
+            fuOrderCustomer.setOrderOpenDate(DateUtil.toDataFormTimeStamp(orderInfo.getInteger("open_time")));
+            fuOrderCustomer.setOrderOpenPrice(new BigDecimal(orderInfo.getDouble("open_price")).setScale(6,BigDecimal.ROUND_HALF_UP));
+            fuOrderCustomer.setOrderClosePrice(new BigDecimal(orderInfo.getDouble("close_price")).setScale(6,BigDecimal.ROUND_HALF_UP));
+            fuOrderCustomer.setOrderExpiration(DateUtil.toDataFormTimeStamp(orderInfo.getInteger("expiration")));
+
+            /*交易 收益*/
+
+            fuOrderCustomer.setOrderProfit(new BigDecimal(orderInfo.getDouble("profit")).setScale(6,BigDecimal.ROUND_HALF_UP));
+            fuOrderCustomer.setOrderStoploss(new BigDecimal(orderInfo.getDouble("stoploss")).setScale(6,BigDecimal.ROUND_HALF_UP));
+            /*fuOrderCustomer.setOrderTakeprofit(new BigDecimal(orderInfo.getDouble("takeprofit")).setScale(6,BigDecimal.ROUND_HALF_UP));*/
+            fuOrderCustomer.setOrderMagic(new BigDecimal(orderInfo.getInteger("magic")).setScale(6,BigDecimal.ROUND_HALF_UP));
+            fuOrderCustomer.setOrderSwap(new BigDecimal(orderInfo.getDouble("storage")).setScale(6,BigDecimal.ROUND_HALF_UP));
+            fuOrderCustomer.setOrderCommission(new BigDecimal(orderInfo.getDouble("commission")).setScale(6,BigDecimal.ROUND_HALF_UP));
+
+            /*用户 账户信息*/
+            /*fuOrderCustomer.setUserId(fuOrderInfo.getUserId());
+            fuOrderCustomer.setMtServerId(fuOrderInfo.getUserServerId());
+            fuOrderCustomer.setMtAccId(fuOrderInfo.getUserMtAccId());*/
+            fuOrderCustomer.setComment(orderInfo.getString("comment"));
+
+            customers.add(fuOrderCustomer);
+        }
+        return customers;
+    }
+
+    /**
+     * 将fuOrderInfo转换成FuOrderCustomer
+     * @param orderInfo
+     * @return
+     */
+    public static FuOrderCustomer convertOrderCustomer(JSONObject orderInfo){
+
+        if(ObjectUtils.isEmpty(orderInfo)){
+            return null;
+        }
+        FuOrderCustomer fuOrderCustomer=new FuOrderCustomer();
+        fuOrderCustomer.setModifyDate(new Date());
+        fuOrderCustomer.setCreateDate(new Date());
+
+        /*订单信息*/
+        fuOrderCustomer.setMtAccId(orderInfo.getString("login"));
+        fuOrderCustomer.setOrderId(orderInfo.getString("order"));
+        fuOrderCustomer.setOrderType(orderInfo.getInteger("cmd"));
+        fuOrderCustomer.setOrderLots(new BigDecimal(orderInfo.getDouble("volume")*0.01).setScale(6,BigDecimal.ROUND_HALF_UP));
+        fuOrderCustomer.setOrderSymbol(orderInfo.getString("symbol"));
+
+        /*时间 价格*/
+        fuOrderCustomer.setCreateDate(DateUtil.toDataFormTimeStamp(orderInfo.getInteger("close_time")));
+        fuOrderCustomer.setOrderCloseDate(DateUtil.toDataFormTimeStamp(orderInfo.getInteger("close_time")));
+        fuOrderCustomer.setOrderOpenDate(DateUtil.toDataFormTimeStamp(orderInfo.getInteger("open_time")));
+        fuOrderCustomer.setOrderOpenPrice(new BigDecimal(orderInfo.getDouble("open_price")).setScale(6,BigDecimal.ROUND_HALF_UP));
+        fuOrderCustomer.setOrderClosePrice(new BigDecimal(orderInfo.getDouble("close_price")).setScale(6,BigDecimal.ROUND_HALF_UP));
+        fuOrderCustomer.setOrderExpiration(DateUtil.toDataFormTimeStamp(orderInfo.getInteger("expiration")));
+
+        /*交易 收益*/
+
+        fuOrderCustomer.setOrderProfit(new BigDecimal(orderInfo.getDouble("profit")).setScale(6,BigDecimal.ROUND_HALF_UP));
+        fuOrderCustomer.setOrderStoploss(new BigDecimal(orderInfo.getDouble("stoploss")).setScale(6,BigDecimal.ROUND_HALF_UP));
+        /*fuOrderCustomer.setOrderTakeprofit(new BigDecimal(orderInfo.getDouble("takeprofit")).setScale(6,BigDecimal.ROUND_HALF_UP));*/
+        fuOrderCustomer.setOrderMagic(new BigDecimal(orderInfo.getInteger("magic")).setScale(6,BigDecimal.ROUND_HALF_UP));
+        fuOrderCustomer.setOrderSwap(new BigDecimal(orderInfo.getDouble("storage")).setScale(6,BigDecimal.ROUND_HALF_UP));
+        fuOrderCustomer.setOrderCommission(new BigDecimal(orderInfo.getDouble("commission")).setScale(6,BigDecimal.ROUND_HALF_UP));
+
+        /*用户 账户信息*/
+        /*fuOrderCustomer.setUserId(fuOrderInfo.getUserId());
+        fuOrderCustomer.setMtServerId(fuOrderInfo.getUserServerId());
+        fuOrderCustomer.setMtAccId(fuOrderInfo.getUserMtAccId());*/
+        fuOrderCustomer.setComment(orderInfo.getString("comment"));
+
+        return fuOrderCustomer;
+    }
 
     /**
      * 将fuOrderInfo转换成FuOrderCustomer

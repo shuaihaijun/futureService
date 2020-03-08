@@ -7,7 +7,6 @@ import com.future.common.enums.GlobalResultCode;
 import com.future.common.exception.ParameterInvalidException;
 import com.future.common.helper.PageInfoHelper;
 import com.future.entity.order.FuOrderDaysum;
-import com.future.entity.order.FuOrderSignal;
 import com.future.entity.product.FuProductSignal;
 import com.future.mapper.order.FuOrderDaysumMapper;
 import com.future.service.product.FuProductSignalService;

@@ -8,24 +8,18 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.future.common.enums.GlobalResultCode;
 import com.future.common.exception.DataConflictException;
-import com.future.common.exception.ParameterInvalidException;
-import com.future.common.helper.PageInfoHelper;
 import com.future.common.util.StringUtils;
 import com.future.entity.product.FuProductSignal;
-import com.future.entity.product.FuProductSignalApply;
-import com.future.entity.product.FuProductSignalValuation;
 import com.future.mapper.product.FuProductSignalMapper;
 import com.future.pojo.vo.signal.FuUserSignalVO;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import io.swagger.models.auth.In;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 

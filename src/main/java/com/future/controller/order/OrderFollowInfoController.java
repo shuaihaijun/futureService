@@ -48,7 +48,7 @@ public class OrderFollowInfoController {
             new DataConflictException(GlobalResultCode.PARAM_NULL_POINTER,"日期数据为空！");
         }
         /*条件查询日期不能超过1周*/
-        return orderService.geMTtHistoryOrders(userId,username,accountId, DateUtil.toDate(dateFrom),DateUtil.toDate(dataTo),"");
+        return orderService.geMTtHistoryOrders(userId,username,accountId, DateUtil.toDate(dateFrom),DateUtil.toDate(dataTo));
     }
 
     //获得社区跟随订单

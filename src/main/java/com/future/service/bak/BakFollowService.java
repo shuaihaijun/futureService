@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.future.common.constants.CommonConstant;
 import com.future.common.constants.FollowConstant;
 import com.future.common.constants.OrderConstant;
-import com.future.common.constants.RedisConstant;
 import com.future.common.enums.GlobalResultCode;
 import com.future.common.exception.BusinessException;
 import com.future.common.util.RedisManager;

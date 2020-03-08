@@ -2,11 +2,23 @@ package com.future.service.trade;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.future.common.constants.GlobalConstant;
+import com.future.common.exception.DataConflictException;
+import com.future.common.util.ConvertUtil;
+import com.future.common.util.DateUtil;
+import com.future.common.util.HttpUtils;
 import com.future.common.util.RedisManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  *  跟随者逻辑处理
@@ -19,48 +31,140 @@ public class FuTradeOrderService {
     @Autowired
     RedisManager redisManager;
 
+    @Value("${tradeServerHost}")
+    public String tradeServerHost;
+    @Value("${tradeServerPort}")
+    public int tradeServerPort;
+
     /**
      * 根据时间段获取用户关闭订单（时间段不能超过1周）
-     * @param brokerName
-     * @param username
+     * @param serverName
+     * @param mtAccId
      * @param password
      * @param nHisTimeFrom
      * @param nHisTimeTo
      */
-    public JSONArray getUserCloseOrders(String brokerName, int username, String password, int nHisTimeFrom, int nHisTimeTo){
-        return null;
+    public JSONArray getUserCloseOrders(String serverName, int mtAccId, String password, long nHisTimeFrom, long nHisTimeTo){
+        if(StringUtils.isEmpty(serverName)||mtAccId==0||StringUtils.isEmpty(password)){
+            log.error("根据时间段获取用户关闭订单,传入参数为空！");
+            throw new DataConflictException("根据时间段获取用户关闭订单,传入参数为空！");
+        }
+        long time = LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().getEpochSecond();
+        if(nHisTimeFrom==0){
+            // 由于时区原因，扩展为8天
+            nHisTimeFrom= (int)DateUtil.getFutureDate(time,-7);
+        }
+        if(nHisTimeTo==0){
+            // 由于时区原因，扩展为8天
+            nHisTimeTo= (int)DateUtil.getFutureDate(time,1);
+        }
+
+        String url=tradeServerHost+":"+tradeServerPort+ GlobalConstant.TRADE_ORDER_CLOSE_ORDERS;
+        Map requestMap=new HashMap();
+        requestMap.put("serverName",serverName);
+        requestMap.put("username",mtAccId);
+        requestMap.put("password",password);
+        requestMap.put("nHisTimeFrom",nHisTimeFrom);
+        requestMap.put("nHisTimeTo",nHisTimeTo);
+        // 请求
+        String result= HttpUtils.doPost(url,requestMap);
+        JSONObject resultJson=JSONObject.parseObject(result);
+        JSONObject content=resultJson.getJSONObject("content");
+        if(content==null||content.getJSONObject("data")==null){
+            log.error(resultJson.getString("msg"));
+            return null;
+        }
+        JSONArray data=content.getJSONArray("data");
+        return data;
     }
 
     /**
      * 根据orderId获取用户关闭订单
-     * @param brokerName
-     * @param username
+     * @param serverName
+     * @param mtAccId
      * @param password
      * @param orderId
      */
-    public JSONObject getUserCloseOrder(String brokerName, int username, String password, int orderId){
-        return null;
+    public JSONObject getUserCloseOrder(String serverName, int mtAccId, String password, int orderId){
+        if(StringUtils.isEmpty(serverName)||mtAccId==0||StringUtils.isEmpty(password)){
+            log.error("获取用户关闭订单,传入参数为空！");
+            throw new DataConflictException("获取用户关闭订单,传入参数为空！");
+        }
+        String url=tradeServerHost+":"+tradeServerPort+ GlobalConstant.TRADE_ORDER_CLOSE_ORDER;
+        Map requestMap=new HashMap();
+        requestMap.put("serverName",serverName);
+        requestMap.put("username",mtAccId);
+        requestMap.put("password",password);
+        // 请求
+        String result= HttpUtils.doPost(url,requestMap);
+        JSONObject resultJson=JSONObject.parseObject(result);
+        JSONObject content=resultJson.getJSONObject("content");
+        if(content==null||content.getJSONObject("data")==null){
+            log.error(resultJson.getString("msg"));
+            return null;
+        }
+        JSONObject data=content.getJSONObject("data");
+        return data;
     }
 
     /**
      * 获取用户open订单
-     * @param brokerName
-     * @param username
+     * @param serverName
+     * @param mtAccId
      * @param password
+     * @param nHisTimeFrom
+     * @param nHisTimeTo
+     * @return
      */
-    public JSONArray getUserOpenOrders(String brokerName, int username, String password){
-        return null;
+    public JSONArray getUserOpenOrders(String serverName, int mtAccId, String password, long nHisTimeFrom, long nHisTimeTo){
+        if(StringUtils.isEmpty(serverName)||mtAccId==0||StringUtils.isEmpty(password)){
+            log.error("获取用户open订单,传入参数为空！");
+            throw new DataConflictException("获取用户open订单,传入参数为空！");
+        }
+        String url=tradeServerHost+":"+tradeServerPort+ GlobalConstant.TRADE_ORDER_OPEN_ORDERS;
+        Map requestMap=new HashMap();
+        requestMap.put("serverName",serverName);
+        requestMap.put("username",mtAccId);
+        requestMap.put("password",password);
+        // 请求
+        String result= HttpUtils.doPost(url,requestMap);
+        JSONObject resultJson=JSONObject.parseObject(result);
+        JSONObject content=resultJson.getJSONObject("content");
+        if(content==null||content.getJSONObject("data")==null){
+            log.error(resultJson.getString("msg"));
+            return null;
+        }
+        JSONArray data=content.getJSONArray("data");
+        return data;
     }
 
     /**
      * 根据orderId获取用户open订单
-     * @param brokerName
-     * @param username
+     * @param serverName
+     * @param mtAccId
      * @param password
      * @param orderId
      */
-    public JSONObject getUserOpenOrder(String brokerName, int username, String password, int orderId){
-        return null;
+    public JSONObject getUserOpenOrder(String serverName, int mtAccId, String password, int orderId){
+        if(StringUtils.isEmpty(serverName)||mtAccId==0||StringUtils.isEmpty(password)){
+            log.error("获取用户关闭订单,传入参数为空！");
+            throw new DataConflictException("获取用户关闭订单,传入参数为空！");
+        }
+        String url=tradeServerHost+":"+tradeServerPort+ GlobalConstant.TRADE_ORDER_OPEN_ORDER;
+        Map requestMap=new HashMap();
+        requestMap.put("serverName",serverName);
+        requestMap.put("username",mtAccId);
+        requestMap.put("password",password);
+        // 请求
+        String result= HttpUtils.doPost(url,requestMap);
+        JSONObject resultJson=JSONObject.parseObject(result);
+        JSONObject content=resultJson.getJSONObject("content");
+        if(content==null||content.getJSONObject("data")==null){
+            log.error(resultJson.getString("msg"));
+            return null;
+        }
+        JSONObject data=content.getJSONObject("data");
+        return data;
     }
 
 }

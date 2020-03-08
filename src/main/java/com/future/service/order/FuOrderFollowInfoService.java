@@ -1,28 +1,31 @@
 package com.future.service.order;
 
 import com.alibaba.druid.util.StringUtils;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
-import com.future.common.constants.RedisConstant;
 import com.future.common.constants.UserConstant;
 import com.future.common.exception.BusinessException;
 import com.future.common.exception.ParameterInvalidException;
+import com.future.common.util.ConvertUtil;
 import com.future.common.util.RedisManager;
 import com.future.entity.order.FuOrderCustomer;
 import com.future.entity.order.FuOrderFollowInfo;
 import com.future.mapper.order.FuOrderFollowInfoMapper;
 import com.future.pojo.bo.order.UserMTAccountBO;
 import com.future.service.account.FuAccountMtService;
-import com.future.service.bak.BakMTOrderService;
+import com.future.service.trade.FuTradeOrderService;
 import com.future.service.user.AdminService;
-import com.jfx.Broker;
-import com.jfx.TradeOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class FuOrderFollowInfoService extends ServiceImpl<FuOrderFollowInfoMapper,FuOrderFollowInfo> {
@@ -32,11 +35,11 @@ public class FuOrderFollowInfoService extends ServiceImpl<FuOrderFollowInfoMappe
     @Autowired
     AdminService adminService;
     @Autowired
-    BakMTOrderService bakMtOrderService;
-    @Autowired
     FuAccountMtService fuAccountMtService;
     @Autowired
     FuOrderCustomerService fuOrderCustomerService;
+    @Autowired
+    FuTradeOrderService fuTradeOrderService;
     @Autowired
     FuOrderFollowInfoMapper fuOrderFollowInfoMapper;
     @Autowired
@@ -49,11 +52,10 @@ public class FuOrderFollowInfoService extends ServiceImpl<FuOrderFollowInfoMappe
      * @param accountId
      * @param dataFrom
      * @param dateTo
-     * @param symbol
      * @return
      */
-    public List<FuOrderFollowInfo> geMTtHistoryOrders(String userId,String username, String accountId,Date dataFrom,Date dateTo,String symbol){
-        return getMTOrders(true,userId,username,accountId,dataFrom,dateTo,symbol);
+    public List<FuOrderFollowInfo> geMTtHistoryOrders(String userId,String username, String accountId,Date dataFrom,Date dateTo){
+        return getMTOrders(true,userId,username,accountId,dataFrom,dateTo);
     }
 
 
@@ -61,36 +63,35 @@ public class FuOrderFollowInfoService extends ServiceImpl<FuOrderFollowInfoMappe
      * 获取用户在仓订单信息
      * @param userId
      * @param username
-     * @param accountId
+     * @param mtAccId
      * @param dataFrom
      * @param dateTo
-     * @param symbol
      * @return
      */
-    public List<FuOrderFollowInfo> getMTAliveOrders(String userId,String username, String accountId,Date dataFrom,Date dateTo,String symbol){
-        return getMTOrders(false,userId,username,accountId,dataFrom,dateTo,symbol);
+    public List<FuOrderFollowInfo> getMTAliveOrders(String userId,String username, String mtAccId,Date dataFrom,Date dateTo){
+        return getMTOrders(false,userId,username,mtAccId,dataFrom,dateTo);
     }
 
     /**
      * 根据MT订单号查询用户历史订单详情
      * @param username
-     * @param accountId
-     * @param index
+     * @param mtAccId
+     * @param orderId
      * @return
      */
-    public FuOrderFollowInfo getMTHistoryOrderByIndex(String username, String accountId,long index){
-        return getMTOrderByIndex(username,accountId,index,true);
+    public FuOrderFollowInfo getMTHistoryOrderByOrderId(String username, String mtAccId,int orderId){
+        return getMTOrderByIndex(username,mtAccId,orderId,true);
     }
 
     /**
      * 根据MT订单号查询用户在仓订单详情
      * @param username
-     * @param accountId
-     * @param index
+     * @param mtAccId
+     * @param orderId
      * @return
      */
-    public FuOrderFollowInfo getMTAliveOrderByIndex(String username, String accountId,long index){
-        return getMTOrderByIndex(username,accountId,index,false);
+    public FuOrderFollowInfo getMTAliveOrderByOrderId(String username, String mtAccId,int orderId){
+        return getMTOrderByIndex(username,mtAccId,orderId,false);
     }
 
     /**
@@ -98,13 +99,12 @@ public class FuOrderFollowInfoService extends ServiceImpl<FuOrderFollowInfoMappe
      * @param isHistoryOrder
      * @param userId
      * @param username
-     * @param accountId
+     * @param mtAccId
      * @param dataFrom
      * @param dateTo
-     * @param symbol
      * @return
      */
-    public List<FuOrderFollowInfo> getMTOrders(Boolean isHistoryOrder, String userId,String username, String accountId,Date dataFrom,Date dateTo,String symbol){
+    public List<FuOrderFollowInfo> getMTOrders(Boolean isHistoryOrder, String userId,String username, String mtAccId,Date dataFrom,Date dateTo){
         if(StringUtils.isEmpty(username)&&StringUtils.isEmpty(userId)){
             log.error("根据时间段 查询用户历史订单，用户信息为空！");
             return null;
@@ -112,12 +112,15 @@ public class FuOrderFollowInfoService extends ServiceImpl<FuOrderFollowInfoMappe
 
         /*查询用户历史订单*/
         Map acountMap=new HashMap();
-        if(!StringUtils.isEmpty(accountId)){
-            acountMap.put("id",accountId);
-        }else if(!StringUtils.isEmpty(userId)){
+        if(!StringUtils.isEmpty(mtAccId)){
+            acountMap.put("mtAccId",mtAccId);
+        }
+        if(!StringUtils.isEmpty(userId)){
             /*默认查询主账户号*/
             acountMap.put("userId",userId);
-        }else {
+        }
+        if(!StringUtils.isEmpty(username)){
+            /*默认查询主账户号*/
             acountMap.put("username",username);
         }
         List<UserMTAccountBO> mts= fuAccountMtService.getUserMTAccByCondition(acountMap);
@@ -125,42 +128,34 @@ public class FuOrderFollowInfoService extends ServiceImpl<FuOrderFollowInfoMappe
             log.error("根据时间段查询用户历史订单|用户MT4账户未绑定！");
             throw new BusinessException("根据时间段查询用户历史订单|用户MT4账户未绑定！");
         }
+        UserMTAccountBO userMtAcc=mts.get(0);
         // todo 考虑多账户问题
-        Integer userType=mts.get(0).getUserType();
-        String server=String.valueOf(mts.get(0).getServerName());
-        String mtAccId=String.valueOf(mts.get(0).getMtAccId());
-        String mtPassword=String.valueOf(mts.get(0).getMtPasswordTrade());
-
-        /*验证用户链接状态*/
-        Integer connectSate=(Integer) redisManager.hget(RedisConstant.H_ACCOUNT_CONNECT_STATE,server+"&"+mtAccId);
-        if(connectSate==null || connectSate==0){
-            log.error("根据时间段查询用户历史订单,用户MT4账户未登录！");
-            throw new BusinessException("根据时间段查询用户历史订单,用户MT4账户未登录！");
-        }
-
-        if(StringUtils.isEmpty(server)){
+        Integer userType=userMtAcc.getUserType();
+        String serverName=String.valueOf(userMtAcc.getServerName());
+        String mtPassword=String.valueOf(userMtAcc.getMtPasswordTrade());
+        if(StringUtils.isEmpty(serverName)){
             log.error("根据时间段 查询用户历史订单，用户MT4账户信息有误！");
             return null;
         }
-        Broker broker=new Broker(server);
-        List<FuOrderFollowInfo> infos=new ArrayList<FuOrderFollowInfo>();
+        JSONArray orderJson=new JSONArray();
         if(isHistoryOrder){
-            infos= bakMtOrderService.getHistoryOrders(broker,mtAccId,mtPassword,dataFrom,dateTo,symbol);
+            orderJson= fuTradeOrderService.getUserCloseOrders(serverName,Integer.parseInt(mtAccId),mtPassword, dataFrom.getTime(),dateTo.getTime());
         }else {
-            infos= bakMtOrderService.getAliveOrders(broker,mtAccId,mtPassword,dataFrom,dateTo,symbol);
+            orderJson= fuTradeOrderService.getUserOpenOrders(serverName,Integer.parseInt(mtAccId),mtPassword, dataFrom.getTime(),dateTo.getTime());
         }
+        List<FuOrderFollowInfo> infos=ConvertUtil.convertOrderInfos(orderJson);
 
         /*填充数据*/
         for (FuOrderFollowInfo info:infos){
             // 是不是普通用户 都填充用户信息，方便前端展示
             info.setUserMtAccId(mtAccId);
             info.setUserId(Integer.parseInt(userId));
-            info.setUserServerName(server);
+            info.setUserServerName(serverName);
             if(userType==UserConstant.USER_TYPE_SIGNAL){
                 // 信号源 填充信号源信息
                 info.setSignalOrderId(info.getOrderId());
                 info.setSignalMtAccId(mtAccId);
-                info.setSignalServerName(server);
+                info.setSignalServerName(serverName);
             }
         }
         return infos;
@@ -170,33 +165,25 @@ public class FuOrderFollowInfoService extends ServiceImpl<FuOrderFollowInfoMappe
     /**
      * 根据Mt订单号 查询用户订单信息
      * @param username
-     * @param accountId
-     * @param index
+     * @param mtAccId
+     * @param orderId
      * @param isHistoryOrder
      * @return
      */
-    public FuOrderFollowInfo getMTOrderByIndex(String username, String accountId,long index,Boolean isHistoryOrder){
+    public FuOrderFollowInfo getMTOrderByIndex(String username, String mtAccId,int orderId,Boolean isHistoryOrder){
 
-        if(StringUtils.isEmpty(username)||index==0){
+        if(StringUtils.isEmpty(username)||orderId==0){
             log.error("根据时间段 查询用户历史订单，数据为空！");
             return null;
         }
-        /*根据用户名 验证用户信息*/
-        /*FuUser fuUser=adminService.findByUsername(username);
-        if(ObjectUtils.isEmpty(fuUser)){
-            log.error("根据时间段 查询用户历史订单，用户信息不存在！");
-            return null;
-        }*/
-
-        /*验证用户登录状态*/
-
         /*查询用户历史订单*/
         Map acountMap=new HashMap();
-        if(StringUtils.isEmpty(accountId)){
-            /*默认查询主账户号*/
+        if(StringUtils.isEmpty(username)){
             acountMap.put("username",username);
-        }else {
-            acountMap.put("id",accountId);
+        }
+        if(StringUtils.isEmpty(mtAccId)){
+            /*默认查询主账户号*/
+            acountMap.put("mtAccId",mtAccId);
         }
         /*查询用户账户信息*/
         List<UserMTAccountBO> mts= fuAccountMtService.getUserMTAccByCondition(acountMap);
@@ -204,23 +191,22 @@ public class FuOrderFollowInfoService extends ServiceImpl<FuOrderFollowInfoMappe
             log.error("根据时间段查询用户历史订单|用户MT4账户未绑定！");
             throw new BusinessException("根据时间段查询用户历史订单|用户MT4账户未绑定！");
         }
-        //TODO 多账户需要考虑
-        String server=String.valueOf(mts.get(0).getServerName());
-        String mtAccId=String.valueOf(mts.get(0).getMtAccId());
-        String mtPassword=String.valueOf(mts.get(0).getMtPasswordTrade());
-        if(StringUtils.isEmpty(server)){
+        UserMTAccountBO accountBO=mts.get(0);
+        String serverName=String.valueOf(accountBO.getServerName());
+        String mtPassword=String.valueOf(accountBO.getMtPasswordTrade());
+        if(StringUtils.isEmpty(serverName)){
             log.error("根据时间段 查询用户历史订单，用户MT4账户信息有误！");
             return null;
         }
-        Broker broker=new Broker(server);
-
+        JSONObject order=new JSONObject();
         if(isHistoryOrder){
             /*历史订单*/
-            return bakMtOrderService.getHistoryOrderByIndex(broker,mtAccId,mtPassword,index);
+            order= fuTradeOrderService.getUserCloseOrder(serverName,Integer.parseInt(mtAccId),mtPassword,orderId);
         }else {
             /*在仓订单*/
-            return bakMtOrderService.getAliveOrderByIndex(broker,mtAccId,mtPassword,index);
+            order= fuTradeOrderService.getUserOpenOrder(serverName,Integer.parseInt(mtAccId),mtPassword,orderId);
         }
+        return ConvertUtil.convertOrderInfo(order);
     }
 
     /**
@@ -263,20 +249,5 @@ public class FuOrderFollowInfoService extends ServiceImpl<FuOrderFollowInfoMappe
             return infos.get(0);
         }
         return null;
-    }
-
-
-
-    /**
-     * 生成订单
-     * @param symbol 币种
-     * @param operate 交易方式
-     * @param lots 数量
-     * @return
-     */
-    public long sendOrder(String symbol, TradeOperation operate, double lots){
-        /*返回订单号orderId*/
-        /*有没有必要 保存该订单至数据库？*/
-        return bakMtOrderService.sendOrder(symbol,operate,lots);
     }
 }
