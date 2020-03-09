@@ -7,15 +7,15 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 public class FuOrderCustomer {
-
     public static final String USER_ID = "user_id";
     public static final String ORDER_ID = "order_id";
     public static final String ORDER_SYMBOL = "order_symbol";
     public static final String ORDER_TYPE = "order_type";
+    public static final String ORDER_FLAG = "order_flag";
     public static final String ORDER_OPEN_DATE = "order_open_date";
     public static final String ORDER_CLOSE_DATE = "order_close_date";
     /**
-     * 
+     *
      */
     @TableId(type = IdType.AUTO)
     private Integer id;
@@ -111,6 +111,11 @@ public class FuOrderCustomer {
     private BigDecimal orderMagic;
 
     /**
+     * 是否是社区跟单订单（0 否，1 是）
+     */
+    private Integer orderFlag;
+
+    /**
      * 交易价格
      */
     private BigDecimal orderOpenPrice;
@@ -121,7 +126,7 @@ public class FuOrderCustomer {
     private Date orderOpenDate;
 
     /**
-     * 订单交易操作（0 OPEN ，1 MODIFY，2 CLOSE，3 CLOSE_PARTIAL，4 CLOSE_MAGIC）
+     * 操作类型（0 OPEN ，1 MODIFY，2 CLOSE，3 CLOSE_PARTIAL，4 CLOSE_MAGIC）
      */
     private Integer orderTradeOperation;
 
@@ -144,7 +149,6 @@ public class FuOrderCustomer {
      * 备注
      */
     private String comment;
-
 
     /**
      * 
@@ -308,6 +312,7 @@ public class FuOrderCustomer {
 
     /**
      * 订单交易类型（ OP_BUY = 0， OP_SELL = 1，OP_BUYLIMIT = 2，OP_SELLLIMIT = 3， OP_BUYSTOP = 4，OP_SELLSTOP = 5）
+     * @return order_type 订单交易类型（ OP_BUY = 0， OP_SELL = 1，OP_BUYLIMIT = 2，OP_SELLLIMIT = 3， OP_BUYSTOP = 4，OP_SELLSTOP = 5）
      */
     public Integer getOrderType() {
         return orderType;
@@ -315,6 +320,7 @@ public class FuOrderCustomer {
 
     /**
      * 订单交易类型（ OP_BUY = 0， OP_SELL = 1，OP_BUYLIMIT = 2，OP_SELLLIMIT = 3， OP_BUYSTOP = 4，OP_SELLSTOP = 5）
+     * @param orderType 订单交易类型（ OP_BUY = 0， OP_SELL = 1，OP_BUYLIMIT = 2，OP_SELLLIMIT = 3， OP_BUYSTOP = 4，OP_SELLSTOP = 5）
      */
     public void setOrderType(Integer orderType) {
         this.orderType = orderType;
@@ -322,6 +328,7 @@ public class FuOrderCustomer {
 
     /**
      * 订单状态（ 0 正常，1 异常）
+     * @return order_state 订单状态（ 0 正常，1 异常）
      */
     public Integer getOrderState() {
         return orderState;
@@ -329,6 +336,7 @@ public class FuOrderCustomer {
 
     /**
      * 订单状态（ 0 正常，1 异常）
+     * @param orderState 订单状态（ 0 正常，1 异常）
      */
     public void setOrderState(Integer orderState) {
         this.orderState = orderState;
@@ -400,7 +408,7 @@ public class FuOrderCustomer {
 
     /**
      * 原订单号
-     * @return order_superior 原在仓订单号
+     * @return order_superior 原订单号
      */
     public String getOrderSuperior() {
         return orderSuperior;
@@ -408,7 +416,7 @@ public class FuOrderCustomer {
 
     /**
      * 原订单号
-     * @param orderSuperior 原在仓订单号
+     * @param orderSuperior 原订单号
      */
     public void setOrderSuperior(String orderSuperior) {
         this.orderSuperior = orderSuperior == null ? null : orderSuperior.trim();
@@ -447,6 +455,22 @@ public class FuOrderCustomer {
     }
 
     /**
+     * 是否是社区跟单订单（0 否，1 是）
+     * @return order_flag 是否是社区跟单订单（0 否，1 是）
+     */
+    public Integer getOrderFlag() {
+        return orderFlag;
+    }
+
+    /**
+     * 是否是社区跟单订单（0 否，1 是）
+     * @param orderFlag 是否是社区跟单订单（0 否，1 是）
+     */
+    public void setOrderFlag(Integer orderFlag) {
+        this.orderFlag = orderFlag;
+    }
+
+    /**
      * 交易价格
      * @return order_open_price 交易价格
      */
@@ -479,14 +503,16 @@ public class FuOrderCustomer {
     }
 
     /**
-     * 订单交易操作（0 OPEN ，1 MODIFY，2 CLOSE，3 CLOSE_PARTIAL，4 CLOSE_MAGIC）
+     * 操作类型（0 OPEN ，1 MODIFY，2 CLOSE，3 CLOSE_PARTIAL，4 CLOSE_MAGIC）
+     * @return order_trade_operation 操作类型（0 OPEN ，1 MODIFY，2 CLOSE，3 CLOSE_PARTIAL，4 CLOSE_MAGIC）
      */
     public Integer getOrderTradeOperation() {
         return orderTradeOperation;
     }
 
     /**
-     * 订单交易操作（0 OPEN ，1 MODIFY，2 CLOSE，3 CLOSE_PARTIAL，4 CLOSE_MAGIC）
+     * 操作类型（0 OPEN ，1 MODIFY，2 CLOSE，3 CLOSE_PARTIAL，4 CLOSE_MAGIC）
+     * @param orderTradeOperation 操作类型（0 OPEN ，1 MODIFY，2 CLOSE，3 CLOSE_PARTIAL，4 CLOSE_MAGIC）
      */
     public void setOrderTradeOperation(Integer orderTradeOperation) {
         this.orderTradeOperation = orderTradeOperation;
@@ -494,6 +520,7 @@ public class FuOrderCustomer {
 
     /**
      * 交易类型
+     * @return order_trade_type 交易类型
      */
     public Integer getOrderTradeType() {
         return orderTradeType;
@@ -501,6 +528,7 @@ public class FuOrderCustomer {
 
     /**
      * 交易类型
+     * @param orderTradeType 交易类型
      */
     public void setOrderTradeType(Integer orderTradeType) {
         this.orderTradeType = orderTradeType;

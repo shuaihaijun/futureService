@@ -21,6 +21,7 @@
     <result column="order_superior" jdbcType="VARCHAR" property="orderSuperior" />
     <result column="order_expiration" jdbcType="TIMESTAMP" property="orderExpiration" />
     <result column="order_magic" jdbcType="DECIMAL" property="orderMagic" />
+    <result column="order_flag" jdbcType="TINYINT" property="orderFlag" />
     <result column="order_open_price" jdbcType="DECIMAL" property="orderOpenPrice" />
     <result column="order_open_date" jdbcType="TIMESTAMP" property="orderOpenDate" />
     <result column="order_trade_operation" jdbcType="TINYINT" property="orderTradeOperation" />
@@ -32,9 +33,9 @@
   <sql id="Base_Column_List">
     id, create_date, modify_date, user_id, mt_server_id, mt_server_name, mt_acc_id, order_id, 
     order_symbol, order_lots, order_type, order_state, order_stoploss, order_profit, 
-    order_swap, order_commission, order_superior, order_expiration, order_magic, order_open_price, 
-    order_open_date, order_trade_operation, order_trade_type, order_close_price, order_close_date, 
-    comment
+    order_swap, order_commission, order_superior, order_expiration, order_magic, order_flag, 
+    order_open_price, order_open_date, order_trade_operation, order_trade_type, order_close_price, 
+    order_close_date, comment
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -53,18 +54,20 @@
       order_lots, order_type, order_state, 
       order_stoploss, order_profit, order_swap, 
       order_commission, order_superior, order_expiration, 
-      order_magic, order_open_price, order_open_date, 
-      order_trade_operation, order_trade_type, order_close_price, 
-      order_close_date, comment)
+      order_magic, order_flag, order_open_price, 
+      order_open_date, order_trade_operation, order_trade_type, 
+      order_close_price, order_close_date, comment
+      )
     values (#{id,jdbcType=INTEGER}, #{createDate,jdbcType=TIMESTAMP}, #{modifyDate,jdbcType=TIMESTAMP}, 
       #{userId,jdbcType=INTEGER}, #{mtServerId,jdbcType=INTEGER}, #{mtServerName,jdbcType=VARCHAR}, 
       #{mtAccId,jdbcType=VARCHAR}, #{orderId,jdbcType=VARCHAR}, #{orderSymbol,jdbcType=VARCHAR}, 
       #{orderLots,jdbcType=DECIMAL}, #{orderType,jdbcType=TINYINT}, #{orderState,jdbcType=TINYINT}, 
       #{orderStoploss,jdbcType=DECIMAL}, #{orderProfit,jdbcType=DECIMAL}, #{orderSwap,jdbcType=DECIMAL}, 
       #{orderCommission,jdbcType=DECIMAL}, #{orderSuperior,jdbcType=VARCHAR}, #{orderExpiration,jdbcType=TIMESTAMP}, 
-      #{orderMagic,jdbcType=DECIMAL}, #{orderOpenPrice,jdbcType=DECIMAL}, #{orderOpenDate,jdbcType=TIMESTAMP}, 
-      #{orderTradeOperation,jdbcType=TINYINT}, #{orderTradeType,jdbcType=TINYINT}, #{orderClosePrice,jdbcType=DECIMAL}, 
-      #{orderCloseDate,jdbcType=TIMESTAMP}, #{comment,jdbcType=VARCHAR})
+      #{orderMagic,jdbcType=DECIMAL}, #{orderFlag,jdbcType=TINYINT}, #{orderOpenPrice,jdbcType=DECIMAL}, 
+      #{orderOpenDate,jdbcType=TIMESTAMP}, #{orderTradeOperation,jdbcType=TINYINT}, #{orderTradeType,jdbcType=TINYINT}, 
+      #{orderClosePrice,jdbcType=DECIMAL}, #{orderCloseDate,jdbcType=TIMESTAMP}, #{comment,jdbcType=VARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.future.entity.order.FuOrderCustomer">
     insert into fu_order_customer
@@ -125,6 +128,9 @@
       </if>
       <if test="orderMagic != null">
         order_magic,
+      </if>
+      <if test="orderFlag != null">
+        order_flag,
       </if>
       <if test="orderOpenPrice != null">
         order_open_price,
@@ -206,6 +212,9 @@
       <if test="orderMagic != null">
         #{orderMagic,jdbcType=DECIMAL},
       </if>
+      <if test="orderFlag != null">
+        #{orderFlag,jdbcType=TINYINT},
+      </if>
       <if test="orderOpenPrice != null">
         #{orderOpenPrice,jdbcType=DECIMAL},
       </if>
@@ -286,6 +295,9 @@
       <if test="orderMagic != null">
         order_magic = #{orderMagic,jdbcType=DECIMAL},
       </if>
+      <if test="orderFlag != null">
+        order_flag = #{orderFlag,jdbcType=TINYINT},
+      </if>
       <if test="orderOpenPrice != null">
         order_open_price = #{orderOpenPrice,jdbcType=DECIMAL},
       </if>
@@ -330,6 +342,7 @@
       order_superior = #{orderSuperior,jdbcType=VARCHAR},
       order_expiration = #{orderExpiration,jdbcType=TIMESTAMP},
       order_magic = #{orderMagic,jdbcType=DECIMAL},
+      order_flag = #{orderFlag,jdbcType=TINYINT},
       order_open_price = #{orderOpenPrice,jdbcType=DECIMAL},
       order_open_date = #{orderOpenDate,jdbcType=TIMESTAMP},
       order_trade_operation = #{orderTradeOperation,jdbcType=TINYINT},
@@ -343,20 +356,20 @@
     select
     o.id, o.create_date, o.modify_date,  o.user_id, o.mt_server_id,o.mt_server_name, o.mt_acc_id,o.order_id, o.order_symbol,
     o.order_lots, o.order_type, o.order_state, o.order_stoploss, o.order_profit, o.order_swap, o.order_commission,
-    o.order_superior, o.order_expiration, o.order_magic, o.order_open_price, o.order_open_date,
+    o.order_superior, o.order_expiration, o.order_magic,o.order_flag, o.order_open_price, o.order_open_date,
     o.order_trade_operation, o.order_trade_type, o.order_close_price, o.order_close_date, o.comment
     FROM
-        fu_user u
+    fu_user u
     LEFT JOIN fu_order_customer o ON u.id = o.user_id
     WHERE 1=1
-      <if test="comment != null">
-        and u.username = #{username,jdbcType=VARCHAR}
-      </if>
-      <if test="userId != null">
-        and u.id = #{userId,jdbcType=INTEGER}
-      </if>
+    <if test="comment != null">
+      and u.username = #{username,jdbcType=VARCHAR}
+    </if>
+    <if test="userId != null">
+      and u.id = #{userId,jdbcType=INTEGER}
+    </if>
     ORDER BY
-        order_close_date desc
+    order_close_date desc
     LIMIT 0,1
   </select>
   <select id="queryCustomerOrderByProject" parameterType="java.util.Map" resultType="com.future.entity.order.FuOrderCustomer">
@@ -380,6 +393,7 @@
       o.order_superior AS orderSuperior,
       o.order_expiration AS orderExpiration,
       o.order_magic AS orderMagic,
+      o.order_flag AS orderFlag,
       o.order_open_price AS orderOpenPrice,
       o.order_open_date AS orderOpenDate,
       o.order_trade_operation AS orderTradeOperation,
@@ -388,51 +402,54 @@
       o.order_close_date AS orderCloseDate,
       o.`comment`
     FROM
-      fu_order_customer o LEFT JOIN fu_permission_userproject p on o.user_id=p.user_id
+        fu_order_customer o LEFT JOIN fu_permission_userproject p on o.user_id=p.user_id
     where
       1 = 1
-    <if test="userId != null">
-      and o.user_id = #{userId,jdbcType=INTEGER}
-    </if>
-    <if test="mtServerName != null">
-      and o.mt_server_name = #{mtServerName,jdbcType=VARCHAR}
-    </if>
-    <if test="mtAccId != null">
-      and o.mt_acc_id = #{mtAccId,jdbcType=VARCHAR}
-    </if>
-    <if test="orderId != null">
-      and o.order_id = #{orderId,jdbcType=VARCHAR}
-    </if>
-    <if test="orderSymbol != null">
-      and o.order_symbol = #{orderSymbol,jdbcType=VARCHAR}
-    </if>
-    <if test="orderType != null">
-      and o.order_type = #{orderType,jdbcType=TINYINT}
-    </if>
-    <if test="orderSuperior != null">
-      and  o.order_superior = #{orderSuperior,jdbcType=VARCHAR}
-    </if>
-    <if test="orderOpenDate != null">
-      and o.order_open_date = #{orderOpenDate,jdbcType=TIMESTAMP}
-    </if>
-    <if test="orderOpenDateBegin != null">
-      and o.order_open_date &gt;= #{orderOpenDateBegin,jdbcType=TIMESTAMP}
-    </if>
-    <if test="orderOpenDateEnd != null">
-      and o.order_open_date &lt;= #{orderOpenDateEnd,jdbcType=TIMESTAMP}
-    </if>
-    <if test="orderCloseDate != null">
-      and o.order_close_date = #{orderCloseDate,jdbcType=TIMESTAMP}
-    </if>
-    <if test="orderCloseDateBegin != null">
-      and o.order_close_date &gt;= #{orderCloseDateBegin,jdbcType=TIMESTAMP}
-    </if>
-    <if test="orderCloseDateEnd != null">
-      and o.order_close_date &lt;= #{orderCloseDateEnd,jdbcType=TIMESTAMP}
-    </if>
-    <if test="projKey != null">
-      and p.proj_key = #{projKey,jdbcType=INTEGER}
-    </if>
+      <if test="userId != null">
+        and o.user_id = #{userId,jdbcType=INTEGER}
+      </if>
+      <if test="mtServerName != null">
+        and o.mt_server_name = #{mtServerName,jdbcType=VARCHAR}
+      </if>
+      <if test="mtAccId != null">
+        and o.mt_acc_id = #{mtAccId,jdbcType=VARCHAR}
+      </if>
+      <if test="orderId != null">
+        and o.order_id = #{orderId,jdbcType=VARCHAR}
+      </if>
+      <if test="orderSymbol != null">
+        and o.order_symbol = #{orderSymbol,jdbcType=VARCHAR}
+      </if>
+      <if test="orderType != null">
+        and o.order_type = #{orderType,jdbcType=TINYINT}
+      </if>
+      <if test="orderFlag != null">
+        and o.order_flag = #{orderFlag,jdbcType=TINYINT}
+      </if>
+      <if test="orderSuperior != null">
+        and  o.order_superior = #{orderSuperior,jdbcType=VARCHAR}
+      </if>
+      <if test="orderOpenDate != null">
+        and o.order_open_date = #{orderOpenDate,jdbcType=TIMESTAMP}
+      </if>
+      <if test="orderOpenDateBegin != null">
+        and o.order_open_date &gt;= #{orderOpenDateBegin,jdbcType=TIMESTAMP}
+      </if>
+      <if test="orderOpenDateEnd != null">
+        and o.order_open_date &lt;= #{orderOpenDateEnd,jdbcType=TIMESTAMP}
+      </if>
+      <if test="orderCloseDate != null">
+        and o.order_close_date = #{orderCloseDate,jdbcType=TIMESTAMP}
+      </if>
+      <if test="orderCloseDateBegin != null">
+        and o.order_close_date &gt;= #{orderCloseDateBegin,jdbcType=TIMESTAMP}
+      </if>
+      <if test="orderCloseDateEnd != null">
+        and o.order_close_date &lt;= #{orderCloseDateEnd,jdbcType=TIMESTAMP}
+      </if>
+      <if test="projKey != null">
+        and p.proj_key = #{projKey,jdbcType=INTEGER}
+      </if>
     order by o.order_close_date desc
   </select>
 </mapper>

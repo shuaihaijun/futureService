@@ -22,6 +22,8 @@ public class GlobalConstant {
      */
     public static final String CONTENTTYPE_JSON_UTF_8 = "application/json;charset=utf-8";
 
+    /*magic作为社区跟单唯一标识(必须与trade项目中的key一直)*/
+    public static final int ORDER_FOLLOW_MAGIC=20992020;
 
     // mt账户连接
     public static final String TRADE_ACC_SET_CONNECT = "/trader/account/setAccountConnect";
@@ -29,6 +31,11 @@ public class GlobalConstant {
     public static final String TRADE_ACC_DIS_CONNECT = "/trader/account/setAccountDisConnect";
     // mt账户连接
     public static final String TRADE_ACC_SIGNAL_MONITOR = "/trader/account/setSignalMonitor";
+    // 设置跟单关系
+    public static final String TRADE_ACC_SET_FOLLOW_RALATION = "/trader/account/addAccountFollowRelation";
+    // 移除跟单关系
+    public static final String TRADE_ACC_REMOVE_FOLLOW_RALATION = "/trader/account/removeAccountFollowRelation";
+
     // 获取用户close订单
     public static final String TRADE_ORDER_CLOSE_ORDERS = "/trader/order/getUserCloseOrders";
     // 获取用户close订单
@@ -37,4 +44,5 @@ public class GlobalConstant {
     public static final String TRADE_ORDER_OPEN_ORDERS = "/trader/order/getUserOpenOrders";
     // 获取用户open订单
     public static final String TRADE_ORDER_OPEN_ORDER = "/trader/order/getUserOpenOrderById";
+
 }

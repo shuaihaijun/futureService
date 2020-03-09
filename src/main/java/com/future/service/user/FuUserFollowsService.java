@@ -18,12 +18,14 @@ import com.future.pojo.bo.order.UserMTAccountBO;
 import com.future.pojo.vo.signal.FuFollowUserVO;
 import com.future.service.account.FuAccountMtService;
 import com.future.service.product.FuProductSignalService;
+import com.future.service.trade.FuTradeAccountService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
 import java.math.BigDecimal;
@@ -44,6 +46,8 @@ public class FuUserFollowsService extends ServiceImpl<FuUserFollowsMapper, FuUse
     FuAccountMtService fuAccountMtService;
     @Autowired
     UserCommonService userCommonService;
+    @Autowired
+    FuTradeAccountService fuTradeAccountService;
     @Autowired
     FuUserFollowsMapper fuUserFollowsMapper;
 
@@ -85,6 +89,7 @@ public class FuUserFollowsService extends ServiceImpl<FuUserFollowsMapper, FuUse
      * @param dataMap
      * @return
      */
+    @Transactional
     public void signalFollowsSaveOrUpdate(Map dataMap){
         /*校验参数*/
         if(MapUtils.isEmpty(dataMap)){
@@ -176,6 +181,12 @@ public class FuUserFollowsService extends ServiceImpl<FuUserFollowsMapper, FuUse
             follows.setModifyDate(new Date());
             fuUserFollowsMapper.updateByPrimaryKeySelective(follows);
         }
+
+        /*更新监听数据*/
+        if(!fuTradeAccountService.addAccountFollowRelation(follows.getSignalMtAccId(),follows.getUserMtAccId(),follows)){
+            log.error("设置跟单关系失败：signalMtAccId:"+follows.getSignalMtAccId()+",userMtAccId"+follows.getUserMtAccId());
+            throw new BusinessException("设置跟单关系失败：signalMtAccId:"+follows.getSignalMtAccId()+",userMtAccId"+follows.getUserMtAccId());
+        }
     }
 
 
@@ -184,6 +195,7 @@ public class FuUserFollowsService extends ServiceImpl<FuUserFollowsMapper, FuUse
      * @param dataMap
      * @return
      */
+    @Transactional
     public void signalFollowsRemove(Map dataMap){
         /*校验参数*/
         if(MapUtils.isEmpty(dataMap)){
@@ -215,6 +227,12 @@ public class FuUserFollowsService extends ServiceImpl<FuUserFollowsMapper, FuUse
         follows.setFollowState(FollowConstant.FOLLOW_STATE_DELETE);
         follows.setModifyDate(new Date());
         fuUserFollowsMapper.updateByPrimaryKeySelective(follows);
+
+        /*更新监听数据*/
+        if(!fuTradeAccountService.removeAccountFollowRelation(follows.getSignalMtAccId(),follows.getUserMtAccId())){
+            log.error("设置跟单关系失败：signalMtAccId:"+follows.getSignalMtAccId()+",userMtAccId"+follows.getUserMtAccId());
+            throw new BusinessException("设置跟单关系失败：signalMtAccId:"+follows.getSignalMtAccId()+",userMtAccId"+follows.getUserMtAccId());
+        }
     }
 
 

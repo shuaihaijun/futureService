@@ -51,7 +51,7 @@ public class FuFollowUserVO {
     private Date modifyDate;
 
     /**
-     * 规则类型（0 按手数比例，1 按净值金额，2 按固定手数）
+     * 规则类型（0 按手数比例，1 按固定金额，2 按固定手数）
      */
     private Integer followType;
 

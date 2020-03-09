@@ -32,9 +32,9 @@ import java.util.*;
  */
 @Configuration
 @EnableScheduling
-public class CommissionOrderlMonitor {
+public class CommissionOrderMonitor {
 
-    Logger log= LoggerFactory.getLogger(CommissionOrderlMonitor.class);
+    Logger log= LoggerFactory.getLogger(CommissionOrderMonitor.class);
     @Autowired
     FuOrderCustomerService fuOrderCustomerService;
     @Autowired

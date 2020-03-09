@@ -29,7 +29,7 @@ public class FuUserFollowRule {
     private String userMtAccId;
 
     /**
-     * 规则类型（0 按手数比例，1 按净值金额，2 按固定手数）
+     * 规则类型（0 按手数比例，1 按固定金额，2 按固定手数）
      */
     private Integer ruleType;
 
@@ -153,16 +153,16 @@ public class FuUserFollowRule {
     }
 
     /**
-     * 规则类型（0 按手数比例，1 按净值金额，2 按固定手数）
-     * @return rule_type 规则类型（0 按手数比例，1 按净值金额，2 按固定手数）
+     * 规则类型（0 按手数比例，1 按固定金额，2 按固定手数）
+     * @return rule_type 规则类型（0 按手数比例，1 按固定金额，2 按固定手数）
      */
     public Integer getRuleType() {
         return ruleType;
     }
 
     /**
-     * 规则类型（0 按手数比例，1 按净值金额，2 按固定手数）
-     * @param ruleType 规则类型（0 按手数比例，1 按净值金额，2 按固定手数）
+     * 规则类型（0 按手数比例，1 按固定金额，2 按固定手数）
+     * @param ruleType 规则类型（0 按手数比例，1 按固定金额，2 按固定手数）
      */
     public void setRuleType(Integer ruleType) {
         this.ruleType = ruleType;

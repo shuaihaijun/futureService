@@ -64,7 +64,7 @@ public class FuUserFollows {
     private Integer followMode;
 
     /**
-     * 跟单类型（0 按手数比例，1 按净值金额，2 按固定手数）
+     * 跟单类型（0 按手数比例，1 按固定金额，2 按固定手数）
      */
     private Integer followType;
 
@@ -289,16 +289,16 @@ public class FuUserFollows {
     }
 
     /**
-     * 跟单类型（0 按手数比例，1 按净值金额，2 按固定手数）
-     * @return follow_type 跟单类型（0 按手数比例，1 按净值金额，2 按固定手数）
+     * 跟单类型（0 按手数比例，1 按固定金额，2 按固定手数）
+     * @return follow_type 跟单类型（0 按手数比例，1 按固定金额，2 按固定手数）
      */
     public Integer getFollowType() {
         return followType;
     }
 
     /**
-     * 跟单类型（0 按手数比例，1 按净值金额，2 按固定手数）
-     * @param followType 跟单类型（0 按手数比例，1 按净值金额，2 按固定手数）
+     * 跟单类型（0 按手数比例，1 按固定金额，2 按固定手数）
+     * @param followType 跟单类型（0 按手数比例，1 按固定金额，2 按固定手数）
      */
     public void setFollowType(Integer followType) {
         this.followType = followType;

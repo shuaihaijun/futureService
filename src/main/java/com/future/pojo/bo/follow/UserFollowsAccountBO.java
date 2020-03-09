@@ -10,7 +10,7 @@ public class UserFollowsAccountBO {
     private Integer signalId; // 信号源ID
     private Date createDate;//创建时间
     private Date modifyDate;//修改时间
-    private Integer ruleType;//规则类型（0 按手数比例，1 按净值金额，2 按固定手数）
+    private Integer ruleType;//规则类型（0 按手数比例，1 按固定金额，2 按固定手数）
     private BigDecimal amount;//数量
     private Integer ruleState;//规则状态（0 正常，1  隐藏，2 废弃）
     private BigDecimal limitUpperAmount;//单笔上限金额

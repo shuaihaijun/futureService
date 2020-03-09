@@ -7,6 +7,10 @@ public class RedisConstant {
 
 	/*mtAccount connect state!!! 此key与tarder项目中的key同步 不可随意修改,这边只取 不存*/
 	public static final String H_ACCOUNT_CONNECT_INFO="tradeAccountConnectInfo";
+	/*订单 跟随订单信息 此key与tarder项目中的key同步 不可随意修改,这边只取 不存*/
+	public static final String L_ORDER_FOLLOW_ORDERS="tradeOrderFollowOrders";
+	/*订单 跟随错误 此key与tarder项目中的key同步 不可随意修改,这边只取 不存*/
+	public static final String L_ORDER_FOLLOW_ERROR_DATA="tradeOrderFollowErrorData";
 
 	/*user login token*/
 	public static final String H_USER_LOGIN_TOKEN="userLoginToken";

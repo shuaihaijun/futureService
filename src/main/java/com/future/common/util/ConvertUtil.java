@@ -2,6 +2,8 @@ package com.future.common.util;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.future.common.constants.CommonConstant;
+import com.future.common.constants.GlobalConstant;
 import com.future.entity.order.FuOrderCustomer;
 import com.future.entity.order.FuOrderFollowInfo;
 import com.future.entity.product.FuProductSignal;
@@ -459,6 +461,13 @@ public class ConvertUtil {
             fuOrderCustomer.setMtAccId(fuOrderInfo.getUserMtAccId());*/
             fuOrderCustomer.setComment(orderInfo.getString("comment"));
 
+            /*判断是否是社区跟单订单*/
+            if(checkMagic(orderInfo.getString("comment"),orderInfo.getInteger("magic"))){
+                fuOrderCustomer.setOrderFlag(CommonConstant.COMMON_YES);
+            }else {
+                fuOrderCustomer.setOrderFlag(CommonConstant.COMMON_NO);
+            }
+
             customers.add(fuOrderCustomer);
         }
         return customers;
@@ -507,6 +516,13 @@ public class ConvertUtil {
         fuOrderCustomer.setMtServerId(fuOrderInfo.getUserServerId());
         fuOrderCustomer.setMtAccId(fuOrderInfo.getUserMtAccId());*/
         fuOrderCustomer.setComment(orderInfo.getString("comment"));
+
+        /*判断是否是社区跟单订单*/
+        if(checkMagic(orderInfo.getString("comment"),orderInfo.getInteger("magic"))){
+            fuOrderCustomer.setOrderFlag(CommonConstant.COMMON_YES);
+        }else {
+            fuOrderCustomer.setOrderFlag(CommonConstant.COMMON_NO);
+        }
 
         return fuOrderCustomer;
     }
@@ -593,5 +609,40 @@ public class ConvertUtil {
         signal.setSuggestCycle(apply.getSuggestCycle());
 
         return signal;
+    }
+
+    /**
+     * 校验magic是否合规
+     * @param comment
+     * @param magic
+     * @return
+     */
+    public static boolean checkMagic(String comment,int magic){
+        if(StringUtils.isEmpty(comment)||magic==0){
+            return false;
+        }
+        String[] followInfo=comment.split(":");
+        try {
+            int followName=Integer.parseInt(followInfo[0]);
+            int orderId=Integer.parseInt(followInfo[1]);
+            int newMagic=getMagic(followName,orderId);
+            if(magic!=newMagic){
+                return false;
+            }
+        }catch (Exception e){
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * 根据跟随账号和信号源订单生成跟随magic
+     * @param followName
+     * @param orderId
+     * @return
+     */
+    public static int getMagic(int followName,int orderId){
+        int magic= GlobalConstant.ORDER_FOLLOW_MAGIC>>2|followName<<4&orderId<<3;
+        return magic%1000000;
     }
 }
