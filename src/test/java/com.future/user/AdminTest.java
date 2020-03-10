@@ -3,9 +3,8 @@ package com.future.user;
 
 import com.future.entity.user.FuUser;
 import com.future.service.account.FuAccountMtService;
-import com.future.service.mt.MTAccountService;
+import com.future.service.bak.BakMTAccountService;
 import com.future.service.user.AdminService;
-import com.future.trade.OrderSendExample;
 import com.jfx.Broker;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -27,7 +26,7 @@ public class AdminTest {
     @Autowired
     FuAccountMtService fuAccountMtService;
     @Autowired
-    MTAccountService mtAccountService;
+    BakMTAccountService bakMtAccountService;
 
     @Test
     public void testAdminLogin(){
@@ -116,13 +115,13 @@ public class AdminTest {
                 /*mtAccountService.getConnect(strategy,broker,mtAccId,mtPassword);
                 System.out.println("----------------connected:"+i+", time"+new Date().getTime());*/
                 try{
-                    OrderSendExample orderSendExample = new OrderSendExample();
+                   /* OrderSendExample orderSendExample = new OrderSendExample();
                     System.out.println("========connect begin");
                     orderSendExample.setData(broker,mtAccId,mtPassword);
                     orderSendExample.init();
                     System.out.println("========connected orderSend begin");
                     orderSendExample.newPosition("EURUSD", "B", 0.01);
-                    System.out.println("========orderSended well done!");
+                    System.out.println("========orderSended well done!");*/
                 }catch (Exception e){
                     System.out.println("errorrrrrrr:"+e.getMessage());
                     e.printStackTrace();

@@ -4,16 +4,18 @@ import com.alibaba.druid.util.StringUtils;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.future.common.constants.OrderConstant;
 import com.future.common.constants.UserConstant;
 import com.future.common.exception.BusinessException;
 import com.future.common.exception.ParameterInvalidException;
 import com.future.common.util.ConvertUtil;
 import com.future.common.util.RedisManager;
-import com.future.entity.order.FuOrderCustomer;
 import com.future.entity.order.FuOrderFollowInfo;
+import com.future.entity.product.FuProductSignal;
 import com.future.mapper.order.FuOrderFollowInfoMapper;
 import com.future.pojo.bo.order.UserMTAccountBO;
 import com.future.service.account.FuAccountMtService;
+import com.future.service.product.FuProductSignalService;
 import com.future.service.trade.FuTradeOrderService;
 import com.future.service.user.AdminService;
 import org.slf4j.Logger;
@@ -22,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -40,6 +43,8 @@ public class FuOrderFollowInfoService extends ServiceImpl<FuOrderFollowInfoMappe
     FuOrderCustomerService fuOrderCustomerService;
     @Autowired
     FuTradeOrderService fuTradeOrderService;
+    @Autowired
+    FuProductSignalService fuProductSignalService;
     @Autowired
     FuOrderFollowInfoMapper fuOrderFollowInfoMapper;
     @Autowired
@@ -210,26 +215,6 @@ public class FuOrderFollowInfoService extends ServiceImpl<FuOrderFollowInfoMappe
     }
 
     /**
-     * 插入数据
-     * @param record
-     * @return
-     */
-    public int insertSelective(FuOrderFollowInfo record){
-       return fuOrderFollowInfoMapper.insertSelective(record);
-    }
-
-    /**
-     * 查询 用户社区内最后的自如交易订单
-     * @param username
-     * @return
-     */
-    public FuOrderCustomer getLastCustomerOrder(String username){
-        FuOrderCustomer lastOrder=new FuOrderCustomer();
-        /*从数据库表 fuOrderCustomer中，查出最新自主交易订单*/
-        return lastOrder;
-    }
-
-    /**
      * 根据orderId+userId查询订单信息
      * @param orderId
      * @return
@@ -249,5 +234,78 @@ public class FuOrderFollowInfoService extends ServiceImpl<FuOrderFollowInfoMappe
             return infos.get(0);
         }
         return null;
+    }
+
+
+    /**
+     * 跟单回调数据保存
+     * @param followMtAccId
+     * @param signalMtAccId
+     * @param signalOrderId
+     * @param orderAction
+     * @param followOrder
+     * @return
+     */
+    public boolean saveFollowOrderData(int followMtAccId,int signalMtAccId,int signalOrderId,int orderAction,JSONObject followOrder){
+
+        if(followMtAccId==0||signalMtAccId==0||signalOrderId==0||ObjectUtils.isEmpty(followOrder)){
+            log.error("跟单回调数据保存 数据为空！");
+            return false;
+        }
+
+        //根据mtaccId 查询user
+        Map conditionMap=new HashMap();
+        conditionMap.put("mtAccId",followMtAccId);
+        List<UserMTAccountBO> followAccountInfo= fuAccountMtService.getUserMTAccByCondition(conditionMap);
+
+        /*根据信号源mtAccId 查询信号源*/
+        conditionMap.clear();
+        conditionMap.put(FuProductSignal.MT_ACC_ID,signalMtAccId);
+        List<FuProductSignal> signals= fuProductSignalService.selectByMap(conditionMap);
+
+        /*判断数据*/
+        if(followAccountInfo==null||followAccountInfo.size()<=0){
+            log.error("根据服务器和账号，查询用户账户信息错误！");
+            return false;
+        }
+        if(signals==null||signals.size()<=0){
+            log.error("根据服务器和账号，查询信号源信息错误！");
+            return false;
+        }
+
+        /*保存至 信号源订单表*/
+        FuOrderFollowInfo followInfo=new FuOrderFollowInfo();
+        followInfo.setSignalId(signals.get(0).getId());
+
+        followInfo.setUserId(followAccountInfo.get(0).getUserId());
+        followInfo.setUserServerName(followAccountInfo.get(0).getServerName());
+        followInfo.setUserMtAccId(followAccountInfo.get(0).getMtAccId());
+        followInfo.setUserServerId(followAccountInfo.get(0).getServerId());
+
+        followInfo.setSignalMtAccId(signals.get(0).getMtAccId());
+        followInfo.setSignalOrderId(String.valueOf(signalOrderId));
+
+        followInfo.setOrderId(followOrder.getString("order"));
+        followInfo.setOrderLots(followOrder.getBigDecimal("volume").multiply(new BigDecimal(0.01)));
+        followInfo.setOrderStoploss(followOrder.getBigDecimal("stoploss"));
+        followInfo.setOrderTakeprofit(followOrder.getBigDecimal("takeprofit"));
+        followInfo.setOrderMagic(followOrder.getBigDecimal("magic"));
+
+        followInfo.setOrderType(followOrder.getInteger("cmd"));
+        followInfo.setOrderOpenDate(followOrder.getTimestamp("open_time"));
+        followInfo.setOrderOpenPrice(followOrder.getBigDecimal("open_price"));
+
+        if(orderAction==OrderConstant.ORDER_OPERATION_OPEN){
+            //开仓
+            followInfo.setOrderTradeOperation(OrderConstant.ORDER_OPERATION_OPEN);
+        }else if(orderAction==OrderConstant.ORDER_OPERATION_CLOSE){
+            followInfo.setOrderTradeOperation(OrderConstant.ORDER_OPERATION_CLOSE);
+            followInfo.setOrderSwap(followOrder.getBigDecimal("storage"));
+            followInfo.setOrderCommission(followOrder.getBigDecimal("commission"));
+            followInfo.setOrderCloseDate(followOrder.getTimestamp("close_time"));
+            followInfo.setOrderClosePrice(followOrder.getBigDecimal("close_price"));
+        }
+        fuOrderFollowInfoMapper.insertSelective(followInfo);
+        return true;
     }
 }

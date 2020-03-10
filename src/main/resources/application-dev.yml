@@ -61,7 +61,7 @@ swagger:
 
 # constant
 #跟单服务器地址
-tradeServerHost: 47.96.165.40
+tradeServerHost: http://47.96.165.40
 tradeServerPort: 8848
 #用户服务器地址
 userTermServerHost: 127.0.0.1

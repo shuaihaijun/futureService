@@ -372,7 +372,7 @@
     u.mobile,
     u.introducer,
     s.id serverId,
-    s.server_name serverName,
+    acc.server_name serverName,
     s.broker_id brokerId,
     s.broker_name brokerName,
     s.server_state serverState
@@ -409,7 +409,7 @@
         and acc.account_type = #{accountType,jdbcType=TINYINT}
       </if>
       <if test="serverName != null">
-        and  s.server_name = #{serverName,jdbcType=VARCHAR}
+        and  acc.server_name = #{serverName,jdbcType=VARCHAR}
       </if>
       <if test="brokerName != null">
         and s.broker_name = #{brokerName,jdbcType=VARCHAR}

@@ -1,8 +1,8 @@
 package com.future.follow;
 
 
-import com.future.service.follow.FollowService;
-import com.future.service.follow.SignalService;
+import com.future.service.bak.BakFollowService;
+import com.future.service.bak.BakSignalService;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,18 +13,15 @@ import org.zeromq.SocketType;
 import org.zeromq.ZContext;
 import org.zeromq.ZMQ;
 
-import java.util.HashMap;
-import java.util.Map;
-
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @Ignore
 public class signalTest {
 
     @Autowired
-    SignalService signalService;
+    BakSignalService bakSignalService;
     @Autowired
-    FollowService followService;
+    BakFollowService bakFollowService;
 
     @Test
     public void testSignalInit(){
@@ -33,13 +30,13 @@ public class signalTest {
         String accountId="2102272054";
 
         //初始化信号源
-        boolean isInit= signalService.signalInit(siganlHost,serverId,accountId);
+        /*boolean isInit= signalService.signalInit(siganlHost,serverId,accountId);
 
         if(!isInit){
             System.out.println("signalInit failed!");
         }else {
             System.out.println("signalInit success!");
-        }
+        }*/
 
 
         /*Map signalOrderMsg = signalService.monitorSignal(hostUrl);
@@ -60,12 +57,12 @@ public class signalTest {
         String serverId="MultiBankFXInt-Demo F";
         String accountId="2102272054";
         String userId="";
-        boolean isSuccess=followService.followInit(userId,hostUrl,followUrl,serverId,accountId);
+        /*boolean isSuccess=followService.followInit(userId,hostUrl,followUrl,serverId,accountId);
         if(!isSuccess){
             System.out.println("Init failed!");
         }else {
             System.out.println("Init success!");
-        }
+        }*/
 
         String signalUrl="127.0.0.1:30222";
         //跟随者

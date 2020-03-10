@@ -3,11 +3,11 @@ package com.future.entity.order;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.enums.IdType;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 public class FuOrderFollowError {
     /**
-     * 
      */
     @TableId(type = IdType.AUTO)
     private Integer id;
@@ -48,6 +48,11 @@ public class FuOrderFollowError {
     private String userMtAccId;
 
     /**
+     * 信号源ID
+     */
+    private Integer signalId;
+
+    /**
      * 信号源订单号
      */
     private String signalOrderId;
@@ -73,9 +78,69 @@ public class FuOrderFollowError {
     private String signalOrderSuperior;
 
     /**
+     * 跟单方向（0 正向跟单，1  反向跟单）
+     */
+    private Integer followDirect;
+
+    /**
+     * 跟单模式（0 多空跟单，1 只跟多单，2 只跟空单）
+     */
+    private Integer followMode;
+
+    /**
+     * 跟单类型（0 按手数比例，1 按固定金额，2 按固定手数）
+     */
+    private Integer followType;
+
+    /**
+     * 跟单系数
+     */
+    private BigDecimal followAmount;
+
+    /**
+     * 订单手数
+     */
+    private BigDecimal orderLots;
+
+    /**
+     * 外汇产品
+     */
+    private String orderSymbol;
+
+    /**
+     * 订单交易类型（ OP_BUY = 0， OP_SELL = 1，OP_BUYLIMIT = 2，OP_SELLLIMIT = 3， OP_BUYSTOP = 4，OP_SELLSTOP = 5）
+     */
+    private Integer orderType;
+
+    /**
+     * 操作类型（0 OPEN ，1 CLOSE，2 MODIFY，3 CLOSE_PARTIAL，4 CLOSE_MAGIC）
+     */
+    private Integer orderTradeOperation;
+
+    /**
+     * 交易价格
+     */
+    private BigDecimal orderOpenPrice;
+
+    /**
+     * 订单建仓时间
+     */
+    private Date orderOpenDate;
+
+    /**
+     * 平仓价格
+     */
+    private BigDecimal orderClosePrice;
+
+    /**
+     * 平仓时间
+     */
+    private Date orderCloseDate;
+
+    /**
      * 订单错误编码
      */
-    private String errorCode;
+    private Integer errorCode;
 
     /**
      * 订单错误信息
@@ -211,6 +276,22 @@ public class FuOrderFollowError {
     }
 
     /**
+     * 信号源ID
+     * @return signal_id 信号源ID
+     */
+    public Integer getSignalId() {
+        return signalId;
+    }
+
+    /**
+     * 信号源ID
+     * @param signalId 信号源ID
+     */
+    public void setSignalId(Integer signalId) {
+        this.signalId = signalId;
+    }
+
+    /**
      * 信号源订单号
      * @return signal_order_id 信号源订单号
      */
@@ -291,10 +372,202 @@ public class FuOrderFollowError {
     }
 
     /**
+     * 跟单方向（0 正向跟单，1  反向跟单）
+     * @return follow_direct 跟单方向（0 正向跟单，1  反向跟单）
+     */
+    public Integer getFollowDirect() {
+        return followDirect;
+    }
+
+    /**
+     * 跟单方向（0 正向跟单，1  反向跟单）
+     * @param followDirect 跟单方向（0 正向跟单，1  反向跟单）
+     */
+    public void setFollowDirect(Integer followDirect) {
+        this.followDirect = followDirect;
+    }
+
+    /**
+     * 跟单模式（0 多空跟单，1 只跟多单，2 只跟空单）
+     * @return follow_mode 跟单模式（0 多空跟单，1 只跟多单，2 只跟空单）
+     */
+    public Integer getFollowMode() {
+        return followMode;
+    }
+
+    /**
+     * 跟单模式（0 多空跟单，1 只跟多单，2 只跟空单）
+     * @param followMode 跟单模式（0 多空跟单，1 只跟多单，2 只跟空单）
+     */
+    public void setFollowMode(Integer followMode) {
+        this.followMode = followMode;
+    }
+
+    /**
+     * 跟单类型（0 按手数比例，1 按固定金额，2 按固定手数）
+     * @return follow_type 跟单类型（0 按手数比例，1 按固定金额，2 按固定手数）
+     */
+    public Integer getFollowType() {
+        return followType;
+    }
+
+    /**
+     * 跟单类型（0 按手数比例，1 按固定金额，2 按固定手数）
+     * @param followType 跟单类型（0 按手数比例，1 按固定金额，2 按固定手数）
+     */
+    public void setFollowType(Integer followType) {
+        this.followType = followType;
+    }
+
+    /**
+     * 跟单系数
+     * @return follow_amount 跟单系数
+     */
+    public BigDecimal getFollowAmount() {
+        return followAmount;
+    }
+
+    /**
+     * 跟单系数
+     * @param followAmount 跟单系数
+     */
+    public void setFollowAmount(BigDecimal followAmount) {
+        this.followAmount = followAmount;
+    }
+
+    /**
+     * 订单手数
+     * @return order_lots 订单手数
+     */
+    public BigDecimal getOrderLots() {
+        return orderLots;
+    }
+
+    /**
+     * 订单手数
+     * @param orderLots 订单手数
+     */
+    public void setOrderLots(BigDecimal orderLots) {
+        this.orderLots = orderLots;
+    }
+
+    /**
+     * 外汇产品
+     * @return order_symbol 外汇产品
+     */
+    public String getOrderSymbol() {
+        return orderSymbol;
+    }
+
+    /**
+     * 外汇产品
+     * @param orderSymbol 外汇产品
+     */
+    public void setOrderSymbol(String orderSymbol) {
+        this.orderSymbol = orderSymbol == null ? null : orderSymbol.trim();
+    }
+
+    /**
+     * 订单交易类型（ OP_BUY = 0， OP_SELL = 1，OP_BUYLIMIT = 2，OP_SELLLIMIT = 3， OP_BUYSTOP = 4，OP_SELLSTOP = 5）
+     * @return order_type 订单交易类型（ OP_BUY = 0， OP_SELL = 1，OP_BUYLIMIT = 2，OP_SELLLIMIT = 3， OP_BUYSTOP = 4，OP_SELLSTOP = 5）
+     */
+    public Integer getOrderType() {
+        return orderType;
+    }
+
+    /**
+     * 订单交易类型（ OP_BUY = 0， OP_SELL = 1，OP_BUYLIMIT = 2，OP_SELLLIMIT = 3， OP_BUYSTOP = 4，OP_SELLSTOP = 5）
+     * @param orderType 订单交易类型（ OP_BUY = 0， OP_SELL = 1，OP_BUYLIMIT = 2，OP_SELLLIMIT = 3， OP_BUYSTOP = 4，OP_SELLSTOP = 5）
+     */
+    public void setOrderType(Integer orderType) {
+        this.orderType = orderType;
+    }
+
+    /**
+     * 操作类型（0 OPEN ，1 CLOSE，2 MODIFY，3 CLOSE_PARTIAL，4 CLOSE_MAGIC）
+     * @return order_trade_operation 操作类型（0 OPEN ，1 CLOSE，2 MODIFY，3 CLOSE_PARTIAL，4 CLOSE_MAGIC）
+     */
+    public Integer getOrderTradeOperation() {
+        return orderTradeOperation;
+    }
+
+    /**
+     * 操作类型（0 OPEN ，1 CLOSE，2 MODIFY，3 CLOSE_PARTIAL，4 CLOSE_MAGIC）
+     * @param orderTradeOperation 操作类型（0 OPEN ，1 CLOSE，2 MODIFY，3 CLOSE_PARTIAL，4 CLOSE_MAGIC）
+     */
+    public void setOrderTradeOperation(Integer orderTradeOperation) {
+        this.orderTradeOperation = orderTradeOperation;
+    }
+
+    /**
+     * 交易价格
+     * @return order_open_price 交易价格
+     */
+    public BigDecimal getOrderOpenPrice() {
+        return orderOpenPrice;
+    }
+
+    /**
+     * 交易价格
+     * @param orderOpenPrice 交易价格
+     */
+    public void setOrderOpenPrice(BigDecimal orderOpenPrice) {
+        this.orderOpenPrice = orderOpenPrice;
+    }
+
+    /**
+     * 订单建仓时间
+     * @return order_open_date 订单建仓时间
+     */
+    public Date getOrderOpenDate() {
+        return orderOpenDate;
+    }
+
+    /**
+     * 订单建仓时间
+     * @param orderOpenDate 订单建仓时间
+     */
+    public void setOrderOpenDate(Date orderOpenDate) {
+        this.orderOpenDate = orderOpenDate;
+    }
+
+    /**
+     * 平仓价格
+     * @return order_close_price 平仓价格
+     */
+    public BigDecimal getOrderClosePrice() {
+        return orderClosePrice;
+    }
+
+    /**
+     * 平仓价格
+     * @param orderClosePrice 平仓价格
+     */
+    public void setOrderClosePrice(BigDecimal orderClosePrice) {
+        this.orderClosePrice = orderClosePrice;
+    }
+
+    /**
+     * 平仓时间
+     * @return order_close_date 平仓时间
+     */
+    public Date getOrderCloseDate() {
+        return orderCloseDate;
+    }
+
+    /**
+     * 平仓时间
+     * @param orderCloseDate 平仓时间
+     */
+    public void setOrderCloseDate(Date orderCloseDate) {
+        this.orderCloseDate = orderCloseDate;
+    }
+
+    /**
      * 订单错误编码
      * @return error_code 订单错误编码
      */
-    public String getErrorCode() {
+    public Integer getErrorCode() {
         return errorCode;
     }
 
@@ -302,8 +575,8 @@ public class FuOrderFollowError {
      * 订单错误编码
      * @param errorCode 订单错误编码
      */
-    public void setErrorCode(String errorCode) {
-        this.errorCode = errorCode == null ? null : errorCode.trim();
+    public void setErrorCode(Integer errorCode) {
+        this.errorCode = errorCode;
     }
 
     /**

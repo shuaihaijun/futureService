@@ -35,23 +35,25 @@ public class FuTradeAccountService {
 
     /**
      * 连接MT账号
-     * @param brokerName
+     * @param serverName
      * @param mtAccId
      * @param password
      * @return
      */
-    public int setMtAccountConnect(String brokerName,int mtAccId,String password){
+    public int setMtAccountConnect(String serverName,int mtAccId,String password){
         /*校验数据*/
-        if(StringUtils.isEmpty(brokerName)||mtAccId==0||StringUtils.isEmpty(password)){
+        if(StringUtils.isEmpty(serverName)||mtAccId==0||StringUtils.isEmpty(password)){
             log.error("getMtAccountConnect null params!");
             throw new DataConflictException("setAccountConnnect null params!");
         }
-        Map requestMap=new HashMap();
-        requestMap.put("brokerName",brokerName);
-        requestMap.put("username",mtAccId);
-        requestMap.put("password",password);
+        Map dataMap=new HashMap();
+        dataMap.put("serverName",serverName);
+        dataMap.put("username",mtAccId);
+        dataMap.put("password",password);
+        Map requestMap= new HashMap<>();
+        requestMap.put("params",dataMap);
         String url=tradeServerHost+":"+tradeServerPort+ GlobalConstant.TRADE_ACC_SET_CONNECT;
-        String result= HttpUtils.doPost(url,requestMap);
+        String result= HttpUtils.httpPost(url,requestMap);
         if(StringUtils.isEmpty(result)){
             log.error("登录MT账号失败：mtAccId:"+mtAccId);
         }
@@ -66,23 +68,25 @@ public class FuTradeAccountService {
 
     /**
      * 断开MT账号连接
-     * @param brokerName
+     * @param serverName
      * @param mtAccId
      * @param password
      * @return
      */
-    public boolean setMtAccountDisConnnect(String brokerName,int mtAccId,String password){
+    public boolean setMtAccountDisConnnect(String serverName,int mtAccId,String password){
         /*校验数据*/
-        if(StringUtils.isEmpty(brokerName)||mtAccId==0||StringUtils.isEmpty(password)){
+        if(StringUtils.isEmpty(serverName)||mtAccId==0||StringUtils.isEmpty(password)){
             log.error("getMtAccountConnect null params!");
             throw new DataConflictException("setAccountConnnect null params!");
         }
-        Map requestMap=new HashMap();
-        requestMap.put("brokerName",brokerName);
-        requestMap.put("username",mtAccId);
-        requestMap.put("password",password);
+        Map dataMap=new HashMap();
+        dataMap.put("serverName",serverName);
+        dataMap.put("username",mtAccId);
+        dataMap.put("password",password);
+        Map requestMap= new HashMap<>();
+        requestMap.put("params",dataMap);
         String url=tradeServerHost+":"+tradeServerPort+ GlobalConstant.TRADE_ACC_DIS_CONNECT;
-        String result= HttpUtils.doPost(url,requestMap);
+        String result= HttpUtils.httpPost(url,requestMap);
         if(StringUtils.isEmpty(result)){
             log.error("断开MT账号连接失败：mtAccId:"+mtAccId);
         }
@@ -104,12 +108,14 @@ public class FuTradeAccountService {
             log.error("getMtAccountConnect null params!");
             throw new DataConflictException("setAccountConnnect null params!");
         }
-        Map requestMap=new HashMap();
-        requestMap.put("brokerName",brokerName);
-        requestMap.put("username",mtAccId);
-        requestMap.put("password",password);
+        Map dataMap= new HashMap<>();
+        dataMap.put("serverName",brokerName);
+        dataMap.put("username",mtAccId);
+        dataMap.put("password",password);
+        Map requestMap= new HashMap<>();
+        requestMap.put("params",dataMap);
         String url=tradeServerHost+":"+tradeServerPort+ GlobalConstant.TRADE_ACC_SIGNAL_MONITOR;
-        String result= HttpUtils.doPost(url,requestMap);
+        String result= HttpUtils.httpPost(url,requestMap);
         if(StringUtils.isEmpty(result)){
             log.error("设置信号源监听失败：mtAccId:"+mtAccId);
         }
@@ -138,8 +144,10 @@ public class FuTradeAccountService {
         requestJson.put("signalName",signalMtAccId);
         requestJson.put("followName",userMtAccId);
         requestJson.put("followRule",followRule);
+        Map requestMap= new HashMap<>();
+        requestMap.put("params",requestJson);
         String url=tradeServerHost+":"+tradeServerPort+ GlobalConstant.TRADE_ACC_SET_FOLLOW_RALATION;
-        String result= HttpUtils.doPost(url,requestJson);
+        String result= HttpUtils.httpPost(url,requestMap);
         if(StringUtils.isEmpty(result)){
             log.error("设置跟单关系失败：signalMtAccId:"+signalMtAccId+",userMtAccId"+userMtAccId);
         }
@@ -166,8 +174,10 @@ public class FuTradeAccountService {
         JSONObject requestJson=new JSONObject();
         requestJson.put("signalName",signalMtAccId);
         requestJson.put("followName",userMtAccId);
+        Map requestMap= new HashMap<>();
+        requestMap.put("params",requestJson);
         String url=tradeServerHost+":"+tradeServerPort+ GlobalConstant.TRADE_ACC_REMOVE_FOLLOW_RALATION;
-        String result= HttpUtils.doPost(url,requestJson);
+        String result= HttpUtils.httpPost(url,requestJson);
         if(StringUtils.isEmpty(result)){
             log.error("设置跟单关系失败：signalMtAccId:"+signalMtAccId+",userMtAccId"+userMtAccId);
         }

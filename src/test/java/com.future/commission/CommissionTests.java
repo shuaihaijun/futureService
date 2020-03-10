@@ -3,7 +3,7 @@ package com.future.commission;
 import com.future.common.helper.PageInfoHelper;
 import com.future.entity.commission.FuCommissionLevel;
 import com.future.service.commission.FuCommissionLevelSevice;
-import com.future.timing.CommissionOrderlMonitor;
+import com.future.timing.CommissionOrderMonitor;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -19,7 +19,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 public class CommissionTests {
 
     @Autowired
-    CommissionOrderlMonitor commissionOrderlMonitor;
+    CommissionOrderMonitor commissionOrderMonitor;
 
     @Autowired
     private FuCommissionLevelSevice fuCommissionLevelSevice;
@@ -35,6 +35,6 @@ public class CommissionTests {
 
     @Test
     public void testCommissionOrdeMonitor(){
-        commissionOrderlMonitor.monitor();
+        commissionOrderMonitor.monitor();
     }
 }

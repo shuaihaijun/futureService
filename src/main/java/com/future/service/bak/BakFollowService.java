@@ -293,7 +293,7 @@ public class BakFollowService {
             error.setUserMtAccId(followAccountInfo.get(0).getMtAccId());
             error.setUserServerId(followAccountInfo.get(0).getServerId());
 
-            error.setErrorCode(response);
+            error.setErrorCode(Integer.parseInt(response));
             error.setErrorMsg(orderJson.toJSONString());
 
             error.setSignalServerId(signalAccountInfo.get(0).getServerId());
@@ -324,7 +324,7 @@ public class BakFollowService {
         followInfo.setOrderLots(orderJson.getBigDecimal("_lots"));
         followInfo.setOrderStoploss(orderJson.getBigDecimal("_SL"));
         followInfo.setOrderTakeprofit(orderJson.getBigDecimal("_TP"));
-        if(orderAction.equalsIgnoreCase(FollowConstant.ACTION_OPEN)){
+        /*if(orderAction.equalsIgnoreCase(FollowConstant.ACTION_OPEN)){
             followInfo.setOrderTradeOperation(OrderConstant.ORDER_OPERATION_OPEN);
             followInfo.setOrderType(orderJson.getInteger("_orderType"));
             followInfo.setOrderOpenDate(orderJson.getTimestamp("_open_time"));
@@ -342,14 +342,14 @@ public class BakFollowService {
             followInfo.setOrderCloseDate(orderJson.getTimestamp("_orderCloseTime"));
             followInfo.setOrderClosePrice(orderJson.getBigDecimal("_orderClosePrice"));
         }
-        followInfo.setOrderMagic(orderJson.getBigDecimal("_magic"));
+        followInfo.setOrderMagic(orderJson.getBigDecimal("_magic"));*/
 
         /*计算信号源佣金*/
 
         /*计算代理佣金*/
 
         /*保存至数据库*/
-        fuOrderFollowInfoService.insertSelective(followInfo);
+        /*fuOrderFollowInfoService.insertSelective(followInfo);*/
 
     }
 

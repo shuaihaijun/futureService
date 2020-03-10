@@ -60,14 +60,16 @@ public class FuTradeOrderService {
         }
 
         String url=tradeServerHost+":"+tradeServerPort+ GlobalConstant.TRADE_ORDER_CLOSE_ORDERS;
-        Map requestMap=new HashMap();
-        requestMap.put("serverName",serverName);
-        requestMap.put("username",mtAccId);
-        requestMap.put("password",password);
-        requestMap.put("nHisTimeFrom",nHisTimeFrom);
-        requestMap.put("nHisTimeTo",nHisTimeTo);
+        Map dataMap=new HashMap();
+        dataMap.put("serverName",serverName);
+        dataMap.put("username",mtAccId);
+        dataMap.put("password",password);
+        dataMap.put("nHisTimeFrom",nHisTimeFrom);
+        dataMap.put("nHisTimeTo",nHisTimeTo);
+        Map requestMap= new HashMap<>();
+        requestMap.put("params",dataMap);
         // 请求
-        String result= HttpUtils.doPost(url,requestMap);
+        String result= HttpUtils.httpPost(url,requestMap);
         JSONObject resultJson=JSONObject.parseObject(result);
         JSONObject content=resultJson.getJSONObject("content");
         if(content==null||content.getJSONObject("data")==null){
@@ -91,12 +93,14 @@ public class FuTradeOrderService {
             throw new DataConflictException("获取用户关闭订单,传入参数为空！");
         }
         String url=tradeServerHost+":"+tradeServerPort+ GlobalConstant.TRADE_ORDER_CLOSE_ORDER;
-        Map requestMap=new HashMap();
-        requestMap.put("serverName",serverName);
-        requestMap.put("username",mtAccId);
-        requestMap.put("password",password);
+        Map dataMap=new HashMap();
+        dataMap.put("serverName",serverName);
+        dataMap.put("username",mtAccId);
+        dataMap.put("password",password);
+        Map requestMap= new HashMap<>();
+        requestMap.put("params",dataMap);
         // 请求
-        String result= HttpUtils.doPost(url,requestMap);
+        String result= HttpUtils.httpPost(url,requestMap);
         JSONObject resultJson=JSONObject.parseObject(result);
         JSONObject content=resultJson.getJSONObject("content");
         if(content==null||content.getJSONObject("data")==null){
@@ -122,12 +126,14 @@ public class FuTradeOrderService {
             throw new DataConflictException("获取用户open订单,传入参数为空！");
         }
         String url=tradeServerHost+":"+tradeServerPort+ GlobalConstant.TRADE_ORDER_OPEN_ORDERS;
-        Map requestMap=new HashMap();
-        requestMap.put("serverName",serverName);
-        requestMap.put("username",mtAccId);
-        requestMap.put("password",password);
+        Map dataMap=new HashMap();
+        dataMap.put("serverName",serverName);
+        dataMap.put("username",mtAccId);
+        dataMap.put("password",password);
+        Map requestMap= new HashMap<>();
+        requestMap.put("params",dataMap);
         // 请求
-        String result= HttpUtils.doPost(url,requestMap);
+        String result= HttpUtils.httpPost(url,requestMap);
         JSONObject resultJson=JSONObject.parseObject(result);
         JSONObject content=resultJson.getJSONObject("content");
         if(content==null||content.getJSONObject("data")==null){
@@ -151,12 +157,14 @@ public class FuTradeOrderService {
             throw new DataConflictException("获取用户关闭订单,传入参数为空！");
         }
         String url=tradeServerHost+":"+tradeServerPort+ GlobalConstant.TRADE_ORDER_OPEN_ORDER;
-        Map requestMap=new HashMap();
-        requestMap.put("serverName",serverName);
-        requestMap.put("username",mtAccId);
-        requestMap.put("password",password);
+        Map dataMap=new HashMap();
+        dataMap.put("serverName",serverName);
+        dataMap.put("username",mtAccId);
+        dataMap.put("password",password);
+        Map requestMap= new HashMap<>();
+        requestMap.put("params",dataMap);
         // 请求
-        String result= HttpUtils.doPost(url,requestMap);
+        String result= HttpUtils.httpPost(url,requestMap);
         JSONObject resultJson=JSONObject.parseObject(result);
         JSONObject content=resultJson.getJSONObject("content");
         if(content==null||content.getJSONObject("data")==null){

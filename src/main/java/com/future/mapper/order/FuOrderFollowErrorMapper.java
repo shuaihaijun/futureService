@@ -2,9 +2,9 @@ package com.future.mapper.order;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.future.entity.order.FuOrderFollowError;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Component;
 
-@Repository
+@Component
 public interface FuOrderFollowErrorMapper extends BaseMapper<FuOrderFollowError> {
     int deleteByPrimaryKey(Integer id);
 

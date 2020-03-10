@@ -129,7 +129,7 @@ public class FuOrderSignal {
     private Date orderOpenDate;
 
     /**
-     * 操作类型（0 OPEN ，1 MODIFY，2 CLOSE，3 CLOSE_PARTIAL，4 CLOSE_MAGIC）
+     * 操作类型（0 OPEN ，1 CLOSE，2 MODIFY，3 CLOSE_PARTIAL，4 CLOSE_MAGIC）
      */
     private Integer orderTradeOperation;
 
@@ -506,16 +506,16 @@ public class FuOrderSignal {
     }
 
     /**
-     * 操作类型（0 OPEN ，1 MODIFY，2 CLOSE，3 CLOSE_PARTIAL，4 CLOSE_MAGIC）
-     * @return order_trade_operation 操作类型（0 OPEN ，1 MODIFY，2 CLOSE，3 CLOSE_PARTIAL，4 CLOSE_MAGIC）
+     * 操作类型（0 OPEN ，1 CLOSE，2 MODIFY，3 CLOSE_PARTIAL，4 CLOSE_MAGIC）
+     * @return order_trade_operation 操作类型（0 OPEN ，1 CLOSE，2 MODIFY，3 CLOSE_PARTIAL，4 CLOSE_MAGIC）
      */
     public Integer getOrderTradeOperation() {
         return orderTradeOperation;
     }
 
     /**
-     * 操作类型（0 OPEN ，1 MODIFY，2 CLOSE，3 CLOSE_PARTIAL，4 CLOSE_MAGIC）
-     * @param orderTradeOperation 操作类型（0 OPEN ，1 MODIFY，2 CLOSE，3 CLOSE_PARTIAL，4 CLOSE_MAGIC）
+     * 操作类型（0 OPEN ，1 CLOSE，2 MODIFY，3 CLOSE_PARTIAL，4 CLOSE_MAGIC）
+     * @param orderTradeOperation 操作类型（0 OPEN ，1 CLOSE，2 MODIFY，3 CLOSE_PARTIAL，4 CLOSE_MAGIC）
      */
     public void setOrderTradeOperation(Integer orderTradeOperation) {
         this.orderTradeOperation = orderTradeOperation;

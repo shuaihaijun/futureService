@@ -15,13 +15,16 @@ public class OrderConstant {
 	/**已关闭*/
 	public static final int ORDER_STATE_CLOSE = 3;
 
-	//订单动作（0 OPEN ，1 MODIFY，2 CLOSE，3 CLOSE_PARTIAL，4 CLOSE_MAGIC,5 CLOSE_ALL
+	//订单动作（0 PositionOpen ，1 PositionClose，2 PositionModify，3 PendingOpen，4 PendingDelete,5 PendingModify,6 PendingFill,7 Balance,8 Credit
 	public static final int ORDER_OPERATION_OPEN=0;
-	public static final int ORDER_OPERATION_MODIFY=1;
-	public static final int ORDER_OPERATION_CLOSE=2;
-	public static final int ORDER_OPERATION_CLOSE_PARTIAL=3;
-	public static final int ORDER_OPERATION_CLOSE_MAGIC=4;
-	public static final int ORDER_OPERATION_CLOSE_ALL=5;
+	public static final int ORDER_OPERATION_CLOSE=1;
+	public static final int ORDER_OPERATION_MODIFY=2;
+	/*public static final int ORDER_OPERATION_PendingOpen=3;
+	public static final int ORDER_OPERATION_PendingDelete=4;
+	public static final int ORDER_OPERATION_PendingModify=5;
+	public static final int ORDER_OPERATION_PendingFill=6;
+	public static final int ORDER_OPERATION_Balance=7;
+	public static final int ORDER_OPERATION_Credit=8;*/
 
 	//订单类型 OP_BUY = 0， OP_SELL = 1，OP_BUYLIMIT = 2，OP_SELLLIMIT = 3， OP_BUYSTOP = 4，OP_SELLSTOP = 5
 	public static final int ORDER_TYPE_BUY=0;

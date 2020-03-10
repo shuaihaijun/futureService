@@ -34,6 +34,8 @@
     <result column="order_close_date" jdbcType="TIMESTAMP" property="orderCloseDate" />
     <result column="order_expiration" jdbcType="TIMESTAMP" property="orderExpiration" />
     <result column="comment" jdbcType="VARCHAR" property="comment" />
+    <result column="follow_direct" jdbcType="TINYINT" property="followDirect" />
+    <result column="follow_mode" jdbcType="TINYINT" property="followMode" />
   </resultMap>
   <sql id="Base_Column_List">
     id, create_date, modify_date, order_id, user_id, signal_id, user_mt_acc_id, user_server_id, 
@@ -41,7 +43,7 @@
     order_symbol, order_lots, order_stoploss, order_takeprofit, order_source_flag, order_trade_operation, 
     order_type, order_split_type, order_superior, order_profit, order_swap, order_commission, 
     order_magic, order_open_price, order_open_date, order_close_price, order_close_date, 
-    order_expiration, comment
+    order_expiration, comment, follow_direct, follow_mode
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -64,7 +66,8 @@
       order_superior, order_profit, order_swap, 
       order_commission, order_magic, order_open_price, 
       order_open_date, order_close_price, order_close_date, 
-      order_expiration, comment)
+      order_expiration, comment, follow_direct, 
+      follow_mode)
     values (#{id,jdbcType=INTEGER}, #{createDate,jdbcType=TIMESTAMP}, #{modifyDate,jdbcType=TIMESTAMP}, 
       #{orderId,jdbcType=VARCHAR}, #{userId,jdbcType=INTEGER}, #{signalId,jdbcType=INTEGER}, 
       #{userMtAccId,jdbcType=VARCHAR}, #{userServerId,jdbcType=INTEGER}, #{userServerName,jdbcType=VARCHAR}, 
@@ -75,7 +78,8 @@
       #{orderSuperior,jdbcType=VARCHAR}, #{orderProfit,jdbcType=DECIMAL}, #{orderSwap,jdbcType=DECIMAL}, 
       #{orderCommission,jdbcType=DECIMAL}, #{orderMagic,jdbcType=DECIMAL}, #{orderOpenPrice,jdbcType=DECIMAL}, 
       #{orderOpenDate,jdbcType=TIMESTAMP}, #{orderClosePrice,jdbcType=DECIMAL}, #{orderCloseDate,jdbcType=TIMESTAMP}, 
-      #{orderExpiration,jdbcType=TIMESTAMP}, #{comment,jdbcType=VARCHAR})
+      #{orderExpiration,jdbcType=TIMESTAMP}, #{comment,jdbcType=VARCHAR}, #{followDirect,jdbcType=TINYINT}, 
+      #{followMode,jdbcType=TINYINT})
   </insert>
   <insert id="insertSelective" parameterType="com.future.entity.order.FuOrderFollowInfo">
     insert into fu_order_follow_info
@@ -176,6 +180,12 @@
       <if test="comment != null">
         comment,
       </if>
+      <if test="followDirect != null">
+        follow_direct,
+      </if>
+      <if test="followMode != null">
+        follow_mode,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -273,6 +283,12 @@
       </if>
       <if test="comment != null">
         #{comment,jdbcType=VARCHAR},
+      </if>
+      <if test="followDirect != null">
+        #{followDirect,jdbcType=TINYINT},
+      </if>
+      <if test="followMode != null">
+        #{followMode,jdbcType=TINYINT},
       </if>
     </trim>
   </insert>
@@ -372,6 +388,12 @@
       <if test="comment != null">
         comment = #{comment,jdbcType=VARCHAR},
       </if>
+      <if test="followDirect != null">
+        follow_direct = #{followDirect,jdbcType=TINYINT},
+      </if>
+      <if test="followMode != null">
+        follow_mode = #{followMode,jdbcType=TINYINT},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -407,7 +429,9 @@
       order_close_price = #{orderClosePrice,jdbcType=DECIMAL},
       order_close_date = #{orderCloseDate,jdbcType=TIMESTAMP},
       order_expiration = #{orderExpiration,jdbcType=TIMESTAMP},
-      comment = #{comment,jdbcType=VARCHAR}
+      comment = #{comment,jdbcType=VARCHAR},
+      follow_direct = #{followDirect,jdbcType=TINYINT},
+      follow_mode = #{followMode,jdbcType=TINYINT}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>
