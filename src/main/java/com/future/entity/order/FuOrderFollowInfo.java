@@ -17,7 +17,6 @@ public class FuOrderFollowInfo {
     public static final String ORDER_DIRECT = "follow_direct";
     public static final String ORDER_OPEN_DATE = "order_open_date";
     public static final String ORDER_CLOSE_DATE = "order_close_date";
-
     /**
      *
      */
@@ -110,7 +109,7 @@ public class FuOrderFollowInfo {
     private Integer orderSourceFlag;
 
     /**
-     * 订单交易操作（0 OPEN ，1 CLOSE，2 MODIFY，3 CLOSE_PARTIAL，4 CLOSE_MAGIC）
+     * 订单交易操作（0 OPEN ，1 MODIFY，2 CLOSE，3 CLOSE_PARTIAL，4 CLOSE_MAGIC）
      */
     private Integer orderTradeOperation;
 
@@ -175,11 +174,6 @@ public class FuOrderFollowInfo {
     private Date orderExpiration;
 
     /**
-     * 备注
-     */
-    private String comment;
-
-    /**
      * 跟单方向（0 正向跟单，1  反向跟单）
      */
     private Integer followDirect;
@@ -188,6 +182,21 @@ public class FuOrderFollowInfo {
      * 跟单模式（0 多空跟单，1 只跟多单，2 只跟空单）
      */
     private Integer followMode;
+
+    /**
+     * 跟单类型（0 按手数比例，1 按固定金额，2 按固定手数）
+     */
+    private Integer followType;
+
+    /**
+     * 跟单数量
+     */
+    private BigDecimal followAmount;
+
+    /**
+     * 备注
+     */
+    private String comment;
 
     /**
      * 
@@ -478,16 +487,16 @@ public class FuOrderFollowInfo {
     }
 
     /**
-     * 订单交易操作（0 OPEN ，1 CLOSE，2 MODIFY，3 CLOSE_PARTIAL，4 CLOSE_MAGIC）
-     * @return order_trade_operation 订单交易操作（0 OPEN ，1 CLOSE，2 MODIFY，3 CLOSE_PARTIAL，4 CLOSE_MAGIC）
+     * 订单交易操作（0 OPEN ，1 MODIFY，2 CLOSE，3 CLOSE_PARTIAL，4 CLOSE_MAGIC）
+     * @return order_trade_operation 订单交易操作（0 OPEN ，1 MODIFY，2 CLOSE，3 CLOSE_PARTIAL，4 CLOSE_MAGIC）
      */
     public Integer getOrderTradeOperation() {
         return orderTradeOperation;
     }
 
     /**
-     * 订单交易操作（0 OPEN ，1 CLOSE，2 MODIFY，3 CLOSE_PARTIAL，4 CLOSE_MAGIC）
-     * @param orderTradeOperation 订单交易操作（0 OPEN ，1 CLOSE，2 MODIFY，3 CLOSE_PARTIAL，4 CLOSE_MAGIC）
+     * 订单交易操作（0 OPEN ，1 MODIFY，2 CLOSE，3 CLOSE_PARTIAL，4 CLOSE_MAGIC）
+     * @param orderTradeOperation 订单交易操作（0 OPEN ，1 MODIFY，2 CLOSE，3 CLOSE_PARTIAL，4 CLOSE_MAGIC）
      */
     public void setOrderTradeOperation(Integer orderTradeOperation) {
         this.orderTradeOperation = orderTradeOperation;
@@ -686,22 +695,6 @@ public class FuOrderFollowInfo {
     }
 
     /**
-     * 备注
-     * @return comment 备注
-     */
-    public String getComment() {
-        return comment;
-    }
-
-    /**
-     * 备注
-     * @param comment 备注
-     */
-    public void setComment(String comment) {
-        this.comment = comment == null ? null : comment.trim();
-    }
-
-    /**
      * 跟单方向（0 正向跟单，1  反向跟单）
      * @return follow_direct 跟单方向（0 正向跟单，1  反向跟单）
      */
@@ -731,5 +724,53 @@ public class FuOrderFollowInfo {
      */
     public void setFollowMode(Integer followMode) {
         this.followMode = followMode;
+    }
+
+    /**
+     * 跟单类型（0 按手数比例，1 按固定金额，2 按固定手数）
+     * @return follow_type 跟单类型（0 按手数比例，1 按固定金额，2 按固定手数）
+     */
+    public Integer getFollowType() {
+        return followType;
+    }
+
+    /**
+     * 跟单类型（0 按手数比例，1 按固定金额，2 按固定手数）
+     * @param followType 跟单类型（0 按手数比例，1 按固定金额，2 按固定手数）
+     */
+    public void setFollowType(Integer followType) {
+        this.followType = followType;
+    }
+
+    /**
+     * 跟单数量
+     * @return follow_amount 跟单数量
+     */
+    public BigDecimal getFollowAmount() {
+        return followAmount;
+    }
+
+    /**
+     * 跟单数量
+     * @param followAmount 跟单数量
+     */
+    public void setFollowAmount(BigDecimal followAmount) {
+        this.followAmount = followAmount;
+    }
+
+    /**
+     * 备注
+     * @return comment 备注
+     */
+    public String getComment() {
+        return comment;
+    }
+
+    /**
+     * 备注
+     * @param comment 备注
+     */
+    public void setComment(String comment) {
+        this.comment = comment == null ? null : comment.trim();
     }
 }

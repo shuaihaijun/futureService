@@ -47,28 +47,30 @@ public class FollowOrderMonitor {
             int signalName=0;
             int signalOrderId=0;
             int orderAction=0;
-            List<Object> orderInfos=redisManager.lGet(RedisConstant.L_ORDER_FOLLOW_ORDERS,0,50);
-            while (orderInfos.size()>0){
-                for(Object orderInfo:orderInfos){
-                    try {
-                        JSONObject orderJson=(JSONObject)orderInfo;
-                        log.info("同步跟单订单数据------");
-                        log.info(orderJson.toJSONString());
-                        followOrder=orderJson.getJSONObject("followOrder");
-                        followName=orderJson.getInteger("followName");
-                        signalName=orderJson.getInteger("signalName");
-                        signalOrderId=orderJson.getInteger("signalOrderId");
-                        orderAction=orderJson.getInteger("signalOrderId");
-                        //TODO redis 暂存数据
-                        fuOrderFollowInfoService.saveFollowOrderData(followName,signalName,signalOrderId,orderAction,followOrder);
-                        //TODO redis 删除暂存数据
-                    }catch (Exception e){
+            Object orderInfo=redisManager.lPop(RedisConstant.L_ORDER_FOLLOW_ORDERS);
+            while (orderInfo!=null){
+                try {
+                    log.info("同步跟单订单数据------");
+                    JSONObject orderJson= (JSONObject)orderInfo;
+                    log.info(orderJson.toJSONString());
+                    followOrder=orderJson.getJSONObject("followOrder");
+                    followName=orderJson.getInteger("followName");
+                    signalName=orderJson.getInteger("signalName");
+                    signalOrderId=orderJson.getInteger("signalOrderId");
+                    orderAction=orderJson.getInteger("orderAction");
+                    boolean isSuccess= fuOrderFollowInfoService.saveFollowOrderData(followName,signalName,signalOrderId,orderAction,followOrder);
+                    if(!isSuccess){
                         log.error("同步跟单订单失败，订单："+JSONObject.toJSONString(orderInfo));
-                        log.error(e.getMessage(),e);
+                        //redis 暂存处理失败数据(暂时未做处理 需要实例化)
+                        redisManager.lSet(RedisConstant.L_ORDER_FOLLOW_ORDERS_BAK,orderInfo);
                     }
+                }catch (Exception e){
+                    log.error("同步跟单订单失败，订单："+JSONObject.toJSONString(orderInfo));
+                    //redis 暂存处理失败数据(暂时未做处理 需要实例化)
+                    redisManager.lSet(RedisConstant.L_ORDER_FOLLOW_ORDERS_BAK,orderInfo);
+                    log.error(e.getMessage(),e);
                 }
-                orderInfos.clear();
-                orderInfos=redisManager.lGet(RedisConstant.L_ORDER_FOLLOW_ORDERS,0,50);
+                orderInfo=redisManager.lPop(RedisConstant.L_ORDER_FOLLOW_ORDERS);
             }
         }
 
@@ -77,29 +79,35 @@ public class FollowOrderMonitor {
         if(errorSize>0){
             JSONObject order=new JSONObject();
             JSONObject followRule=new JSONObject();
-            int errorCode=0;
+            int errorCode=1;
             int updateAction=0;
-            List<Object> errorInfos=redisManager.lGet(RedisConstant.L_ORDER_FOLLOW_ORDERS,0,50);
-            while (errorInfos.size()>0){
-                for(Object errorInfo:errorInfos){
-                    try {
-                        JSONObject errorData=(JSONObject)errorInfo;
-                        log.info("同步跟单错误数据------");
-                        log.info(errorData.toJSONString());
+            Object errorInfo=redisManager.lPop(RedisConstant.L_ORDER_FOLLOW_ERROR_DATA);
+            while (errorInfo!=null){
+                try {
+                    log.info("同步跟单错误数据------");
+                    JSONObject errorData=(JSONObject)errorInfo;
+                    log.info(errorData.toJSONString());
+                    if(errorData.get("updateAction")!=null){
                         updateAction=errorData.getInteger("updateAction");
-                        order=errorData.getJSONObject("order");
-                        followRule=errorData.getJSONObject("followRule");
-                        errorCode=errorData.getInteger("errorCode");
-                        //TODO redis 暂存数据
-                        fuOrderFollowErrorService.dealFollowErrorData(updateAction,order,followRule,errorCode);
-                        //TODO redis 删除暂存数据
-                    }catch (Exception e){
-                        log.error("同步跟单错误数据失败，订单："+JSONObject.toJSONString(errorInfo));
-                        log.error(e.getMessage(),e);
                     }
+                    if(errorData.get("errorCode")!=null){
+                        errorCode=errorData.getInteger("errorCode");
+                    }
+                    order=errorData.getJSONObject("order");
+                    followRule=errorData.getJSONObject("followRule");
+                    boolean isSuccess=fuOrderFollowErrorService.dealFollowErrorData(updateAction,order,followRule,errorCode);
+                    if(!isSuccess){
+                        log.error("同步跟单订单失败，订单："+JSONObject.toJSONString(errorInfo));
+                        //redis 暂存处理失败数据(暂时未做处理 需要实例化)
+                        redisManager.lSet(RedisConstant.L_ORDER_FOLLOW_ORDERS_BAK,errorInfo);
+                    }
+                }catch (Exception e){
+                    log.error("同步跟单错误数据失败，订单："+JSONObject.toJSONString(errorInfo));
+                    log.error(e.getMessage(),e);
+                    //redis 暂存处理失败数据(暂时未做处理 需要实例化)
+                    redisManager.lSet(RedisConstant.L_ORDER_FOLLOW_ERROR_DATA_BAK,errorInfo);
                 }
-                errorInfos.clear();
-                errorInfos=redisManager.lGet(RedisConstant.L_ORDER_FOLLOW_ERROR_DATA,0,50);
+                errorInfo=redisManager.lPop(RedisConstant.L_ORDER_FOLLOW_ERROR_DATA);
             }
         }
     }

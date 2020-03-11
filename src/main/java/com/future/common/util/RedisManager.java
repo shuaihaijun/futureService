@@ -440,6 +440,20 @@ public class RedisManager {
     }
 
     /**
+     * 获取list缓存的一个内容
+     * @param key 键
+     * @return
+     */
+    public Object lPop(String key){
+        try {
+            return redisTemplate.opsForList().rightPop(key);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    /**
      * 获取list缓存的长度
      * @param key 键
      * @return

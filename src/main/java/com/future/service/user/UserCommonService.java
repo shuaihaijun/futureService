@@ -2,9 +2,6 @@ package com.future.service.user;
 
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.future.common.constants.AccountConstant;
-import com.future.common.constants.CommonConstant;
-import com.future.common.constants.GlobalConstant;
-import com.future.common.constants.RedisConstant;
 import com.future.common.util.RedisManager;
 import com.future.entity.com.FuComAgent;
 import com.future.entity.permission.FuPermissionAdmin;
@@ -16,9 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ObjectUtils;
 
-import javax.xml.ws.soap.Addressing;
 import java.util.Arrays;
 import java.util.List;
 

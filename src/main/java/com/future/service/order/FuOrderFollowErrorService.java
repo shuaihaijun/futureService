@@ -4,20 +4,14 @@ import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.future.common.constants.OrderConstant;
 import com.future.common.enums.TradeErrorEnum;
+import com.future.common.util.DateUtil;
 import com.future.entity.order.FuOrderFollowError;
 import com.future.entity.user.FuUserFollows;
 import com.future.mapper.order.FuOrderFollowErrorMapper;
-import com.future.pojo.bo.order.UserMTAccountBO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 @Service
 public class FuOrderFollowErrorService extends ServiceImpl<FuOrderFollowErrorMapper, FuOrderFollowError> {
@@ -37,6 +31,11 @@ public class FuOrderFollowErrorService extends ServiceImpl<FuOrderFollowErrorMap
      * @return
      */
     public boolean dealFollowErrorData(int updateAction,JSONObject signalOrder,JSONObject followRule,int errorCode){
+
+        if(signalOrder==null||followRule==null){
+            log.error("处理跟单失败逻辑 失败，数据为空！");
+            return false;
+        }
 
         FuOrderFollowError error=new FuOrderFollowError();
 
@@ -61,21 +60,24 @@ public class FuOrderFollowErrorService extends ServiceImpl<FuOrderFollowErrorMap
 
         /*订单信息*/
         JSONObject orderInfo=signalOrder.getJSONObject("tradeRecord");
-        error.setSignalOrderId(signalOrder.getString("tradeRecord"));
+        error.setSignalOrderId(orderInfo.getString("order"));
         error.setOrderSymbol(new String(orderInfo.getBytes("symbol")).trim());
         error.setOrderType(orderInfo.getInteger("cmd"));
-        error.setOrderOpenDate(orderInfo.getTimestamp("open_time"));
+        error.setOrderOpenDate(DateUtil.toDataFormTimeStamp(orderInfo.getInteger("open_time")*1000));
         error.setOrderOpenPrice(orderInfo.getBigDecimal("open_price"));
         if(updateAction==OrderConstant.ORDER_OPERATION_OPEN){
             //开仓
             error.setOrderTradeOperation(OrderConstant.ORDER_OPERATION_OPEN);
         }else if(updateAction==OrderConstant.ORDER_OPERATION_CLOSE){
             error.setOrderTradeOperation(OrderConstant.ORDER_OPERATION_CLOSE);
-            error.setOrderCloseDate(orderInfo.getTimestamp("close_time"));
+            error.setOrderCloseDate(DateUtil.toDataFormTimeStamp(orderInfo.getInteger("close_time")*1000));
             error.setOrderClosePrice(orderInfo.getBigDecimal("close_price"));
+        }else {
+            log.error("跟单回调数据保存 订单动作错误！updateAction："+updateAction);
+            return false;
         }
 
-        fuOrderFollowErrorMapper.insert(error);
+        fuOrderFollowErrorMapper.insertSelective(error);
 
         return true;
     }

@@ -1,6 +1,9 @@
 package com.future.follow;
 
 
+import com.future.common.constants.AccountConstant;
+import com.future.common.util.DateUtil;
+import com.future.entity.user.FuUserFollows;
 import com.future.service.account.FuAccountMtService;
 import com.future.service.user.FuUserFollowsService;
 import org.junit.Ignore;
@@ -12,12 +15,14 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.ObjectUtils;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@Ignore
+//@Ignore
 public class followTest {
 
     @Autowired
@@ -57,7 +62,21 @@ public class followTest {
 
     @Test
     public void testFollowMonitor(){
+        long time=1583899522;
+        Date timeDate=DateUtil.toDataFormTimeStamp(time*1000);
+        System.out.println(timeDate);
+        System.out.println(DateUtil.toDatetimeString(timeDate));
+    }
 
+    @Test
+    public void testFollowRule(){
+        Map conditionMap=new HashMap();
+        conditionMap.put("userId",58);
+        conditionMap.put("signalMtAccId",1100551517);
+        conditionMap.put("signalId",2);
+        conditionMap.put("followState", AccountConstant.ACCOUNT_STATE_NORMAL);
+        List<FuUserFollows> fuUserFollows= fuUserFollowsService.signalFollowsQuery(conditionMap);
+        System.out.println(fuUserFollows.size());
     }
 
 }

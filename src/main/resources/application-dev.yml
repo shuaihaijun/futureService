@@ -30,7 +30,7 @@ spring:
     maxOpenPreparedStatements: 20
   # 使用redis
   redis:
-    host: 127.0.0.1
+    host: 47.96.165.40
     port: 6379
     password:
     timeout: 3000 # 连接超时时间（毫秒）
