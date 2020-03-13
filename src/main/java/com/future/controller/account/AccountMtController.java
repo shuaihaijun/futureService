@@ -2,13 +2,10 @@ package com.future.controller.account;
 
 import com.alibaba.druid.util.StringUtils;
 import com.alibaba.fastjson.JSONObject;
-import com.future.common.constants.CommonConstant;
-import com.future.common.constants.RedisConstant;
 import com.future.common.enums.GlobalResultCode;
 import com.future.common.exception.ParameterInvalidException;
 import com.future.common.helper.PageInfoHelper;
 import com.future.common.result.RequestParams;
-import com.future.common.util.RedisManager;
 import com.future.common.util.ThreadCache;
 import com.future.pojo.bo.order.UserMTAccountBO;
 import com.future.service.account.FuAccountMtService;
@@ -16,7 +13,6 @@ import com.github.pagehelper.Page;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -31,8 +27,6 @@ public class AccountMtController {
 
     @Autowired
     FuAccountMtService fuAccountMtService;
-    @Autowired
-    RedisManager redisManager;
 
     //获取MT账户信息
     @RequestMapping(value= "/getUserMtAccountByCondition",method=RequestMethod.POST)
