@@ -96,17 +96,7 @@ public class AccountMtController {
             throw new ParameterInvalidException(GlobalResultCode.PARAM_NOT_COMPLETE);
         }
         List<UserMTAccountBO> accounts=  fuAccountMtService.getUserMTAccByCondition(conditonMap);
-        String userAccout="";
-        Object clientId;
-        /*循环设置状态*/
-        for(int i=0;i<accounts.size();i++){
-            clientId=redisManager.hget(RedisConstant.H_ACCOUNT_CONNECT_INFO,mtAccId);
-            if(!ObjectUtils.isEmpty(clientId)&&(Integer)clientId>0){
-                accounts.get(i).setConnectState(CommonConstant.COMMON_YES);
-            }else {
-                accounts.get(i).setConnectState(CommonConstant.COMMON_NO);
-            }
-        }
+
         return  accounts;
     }
 

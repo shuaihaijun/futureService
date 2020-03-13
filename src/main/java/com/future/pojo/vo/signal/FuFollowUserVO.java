@@ -51,6 +51,14 @@ public class FuFollowUserVO {
     private Date modifyDate;
 
     /**
+     * 跟随方向
+     */
+    private Integer followDirect;
+    /**
+     * 跟随模式
+     */
+    private Integer followMode;
+    /**
      * 规则类型（0 按手数比例，1 按固定金额，2 按固定手数）
      */
     private Integer followType;

@@ -34,6 +34,7 @@
     <result column="historical_return" jdbcType="DECIMAL" property="historicalReturn" />
     <result column="suggest_cycle" jdbcType="DECIMAL" property="suggestCycle" />
     <result column="remarks" jdbcType="VARCHAR" property="remarks" />
+    <result column="connect_state" jdbcType="TINYINT" property="connectState" />
   </resultMap>
   <sql id="Base_Column_List">
     id, create_date, modify_date, user_id, signal_name, signal_level, signal_desc, signal_ratings, 
@@ -41,7 +42,7 @@
     signal_account_money, signal_currency, signal_follows, monthly_average_income, history_income, 
     history_withdraw, email, phone, qq_number, server_name, mt_acc_id, mt_password_trade, 
     mt_password_watch, minimum, annualized_expected_return, historical_return, suggest_cycle, 
-    remarks
+    remarks, connect_state
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -64,7 +65,8 @@
       phone, qq_number, server_name, 
       mt_acc_id, mt_password_trade, mt_password_watch, 
       minimum, annualized_expected_return, historical_return, 
-      suggest_cycle, remarks)
+      suggest_cycle, remarks, connect_state
+      )
     values (#{id,jdbcType=INTEGER}, #{createDate,jdbcType=TIMESTAMP}, #{modifyDate,jdbcType=TIMESTAMP}, 
       #{userId,jdbcType=INTEGER}, #{signalName,jdbcType=VARCHAR}, #{signalLevel,jdbcType=TINYINT}, 
       #{signalDesc,jdbcType=VARCHAR}, #{signalRatings,jdbcType=TINYINT}, #{signalState,jdbcType=TINYINT}, 
@@ -75,7 +77,8 @@
       #{phone,jdbcType=VARCHAR}, #{qqNumber,jdbcType=VARCHAR}, #{serverName,jdbcType=VARCHAR}, 
       #{mtAccId,jdbcType=VARCHAR}, #{mtPasswordTrade,jdbcType=VARCHAR}, #{mtPasswordWatch,jdbcType=VARCHAR}, 
       #{minimum,jdbcType=DECIMAL}, #{annualizedExpectedReturn,jdbcType=DECIMAL}, #{historicalReturn,jdbcType=DECIMAL}, 
-      #{suggestCycle,jdbcType=DECIMAL}, #{remarks,jdbcType=VARCHAR})
+      #{suggestCycle,jdbcType=DECIMAL}, #{remarks,jdbcType=VARCHAR}, #{connectState,jdbcType=TINYINT}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.future.entity.product.FuProductSignal">
     insert into fu_product_signal
@@ -176,6 +179,9 @@
       <if test="remarks != null">
         remarks,
       </if>
+      <if test="connectState != null">
+        connect_state,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -273,6 +279,9 @@
       </if>
       <if test="remarks != null">
         #{remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="connectState != null">
+        #{connectState,jdbcType=TINYINT},
       </if>
     </trim>
   </insert>
@@ -372,6 +381,9 @@
       <if test="remarks != null">
         remarks = #{remarks,jdbcType=VARCHAR},
       </if>
+      <if test="connectState != null">
+        connect_state = #{connectState,jdbcType=TINYINT},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -407,7 +419,8 @@
       annualized_expected_return = #{annualizedExpectedReturn,jdbcType=DECIMAL},
       historical_return = #{historicalReturn,jdbcType=DECIMAL},
       suggest_cycle = #{suggestCycle,jdbcType=DECIMAL},
-      remarks = #{remarks,jdbcType=VARCHAR}
+      remarks = #{remarks,jdbcType=VARCHAR},
+      connect_state = #{connectState,jdbcType=TINYINT}
     where id = #{id,jdbcType=INTEGER}
   </update>
   <select id="querySignalUsers" parameterType="java.util.Map" resultType="com.future.pojo.vo.signal.FuUserSignalVO">
@@ -459,10 +472,10 @@
       m.equity,
       m.margin
     FROM
-        fu_product_signal s
-    LEFT JOIN fu_product_signal_valuation v ON s.id = v.signal_id
-    LEFT JOIN fu_user u ON s.user_id = u.id
-    LEFT JOIN fu_account_mt m ON s.user_id=m.user_id and s.mt_acc_id=m.mt_acc_id
+      fu_product_signal s
+      LEFT JOIN fu_product_signal_valuation v ON s.id = v.signal_id
+      LEFT JOIN fu_user u ON s.user_id = u.id
+      LEFT JOIN fu_account_mt m ON s.user_id=m.user_id and s.mt_acc_id=m.mt_acc_id
     where 1=1
       <if test="userId != null">
         and s.user_id = #{userId,jdbcType=INTEGER}

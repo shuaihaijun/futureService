@@ -1,26 +1,26 @@
 package com.future.controller.signal;
 
 import com.alibaba.fastjson.JSONObject;
-import com.baomidou.mybatisplus.plugins.Page;
 import com.future.common.enums.GlobalResultCode;
 import com.future.common.exception.ParameterInvalidException;
+import com.future.common.helper.PageInfoHelper;
+import com.future.common.result.RequestParams;
 import com.future.common.util.ThreadCache;
 import com.future.entity.product.FuProductSignal;
 import com.future.entity.product.FuProductSignalValuation;
 import com.future.entity.user.FuUserFollows;
+import com.future.pojo.vo.signal.FuFollowStateVO;
 import com.future.pojo.vo.signal.FuFollowUserVO;
 import com.future.pojo.vo.signal.FuUserSignalVO;
-import com.future.service.user.FuUserFollowsService;
 import com.future.service.product.FuProductSignalService;
 import com.future.service.product.FuProductSignalValuationService;
+import com.future.service.user.FuUserFollowsService;
+import com.github.pagehelper.Page;
 import com.github.pagehelper.PageInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
@@ -52,15 +52,12 @@ public class ProductSignalController {
     }
 
     //查找申请信息
-    @RequestMapping(value= "/getSignalInfos",method=RequestMethod.POST)
+    @RequestMapping(value= "/querySignalInfos",method=RequestMethod.POST)
     public @ResponseBody
-    Page<FuProductSignal>getSignalInfos(){
-        // 获取请求参数
-        String requestJSONStr = ThreadCache.getPostRequestParams();
-        JSONObject requestMap = JSONObject.parseObject(requestJSONStr);
-
-        /*条件查询日期不能超过1周*/
-        return fuProductSignalService.findSignalByCondition(requestMap);
+    com.github.pagehelper.Page<FuProductSignal> querySignalInfos(@RequestBody RequestParams<Map> requestParams) {
+        Map orderCondition = requestParams.getParams();
+        PageInfoHelper helper = requestParams.getPageInfoHelper();
+        return fuProductSignalService.findSignalByCondition(orderCondition,helper);
     }
 
     //保存申请信息
@@ -108,6 +105,16 @@ public class ProductSignalController {
         return fuUserFollowsService.signalFollowsQuery(conditionMap);
     }
 
+    //查询跟单信息
+    @RequestMapping(value= "/querySignalFollowState",method=RequestMethod.POST)
+    public @ResponseBody
+    PageInfo<FuFollowStateVO> querySignalFollowState(@RequestBody RequestParams<Map> requestParams) {
+        Map conditionMap = requestParams.getParams();
+        PageInfoHelper helper = requestParams.getPageInfoHelper();
+        /*校验参数*/
+        return fuUserFollowsService.querySignalFollowState(conditionMap,helper);
+    }
+
     //删除申请信息
     @RequestMapping(value= "/signalFollowsRemove",method=RequestMethod.POST)
     public @ResponseBody boolean signalFollowsRemove(){
@@ -130,6 +137,14 @@ public class ProductSignalController {
         /*校验参数*/
         fuUserFollowsService.signalFollowsSaveOrUpdate(conditionMap);
         return true;
+    }
+
+    //查询跟单信息
+    @RequestMapping(value= "/getSignalFollowByCondition",method=RequestMethod.POST)
+    public @ResponseBody FuFollowStateVO getSignalFollowByCondition(@RequestBody RequestParams<Map> requestParams) {
+        Map conditionMap = requestParams.getParams();
+        /*校验参数*/
+        return fuUserFollowsService.getSignalFollowByCondition(conditionMap);
     }
 
     //查询跟单信息

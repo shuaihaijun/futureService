@@ -305,6 +305,7 @@ public class FuOrderFollowInfoService extends ServiceImpl<FuOrderFollowInfoMappe
         followInfo.setOrderLots(followOrder.getBigDecimal("volume").multiply(new BigDecimal(0.01)));
         followInfo.setOrderStoploss(followOrder.getBigDecimal("stoploss"));
         followInfo.setOrderTakeprofit(followOrder.getBigDecimal("takeprofit"));
+        followInfo.setOrderProfit(followOrder.getBigDecimal("profit"));
         followInfo.setOrderMagic(followOrder.getBigDecimal("magic"));
         followInfo.setOrderSymbol(followOrder.getString("symbol"));
 
@@ -332,6 +333,9 @@ public class FuOrderFollowInfoService extends ServiceImpl<FuOrderFollowInfoMappe
             followInfo.setOrderCommission(followOrder.getBigDecimal("commission"));
             followInfo.setOrderCloseDate(DateUtil.toDataFormTimeStamp(followOrder.getLong("close_time")*1000));
             followInfo.setOrderClosePrice(followOrder.getBigDecimal("close_price"));
+        }else if(orderAction==OrderConstant.ORDER_OPERATION_MODIFY){
+            followInfo.setOrderTradeOperation(OrderConstant.ORDER_OPERATION_MODIFY);
+            log.error("跟单回调数据保存 订单类型错误！orderAction："+orderAction);
         }else {
             log.error("跟单回调数据保存 订单类型错误！orderAction："+orderAction);
             return false;

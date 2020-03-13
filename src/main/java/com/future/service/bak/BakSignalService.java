@@ -189,7 +189,7 @@ public class BakSignalService extends ServiceImpl<FuOrderSignalMapper,FuOrderSig
         signalOrder.setMtAccId(accountBOS.get(0).getMtAccId());
         signalOrder.setOrderType(Integer.parseInt(orderDetail[0]));
         signalOrder.setOrderSymbol(orderDetail[1]);
-        //订单状态（0 OPEN ，1 MODIFY，2 CLOSE，3 CLOSE_PARTIAL，4 CLOSE_MAGIC
+        //订单状态（0 PositionOpen ，1 PositionClose，2 PositionModify，3 PendingOpen，4 PendingDelete,5 PendingModify,6 PendingFill
         if(orderAction.equalsIgnoreCase(FollowConstant.ACTION_OPEN)){
             signalOrder.setOrderTradeOperation(0);
             signalOrder.setOrderOpenDate(DateUtil.toDataFormTimeStamp(Long.parseLong(orderDetail[9])));

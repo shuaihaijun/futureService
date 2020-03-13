@@ -49,7 +49,7 @@ public class FuUserFollows {
     private String signalMtAccId;
 
     /**
-     * 跟单状态（0 正常，1  隐藏，2 废弃）
+     * 跟单状态（0 正常，1 暂停，2 废弃）
      */
     private Integer followState;
 
@@ -241,16 +241,16 @@ public class FuUserFollows {
     }
 
     /**
-     * 跟单状态（0 正常，1  隐藏，2 废弃）
-     * @return follow_state 跟单状态（0 正常，1  隐藏，2 废弃）
+     * 跟单状态（0 正常，1 暂停，2 废弃）
+     * @return follow_state 跟单状态（0 正常，1 暂停，2 废弃）
      */
     public Integer getFollowState() {
         return followState;
     }
 
     /**
-     * 跟单状态（0 正常，1  隐藏，2 废弃）
-     * @param followState 跟单状态（0 正常，1  隐藏，2 废弃）
+     * 跟单状态（0 正常，1 暂停，2 废弃）
+     * @param followState 跟单状态（0 正常，1 暂停，2 废弃）
      */
     public void setFollowState(Integer followState) {
         this.followState = followState;

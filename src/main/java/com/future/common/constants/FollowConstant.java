@@ -28,7 +28,7 @@ public class FollowConstant {
 
 
 
-	//跟单状态（0 正常，1  隐藏，2 废弃）
+	//跟单状态（0 正常，1 暂停，2 废弃）
 	/*跟单状态 正常*/
 	public static final int FOLLOW_STATE_NORMAL=0;
 	/*跟单状态 隐藏*/

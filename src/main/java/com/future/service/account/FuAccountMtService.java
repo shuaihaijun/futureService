@@ -76,7 +76,22 @@ public class FuAccountMtService extends ServiceImpl<FuAccountMtMapper, FuAccount
             log.warn("根据条件查询用户MT账户信息，查询条件为空！");
             return null;
         }
-        return fuAccountMtMapper.selectUserMTAccByCondition(condition);
+        List<UserMTAccountBO> accounts=fuAccountMtMapper.selectUserMTAccByCondition(condition);
+        Object clientId;
+        /*循环设置状态*/
+        for(int i=0;i<accounts.size();i++){
+            if(accounts.get(i).getMtAccId()==null){
+                accounts.get(i).setConnectState(CommonConstant.COMMON_NO);
+                continue;
+            }
+            clientId=redisManager.hget(RedisConstant.H_ACCOUNT_CONNECT_INFO,accounts.get(i).getMtAccId());
+            if(!ObjectUtils.isEmpty(clientId)&&(Integer)clientId>0){
+                accounts.get(i).setConnectState(CommonConstant.COMMON_YES);
+            }else {
+                accounts.get(i).setConnectState(CommonConstant.COMMON_NO);
+            }
+        }
+        return accounts;
     }
 
     /**

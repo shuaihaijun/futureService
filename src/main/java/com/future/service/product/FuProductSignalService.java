@@ -4,14 +4,19 @@ package com.future.service.product;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
-import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.future.common.constants.CommonConstant;
+import com.future.common.constants.RedisConstant;
 import com.future.common.enums.GlobalResultCode;
 import com.future.common.exception.DataConflictException;
+import com.future.common.helper.PageInfoHelper;
+import com.future.common.util.RedisManager;
 import com.future.common.util.StringUtils;
+import com.future.entity.order.FuOrderFollowError;
 import com.future.entity.product.FuProductSignal;
 import com.future.mapper.product.FuProductSignalMapper;
 import com.future.pojo.vo.signal.FuUserSignalVO;
+import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.slf4j.Logger;
@@ -27,34 +32,20 @@ import java.util.Map;
 public class FuProductSignalService extends ServiceImpl<FuProductSignalMapper,FuProductSignal> {
     @Autowired
     FuProductSignalMapper fuProductSignalMapper;
+    @Autowired
+    RedisManager redisManager;
 
     Logger log= LoggerFactory.getLogger(FuProductSignalService.class);
 
     /**
      * 根据条件查找信号源信息
      * @param conditionMap
+     * @param helper
      * @return
      */
-    public Page<FuProductSignal> findSignalByCondition(Map conditionMap){
+    public Page<FuProductSignal> findSignalByCondition(Map conditionMap, PageInfoHelper helper){
         /*校验信息*/
-        Page<FuProductSignal> page=new Page<FuProductSignal>();
         Wrapper<FuProductSignal> wrapper=new EntityWrapper<FuProductSignal>();
-
-        int pageSize=20;
-        int pageNum=1;
-
-        if(StringUtils.isEmpty(pageSize)||StringUtils.isEmpty(pageNum)){
-            log.error("分页数据为空！");
-            new DataConflictException(GlobalResultCode.PARAM_NULL_POINTER,"分页数据为空！");
-        }
-        if(conditionMap.get("pageSize")!=null){
-            pageSize=Integer.parseInt(String.valueOf(conditionMap.get("pageSize")));
-        }
-        if(conditionMap.get("pageNum")!=null){
-            pageNum=Integer.parseInt(String.valueOf(conditionMap.get("pageNum")));
-        }
-        page.setSize(pageSize);
-        page.setCurrent(pageNum);
 
         if(!ObjectUtils.isEmpty(conditionMap.get("signalId"))){
             wrapper.eq(FuProductSignal.APPLY_ID,String.valueOf(conditionMap.get("signalId")));
@@ -112,7 +103,18 @@ public class FuProductSignalService extends ServiceImpl<FuProductSignalMapper,Fu
                 wrapper.lt(FuProductSignal.CHECK_DATE,dateClose[1]);
             }
         }
-        return selectPage(page,wrapper);
+        if(helper==null){
+            helper=new PageInfoHelper();
+        }
+        Page<FuProductSignal> signals= PageHelper.startPage(helper.getPageNo(),helper.getPageSize());
+        fuProductSignalMapper.selectList(wrapper);
+        /*设置监听状态*/
+        for(FuProductSignal signal:signals.getResult()){
+            if(redisManager.hget(RedisConstant.H_ACCOUNT_CONNECT_INFO,signal.getMtAccId())!=null){
+                signal.setConnectState(CommonConstant.COMMON_YES);
+            }
+        }
+        return signals;
     }
 
     /**

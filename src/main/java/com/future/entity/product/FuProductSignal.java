@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 public class FuProductSignal {
-
+    
     public static final String APPLY_ID = "id";
     public static final String USER_ID = "user_id";
     public static final String SIGNAL_ID = "signal_id";
@@ -17,7 +17,6 @@ public class FuProductSignal {
     public static final String MT_ACC_ID = "mt_acc_id";
     public static final String CREATE_DATE = "create_date";
     public static final String CHECK_DATE = "check_date";
-
     /**
      * 
      */
@@ -178,6 +177,11 @@ public class FuProductSignal {
      * 备注
      */
     private String remarks;
+
+    /**
+     * 监听状态（0 未监听，1 已监听）
+     */
+    private Integer connectState;
 
     /**
      * 
@@ -689,5 +693,21 @@ public class FuProductSignal {
      */
     public void setRemarks(String remarks) {
         this.remarks = remarks == null ? null : remarks.trim();
+    }
+
+    /**
+     * 监听状态（0 未监听，1 已监听）
+     * @return connect_state 监听状态（0 未监听，1 已监听）
+     */
+    public Integer getConnectState() {
+        return connectState;
+    }
+
+    /**
+     * 监听状态（0 未监听，1 已监听）
+     * @param connectState 监听状态（0 未监听，1 已监听）
+     */
+    public void setConnectState(Integer connectState) {
+        this.connectState = connectState;
     }
 }

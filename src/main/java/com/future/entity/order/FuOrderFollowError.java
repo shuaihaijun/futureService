@@ -7,6 +7,19 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 public class FuOrderFollowError {
+
+    public static final String USER_ID = "user_id";
+    public static final String USER_MT_ACC_ID = "user_mt_acc_id";
+    public static final String USER_SERVER_NAME = "user_server_name";
+    public static final String SIGNAL_ID = "signal_id";
+    public static final String SIGNAL_MT_ACC_ID = "signal_mt_acc_id";
+    public static final String SIGNAL_SERVER_NAME = "signal_server_name";
+
+    public static final String SIGNAL_ORDER_ID = "signal_order_id";
+    public static final String ORDER_SYMBOL = "order_symbol";
+    public static final String ORDER_TYPE = "order_type";
+    public static final String FOLLOW_DIRECT = "follow_direct";
+    public static final String ORDER_OPEN_DATE = "order_open_date";
     /**
      */
     @TableId(type = IdType.AUTO)

@@ -6,20 +6,22 @@ import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.future.common.enums.GlobalResultCode;
 import com.future.common.exception.DataConflictException;
+import com.future.common.helper.PageInfoHelper;
+import com.future.common.result.RequestParams;
 import com.future.common.util.DateUtil;
 import com.future.common.util.StringUtils;
 import com.future.common.util.ThreadCache;
+import com.future.entity.order.FuOrderFollowError;
 import com.future.entity.order.FuOrderFollowInfo;
+import com.future.service.order.FuOrderFollowErrorService;
 import com.future.service.order.FuOrderFollowInfoService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/orderFollowInfo")
@@ -28,6 +30,8 @@ public class OrderFollowInfoController {
 
     @Autowired
     FuOrderFollowInfoService orderService;
+    @Autowired
+    FuOrderFollowErrorService fuOrderFollowErrorService;
 
     //获得Mt历史订单操作
     @RequestMapping(value= "/getMTtHistoryOrders",method=RequestMethod.POST)
@@ -52,9 +56,9 @@ public class OrderFollowInfoController {
     }
 
     //获得社区跟随订单
-    @RequestMapping(value= "/getOrderFollows",method=RequestMethod.POST)
+    @RequestMapping(value= "/getOrderFollowInfo",method=RequestMethod.POST)
     public @ResponseBody
-    Page<FuOrderFollowInfo> getOrderFollows(){
+    Page<FuOrderFollowInfo> getOrderFollowInfo(){
         // 获取请求参数
         String requestJSONStr = ThreadCache.getPostRequestParams();
         JSONObject requestMap = JSONObject.parseObject(requestJSONStr);
@@ -123,5 +127,14 @@ public class OrderFollowInfoController {
             }
         }
         return orderService.selectPage(page, wrapper);
+    }
+
+    //获得社区跟随异常
+    @RequestMapping(value= "/queryOrderFollowError",method=RequestMethod.POST)
+    public @ResponseBody
+    com.github.pagehelper.Page<FuOrderFollowError> queryOrderFollowError(@RequestBody RequestParams<Map> requestParams) {
+        Map orderCondition = requestParams.getParams();
+        PageInfoHelper helper = requestParams.getPageInfoHelper();
+        return fuOrderFollowErrorService.queryOrderFollowError(orderCondition,helper);
     }
 }

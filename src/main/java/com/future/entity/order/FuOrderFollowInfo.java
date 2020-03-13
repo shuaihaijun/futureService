@@ -109,7 +109,7 @@ public class FuOrderFollowInfo {
     private Integer orderSourceFlag;
 
     /**
-     * 订单交易操作（0 OPEN ，1 MODIFY，2 CLOSE，3 CLOSE_PARTIAL，4 CLOSE_MAGIC）
+     * 订单交易操作（0 PositionOpen ，1 PositionClose，2 PositionModify，3 PendingOpen，4 PendingDelete,5 PendingModify,6 PendingFill）
      */
     private Integer orderTradeOperation;
 
@@ -487,16 +487,16 @@ public class FuOrderFollowInfo {
     }
 
     /**
-     * 订单交易操作（0 OPEN ，1 MODIFY，2 CLOSE，3 CLOSE_PARTIAL，4 CLOSE_MAGIC）
-     * @return order_trade_operation 订单交易操作（0 OPEN ，1 MODIFY，2 CLOSE，3 CLOSE_PARTIAL，4 CLOSE_MAGIC）
+     * 订单交易操作（0 PositionOpen ，1 PositionClose，2 PositionModify，3 PendingOpen，4 PendingDelete,5 PendingModify,6 PendingFill）
+     * @return order_trade_operation 订单交易操作（0 PositionOpen ，1 PositionClose，2 PositionModify，3 PendingOpen，4 PendingDelete,5 PendingModify,6 PendingFill）
      */
     public Integer getOrderTradeOperation() {
         return orderTradeOperation;
     }
 
     /**
-     * 订单交易操作（0 OPEN ，1 MODIFY，2 CLOSE，3 CLOSE_PARTIAL，4 CLOSE_MAGIC）
-     * @param orderTradeOperation 订单交易操作（0 OPEN ，1 MODIFY，2 CLOSE，3 CLOSE_PARTIAL，4 CLOSE_MAGIC）
+     * 订单交易操作（0 PositionOpen ，1 PositionClose，2 PositionModify，3 PendingOpen，4 PendingDelete,5 PendingModify,6 PendingFill）
+     * @param orderTradeOperation 订单交易操作（0 PositionOpen ，1 PositionClose，2 PositionModify，3 PendingOpen，4 PendingDelete,5 PendingModify,6 PendingFill）
      */
     public void setOrderTradeOperation(Integer orderTradeOperation) {
         this.orderTradeOperation = orderTradeOperation;
