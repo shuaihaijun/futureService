@@ -5,19 +5,15 @@ import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.future.common.enums.GlobalResultCode;
 import com.future.common.exception.BusinessException;
-import com.future.common.util.RequestContextHolderUtil;
 import com.future.common.util.StringUtils;
 import com.future.common.util.TreeBuilder;
 import com.future.entity.permission.FuPermissionResource;
 import com.future.entity.permission.FuPermissionRoleResource;
-import com.future.entity.user.FuUser;
 import com.future.mapper.permission.FuPermissionRoleResourceMapper;
-import com.future.pojo.bo.AdminInfo;
 import com.future.pojo.bo.BasicBO;
 import com.future.pojo.bo.Node;
 import com.future.pojo.bo.permission.FuPermissionResourceBO;
 import com.future.pojo.bo.permission.FuPermissionRoleResourceBO;
-import com.future.service.user.AdminService;
 import com.future.service.user.UserCommonService;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
@@ -28,7 +24,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**

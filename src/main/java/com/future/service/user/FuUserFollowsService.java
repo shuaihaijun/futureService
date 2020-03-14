@@ -8,6 +8,7 @@ import com.future.common.constants.CommonConstant;
 import com.future.common.constants.FollowConstant;
 import com.future.common.constants.RedisConstant;
 import com.future.common.enums.GlobalResultCode;
+import com.future.common.enums.TradeErrorEnum;
 import com.future.common.exception.BusinessException;
 import com.future.common.exception.DataConflictException;
 import com.future.common.exception.ParameterInvalidException;
@@ -304,6 +305,13 @@ public class FuUserFollowsService extends ServiceImpl<FuUserFollowsMapper, FuUse
         }
 
         if(follows.getFollowState()==FollowConstant.FOLLOW_STATE_NORMAL){
+            /*启动用户账户监听*/
+            int isConnect=fuTradeAccountService.setMtAccountConnect(userMTAccountBO.getServerName(),Integer.parseInt(userMTAccountBO.getMtAccId()),userMTAccountBO.getMtPasswordTrade());
+            if(isConnect> TradeErrorEnum.SUCCESS.code()){
+                log.error("用户账号监听失败！"+TradeErrorEnum.getMessage(isConnect));
+                throw new BusinessException("用户账号监听失败！"+TradeErrorEnum.getMessage(isConnect));
+            }
+
             // /*更新监听数据*/
             if(!fuTradeAccountService.addAccountFollowRelation(follows.getSignalMtAccId(),follows.getUserMtAccId(),follows)){
                 log.error("设置跟单关系失败：signalMtAccId:"+follows.getSignalMtAccId()+",userMtAccId"+follows.getUserMtAccId());

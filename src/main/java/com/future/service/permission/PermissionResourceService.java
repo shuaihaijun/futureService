@@ -186,7 +186,7 @@ public class PermissionResourceService extends ServiceImpl<FuPermissionResourceM
     public List<FuPermissionResource> findAll(){
         /*查找所有可用的资源情况*/
         List<FuPermissionResource> result = selectList(new EntityWrapper<FuPermissionResource>()
-                .eq(FuPermissionResource.RES_STATUS, CommonConstant.COMMON_STATE_USABLE));
+                .eq(FuPermissionResource.RES_STATUS, CommonConstant.COMMON_STATE_USABLE).orderBy(FuPermissionResource.RES_SORT));
         return result;
     }
 
