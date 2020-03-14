@@ -306,7 +306,7 @@ public class FuUserFollowsService extends ServiceImpl<FuUserFollowsMapper, FuUse
 
         if(follows.getFollowState()==FollowConstant.FOLLOW_STATE_NORMAL){
             /*启动用户账户监听*/
-            int isConnect=fuTradeAccountService.setMtAccountConnect(userMTAccountBO.getServerName(),Integer.parseInt(userMTAccountBO.getMtAccId()),userMTAccountBO.getMtPasswordTrade());
+            int isConnect=fuTradeAccountService.setAccountConnectTradeAllowed(userMTAccountBO.getServerName(),Integer.parseInt(userMTAccountBO.getMtAccId()),userMTAccountBO.getMtPasswordTrade());
             if(isConnect> TradeErrorEnum.SUCCESS.code()){
                 log.error("用户账号监听失败！"+TradeErrorEnum.getMessage(isConnect));
                 throw new BusinessException("用户账号监听失败！"+TradeErrorEnum.getMessage(isConnect));

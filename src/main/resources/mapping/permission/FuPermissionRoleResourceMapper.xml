@@ -45,6 +45,7 @@
         FROM
         fu_permission_roleresource rs INNER  JOIN fu_permission_resource r ON rs.res_id=r.id
         WHERE Role_id = #{roleId, jdbcType=INTEGER}
+        order by r.Res_sort
     </select>
     <!--  通过工程项目KEY以及角色ID删除角色权限资源关系数据 -->
     <delete id="deleteByRoleIdProjKeys">

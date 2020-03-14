@@ -27,9 +27,11 @@ public class GlobalConstant {
 
     // mt账户连接
     public static final String TRADE_ACC_SET_CONNECT = "/trader/account/setAccountConnect";
+    // mt账户连接-允许交易
+    public static final String TRADE_ACC_SET_CONNECT_TRADE = "/trader/account/setAccountConnectTradeAllowed";
     // mt账户连接断开
     public static final String TRADE_ACC_DIS_CONNECT = "/trader/account/setAccountDisConnect";
-    // mt账户连接
+    // 信号源监听
     public static final String TRADE_ACC_SIGNAL_MONITOR = "/trader/account/setSignalMonitor";
     // 设置跟单关系
     public static final String TRADE_ACC_SET_FOLLOW_RALATION = "/trader/account/addAccountFollowRelation";

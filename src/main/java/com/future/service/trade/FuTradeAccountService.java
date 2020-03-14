@@ -66,6 +66,40 @@ public class FuTradeAccountService {
         return clientId;
     }
 
+
+    /**
+     * 连接MT账号 并且允许交易
+     * @param serverName
+     * @param mtAccId
+     * @param password
+     * @return
+     */
+    public int setAccountConnectTradeAllowed(String serverName,int mtAccId,String password){
+        /*校验数据*/
+        if(StringUtils.isEmpty(serverName)||mtAccId==0||StringUtils.isEmpty(password)){
+            log.error("getMtAccountConnect null params!");
+            throw new DataConflictException("setAccountConnnect null params!");
+        }
+        Map dataMap=new HashMap();
+        dataMap.put("serverName",serverName);
+        dataMap.put("username",mtAccId);
+        dataMap.put("password",password);
+        Map requestMap= new HashMap<>();
+        requestMap.put("params",dataMap);
+        String url=tradeServerHost+":"+tradeServerPort+ GlobalConstant.TRADE_ACC_SET_CONNECT_TRADE;
+        String result= HttpUtils.httpPost(url,requestMap);
+        if(StringUtils.isEmpty(result)){
+            log.error("登录MT账号失败：mtAccId:"+mtAccId);
+        }
+        JSONObject resultJson=JSONObject.parseObject(result);
+        JSONObject content=resultJson.getJSONObject("content");
+        int clientId=0;
+        if(content.get("data")!=null){
+            clientId=content.getInteger("data");
+        }
+        return clientId;
+    }
+
     /**
      * 断开MT账号连接
      * @param serverName
