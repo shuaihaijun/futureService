@@ -36,7 +36,7 @@ public class FollowOrderMonitor {
     /**
      * 跟单监听 每分钟同步一次
      */
-//    @Scheduled(cron = "0/30 * * * * ?")
+    @Scheduled(cron = "0/30 * * * * ?")
     public void monitor(){
 
         /*1、同步跟单成功订单*/

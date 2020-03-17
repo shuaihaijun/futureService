@@ -211,11 +211,15 @@ public class FuTradeAccountService {
         Map requestMap= new HashMap<>();
         requestMap.put("params",requestJson);
         String url=tradeServerHost+":"+tradeServerPort+ GlobalConstant.TRADE_ACC_REMOVE_FOLLOW_RALATION;
-        String result= HttpUtils.httpPost(url,requestJson);
+        String result= HttpUtils.httpPost(url,requestMap);
         if(StringUtils.isEmpty(result)){
             log.error("设置跟单关系失败：signalMtAccId:"+signalMtAccId+",userMtAccId"+userMtAccId);
         }
         JSONObject resultJson=JSONObject.parseObject(result);
+        if(resultJson.get("content")==null){
+            log.error("设置跟单关系失败：signalMtAccId:"+signalMtAccId+",userMtAccId"+userMtAccId);
+            return false;
+        }
         boolean content=resultJson.getBoolean("content");
         if(!content){
             log.error("设置跟单关系失败：signalMtAccId:"+signalMtAccId+",userMtAccId"+userMtAccId);
