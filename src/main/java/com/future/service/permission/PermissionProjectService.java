@@ -4,6 +4,7 @@ package com.future.service.permission;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.pagination.PageHelper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.future.common.constants.CommonConstant;
 import com.future.common.enums.GlobalResultCode;
 import com.future.common.enums.RmsResultCode;
 import com.future.common.exception.BusinessException;
@@ -11,8 +12,10 @@ import com.future.common.exception.RmsrException;
 import com.future.common.helper.PageInfoHelper;
 import com.future.common.util.RequestContextHolderUtil;
 import com.future.common.util.StringUtils;
+import com.future.entity.permission.FuPermissionAdmin;
 import com.future.entity.permission.FuPermissionProject;
 import com.future.entity.permission.FuPermissionRoleResource;
+import com.future.mapper.permission.FuPermissionAdminMapper;
 import com.future.mapper.permission.FuPermissionProjectMapper;
 import com.future.pojo.bo.AdminInfo;
 import com.future.pojo.bo.permission.FuPermissionProjectBO;
@@ -26,6 +29,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -47,6 +51,8 @@ public class PermissionProjectService extends ServiceImpl<FuPermissionProjectMap
     private PermissionRoleResourceService permissionRoleResourceService;
     @Autowired
     private PermissionUserProjectService permissionUserProjectService;
+    @Autowired
+    private FuPermissionAdminMapper fuPermissionAdminMapper;
 
     /**
      * 注入超级管理员数据
@@ -73,10 +79,9 @@ public class PermissionProjectService extends ServiceImpl<FuPermissionProjectMap
 
         //组装并保存数据
         FuPermissionProject proj = FuPermissionProjectBO.boToModel(fuPermissionProjectBO);
-        proj.setProjStatus(1);
-        proj.setProjType(0);
-        boolean isSuccess = insert(proj);
-        if (!isSuccess) {
+        proj.setProjStatus(CommonConstant.COMMON_YES);
+        int isSuccess = fuPermissionProjectMapper.insertSelective(proj);
+        if (isSuccess<=0) {
             throw new RmsrException(RmsResultCode.PERMISSION_PROJECT_DATA_SAVE_FAILURE);
         }
     }
@@ -104,7 +109,7 @@ public class PermissionProjectService extends ServiceImpl<FuPermissionProjectMap
 
         //通过工程KEY查询除本数据记录之外是否存在此KEY的数据
         FuPermissionProject result = selectOne(new EntityWrapper<FuPermissionProject>()
-                .eq(FuPermissionProject.PROJ_STATUS, 1)
+                /*.eq(FuPermissionProject.PROJ_STATUS, 1)*/
                 .eq(FuPermissionProject.PROJ_KEY, fuPermissionProjectBO.getProjKey())
                 .ne(FuPermissionProject.PROJ_ID, fuPermissionProjectBO.getId()));
         if (result != null) {
@@ -113,8 +118,8 @@ public class PermissionProjectService extends ServiceImpl<FuPermissionProjectMap
 
         //保存数据
         FuPermissionProject proj = FuPermissionProjectBO.boToModel(fuPermissionProjectBO);
-        boolean isSuccess = updateById(proj);
-        if (!isSuccess) {
+        int isSuccess = fuPermissionProjectMapper.updateByPrimaryKeySelective(proj);
+        if (isSuccess<=0) {
             throw new RmsrException(RmsResultCode.PERMISSION_PROJECT_DATA_SAVE_FAILURE);
         }
     }
@@ -132,24 +137,23 @@ public class PermissionProjectService extends ServiceImpl<FuPermissionProjectMap
             throw new BusinessException(GlobalResultCode.PARAM_NULL_POINTER);
         }
 
+
+        boolean contains = true;
+        List<Integer> porjKeys = null;
         // 获取当前用户信息
-        AdminInfo user = RequestContextHolderUtil.getAdminInfo();
-        //TODO:测试数据
-        user = new AdminInfo();
-        user.setAdminId(11);
+       /* AdminInfo user = new AdminInfo();
         //获取配置文件中超级管理员，判断当前登录用户是否为超级管理员,true为超管
         String[] superAdministrators = superAdministrator.split(",");
-        boolean contains = false;
+
         if (user != null && superAdministrators != null) {
             contains = Arrays.asList(superAdministrators).contains(user.getAdminId().toString());
         }
 
         //由于分页组件默认执行startPage的第一个sql，因此提前单独执行
-        List<Integer> porjKeys = null;
         if (!contains) {
             //获取用户所管理的工程项目KEY集合
             porjKeys = permissionUserProjectService.findPorjKeysByUserId(user.getAdminId());
-        }
+        }*/
 
         //设置分页信息
         if (helper == null) {
@@ -162,7 +166,6 @@ public class PermissionProjectService extends ServiceImpl<FuPermissionProjectMap
             list = fuPermissionProjectMapper.selectPageList(fuPermissionProjectBO);
         } else {
             if (StringUtils.isNotEmpty(porjKeys)) {
-                //List<FuPermissionProject> ppList = permissionProjectMapper.selectList(new EntityWrapper<FuPermissionProject>().eq(FuPermissionProject.PROJ_STATUS, 1).in(FuPermissionProject.PROJ_KEY, porjKeys));
                 fuPermissionProjectBO.setProjKeys(porjKeys);
                 list = fuPermissionProjectMapper.selectPageList(fuPermissionProjectBO);
             }
@@ -209,6 +212,16 @@ public class PermissionProjectService extends ServiceImpl<FuPermissionProjectMap
 
         //根据工程项目ID查询工程项目key
         List<Integer> projKeys = fuPermissionProjectMapper.selectKeyById(paramList);
+        /*校验项目下是否有管理员*/
+        Map conditionMap=new HashMap();
+        for(Integer projKey:projKeys){
+            conditionMap.put(FuPermissionAdmin.PROJ_KEY,projKey);
+            List<FuPermissionAdmin> admins= fuPermissionAdminMapper.selectByMap(conditionMap);
+            if(admins!=null&&admins.size()>0){
+                throw new RmsrException(RmsResultCode.PERMISSION_PROJECT_DATA_DEL_FAILURE_INFOS);
+            }
+        }
+
         //批量删除工程项目
         Integer isSuccess = fuPermissionProjectMapper.deleteBatchIds(paramList);
         if (isSuccess < 0) {
@@ -221,12 +234,6 @@ public class PermissionProjectService extends ServiceImpl<FuPermissionProjectMap
             boolean success = permissionResourceService.deleteBatchIds(resIds);
             boolean perRole = permissionRoleResourceService.delete(new EntityWrapper<FuPermissionRoleResource>().in(FuPermissionRoleResource.RES_ID, resIds));
         }
-        //获取当前登录用户信息
-        AdminInfo user = RequestContextHolderUtil.getAdminInfo();
-        //TODO
-        user = new AdminInfo();
-        user.setAdminLogin("test");
-        log.warn("user:{},remove permission project[{}]", user.getAdminLogin(), ids);
     }
 
     /**

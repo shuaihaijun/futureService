@@ -1,85 +1,269 @@
 package com.future.entity.permission;
 
-import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
 import com.baomidou.mybatisplus.enums.IdType;
 import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
-import lombok.Data;
 
-import java.io.Serializable;
 import java.util.Date;
 
-/**
- * å·¥ç¨‹é¡¹ç›®ä¿¡æ¯å®ä½“ç±»
- *
- * @author Admin
- * @version: 1.0
- */
-@ApiModel("å·¥ç¨‹é¡¹ç›®ä¿¡æ¯å®ä½“ç±»")
+@ApiModel("¹¤³ÌÏîÄ¿ĞÅÏ¢ÊµÌåÀà")
 @TableName("fu_permission_project")
-@Data
-public class FuPermissionProject implements Serializable {
-
-    /**
-     * ä¸»é”®
-     */
-    @ApiModelProperty(value = "ä¸»é”®")
-    @TableId(type = IdType.AUTO)
-    private Integer id;
-    /**
-     * å·¥ç¨‹é¡¹ç›®åç§°
-     */
-    @ApiModelProperty(value = "å·¥ç¨‹é¡¹ç›®åç§°")
-    @TableField
-    private String projName;
-    /**
-     * å·¥ç¨‹é¡¹ç›®keyï¼Œä¸å¯é‡å¤ï¼Œå…¨è¡¨å”¯ä¸€
-     */
-    @ApiModelProperty(value = "å·¥ç¨‹é¡¹ç›®KEY")
-    @TableField
-    private Integer projKey;
-    /**
-     * å·¥ç¨‹é¡¹ç›®è´Ÿè´£äººå§“å
-     */
-    @ApiModelProperty(value = "å·¥ç¨‹é¡¹ç›®è´Ÿè´£äººå§“å")
-    @TableField
-    private String projAdmin;
-    /**
-     * çŠ¶æ€ 1 æœ‰æ•ˆ 0 æ— æ•ˆ
-     */
-    @ApiModelProperty(value = "çŠ¶æ€ 1ï¼šæœ‰æ•ˆ 0ï¼šæ— æ•ˆ")
-    @TableField
-    private Integer projStatus;
-
-    /**
-     * ç±»å‹ 0æ™®é€šç³»ç»Ÿ 1ç‰¹æ®Šç³»ç»Ÿ
-     */
-    @ApiModelProperty(value = "ç±»å‹ 0æ™®é€šç³»ç»Ÿ 1ç‰¹æ®Šç³»ç»Ÿ")
-    @TableField
-    private Integer projType;
-    /**
-     * åˆ›å»ºäººå§“å
-     */
-    @ApiModelProperty(value = "åˆ›å»ºäººå§“å")
-    @TableField
-    private String creater;
-    /**
-     * åˆ›å»ºæ—¶é—´
-     */
-    @ApiModelProperty(value = "åˆ›å»ºæ—¶é—´")
-    @TableField
-    private Date createDate;
-    /**
-     * åˆ›å»ºæ—¶é—´
-     */
-    @ApiModelProperty(value = "ä¿®æ”¹æ—¶é—´")
-    @TableField
-    private Date modifyDate;
+public class FuPermissionProject {
 
     public static final String PROJ_ID = "Id";
     public static final String PROJ_KEY = "Proj_key";
     public static final String PROJ_STATUS = "Proj_status";
+    /**
+     * Ö÷¼ü
+     */
+    @TableId(type = IdType.AUTO)
+    private Integer id;
 
+    /**
+     * ÏîÄ¿¹¤³ÌÃû³Æ
+     */
+    private String projName;
+
+    /**
+     * ÏîÄ¿¹¤³ÌKEY
+     */
+    private Integer projKey;
+
+    /**
+     * ÏîÄ¿¹¤³Ì¹ÜÀíÔ±ĞÕÃû
+     */
+    private String projAdmin;
+
+    /**
+     * ÏîÄ¿¹¤³Ì×´Ì¬ 1ÓĞĞ§ 0ÎŞĞ§
+     */
+    private Integer projStatus;
+
+    /**
+     * ÀàĞÍ(0 ÍÅ¶Ó,1 Æ½Ì¨,2 ÏµÍ³)
+     */
+    private Integer projType;
+
+    /**
+     * ´´½¨ÈËĞÕÃû
+     */
+    private String creater;
+
+    /**
+     * ´´½¨Ê±¼ä
+     */
+    private Date createDate;
+
+    /**
+     * ¸üĞÂÊ±¼ä
+     */
+    private Date modifyDate;
+
+    /**
+     * ÏîÄ¿¹¤³Ìlogo
+     */
+    private String projLogo;
+
+    /**
+     * ÏîÄ¿¹¤³Ì±êÓï
+     */
+    private String projSlogan;
+
+    /**
+     * ÏîÄ¿¹¤³ÌÃèÊö
+     */
+    private String projDesc;
+
+    /**
+     * Ö÷¼ü
+     * @return id Ö÷¼ü
+     */
+    public Integer getId() {
+        return id;
+    }
+
+    /**
+     * Ö÷¼ü
+     * @param id Ö÷¼ü
+     */
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    /**
+     * ÏîÄ¿¹¤³ÌÃû³Æ
+     * @return proj_name ÏîÄ¿¹¤³ÌÃû³Æ
+     */
+    public String getProjName() {
+        return projName;
+    }
+
+    /**
+     * ÏîÄ¿¹¤³ÌÃû³Æ
+     * @param projName ÏîÄ¿¹¤³ÌÃû³Æ
+     */
+    public void setProjName(String projName) {
+        this.projName = projName == null ? null : projName.trim();
+    }
+
+    /**
+     * ÏîÄ¿¹¤³ÌKEY
+     * @return proj_key ÏîÄ¿¹¤³ÌKEY
+     */
+    public Integer getProjKey() {
+        return projKey;
+    }
+
+    /**
+     * ÏîÄ¿¹¤³ÌKEY
+     * @param projKey ÏîÄ¿¹¤³ÌKEY
+     */
+    public void setProjKey(Integer projKey) {
+        this.projKey = projKey;
+    }
+
+    /**
+     * ÏîÄ¿¹¤³Ì¹ÜÀíÔ±ĞÕÃû
+     * @return proj_admin ÏîÄ¿¹¤³Ì¹ÜÀíÔ±ĞÕÃû
+     */
+    public String getProjAdmin() {
+        return projAdmin;
+    }
+
+    /**
+     * ÏîÄ¿¹¤³Ì¹ÜÀíÔ±ĞÕÃû
+     * @param projAdmin ÏîÄ¿¹¤³Ì¹ÜÀíÔ±ĞÕÃû
+     */
+    public void setProjAdmin(String projAdmin) {
+        this.projAdmin = projAdmin == null ? null : projAdmin.trim();
+    }
+
+    /**
+     * ÏîÄ¿¹¤³Ì×´Ì¬ 1ÓĞĞ§ 0ÎŞĞ§
+     * @return proj_status ÏîÄ¿¹¤³Ì×´Ì¬ 1ÓĞĞ§ 0ÎŞĞ§
+     */
+    public Integer getProjStatus() {
+        return projStatus;
+    }
+
+    /**
+     * ÏîÄ¿¹¤³Ì×´Ì¬ 1ÓĞĞ§ 0ÎŞĞ§
+     * @param projStatus ÏîÄ¿¹¤³Ì×´Ì¬ 1ÓĞĞ§ 0ÎŞĞ§
+     */
+    public void setProjStatus(Integer projStatus) {
+        this.projStatus = projStatus;
+    }
+
+    /**
+     * ÀàĞÍ(0 ÍÅ¶Ó,1 Æ½Ì¨,2 ÏµÍ³)
+     * @return proj_type ÀàĞÍ(0 ÍÅ¶Ó,1 Æ½Ì¨,2 ÏµÍ³)
+     */
+    public Integer getProjType() {
+        return projType;
+    }
+
+    /**
+     * ÀàĞÍ(0 ÍÅ¶Ó,1 Æ½Ì¨,2 ÏµÍ³)
+     * @param projType ÀàĞÍ(0 ÍÅ¶Ó,1 Æ½Ì¨,2 ÏµÍ³)
+     */
+    public void setProjType(Integer projType) {
+        this.projType = projType;
+    }
+
+    /**
+     * ´´½¨ÈËĞÕÃû
+     * @return creater ´´½¨ÈËĞÕÃû
+     */
+    public String getCreater() {
+        return creater;
+    }
+
+    /**
+     * ´´½¨ÈËĞÕÃû
+     * @param creater ´´½¨ÈËĞÕÃû
+     */
+    public void setCreater(String creater) {
+        this.creater = creater == null ? null : creater.trim();
+    }
+
+    /**
+     * ´´½¨Ê±¼ä
+     * @return create_date ´´½¨Ê±¼ä
+     */
+    public Date getCreateDate() {
+        return createDate;
+    }
+
+    /**
+     * ´´½¨Ê±¼ä
+     * @param createDate ´´½¨Ê±¼ä
+     */
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
+    }
+
+    /**
+     * ¸üĞÂÊ±¼ä
+     * @return modify_date ¸üĞÂÊ±¼ä
+     */
+    public Date getModifyDate() {
+        return modifyDate;
+    }
+
+    /**
+     * ¸üĞÂÊ±¼ä
+     * @param modifyDate ¸üĞÂÊ±¼ä
+     */
+    public void setModifyDate(Date modifyDate) {
+        this.modifyDate = modifyDate;
+    }
+
+    /**
+     * ÏîÄ¿¹¤³Ìlogo
+     * @return proj_logo ÏîÄ¿¹¤³Ìlogo
+     */
+    public String getProjLogo() {
+        return projLogo;
+    }
+
+    /**
+     * ÏîÄ¿¹¤³Ìlogo
+     * @param projLogo ÏîÄ¿¹¤³Ìlogo
+     */
+    public void setProjLogo(String projLogo) {
+        this.projLogo = projLogo == null ? null : projLogo.trim();
+    }
+
+    /**
+     * ÏîÄ¿¹¤³Ì±êÓï
+     * @return proj_slogan ÏîÄ¿¹¤³Ì±êÓï
+     */
+    public String getProjSlogan() {
+        return projSlogan;
+    }
+
+    /**
+     * ÏîÄ¿¹¤³Ì±êÓï
+     * @param projSlogan ÏîÄ¿¹¤³Ì±êÓï
+     */
+    public void setProjSlogan(String projSlogan) {
+        this.projSlogan = projSlogan == null ? null : projSlogan.trim();
+    }
+
+    /**
+     * ÏîÄ¿¹¤³ÌÃèÊö
+     * @return proj_desc ÏîÄ¿¹¤³ÌÃèÊö
+     */
+    public String getProjDesc() {
+        return projDesc;
+    }
+
+    /**
+     * ÏîÄ¿¹¤³ÌÃèÊö
+     * @param projDesc ÏîÄ¿¹¤³ÌÃèÊö
+     */
+    public void setProjDesc(String projDesc) {
+        this.projDesc = projDesc == null ? null : projDesc.trim();
+    }
 }

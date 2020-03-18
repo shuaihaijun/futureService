@@ -7,7 +7,9 @@ import java.util.Date;
 
 public class FuPermissionAdmin {
 
-    public static String USER_ID ="user+id";
+    public static String ADMIN_ID ="id";
+    public static String USER_ID ="user_id";
+    public static String PROJ_KEY ="proj_key";
     /**
      * 主键
      */

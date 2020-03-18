@@ -6,19 +6,13 @@ import com.future.pojo.bo.permission.FuPermissionProjectBO;
 import com.future.pojo.vo.permission.FuPermissionProjectVO;
 import org.apache.ibatis.annotations.MapKey;
 import org.apache.ibatis.annotations.Param;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Map;
 
-/**
- * 工程项目信息模块Mapper接口
- *
- * @author Admin
- * @version: 1.0
- */
-@Repository
-public interface FuPermissionProjectMapper extends BaseMapper<FuPermissionProject> {
+@Component
+public interface FuPermissionProjectMapper  extends BaseMapper<FuPermissionProject> {
 
     /**
      * 查询全部工程项目信息
@@ -46,4 +40,15 @@ public interface FuPermissionProjectMapper extends BaseMapper<FuPermissionProjec
      */
     List<FuPermissionProjectVO> selectPageList(@Param("param") FuPermissionProjectBO fuPermissionProjectBO);
 
+    int deleteByPrimaryKey(Integer id);
+
+    Integer insert(FuPermissionProject record);
+
+    int insertSelective(FuPermissionProject record);
+
+    FuPermissionProject selectByPrimaryKey(Integer id);
+
+    int updateByPrimaryKeySelective(FuPermissionProject record);
+
+    int updateByPrimaryKey(FuPermissionProject record);
 }

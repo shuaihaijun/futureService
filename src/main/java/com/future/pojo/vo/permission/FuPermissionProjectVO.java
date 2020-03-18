@@ -7,6 +7,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * 工程项目信息VO类
@@ -49,6 +50,36 @@ public class FuPermissionProjectVO implements Serializable {
      */
     @ApiModelProperty(value = "类型 0普通系统 1特殊系统")
     private Integer projType;
+
+    /**
+     * 项目工程logo
+     */
+    private String projLogo;
+
+    /**
+     * 项目工程标语
+     */
+    private String projSlogan;
+
+    /**
+     * 项目工程描述
+     */
+    private String projDesc;
+
+    /**
+     * 创建人姓名
+     */
+    private String creater;
+
+    /**
+     * 创建时间
+     */
+    private Date createDate;
+
+    /**
+     * 更新时间
+     */
+    private Date modifyDate;
 
     /**
      * 将数据访问实体对象转换为表现层对象

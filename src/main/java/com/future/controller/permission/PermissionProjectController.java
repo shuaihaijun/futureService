@@ -41,9 +41,10 @@ public class PermissionProjectController {
      */
     @ApiOperation(value = "新增工程项目信息", notes = "新增工程项目信息")
     @PostMapping(value = "/save")
-    public void save(@RequestBody @Validated RequestParams<FuPermissionProjectBO> requestParams) throws Exception {
+    public boolean save(@RequestBody @Validated RequestParams<FuPermissionProjectBO> requestParams) throws Exception {
         FuPermissionProjectBO fuPermissionProjectBO = requestParams.getParams();
         permissionProjectService.save(fuPermissionProjectBO);
+        return true;
     }
 
     /**
@@ -53,9 +54,10 @@ public class PermissionProjectController {
      */
     @ApiOperation(value = "工程项目信息更新保存", notes = "工程项目信息更新保存")
     @PostMapping(value = "/modify")
-    public void modify(@RequestBody RequestParams<FuPermissionProjectBO> requestParams) throws Exception {
+    public boolean modify(@RequestBody RequestParams<FuPermissionProjectBO> requestParams) throws Exception {
         FuPermissionProjectBO fuPermissionProjectBO = requestParams.getParams();
         permissionProjectService.modify(fuPermissionProjectBO);
+        return true;
     }
 
     /**
@@ -94,9 +96,10 @@ public class PermissionProjectController {
      */
     @ApiOperation(value = "工程项目信息删除", notes = "工程项目信息删除")
     @PostMapping(value = "/remove")
-    public void delete(@RequestBody RequestParams<BasicBO> requestParams) throws Exception {
+    public boolean delete(@RequestBody RequestParams<BasicBO> requestParams) throws Exception {
         String ids = requestParams.getParams().getDelIds();
         permissionProjectService.remove(ids);
+        return true;
     }
 
     /**

@@ -1,24 +1,185 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.future.mapper.permission.FuPermissionProjectMapper">
-
-    <sql id="baseColumnList">
-        Id,
-        Proj_name,
-        Proj_key,
-        Proj_admin,
-        Proj_status,
-        Proj_type,
-        Creater,
+  <resultMap id="BaseResultMap" type="com.future.entity.permission.FuPermissionProject">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="proj_name" jdbcType="VARCHAR" property="projName" />
+    <result column="proj_key" jdbcType="INTEGER" property="projKey" />
+    <result column="proj_admin" jdbcType="VARCHAR" property="projAdmin" />
+    <result column="proj_status" jdbcType="TINYINT" property="projStatus" />
+    <result column="proj_type" jdbcType="TINYINT" property="projType" />
+    <result column="creater" jdbcType="VARCHAR" property="creater" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="modify_date" jdbcType="TIMESTAMP" property="modifyDate" />
+    <result column="proj_logo" jdbcType="VARCHAR" property="projLogo" />
+    <result column="proj_slogan" jdbcType="VARCHAR" property="projSlogan" />
+    <result column="proj_desc" jdbcType="VARCHAR" property="projDesc" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, proj_name, proj_key, proj_admin, proj_status, proj_type, creater, create_date, 
+    modify_date, proj_logo, proj_slogan, proj_desc
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from fu_permission_project
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from fu_permission_project
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.future.entity.permission.FuPermissionProject">
+    insert into fu_permission_project (id, proj_name, proj_key, 
+      proj_admin, proj_status, proj_type, 
+      creater, create_date, modify_date, 
+      proj_logo, proj_slogan, proj_desc
+      )
+    values (#{id,jdbcType=INTEGER}, #{projName,jdbcType=VARCHAR}, #{projKey,jdbcType=INTEGER}, 
+      #{projAdmin,jdbcType=VARCHAR}, #{projStatus,jdbcType=TINYINT}, #{projType,jdbcType=TINYINT}, 
+      #{creater,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, #{modifyDate,jdbcType=TIMESTAMP}, 
+      #{projLogo,jdbcType=VARCHAR}, #{projSlogan,jdbcType=VARCHAR}, #{projDesc,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.future.entity.permission.FuPermissionProject">
+    insert into fu_permission_project
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="projName != null">
+        proj_name,
+      </if>
+      <if test="projKey != null">
+        proj_key,
+      </if>
+      <if test="projAdmin != null">
+        proj_admin,
+      </if>
+      <if test="projStatus != null">
+        proj_status,
+      </if>
+      <if test="projType != null">
+        proj_type,
+      </if>
+      <if test="creater != null">
+        creater,
+      </if>
+      <if test="createDate != null">
         create_date,
-        modify_date
-    </sql>
+      </if>
+      <if test="modifyDate != null">
+        modify_date,
+      </if>
+      <if test="projLogo != null">
+        proj_logo,
+      </if>
+      <if test="projSlogan != null">
+        proj_slogan,
+      </if>
+      <if test="projDesc != null">
+        proj_desc,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="projName != null">
+        #{projName,jdbcType=VARCHAR},
+      </if>
+      <if test="projKey != null">
+        #{projKey,jdbcType=INTEGER},
+      </if>
+      <if test="projAdmin != null">
+        #{projAdmin,jdbcType=VARCHAR},
+      </if>
+      <if test="projStatus != null">
+        #{projStatus,jdbcType=TINYINT},
+      </if>
+      <if test="projType != null">
+        #{projType,jdbcType=TINYINT},
+      </if>
+      <if test="creater != null">
+        #{creater,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null">
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyDate != null">
+        #{modifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="projLogo != null">
+        #{projLogo,jdbcType=VARCHAR},
+      </if>
+      <if test="projSlogan != null">
+        #{projSlogan,jdbcType=VARCHAR},
+      </if>
+      <if test="projDesc != null">
+        #{projDesc,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.future.entity.permission.FuPermissionProject">
+    update fu_permission_project
+    <set>
+      <if test="projName != null">
+        proj_name = #{projName,jdbcType=VARCHAR},
+      </if>
+      <if test="projKey != null">
+        proj_key = #{projKey,jdbcType=INTEGER},
+      </if>
+      <if test="projAdmin != null">
+        proj_admin = #{projAdmin,jdbcType=VARCHAR},
+      </if>
+      <if test="projStatus != null">
+        proj_status = #{projStatus,jdbcType=TINYINT},
+      </if>
+      <if test="projType != null">
+        proj_type = #{projType,jdbcType=TINYINT},
+      </if>
+      <if test="creater != null">
+        creater = #{creater,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null">
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyDate != null">
+        modify_date = #{modifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="projLogo != null">
+        proj_logo = #{projLogo,jdbcType=VARCHAR},
+      </if>
+      <if test="projSlogan != null">
+        proj_slogan = #{projSlogan,jdbcType=VARCHAR},
+      </if>
+      <if test="projDesc != null">
+        proj_desc = #{projDesc,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.future.entity.permission.FuPermissionProject">
+    update fu_permission_project
+    set proj_name = #{projName,jdbcType=VARCHAR},
+      proj_key = #{projKey,jdbcType=INTEGER},
+      proj_admin = #{projAdmin,jdbcType=VARCHAR},
+      proj_status = #{projStatus,jdbcType=TINYINT},
+      proj_type = #{projType,jdbcType=TINYINT},
+      creater = #{creater,jdbcType=VARCHAR},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      modify_date = #{modifyDate,jdbcType=TIMESTAMP},
+      proj_logo = #{projLogo,jdbcType=VARCHAR},
+      proj_slogan = #{projSlogan,jdbcType=VARCHAR},
+      proj_desc = #{projDesc,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
 
     <!-- 通过工程项目BO查询 -->
-    <select id="selectPageList" parameterType="com.future.pojo.bo.permission.FuPermissionProjectBO"
-            resultType="com.future.pojo.vo.permission.FuPermissionProjectVO">
+    <select id="selectPageList" parameterType="com.future.pojo.bo.permission.FuPermissionProjectBO" resultType="com.future.pojo.vo.permission.FuPermissionProjectVO">
         SELECT
-        <include refid="baseColumnList"/>
+        <include refid="Base_Column_List" />
         FROM fu_permission_project
         WHERE Proj_status = 1
         <if test="param.projKey != null">
@@ -27,9 +188,9 @@
         <if test="param.projName != null and param.projName != ''">
             AND Proj_name = #{param.projName,jdbcType=VARCHAR}
         </if>
-        <if test="param.projKeys != null and param.projKeys.size > 0">
+        <if test="param.projKeys != null and param.projKeys.size &gt; 0">
             AND Proj_key
-            <foreach collection="param.projKeys" open="IN (" close=")" separator="," item="projKey">
+            <foreach close=")" collection="param.projKeys" item="projKey" open="IN (" separator=",">
                 #{projKey,jdbcType=INTEGER}
             </foreach>
         </if>
@@ -42,7 +203,7 @@
         WHERE 1=1
         <if test="param != null">
             AND id
-            <foreach collection="param" item="id" close=")" open="IN (" separator=",">
+            <foreach close=")" collection="param" item="id" open="IN (" separator=",">
                 #{id,jdbcType=INTEGER}
             </foreach>
         </if>
@@ -51,7 +212,7 @@
     <!-- 查询全部信息 -->
     <select id="selectAllProjet" resultType="com.future.entity.permission.FuPermissionProject">
         SELECT
-        <include refid="baseColumnList"/>
+        <include refid="Base_Column_List" />
         FROM fu_permission_project
         WHERE Proj_status = 1
     </select>

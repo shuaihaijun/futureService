@@ -14,6 +14,7 @@ public enum RmsResultCode implements ResultCode{
     PERMISSION_PROJECT_DATA_UPDATE_FAILURE(300002, "工程项目信息更新失败"),
     PERMISSION_PROJECT_DATA_DEL_FAILURE(300003, "工程项目信息删除失败"),
     PERMISSION_PROJECT_DATA_IS_EXIST(300004, "此工程项目已存在"),
+    PERMISSION_PROJECT_DATA_DEL_FAILURE_INFOS(300005, "工程项目信息删除失败"),
 
 
     /** 权限资源信息模块业务异常 */

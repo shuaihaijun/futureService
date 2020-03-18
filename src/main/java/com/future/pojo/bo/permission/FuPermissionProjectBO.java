@@ -50,6 +50,26 @@ public class FuPermissionProjectBO implements Serializable {
     @ApiModelProperty(value = "工程项目KEY集合")
     private List<Integer> projKeys;
 
+
+    /**
+     * 类型(0 团队,1 平台,2 系统)
+     */
+    private Integer projType;
+    /**
+     * 项目工程logo
+     */
+    private String projLogo;
+
+    /**
+     * 项目工程标语
+     */
+    private String projSlogan;
+
+    /**
+     * 项目工程描述
+     */
+    private String projDesc;
+
     /**
      * 将业务层对象转换为数据访问实体对象
      *
