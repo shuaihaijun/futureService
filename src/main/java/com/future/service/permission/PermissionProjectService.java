@@ -10,8 +10,7 @@ import com.future.common.enums.RmsResultCode;
 import com.future.common.exception.BusinessException;
 import com.future.common.exception.RmsrException;
 import com.future.common.helper.PageInfoHelper;
-import com.future.common.util.RequestContextHolderUtil;
-import com.future.common.util.StringUtils;
+import com.future.common.util.*;
 import com.future.entity.permission.FuPermissionAdmin;
 import com.future.entity.permission.FuPermissionProject;
 import com.future.entity.permission.FuPermissionRoleResource;
@@ -23,6 +22,7 @@ import com.future.pojo.vo.permission.FuPermissionProjectVO;
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -190,6 +190,44 @@ public class PermissionProjectService extends ServiceImpl<FuPermissionProjectMap
             throw new BusinessException(GlobalResultCode.RESULE_DATA_NONE);
         }
         return FuPermissionProjectVO.modelToVO(proj);
+    }
+
+    /**
+     * 通过主键获取工程项目详情
+     * @param conditionMap
+     * @return
+     */
+    public FuPermissionProject findProject(Map conditionMap) throws Exception {
+        //验证必要参数值是否为空
+        if (conditionMap == null) {
+            throw new BusinessException(GlobalResultCode.PARAM_NULL_POINTER);
+        }
+        FuPermissionProject conditionProject=new FuPermissionProject();
+        if(conditionMap.get("userId")!=null){
+            // 使用用户id进行查找
+            Integer userId=Integer.parseInt(String.valueOf(conditionMap.get("userId")));
+            List<Integer> prokeys= permissionUserProjectService.findPorjKeysByUserId(userId);
+            if(prokeys==null||prokeys.size()==0){
+                throw new BusinessException(GlobalResultCode.RESULE_DATA_NONE);
+            }
+            conditionProject.setProjKey(prokeys.get(0));
+
+        }
+        if(conditionMap.get("id")!=null){
+            conditionProject.setId(Integer.parseInt(String.valueOf(conditionMap.get("id"))));
+        }
+        if(conditionMap.get("projKey")!=null){
+            conditionProject.setProjKey(Integer.parseInt(String.valueOf(conditionMap.get("projKey"))));
+        }
+        if(conditionMap.get("projName")!=null){
+            conditionProject.setProjName(String.valueOf(conditionMap.get("projName")));
+        }
+        FuPermissionProject proj = fuPermissionProjectMapper.selectOne(conditionProject);
+        if (proj == null) {
+            throw new BusinessException(GlobalResultCode.RESULE_DATA_NONE);
+        }
+        return proj;
+
     }
 
     /**

@@ -2,6 +2,7 @@ package com.future.controller.permission;
 
 
 import com.future.common.helper.PageInfoHelper;
+import com.future.entity.permission.FuPermissionProject;
 import com.future.pojo.bo.BasicBO;
 import com.future.common.result.RequestParams;
 import com.future.pojo.bo.permission.FuPermissionProjectBO;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -112,5 +114,19 @@ public class PermissionProjectController {
     public List<FuPermissionProjectVO> queryAll(@RequestBody RequestParams requestParams) throws Exception {
         List<FuPermissionProjectVO> resultList = permissionProjectService.findAllList();
         return resultList;
+    }
+
+
+    /**
+     * 工程项目信息详情
+     * @param requestParams
+     * @return
+     */
+    @ApiOperation(value = "工程项目信息详情查询", notes = "工程项目信息详情查询")
+    @PostMapping(value = "/queryDetailByCondition")
+    public FuPermissionProject queryDetailByCondition(@RequestBody RequestParams<Map> requestParams) throws Exception {
+        Map permissionProject = requestParams.getParams();
+        FuPermissionProject project = permissionProjectService.findProject(permissionProject);
+        return project;
     }
 }
