@@ -23,4 +23,6 @@ public interface FuUserFollowsMapper extends BaseMapper<FuUserFollows> {
     int updateByPrimaryKey(FuUserFollows record);
 
     List<FuFollowUserVO> queryFollowUsers(Map conditionMap);
+
+    List<FuUserFollows> queryProjectSignalFollows(Map conditionMap);
 }

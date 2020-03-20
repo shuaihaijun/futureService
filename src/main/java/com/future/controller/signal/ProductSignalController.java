@@ -22,7 +22,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -57,7 +56,7 @@ public class ProductSignalController {
     com.github.pagehelper.Page<FuProductSignal> querySignalInfos(@RequestBody RequestParams<Map> requestParams) {
         Map orderCondition = requestParams.getParams();
         PageInfoHelper helper = requestParams.getPageInfoHelper();
-        return fuProductSignalService.findSignalByCondition(orderCondition,helper);
+        return fuProductSignalService.querySignalInfos(orderCondition,helper);
     }
 
     //保存申请信息
@@ -96,13 +95,12 @@ public class ProductSignalController {
 
     //查询跟单信息
     @RequestMapping(value= "/signalFollowsQuery",method=RequestMethod.POST)
-    public @ResponseBody List<FuUserFollows> signalFollowsQuery(){
+    public @ResponseBody Page<FuUserFollows> signalFollowsQuery(@RequestBody RequestParams<Map> requestParams) {
         // 获取请求参数
-        String requestJSONStr = ThreadCache.getPostRequestParams();
-        JSONObject requestMap = JSONObject.parseObject(requestJSONStr);
-        Map conditionMap = requestMap.getInnerMap();
+        Map conditionMap = requestParams.getParams();
+        PageInfoHelper helper = requestParams.getPageInfoHelper();
         /*校验参数*/
-        return fuUserFollowsService.signalFollowsQuery(conditionMap);
+        return fuUserFollowsService.querySignalFollows(conditionMap,helper);
     }
 
     //查询跟单信息

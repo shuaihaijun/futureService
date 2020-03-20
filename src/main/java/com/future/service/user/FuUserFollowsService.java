@@ -64,33 +64,8 @@ public class FuUserFollowsService extends ServiceImpl<FuUserFollowsMapper, FuUse
      * @return
      */
     public PageInfo<FuFollowStateVO> querySignalFollowState(Map conditionMap, PageInfoHelper helper){
-        /*校验参数*/
-        Map serchMap=new HashMap();
-        if(!StringUtils.isEmpty(conditionMap.get("userId"))){
-            serchMap.put(FuUserFollows.USER_ID,conditionMap.get("userId"));
-        }
-        if(!StringUtils.isEmpty(conditionMap.get("signalId"))){
-            serchMap.put(FuUserFollows.SIGNAL_ID,conditionMap.get("signalId"));
-        }
-        if(!StringUtils.isEmpty(conditionMap.get("userMtAccId"))){
-            serchMap.put(FuUserFollows.USER_MT_ACC_ID,conditionMap.get("userMtAccId"));
-        }
-        if(!StringUtils.isEmpty(conditionMap.get("signalMtAccId"))){
-            serchMap.put(FuUserFollows.SIGNAL_MT_ACC_ID,conditionMap.get("signalMtAccId"));
-        }
-        if(!StringUtils.isEmpty(conditionMap.get("followState"))){
-            serchMap.put(FuUserFollows.FOLLOW_STATE,conditionMap.get("followState"));
-        }
-        if(conditionMap.get("operUserId")!=null){
-            String operUserId=String.valueOf(conditionMap.get("operUserId"));
-            /*非管理员用户 只能查询自己的数据*/
-            if(!userCommonService.isAdministrator(Integer.parseInt(operUserId))){
-                conditionMap.put("userId",operUserId);
-            }
-        }
 
-        Page<FuUserFollows> follows=PageHelper.startPage(helper.getPageNo(),helper.getPageSize());
-        fuUserFollowsMapper.selectByMap(serchMap);
+        Page<FuUserFollows> follows=querySignalFollows(conditionMap,helper);
 
         List<FuFollowStateVO> fuFollowStateVOS=new ArrayList<>();
         /*设置监听状态*/
@@ -172,11 +147,41 @@ public class FuUserFollowsService extends ServiceImpl<FuUserFollowsMapper, FuUse
     /**
      * 查询跟随列表
      * @param conditionMap
+     * @param helper
      * @return
      */
-    public List<FuUserFollows> signalFollowsQuery(Map conditionMap){
+    public Page<FuUserFollows> querySignalFollows(Map conditionMap,PageInfoHelper helper){
         /*校验参数*/
         Map serchMap=new HashMap();
+        if(conditionMap == null||conditionMap.get("operUserId")==null){
+            log.error("查询列表,获取参数为空！");
+            throw new ParameterInvalidException("查询列表,获取参数为空！");
+        }
+        /*判断权限*/
+        String operId=String.valueOf(conditionMap.get("operUserId"));
+        if(StringUtils.isEmpty(operId)){
+            log.error("查询列表,用户未登录！");
+            throw new ParameterInvalidException("查询列表,获取参数为空！");
+        }
+        /*校验信息*/
+        Integer operUserProj=userCommonService.getUserProjKey(Integer.parseInt(operId));
+        Boolean isProjAdmin=userCommonService.isAdministrator(Integer.parseInt(operId),operUserProj);
+        if(operUserProj==null){
+            log.error("查询用户列表,用户权限有误！");
+            throw new ParameterInvalidException("查询用户列表,用户权限有误！");
+        }
+
+        if(isProjAdmin&&operUserProj==0){
+            /*超管查询*/
+        }else if(isProjAdmin){
+            /*资源组管理员查找*/
+            conditionMap.put("projKey",operUserProj);
+            return queryProjectSignalFollows(conditionMap,helper);
+        }else {
+            /*普通用户查找*/
+            serchMap.put("userId",operId);
+        }
+
         if(!StringUtils.isEmpty(conditionMap.get("userId"))){
             serchMap.put(FuUserFollows.USER_ID,conditionMap.get("userId"));
         }
@@ -192,14 +197,33 @@ public class FuUserFollowsService extends ServiceImpl<FuUserFollowsMapper, FuUse
         if(!StringUtils.isEmpty(conditionMap.get("followState"))){
             serchMap.put(FuUserFollows.FOLLOW_STATE,conditionMap.get("followState"));
         }
-        if(conditionMap.get("operUserId")!=null){
-            String operUserId=String.valueOf(conditionMap.get("operUserId"));
-            /*非管理员用户 只能查询自己的数据*/
-            if(!userCommonService.isAdministrator(Integer.parseInt(operUserId))){
-                conditionMap.put("userId",operUserId);
-            }
+
+        if(helper==null){
+            helper=new PageInfoHelper();
         }
-        return selectByMap(serchMap);
+        Page<FuUserFollows> userFollows= PageHelper.startPage(helper.getPageNo(),helper.getPageSize());
+        fuUserFollowsMapper.selectByMap(serchMap);
+        return userFollows;
+    }
+
+    /**
+     * 查询跟随列表
+     * @param conditionMap
+     * @param helper
+     * @return
+     */
+    public Page<FuUserFollows> queryProjectSignalFollows(Map conditionMap,PageInfoHelper helper){
+        if(conditionMap == null||conditionMap.get("projKey")==null){
+            log.error("查询列表,获取参数为空！");
+            throw new ParameterInvalidException("查询列表,获取参数为空！");
+        }
+
+        if(helper==null){
+            helper=new PageInfoHelper();
+        }
+        Page<FuUserFollows> userFollows= PageHelper.startPage(helper.getPageNo(),helper.getPageSize());
+        fuUserFollowsMapper.queryProjectSignalFollows(conditionMap);
+        return userFollows;
     }
 
     /**
@@ -220,9 +244,23 @@ public class FuUserFollowsService extends ServiceImpl<FuUserFollowsMapper, FuUse
             throw new ParameterInvalidException(GlobalResultCode.PARAM_NULL_POINTER);
         }
 
+        String operUserId = String.valueOf(dataMap.get("operUserId"));
         String userId = String.valueOf(dataMap.get("userId"));
         String userMtAccId = String.valueOf(dataMap.get("userMtAccId"));
         String signalId = String.valueOf(dataMap.get("signalId"));
+
+        /*判断权限*/
+        /*查看 申请人和用户 是否属于同一团队工程*/
+        Integer userProjKey= userCommonService.getUserProjKey(Integer.parseInt(userId));
+        Integer operProjKey= userCommonService.getUserProjKey(Integer.parseInt(operUserId));
+        if(userProjKey==null||userProjKey==0||operProjKey==null||operProjKey==0){
+            log.error("查询用户和申请人团队信息失败！");
+            throw new BusinessException(GlobalResultCode.RESULE_DATA_NONE,"查询用户和申请人团队信息失败！");
+        }
+        if(userProjKey!=operProjKey){
+            log.error("无权限跟随该信号源！");
+            throw new BusinessException("无权限跟随该信号源！");
+        }
 
         Map conMap=new HashMap();
         conMap.put("userId",userId);

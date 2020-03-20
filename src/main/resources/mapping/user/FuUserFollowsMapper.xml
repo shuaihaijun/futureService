@@ -352,4 +352,68 @@
         and f.follow_state = #{followState,jdbcType=INTEGER}
       </if>
   </select>
+  <select id="queryProjectSignalFollows" parameterType="java.util.Map" resultType="com.future.entity.user.FuUserFollows">
+    SELECT
+      f.id,
+      f.user_id,
+      f.signal_id,
+      f.user_server_name,
+      f.user_mt_acc_id,
+      f.signal_server_name,
+      f.signal_mt_acc_id,
+      f.follow_state,
+      f.follow_direct,
+      f.follow_mode,
+      f.follow_type,
+      f.follow_amount,
+      f.follow_max_amount,
+      f.follow_min_amount,
+      f.follow_alarm_amount,
+      f.follow_max_hands,
+      f.follow_min_hands,
+      f.follow_alarm_lose,
+      f.follow_alarm_level,
+      f.account_equity_percentage,
+      f.account_equity_amount,
+      f.modify_date,
+      f.create_date
+    FROM
+        fu_user_follows f
+    LEFT JOIN fu_product_signal_permit p ON f.signal_id = p.signal_id
+    WHERE 1=1
+      <if test="projKey != null">
+        and p.proj_key = #{projKey,jdbcType=INTEGER}
+      </if>
+      <if test="signalId != null">
+        and f.signal_id = #{signalId,jdbcType=INTEGER}
+      </if>
+      <if test="followState != null">
+        and f.follow_state = #{followState,jdbcType=INTEGER}
+      </if>
+      <if test="userId != null">
+        and f.user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="userServerName != null">
+        and f.user_server_name = #{userServerName,jdbcType=VARCHAR},
+      </if>
+      <if test="userMtAccId != null">
+        and f.user_mt_acc_id = #{userMtAccId,jdbcType=VARCHAR},
+      </if>
+      <if test="signalServerName != null">
+        and f.signal_server_name = #{signalServerName,jdbcType=VARCHAR},
+      </if>
+      <if test="signalMtAccId != null">
+        and f.signal_mt_acc_id = #{signalMtAccId,jdbcType=VARCHAR},
+      </if>
+
+      <if test="followDirect != null">
+        and f.follow_direct = #{followDirect,jdbcType=TINYINT},
+      </if>
+      <if test="followMode != null">
+        and f.follow_mode = #{followMode,jdbcType=TINYINT},
+      </if>
+      <if test="followType != null">
+        and f.follow_type = #{followType,jdbcType=TINYINT},
+      </if>
+  </select>
 </mapper>

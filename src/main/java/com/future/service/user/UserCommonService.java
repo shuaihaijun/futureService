@@ -110,19 +110,7 @@ public class UserCommonService extends ServiceImpl<FuComAgentMapper,FuComAgent> 
             return 0;
         }
         Integer projKey=0;
-        //  todo 需要redis
-        /*Object oProjKey= redisManager.hget(RedisConstant.H_USER_PROJ,userId.toString());
-        if(ObjectUtils.isEmpty(oProjKey)){
-            List<Integer> keys= fuPermissionUserProjectMapper.selectPorjKeysByUserId(userId);
-            if(keys==null||keys.size()==0){
-                log.error("根据用户ID，获取用户所属project失败！");
-                return 0;
-            }
-            projKey=keys.get(0);
-            redisManager.hset(RedisConstant.H_USER_PROJ,userId.toString(),keys.get(0));
-        }else {
-            projKey=(Integer)oProjKey;
-        }*/
+
         List<Integer> keys= fuPermissionUserProjectMapper.selectPorjKeysByUserId(userId);
         if(keys==null||keys.size()==0){
             log.error("根据用户ID，获取用户所属project失败！");

@@ -7,8 +7,11 @@ import com.future.common.exception.ParameterInvalidException;
 import com.future.common.helper.PageInfoHelper;
 import com.future.common.result.RequestParams;
 import com.future.common.util.ThreadCache;
+import com.future.entity.product.FuProductSignal;
 import com.future.pojo.bo.order.UserMTAccountBO;
 import com.future.service.account.FuAccountMtService;
+import com.future.service.product.FuProductSignalService;
+import com.future.service.user.UserCommonService;
 import com.github.pagehelper.Page;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,6 +30,12 @@ public class AccountMtController {
 
     @Autowired
     FuAccountMtService fuAccountMtService;
+    @Autowired
+    FuProductSignalService fuProductSignalService;
+    @Autowired
+    UserCommonService userCommonService;
+
+
 
     //获取MT账户信息
     @RequestMapping(value= "/getUserMtAccountByCondition",method=RequestMethod.POST)
@@ -162,11 +171,24 @@ public class AccountMtController {
         String requestJSONStr = ThreadCache.getPostRequestParams();
         JSONObject requestData = JSONObject.parseObject(requestJSONStr);
         Integer signalId=requestData.getInteger("signalId");
+        Integer operUserId=requestData.getInteger("operUserId");
         /*校验数据*/
-        if(signalId==null||signalId==0){
+        if(signalId==null||signalId==0||operUserId==null||operUserId==0){
             log.warn("连接MT账户信息,数据为空!");
             throw new ParameterInvalidException(GlobalResultCode.PARAM_NULL_POINTER);
         }
+        /*判断权限*/
+        FuProductSignal signal= fuProductSignalService.findSignalById(signalId);
+        Integer operProjectKey= userCommonService.getUserProjKey(operUserId);
+        if(signal==null||signal.getProjKey()==0||operProjectKey==0){
+            log.warn("查询信号源和团队信息失败!");
+            throw new ParameterInvalidException("查询信号源和团队信息失败!");
+        }
+        if(signal.getProjKey()!=operProjectKey){
+            log.warn("管理员只能操作自己团队的信号源!");
+            throw new ParameterInvalidException("管理员只能操作自己团队的信号源!");
+        }
+
         return fuAccountMtService.connectSignalMTAccount(signalId);
     }
     //断开信号源连接MT账户信息
@@ -176,10 +198,22 @@ public class AccountMtController {
         String requestJSONStr = ThreadCache.getPostRequestParams();
         JSONObject requestData = JSONObject.parseObject(requestJSONStr);
         Integer signalId=requestData.getInteger("signalId");
+        Integer operUserId=requestData.getInteger("operUserId");
         /*校验数据*/
-        if(signalId==null||signalId==0){
+        if(signalId==null||signalId==0||operUserId==null||operUserId==0){
             log.warn("连接MT账户信息,数据为空!");
             throw new ParameterInvalidException(GlobalResultCode.PARAM_NULL_POINTER);
+        }
+        /*判断权限*/
+        FuProductSignal signal= fuProductSignalService.findSignalById(signalId);
+        Integer operProjectKey= userCommonService.getUserProjKey(operUserId);
+        if(signal==null||signal.getProjKey()==0||operProjectKey==0){
+            log.warn("查询信号源和团队信息失败!");
+            throw new ParameterInvalidException("查询信号源和团队信息失败!");
+        }
+        if(signal.getProjKey()!=operProjectKey){
+            log.warn("管理员只能操作自己团队的信号源!");
+            throw new ParameterInvalidException("管理员只能操作自己团队的信号源!");
         }
         return fuAccountMtService.disConnectSignalMTAccount(signalId);
     }

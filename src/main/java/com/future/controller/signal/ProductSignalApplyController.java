@@ -1,9 +1,10 @@
 package com.future.controller.signal;
 
 import com.alibaba.fastjson.JSONObject;
-import com.baomidou.mybatisplus.plugins.Page;
 import com.future.common.enums.GlobalResultCode;
 import com.future.common.exception.DataConflictException;
+import com.future.common.helper.PageInfoHelper;
+import com.future.common.result.RequestParams;
 import com.future.common.util.StringUtils;
 import com.future.common.util.ThreadCache;
 import com.future.entity.product.FuProductSignalApply;
@@ -12,10 +13,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.ObjectUtils;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping("/signalApply")
@@ -45,12 +45,11 @@ public class ProductSignalApplyController {
     //查找申请信息
     @RequestMapping(value= "/findApply",method=RequestMethod.POST)
     public @ResponseBody
-    Page<FuProductSignalApply> findApply(){
-        // 获取请求参数
-        String requestJSONStr = ThreadCache.getPostRequestParams();
-        JSONObject requestMap = JSONObject.parseObject(requestJSONStr);
+    com.github.pagehelper.Page<FuProductSignalApply> findApply(@RequestBody RequestParams<Map> requestParams) throws Exception {
+        Map requestMap = requestParams.getParams();
+        PageInfoHelper helper = requestParams.getPageInfoHelper();
         /*条件查询日期不能超过1周*/
-        return fuProductSignalApplyService.findSignalApplyByCondition(requestMap);
+        return fuProductSignalApplyService.querySignalApply(requestMap,helper);
     }
 
     //保存申请信息

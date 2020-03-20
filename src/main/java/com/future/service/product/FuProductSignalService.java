@@ -9,13 +9,14 @@ import com.future.common.constants.CommonConstant;
 import com.future.common.constants.RedisConstant;
 import com.future.common.enums.GlobalResultCode;
 import com.future.common.exception.DataConflictException;
+import com.future.common.exception.ParameterInvalidException;
 import com.future.common.helper.PageInfoHelper;
 import com.future.common.util.RedisManager;
 import com.future.common.util.StringUtils;
-import com.future.entity.order.FuOrderFollowError;
 import com.future.entity.product.FuProductSignal;
 import com.future.mapper.product.FuProductSignalMapper;
 import com.future.pojo.vo.signal.FuUserSignalVO;
+import com.future.service.user.UserCommonService;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -30,12 +31,58 @@ import java.util.Map;
 
 @Service
 public class FuProductSignalService extends ServiceImpl<FuProductSignalMapper,FuProductSignal> {
+
+    @Autowired
+    UserCommonService userCommonService;
     @Autowired
     FuProductSignalMapper fuProductSignalMapper;
     @Autowired
     RedisManager redisManager;
 
     Logger log= LoggerFactory.getLogger(FuProductSignalService.class);
+
+
+    /**
+     * 查询申请列表
+     * @param conditionMap
+     * @param helper
+     * @return
+     */
+    public Page<FuProductSignal> querySignalInfos(Map conditionMap, PageInfoHelper helper){
+
+        /*判断查询条件*/
+        if(conditionMap == null||conditionMap.get("operId")==null){
+            log.error("查询列表,获取参数为空！");
+            throw new ParameterInvalidException("查询列表,获取参数为空！");
+        }
+        /*判断权限*/
+        String operId=String.valueOf(conditionMap.get("operId"));
+        if(StringUtils.isEmpty(operId)){
+            log.error("查询用户列表,用户未登录！");
+            throw new ParameterInvalidException("查询用户列表,获取参数为空！");
+        }
+        /*校验信息*/
+        Integer operUserProj=userCommonService.getUserProjKey(Integer.parseInt(operId));
+        Boolean isProjAdmin=userCommonService.isAdministrator(Integer.parseInt(operId),operUserProj);
+        if(operUserProj==null){
+            log.error("查询用户列表,用户权限有误！");
+            throw new ParameterInvalidException("查询用户列表,用户权限有误！");
+        }
+
+        if(isProjAdmin&&operUserProj==0){
+            /*超管查询*/
+            return findSignalByCondition(conditionMap,helper);
+        }else if(isProjAdmin){
+            /*资源组管理员查找*/
+            conditionMap.put("projKey",operUserProj);
+            return findSignalByCondition(conditionMap,helper);
+        }else {
+            /*普通用户查找*/
+            conditionMap.put("userId",operId);
+            return findSignalByCondition(conditionMap,helper);
+        }
+    }
+
 
     /**
      * 根据条件查找信号源信息
@@ -55,6 +102,9 @@ public class FuProductSignalService extends ServiceImpl<FuProductSignalMapper,Fu
         }
         if(!ObjectUtils.isEmpty(conditionMap.get("signalName"))){
             wrapper.eq(FuProductSignal.SIGNAL_NAME,String.valueOf(conditionMap.get("signalName")));
+        }
+        if(!ObjectUtils.isEmpty(conditionMap.get("projKey"))){
+            wrapper.eq(FuProductSignal.PROJ_KEY,String.valueOf(conditionMap.get("projKey")));
         }
         if(!ObjectUtils.isEmpty(conditionMap.get("signalState"))){
             if(String.valueOf(conditionMap.get("signalState")).indexOf(",")<0){

@@ -283,7 +283,7 @@ public class FuOrderFollowInfoService extends ServiceImpl<FuOrderFollowInfoMappe
         conditionMap.put("signalId",signals.get(0).getId());
         conditionMap.put("signalMtAccId",signals.get(0).getMtAccId());
         conditionMap.put("followState", AccountConstant.ACCOUNT_STATE_NORMAL);
-        List<FuUserFollows> fuUserFollows= fuUserFollowsService.signalFollowsQuery(conditionMap);
+        List<FuUserFollows> fuUserFollows= fuUserFollowsService.selectByMap(conditionMap);
         if(fuUserFollows==null||fuUserFollows.size()<=0){
             log.error("根据订单数据，查询跟单信息错误！");
         }

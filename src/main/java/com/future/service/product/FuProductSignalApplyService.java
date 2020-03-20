@@ -11,24 +11,32 @@ import com.future.common.enums.GlobalResultCode;
 import com.future.common.enums.UserRoleCode;
 import com.future.common.exception.BusinessException;
 import com.future.common.exception.DataConflictException;
+import com.future.common.exception.ParameterInvalidException;
+import com.future.common.helper.PageInfoHelper;
 import com.future.common.util.ConvertUtil;
 import com.future.common.util.StringUtils;
+import com.future.entity.account.FuAccountCommission;
 import com.future.entity.account.FuAccountInfo;
+import com.future.entity.permission.FuPermissionProject;
 import com.future.entity.permission.FuPermissionRole;
 import com.future.entity.permission.FuPermissionUserProject;
 import com.future.entity.permission.FuPermissionUserRole;
 import com.future.entity.product.FuProductSignal;
 import com.future.entity.product.FuProductSignalApply;
+import com.future.entity.product.FuProductSignalPermit;
 import com.future.entity.user.FuUser;
 import com.future.mapper.product.FuProductSignalApplyMapper;
 import com.future.mapper.product.FuProductSignalMapper;
 import com.future.service.account.FuAccountCommissionService;
 import com.future.service.account.FuAccountInfoService;
 import com.future.service.account.FuAccountMtService;
+import com.future.service.permission.PermissionProjectService;
 import com.future.service.permission.PermissionRoleService;
 import com.future.service.permission.PermissionUserProjectService;
 import com.future.service.permission.PermissionUserRoleService;
 import com.future.service.user.AdminService;
+import com.future.service.user.UserCommonService;
+import com.github.pagehelper.PageHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,33 +76,63 @@ public class FuProductSignalApplyService extends ServiceImpl<FuProductSignalAppl
     AdminService adminService;
     @Autowired
     PermissionUserRoleService permissionUserRoleService;
+    @Autowired
+    UserCommonService userCommonService;
+    @Autowired
+    PermissionProjectService permissionProjectService;
+    @Autowired
+    FuProductSignalPermitService fuProductSignalPermitService;
+
+
+    /**
+     * 查询申请列表
+     * @param conditionMap
+     * @param helper
+     * @return
+     */
+    public com.github.pagehelper.Page<FuProductSignalApply> querySignalApply(Map conditionMap, PageInfoHelper helper){
+
+        /*判断查询条件*/
+        if(conditionMap == null||conditionMap.get("operId")==null){
+            log.error("查询列表,获取参数为空！");
+            throw new ParameterInvalidException("查询列表,获取参数为空！");
+        }
+        /*判断权限*/
+        String operId=String.valueOf(conditionMap.get("operId"));
+        if(StringUtils.isEmpty(operId)){
+            log.error("查询用户列表,用户未登录！");
+            throw new ParameterInvalidException("查询用户列表,获取参数为空！");
+        }
+        /*校验信息*/
+        Integer operUserProj=userCommonService.getUserProjKey(Integer.parseInt(operId));
+        Boolean isProjAdmin=userCommonService.isAdministrator(Integer.parseInt(operId),operUserProj);
+        if(operUserProj==null){
+            log.error("查询用户列表,用户权限有误！");
+            throw new ParameterInvalidException("查询用户列表,用户权限有误！");
+        }
+
+        if(isProjAdmin&&operUserProj==0){
+            /*超管查询*/
+            return findSignalApplyByCondition(conditionMap,helper);
+        }else if(isProjAdmin){
+            /*资源组管理员查找*/
+            conditionMap.put("projKey",operUserProj);
+            return findSignalApplyByCondition(conditionMap,helper);
+        }else {
+            /*普通用户查找*/
+            conditionMap.put("userId",operId);
+            return findSignalApplyByCondition(conditionMap,helper);
+        }
+    }
 
     /**
      * 根据条件查找信号源信息
      * @param conditionMap
      * @return
      */
-    public Page<FuProductSignalApply> findSignalApplyByCondition(Map conditionMap){
-        /*校验信息*/
-        Page<FuProductSignalApply> page=new Page<FuProductSignalApply>();
+    public com.github.pagehelper.Page<FuProductSignalApply> findSignalApplyByCondition(Map conditionMap, PageInfoHelper helper){
+
         Wrapper<FuProductSignalApply> wrapper=new EntityWrapper<FuProductSignalApply>();
-
-        int pageSize=20;
-        int pageNum=1;
-
-        if(StringUtils.isEmpty(pageSize)||StringUtils.isEmpty(pageNum)){
-            log.error("分页数据为空！");
-            new DataConflictException(GlobalResultCode.PARAM_NULL_POINTER,"分页数据为空！");
-        }
-        if(conditionMap.get("pageSize")!=null){
-            pageSize=Integer.parseInt(String.valueOf(conditionMap.get("pageSize")));
-        }
-        if(conditionMap.get("pageNum")!=null){
-            pageNum=Integer.parseInt(String.valueOf(conditionMap.get("pageNum")));
-        }
-        page.setSize(pageSize);
-        page.setCurrent(pageNum);
-
         if(!ObjectUtils.isEmpty(conditionMap.get("applyId"))){
             wrapper.eq(FuProductSignalApply.APPLY_ID,String.valueOf(conditionMap.get("applyId")));
         }
@@ -103,6 +141,9 @@ public class FuProductSignalApplyService extends ServiceImpl<FuProductSignalAppl
         }
         if(!ObjectUtils.isEmpty(conditionMap.get("signalName"))){
             wrapper.eq(FuProductSignalApply.SIGNAL_NAME,String.valueOf(conditionMap.get("signalName")));
+        }
+        if(!ObjectUtils.isEmpty(conditionMap.get("projKey"))){
+            wrapper.eq(FuProductSignalApply.PROJ_KEY,String.valueOf(conditionMap.get("projKey")));
         }
         if(!ObjectUtils.isEmpty(conditionMap.get("applyState"))){
             if(String.valueOf(conditionMap.get("applyState")).indexOf(",")<0){
@@ -165,7 +206,13 @@ public class FuProductSignalApplyService extends ServiceImpl<FuProductSignalAppl
                 wrapper.lt(FuProductSignalApply.CHECK_DATE,dateClose[1]);
             }
         }
-        return selectPage(page,wrapper);
+
+        if(helper==null){
+            helper=new PageInfoHelper();
+        }
+        com.github.pagehelper.Page<FuProductSignalApply> commissions=PageHelper.startPage(helper.getPageNo(),helper.getPageSize());
+        fuProductSignalApplyMapper.selectList(wrapper);
+        return commissions;
     }
 
     /**
@@ -187,6 +234,7 @@ public class FuProductSignalApplyService extends ServiceImpl<FuProductSignalAppl
      * 保存信号源信息
      * @param signalMap
      */
+    @Transactional
     public int saveProductSignal(Map signalMap){
         /*校验信息*/
         if(ObjectUtils.isEmpty(signalMap.get("userId"))){
@@ -221,15 +269,54 @@ public class FuProductSignalApplyService extends ServiceImpl<FuProductSignalAppl
             log.error("联系人QQ不能为空！");
             throw new DataConflictException(GlobalResultCode.PARAM_NULL_POINTER,"联系人QQ不能为空！！");
         }
+        if(ObjectUtils.isEmpty(signalMap.get("qqNumber"))){
+            log.error("联系人QQ不能为空！");
+            throw new DataConflictException(GlobalResultCode.PARAM_NULL_POINTER,"联系人QQ不能为空！！");
+        }
+        /*校验申请人*/
+        if(ObjectUtils.isEmpty(signalMap.get("operUserId"))){
+            log.error("申请人信息为空！");
+            throw new DataConflictException(GlobalResultCode.PARAM_NULL_POINTER,"申请人信息为空！");
+        }
+
         /*组装信息*/
         FuProductSignalApply signal=setSignal(signalMap);
 
-        //todo  判断该信号源是否满足申请条件
+        /*查看 申请人和用户 是否属于同一团队工程*/
+        Integer userProjKey= userCommonService.getUserProjKey(signal.getUserId());
+        Integer operProjKey= userCommonService.getUserProjKey(signal.getOperUserId());
+        if(userProjKey==null||userProjKey==0||operProjKey==null||operProjKey==0){
+            log.error("查询用户和申请人团队信息失败！");
+            throw new BusinessException(GlobalResultCode.RESULE_DATA_NONE,"查询用户和申请人团队信息失败！");
+        }
+        if(userProjKey!=operProjKey){
+            log.error("只能申请自己团队的用户为信号源！");
+            throw new BusinessException("只能申请自己团队的用户为信号源！");
+        }
+
+        // 判断该信号源是否满足申请条件
+        Map conditionMap = new HashMap();
+        conditionMap.put(FuProductSignalApply.MT_ACC_ID,signalMap.get("mtAccId"));
+        List<FuProductSignalApply> applies=fuProductSignalMapper.selectByMap(conditionMap);
+        if(applies==null||applies.size()>0){
+            log.error("该MT账户已申请！");
+            throw new DataConflictException(GlobalResultCode.DATA_ALREADY_EXISTED,"该MT账户已申请！");
+        }
+
+        Map projectMap=new HashMap();
+        projectMap.put(FuPermissionProject.PROJ_KEY,operProjKey);
+        List<FuPermissionProject> projects= permissionProjectService.selectByMap(projectMap);
+        if(projects==null||projects.size()==0){
+            log.error("查询团队信息失败！");
+            throw new BusinessException(GlobalResultCode.RESULE_DATA_NONE,"查询团队信息失败！");
+        }
 
         /*默认数据填充*/
         signal.setCreateDate(new Date());
         signal.setApplyState(SignalConstant.SIGNAL_APPLY_STATE_SAVE);
         signal.setModifyDate(new Date());
+        signal.setProjKey(operProjKey);
+        signal.setProjName(projects.get(0).getProjName());
 
         return fuProductSignalApplyMapper.insertSelective(signal);
     }
@@ -285,18 +372,18 @@ public class FuProductSignalApplyService extends ServiceImpl<FuProductSignalAppl
      * @param mesage
      */
     @Transactional(propagation=Propagation.REQUIRED)
-    public void reviewProductSignal(int signalId,int state, String mesage){
+    public void reviewProductSignal(int signalApplyId,int state, String mesage){
         /**校验信息*/
-        if(signalId<1){
+        if(signalApplyId<1){
             log.error("传入数据为空！");
             throw new DataConflictException(GlobalResultCode.PARAM_NULL_POINTER,"传入数据为空!");
         }
         /*组装信息*/
         FuProductSignalApply signalApply=new FuProductSignalApply();
-        signalApply.setId(signalId);
+        signalApply.setId(signalApplyId);
         if(state== SignalConstant.SIGNAL_APPLY_STATE_NORMAL){
             /*审核通过*/
-            FuProductSignalApply apply=findSignalApplyById(signalId);
+            FuProductSignalApply apply=findSignalApplyById(signalApplyId);
             if(ObjectUtils.isEmpty(apply)){
                 log.error("查询申请信息错误！");
                 throw new BusinessException("查询申请信息错误！");
@@ -344,8 +431,19 @@ public class FuProductSignalApplyService extends ServiceImpl<FuProductSignalAppl
 
             /*修改绑定MT账号状态  isSignal=1、 设置端口等 */
             fuAccountMtService.checkSignalMtAccount(apply.getUserId(),apply.getServerName(),apply.getMtAccId());
+
             /*保存信号源*/
-            fuProductSignalMapper.insertSelective(signal);
+            int signalId= fuProductSignalMapper.insertSelective(signal);
+            if(signalId==0){
+                throw new BusinessException("信号源保存失败！");
+            }
+
+            /*设置信号源权限*/
+            FuProductSignalPermit permit=new FuProductSignalPermit();
+            permit.setSignalId(signalId);
+            permit.setProjKey(signal.getProjKey());
+            fuProductSignalPermitService.insertSelective(permit);
+
             signalApply.setApplyState(SignalConstant.SIGNAL_APPLY_STATE_NORMAL);
 
         }else if(state==SignalConstant.SIGNAL_APPLY_STATE_UNPASS){
@@ -388,6 +486,9 @@ public class FuProductSignalApplyService extends ServiceImpl<FuProductSignalAppl
             }
             if(!ObjectUtils.isEmpty(signalMap.get("userId"))){
                 signal.setUserId(Integer.valueOf(String.valueOf(signalMap.get("userId"))));
+            }
+            if(!ObjectUtils.isEmpty(signalMap.get("operUserId"))){
+                signal.setOperUserId(Integer.valueOf(String.valueOf(signalMap.get("operUserId"))));
             }
             if(!ObjectUtils.isEmpty(signalMap.get("signalName"))){
                 signal.setSignalName(String.valueOf(signalMap.get("signalName")));

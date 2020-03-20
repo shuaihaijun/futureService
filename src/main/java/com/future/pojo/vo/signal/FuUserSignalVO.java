@@ -42,6 +42,20 @@ public class FuUserSignalVO {
      * 信号源描述
      */
     private String signalDesc;
+    /**
+     * 项目工程KEY
+     */
+    private Integer projKey;
+
+    /**
+     * 项目工程名称
+     */
+    private String projName;
+
+    /**
+     * 申请人ID
+     */
+    private Integer operUserId;
 
     /**
      * 审核时间

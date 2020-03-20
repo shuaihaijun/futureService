@@ -585,6 +585,9 @@ public class ConvertUtil {
 
         signal.setUserId(apply.getUserId());
 
+        signal.setProjKey(apply.getProjKey());
+        signal.setProjName(apply.getProjName());
+
         signal.setSignalName(apply.getSignalName());
         signal.setSignalTem(apply.getSignalTem());
         signal.setSignalDesc(apply.getSignalDesc());

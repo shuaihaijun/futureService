@@ -22,6 +22,9 @@ import java.util.Date;
 @Data
 public class FuPermissionUserProject implements Serializable {
 
+
+    public static String PROJ_KEY= "proj_Key";
+    public static String USER_ID = "User_id";
     /**
      * 主键
      */
@@ -53,5 +56,4 @@ public class FuPermissionUserProject implements Serializable {
     @TableField
     private Date modifyDate;
 
-    public static final String USER_ID = "User_id";
 }
