@@ -218,26 +218,26 @@ public class FuOrderCustomerService extends ServiceImpl<FuOrderCustomerMapper, F
         String dateFrom="";
         String dataTo="";
 
-        if(conditionMap.get("accountId")!=null){
-            accountId=String.valueOf(conditionMap.get("accountId"));
-        }
-        if(conditionMap.get("username")!=null){
-            username=String.valueOf(conditionMap.get("username"));
-        }
-        if(conditionMap.get("userId")!=null){
-            userId=String.valueOf(conditionMap.get("userId"));
-        }
-        if(conditionMap.get("orderSymbol")!=null){
-            orderSymbol=String.valueOf(conditionMap.get("orderSymbol"));
-        }
-        if(conditionMap.get("orderOpenDate")!=null){
-            orderOpenDate=String.valueOf(conditionMap.get("orderOpenDate"));
-        }
-
-        if(conditionMap == null||conditionMap.get("operUserId")==null){
+        if(conditionMap == null||ObjectUtils.isEmpty(conditionMap.get("operUserId"))){
             log.error("查询用户列表,获取参数为空！");
             throw new ParameterInvalidException("查询用户列表,获取参数为空！");
         }
+        if(!ObjectUtils.isEmpty(conditionMap.get("accountId"))){
+            accountId=String.valueOf(conditionMap.get("accountId"));
+        }
+        if(!ObjectUtils.isEmpty(conditionMap.get("username"))){
+            username=String.valueOf(conditionMap.get("username"));
+        }
+        if(!ObjectUtils.isEmpty(conditionMap.get("userId"))){
+            userId=String.valueOf(conditionMap.get("userId"));
+        }
+        if(!ObjectUtils.isEmpty(conditionMap.get("orderSymbol"))){
+            orderSymbol=String.valueOf(conditionMap.get("orderSymbol"));
+        }
+        if(!ObjectUtils.isEmpty(conditionMap.get("orderOpenDate"))){
+            orderOpenDate=String.valueOf(conditionMap.get("orderOpenDate"));
+        }
+
         /*判断权限*/
         String operUserId=String.valueOf(conditionMap.get("operUserId"));
         if(com.alibaba.druid.util.StringUtils.isEmpty(operUserId)){

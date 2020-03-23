@@ -20,6 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 import java.math.BigDecimal;
 import java.util.Map;
@@ -40,34 +41,34 @@ public class FuOrderFollowErrorService extends ServiceImpl<FuOrderFollowErrorMap
      */
     public Page<FuOrderFollowError> queryOrderFollowError(Map condition, PageInfoHelper helper){
         EntityWrapper<FuOrderFollowError> wrapper=new EntityWrapper<FuOrderFollowError>();
-        if(condition.get("userId")!=null){
+        if(!ObjectUtils.isEmpty(condition.get("userId"))){
             wrapper.eq(FuOrderFollowError.USER_ID,condition.get("userId"));
         }
-        if(condition.get("userMtAccId")!=null){
+        if(!ObjectUtils.isEmpty(condition.get("userMtAccId"))){
             wrapper.eq(FuOrderFollowError.USER_MT_ACC_ID,condition.get("userMtAccId"));
         }
-        if(condition.get("userServerName")!=null){
+        if(!ObjectUtils.isEmpty(condition.get("userServerName"))){
             wrapper.eq(FuOrderFollowError.USER_SERVER_NAME,condition.get("userServerName"));
         }
-        if(condition.get("signalId")!=null){
+        if(!ObjectUtils.isEmpty(condition.get("signalId"))){
             wrapper.eq(FuOrderFollowError.SIGNAL_ID,condition.get("signalId"));
         }
-        if(condition.get("signalMtAccId")!=null){
+        if(!ObjectUtils.isEmpty(condition.get("signalMtAccId"))){
             wrapper.eq(FuOrderFollowError.SIGNAL_MT_ACC_ID,condition.get("signalMtAccId"));
         }
-        if(condition.get("signalServerName")!=null){
+        if(!ObjectUtils.isEmpty(condition.get("signalServerName"))){
             wrapper.eq(FuOrderFollowError.SIGNAL_SERVER_NAME,condition.get("signalServerName"));
         }
-        if( condition.get("signalOrderId")!=null){
+        if(!ObjectUtils.isEmpty(condition.get("signalOrderId"))){
             wrapper.eq(FuOrderFollowError.SIGNAL_ORDER_ID,condition.get("signalOrderId"));
         }
-        if( condition.get("orderSymbol")!=null){
+        if(!ObjectUtils.isEmpty(condition.get("orderSymbol"))){
             wrapper.eq(FuOrderFollowError.ORDER_SYMBOL,condition.get("orderSymbol"));
         }
-        if(condition.get("orderType")!=null){
+        if(!ObjectUtils.isEmpty(condition.get("orderType"))){
             wrapper.eq(FuOrderFollowError.ORDER_TYPE,condition.get("orderType"));
         }
-        if(condition.get("followDirect")!=null){
+        if(!ObjectUtils.isEmpty(condition.get("followDirect"))){
             wrapper.eq(FuOrderFollowError.FOLLOW_DIRECT,condition.get("followDirect"));
         }
         if(!StringUtils.isEmpty(condition.get("orderOpenDate"))){

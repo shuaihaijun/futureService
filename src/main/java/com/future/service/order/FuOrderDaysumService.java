@@ -16,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -41,19 +42,19 @@ public class FuOrderDaysumService extends ServiceImpl<FuOrderDaysumMapper, FuOrd
         }
 
         Wrapper<FuOrderDaysum> wrapper=new EntityWrapper<FuOrderDaysum>();
-        if(condition.get("userId")!=null){
+        if(!ObjectUtils.isEmpty(condition.get("userId"))){
             wrapper.andNew().eq(FuOrderDaysum.USER_ID,condition.get("userId"));
         }
-        if(condition.get("userType")!=null){
+        if(!ObjectUtils.isEmpty(condition.get("userType"))){
             wrapper.andNew().eq(FuOrderDaysum.USER_TYPE,condition.get("userType"));
         }
-        if(condition.get("otherId")!=null){
+        if(!ObjectUtils.isEmpty(condition.get("otherId"))){
             wrapper.andNew().eq(FuOrderDaysum.OTHER_ID,condition.get("otherId"));
         }
-        if(condition.get("dateBegin")!=null){
+        if(!ObjectUtils.isEmpty(condition.get("dateBegin"))){
             wrapper.andNew().ge(FuOrderDaysum.TRADE_DATE,condition.get("dateBegin"));
         }
-        if(condition.get("dateEnd")!=null){
+        if(!ObjectUtils.isEmpty(condition.get("dateEnd"))){
             wrapper.andNew().le(FuOrderDaysum.TRADE_DATE,condition.get("dateEnd"));
         }
 

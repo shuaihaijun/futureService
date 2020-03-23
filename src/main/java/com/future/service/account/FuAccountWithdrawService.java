@@ -32,6 +32,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ObjectUtils;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -83,10 +84,10 @@ public class FuAccountWithdrawService extends ServiceImpl<FuAccountWithdrawMappe
         }
 
         Wrapper<FuAccountWithdraw> wrapper=new EntityWrapper<>();
-        if(queryCondition.get("userId")!=null){
+        if(!ObjectUtils.isEmpty(queryCondition.get("userId"))){
             wrapper.eq(FuAccountWithdraw.USER_ID,queryCondition.get("userId"));
         }
-        if(queryCondition.get("withdrawTime")!=null){
+        if(!ObjectUtils.isEmpty(queryCondition.get("withdrawTime"))){
             String wtime=String.valueOf(queryCondition.get("withdrawTime"));
             if(String.valueOf(queryCondition.get("withdrawTime")).indexOf(",")<0){
                 wrapper.eq(FuAccountWithdraw.WITHDRAW_TIME,wtime);

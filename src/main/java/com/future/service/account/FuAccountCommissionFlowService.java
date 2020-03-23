@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 import javax.xml.crypto.Data;
 import java.util.Date;
@@ -100,25 +101,25 @@ public class FuAccountCommissionFlowService extends ServiceImpl<FuAccountCommiss
         Wrapper<FuAccountCommissionFlow> wrapper=new EntityWrapper<>();
         wrapper.eq(FuAccountCommissionFlow.COMMISSION_STATE, CommonConstant.COMMON_SERVER_STATE_NORMAL);
 
-        if(conditionMap.get("userId")!=null){
+        if(!ObjectUtils.isEmpty(conditionMap.get("userId"))){
             wrapper.and().eq(FuAccountCommissionFlow.USER_ID,conditionMap.get("userId"));
         }
-        if(conditionMap.get("accountId")!=null){
+        if(!ObjectUtils.isEmpty(conditionMap.get("accountId"))){
             wrapper.and().eq(FuAccountCommissionFlow.ACCOUNT_ID,conditionMap.get("accountId"));
         }
-        if(conditionMap.get("commissionType")!=null){
+        if(!ObjectUtils.isEmpty(conditionMap.get("commissionType"))){
             wrapper.and().eq(FuAccountCommissionFlow.COMMISSION_TYPE,conditionMap.get("commissionType"));
         }
-        if(conditionMap.get("commissionUserType")!=null){
+        if(!ObjectUtils.isEmpty(conditionMap.get("commissionUserType"))){
             wrapper.and().eq(FuAccountCommissionFlow.COMMISSION_USER_TYPE,conditionMap.get("commissionUserType"));
         }
-        if(conditionMap.get("commissionLevel")!=null){
+        if(!ObjectUtils.isEmpty(conditionMap.get("commissionLevel"))){
             wrapper.and().eq(FuAccountCommissionFlow.COMMISSION_LEVEL,conditionMap.get("commissionLevel"));
         }
-        if(conditionMap.get("beginDate")!=null){
+        if(!ObjectUtils.isEmpty(conditionMap.get("beginDate"))){
             wrapper.ge(FuAccountCommissionFlow.COMMISSION_DATE,conditionMap.get("commissionDate"));
         }
-        if(conditionMap.get("endDate")!=null){
+        if(!ObjectUtils.isEmpty(conditionMap.get("endDate"))){
             wrapper.le(FuAccountCommissionFlow.COMMISSION_DATE,conditionMap.get("commissionDate"));
         }
 

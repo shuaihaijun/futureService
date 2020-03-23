@@ -254,6 +254,7 @@ public class FuProductSignalService extends ServiceImpl<FuProductSignalMapper,Fu
             conditionMap.put("projKey",operUserProj);
         }else {
             /*普通用户查找*/
+            conditionMap.put("projKey",operUserProj);
         }
 
         if(helper==null){

@@ -16,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ObjectUtils;
 
 import java.util.HashMap;
 import java.util.List;
@@ -50,13 +51,13 @@ public class PermissionAdminService extends ServiceImpl<FuPermissionAdminMapper,
             helper=new PageInfoHelper();
         }
         Map conditionMap =new HashMap();
-        if(permissionAdmin.get("projKey")!=null){
+        if(!ObjectUtils.isEmpty(permissionAdmin.get("projKey"))){
             conditionMap.put(FuPermissionAdmin.PROJ_KEY,permissionAdmin.get("projKey"));
         }
-        if(permissionAdmin.get("id")!=null){
+        if(!ObjectUtils.isEmpty(permissionAdmin.get("id"))){
             conditionMap.put(FuPermissionAdmin.ADMIN_ID,permissionAdmin.get("id"));
         }
-        if(permissionAdmin.get("userId")!=null){
+        if(!ObjectUtils.isEmpty(permissionAdmin.get("userId"))){
             conditionMap.put(FuPermissionAdmin.USER_ID,permissionAdmin.get("userId"));
         }
         Page<FuPermissionAdmin> permissionAdmins= PageHelper.startPage(helper.getPageNo(),helper.getPageSize());

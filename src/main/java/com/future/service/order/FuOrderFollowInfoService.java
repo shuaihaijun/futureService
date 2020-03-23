@@ -401,22 +401,22 @@ public class FuOrderFollowInfoService extends ServiceImpl<FuOrderFollowInfoMappe
      */
     public Page<FuOrderFollowInfo> queryUserFollowOrder(Map requestMap, PageInfoHelper helper){
         EntityWrapper<FuOrderFollowInfo> wrapper=new EntityWrapper<FuOrderFollowInfo>();
-        if(requestMap.get("userId")!=null){
+        if(!ObjectUtils.isEmpty(requestMap.get("userId"))){
             wrapper.eq(FuOrderFollowInfo.USER_ID,requestMap.get("userId"));
         }
-        if(requestMap.get("signalId")!=null){
+        if(!ObjectUtils.isEmpty(requestMap.get("signalId"))){
             wrapper.eq(FuOrderFollowInfo.SIGNAL_ID,requestMap.get("signalId"));
         }
-        if( requestMap.get("orderId")!=null){
+        if(!ObjectUtils.isEmpty(requestMap.get("orderId"))){
             wrapper.eq(FuOrderFollowInfo.ORDER_ID,requestMap.get("orderId"));
         }
-        if( requestMap.get("signalOrderId")!=null){
+        if(!ObjectUtils.isEmpty(requestMap.get("signalOrderId"))){
             wrapper.eq(FuOrderFollowInfo.SIGNAL_ORDER_ID,requestMap.get("signalOrderId"));
         }
-        if( requestMap.get("orderSymbol")!=null){
+        if(!ObjectUtils.isEmpty(requestMap.get("orderSymbol"))){
             wrapper.eq(FuOrderFollowInfo.ORDER_SYMBOL,requestMap.get("orderSymbol"));
         }
-        if(!com.future.common.util.StringUtils.isEmpty(requestMap.get("orderType"))){
+        if(!ObjectUtils.isEmpty(requestMap.get("orderType"))){
             wrapper.eq(FuOrderFollowInfo.ORDER_TYPE,requestMap.get("orderType"));
         }
         if(!ObjectUtils.isEmpty(requestMap.get("orderOpenDate"))){
@@ -432,8 +432,8 @@ public class FuOrderFollowInfoService extends ServiceImpl<FuOrderFollowInfoMappe
                 wrapper.lt(FuOrderFollowInfo.ORDER_OPEN_DATE,dateList.get(1));
             }
         }
-        if(!ObjectUtils.isEmpty(requestMap.get("orderOpenDate"))){
-            if(String.valueOf(requestMap.get("orderOpenDate")).indexOf(",")<0){
+        if(!ObjectUtils.isEmpty(requestMap.get("orderCloseDate"))){
+            if(String.valueOf(requestMap.get("orderCloseDate")).indexOf(",")<0){
                 wrapper.eq(FuOrderFollowInfo.ORDER_CLOSE_DATE,requestMap.get("orderCloseDate"));
             }else {
                 //时间段
@@ -442,8 +442,8 @@ public class FuOrderFollowInfoService extends ServiceImpl<FuOrderFollowInfoMappe
                     log.error("平仓时间段数据传入错误！"+requestMap.get("orderCloseDate"));
                     throw new DataConflictException(GlobalResultCode.PARAM_VERIFY_ERROR,"平仓时间段数据传入错误！"+requestMap.get("orderCloseDate"));
                 }
-                wrapper.gt(FuOrderFollowInfo.ORDER_OPEN_DATE,dateList.get(0));
-                wrapper.lt(FuOrderFollowInfo.ORDER_OPEN_DATE,dateList.get(1));
+                wrapper.gt(FuOrderFollowInfo.ORDER_CLOSE_DATE,dateList.get(0));
+                wrapper.lt(FuOrderFollowInfo.ORDER_CLOSE_DATE,dateList.get(1));
             }
         }
 

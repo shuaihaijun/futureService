@@ -24,177 +24,177 @@ public class FuProductSignal {
     private Integer id;
 
     /**
-     * ´´½¨Ê±¼ä
+     * åˆ›å»ºæ—¶é—´
      */
     private Date createDate;
 
     /**
-     * ĞŞ¸ÄÊ±¼ä
+     * ä¿®æ”¹æ—¶é—´
      */
     private Date modifyDate;
 
     /**
-     * ÓÃ»§ID
+     * ç”¨æˆ·ID
      */
     private Integer userId;
 
     /**
-     * ĞÅºÅÔ´Ãû³Æ
+     * ä¿¡å·æºåç§°
      */
     private String signalName;
 
     /**
-     * ĞÅºÅÔ´µÈ¼¶
+     * ä¿¡å·æºç­‰çº§
      */
     private Integer signalLevel;
 
     /**
-     * ĞÅºÅÔ´ÃèÊö
+     * ä¿¡å·æºæè¿°
      */
     private String signalDesc;
 
     /**
-     * ĞÅºÅÔ´×ÛºÏÆÀ·Ö
+     * ä¿¡å·æºç»¼åˆè¯„åˆ†
      */
     private Integer signalRatings;
 
     /**
-     * ĞÅºÅÔ´×´Ì¬£¨0 Õı³££¬1 Òş²Ø£¬2 É¾³ı£©
+     * ä¿¡å·æºçŠ¶æ€ï¼ˆ0 æ­£å¸¸ï¼Œ1 éšè—ï¼Œ2 åˆ é™¤ï¼‰
      */
     private Integer signalState;
 
     /**
-     * ÉêÇëÊ±¼ä
+     * ç”³è¯·æ—¶é—´
      */
     private Date applyDate;
 
     /**
-     * ÉóºËÊ±¼ä
+     * å®¡æ ¸æ—¶é—´
      */
     private Date checkDate;
 
     /**
-     * ÍÅ¶ÓÃèÊö
+     * å›¢é˜Ÿæè¿°
      */
     private String signalTem;
 
     /**
-     * ½»Ò×ÊÖÊı
+     * äº¤æ˜“æ‰‹æ•°
      */
     private Integer signalLots;
 
     /**
-     * ½»Ò×Ó®ÊÖÊı
+     * äº¤æ˜“èµ¢æ‰‹æ•°
      */
     private Integer signalLotsProfit;
 
     /**
-     * ÕË»§Óà¶î
+     * è´¦æˆ·ä½™é¢
      */
     private BigDecimal signalAccountMoney;
 
     /**
-     * Ö÷Òª½»Ò×±ÒÖÖ
+     * ä¸»è¦äº¤æ˜“å¸ç§
      */
     private String signalCurrency;
 
     /**
-     * ¸úËæÈËÊı
+     * è·Ÿéšäººæ•°
      */
     private Integer signalFollows;
 
     /**
-     * ÔÂ¾ùÊÕÒæ
+     * æœˆå‡æ”¶ç›Š
      */
     private BigDecimal monthlyAverageIncome;
 
     /**
-     * ÀúÊ·ÊÕÒæ
+     * å†å²æ”¶ç›Š
      */
     private BigDecimal historyIncome;
 
     /**
-     * ÀúÊ·×î´ó»Ø³·
+     * å†å²æœ€å¤§å›æ’¤
      */
     private BigDecimal historyWithdraw;
 
     /**
-     * µç×ÓÓÊ¼ş
+     * ç”µå­é‚®ä»¶
      */
     private String email;
 
     /**
-     * µç»°ºÅÂë
+     * ç”µè¯å·ç 
      */
     private String phone;
 
     /**
-     * qqºÅÂë
+     * qqå·ç 
      */
     private String qqNumber;
 
     /**
-     * ·şÎñÆ÷Ãû³Æ
+     * æœåŠ¡å™¨åç§°
      */
     private String serverName;
 
     /**
-     * mtÆ½Ì¨ÕËºÅ
+     * mtå¹³å°è´¦å·
      */
     private String mtAccId;
 
     /**
-     * ÃÜÂë½»Ò×
+     * å¯†ç äº¤æ˜“
      */
     private String mtPasswordTrade;
 
     /**
-     * ¹ÛÄ¦ÃÜÂë
+     * è§‚æ‘©å¯†ç 
      */
     private String mtPasswordWatch;
 
     /**
-     * ×îÉÙ²ÎÓë×Ê½ğ
+     * æœ€å°‘å‚ä¸èµ„é‡‘
      */
     private BigDecimal minimum;
 
     /**
-     * Äê»¯Ô¤ÆÚÊÕÒæÂÊ
+     * å¹´åŒ–é¢„æœŸæ”¶ç›Šç‡
      */
     private BigDecimal annualizedExpectedReturn;
 
     /**
-     * ÀúÊ·ÊÕÒæÂÊ(Äê)
+     * å†å²æ”¶ç›Šç‡(å¹´)
      */
     private BigDecimal historicalReturn;
 
     /**
-     * ½¨Òé¸úËæÖÜÆÚ
+     * å»ºè®®è·Ÿéšå‘¨æœŸ
      */
     private BigDecimal suggestCycle;
 
     /**
-     * ±¸×¢
+     * å¤‡æ³¨
      */
     private String remarks;
 
     /**
-     * ¼àÌı×´Ì¬£¨0 Î´¼àÌı£¬1 ÒÑ¼àÌı£©
+     * ç›‘å¬çŠ¶æ€ï¼ˆ0 æœªç›‘å¬ï¼Œ1 å·²ç›‘å¬ï¼‰
      */
     private Integer connectState;
 
     /**
-     * ÏîÄ¿¹¤³ÌKEY
+     * é¡¹ç›®å·¥ç¨‹KEY
      */
     private Integer projKey;
 
     /**
-     * ÏîÄ¿¹¤³ÌÃû³Æ
+     * é¡¹ç›®å·¥ç¨‹åç§°
      */
     private String projName;
 
     /**
-     * ÉêÇëÈËID
+     * ç”³è¯·äººID
      */
     private Integer operUserId;
 
@@ -215,560 +215,560 @@ public class FuProductSignal {
     }
 
     /**
-     * ´´½¨Ê±¼ä
-     * @return create_date ´´½¨Ê±¼ä
+     * åˆ›å»ºæ—¶é—´
+     * @return create_date åˆ›å»ºæ—¶é—´
      */
     public Date getCreateDate() {
         return createDate;
     }
 
     /**
-     * ´´½¨Ê±¼ä
-     * @param createDate ´´½¨Ê±¼ä
+     * åˆ›å»ºæ—¶é—´
+     * @param createDate åˆ›å»ºæ—¶é—´
      */
     public void setCreateDate(Date createDate) {
         this.createDate = createDate;
     }
 
     /**
-     * ĞŞ¸ÄÊ±¼ä
-     * @return modify_date ĞŞ¸ÄÊ±¼ä
+     * ä¿®æ”¹æ—¶é—´
+     * @return modify_date ä¿®æ”¹æ—¶é—´
      */
     public Date getModifyDate() {
         return modifyDate;
     }
 
     /**
-     * ĞŞ¸ÄÊ±¼ä
-     * @param modifyDate ĞŞ¸ÄÊ±¼ä
+     * ä¿®æ”¹æ—¶é—´
+     * @param modifyDate ä¿®æ”¹æ—¶é—´
      */
     public void setModifyDate(Date modifyDate) {
         this.modifyDate = modifyDate;
     }
 
     /**
-     * ÓÃ»§ID
-     * @return user_id ÓÃ»§ID
+     * ç”¨æˆ·ID
+     * @return user_id ç”¨æˆ·ID
      */
     public Integer getUserId() {
         return userId;
     }
 
     /**
-     * ÓÃ»§ID
-     * @param userId ÓÃ»§ID
+     * ç”¨æˆ·ID
+     * @param userId ç”¨æˆ·ID
      */
     public void setUserId(Integer userId) {
         this.userId = userId;
     }
 
     /**
-     * ĞÅºÅÔ´Ãû³Æ
-     * @return signal_name ĞÅºÅÔ´Ãû³Æ
+     * ä¿¡å·æºåç§°
+     * @return signal_name ä¿¡å·æºåç§°
      */
     public String getSignalName() {
         return signalName;
     }
 
     /**
-     * ĞÅºÅÔ´Ãû³Æ
-     * @param signalName ĞÅºÅÔ´Ãû³Æ
+     * ä¿¡å·æºåç§°
+     * @param signalName ä¿¡å·æºåç§°
      */
     public void setSignalName(String signalName) {
         this.signalName = signalName == null ? null : signalName.trim();
     }
 
     /**
-     * ĞÅºÅÔ´µÈ¼¶
-     * @return signal_level ĞÅºÅÔ´µÈ¼¶
+     * ä¿¡å·æºç­‰çº§
+     * @return signal_level ä¿¡å·æºç­‰çº§
      */
     public Integer getSignalLevel() {
         return signalLevel;
     }
 
     /**
-     * ĞÅºÅÔ´µÈ¼¶
-     * @param signalLevel ĞÅºÅÔ´µÈ¼¶
+     * ä¿¡å·æºç­‰çº§
+     * @param signalLevel ä¿¡å·æºç­‰çº§
      */
     public void setSignalLevel(Integer signalLevel) {
         this.signalLevel = signalLevel;
     }
 
     /**
-     * ĞÅºÅÔ´ÃèÊö
-     * @return signal_desc ĞÅºÅÔ´ÃèÊö
+     * ä¿¡å·æºæè¿°
+     * @return signal_desc ä¿¡å·æºæè¿°
      */
     public String getSignalDesc() {
         return signalDesc;
     }
 
     /**
-     * ĞÅºÅÔ´ÃèÊö
-     * @param signalDesc ĞÅºÅÔ´ÃèÊö
+     * ä¿¡å·æºæè¿°
+     * @param signalDesc ä¿¡å·æºæè¿°
      */
     public void setSignalDesc(String signalDesc) {
         this.signalDesc = signalDesc == null ? null : signalDesc.trim();
     }
 
     /**
-     * ĞÅºÅÔ´×ÛºÏÆÀ·Ö
-     * @return signal_ratings ĞÅºÅÔ´×ÛºÏÆÀ·Ö
+     * ä¿¡å·æºç»¼åˆè¯„åˆ†
+     * @return signal_ratings ä¿¡å·æºç»¼åˆè¯„åˆ†
      */
     public Integer getSignalRatings() {
         return signalRatings;
     }
 
     /**
-     * ĞÅºÅÔ´×ÛºÏÆÀ·Ö
-     * @param signalRatings ĞÅºÅÔ´×ÛºÏÆÀ·Ö
+     * ä¿¡å·æºç»¼åˆè¯„åˆ†
+     * @param signalRatings ä¿¡å·æºç»¼åˆè¯„åˆ†
      */
     public void setSignalRatings(Integer signalRatings) {
         this.signalRatings = signalRatings;
     }
 
     /**
-     * ĞÅºÅÔ´×´Ì¬£¨0 Õı³££¬1 Òş²Ø£¬2 É¾³ı£©
-     * @return signal_state ĞÅºÅÔ´×´Ì¬£¨0 Õı³££¬1 Òş²Ø£¬2 É¾³ı£©
+     * ä¿¡å·æºçŠ¶æ€ï¼ˆ0 æ­£å¸¸ï¼Œ1 éšè—ï¼Œ2 åˆ é™¤ï¼‰
+     * @return signal_state ä¿¡å·æºçŠ¶æ€ï¼ˆ0 æ­£å¸¸ï¼Œ1 éšè—ï¼Œ2 åˆ é™¤ï¼‰
      */
     public Integer getSignalState() {
         return signalState;
     }
 
     /**
-     * ĞÅºÅÔ´×´Ì¬£¨0 Õı³££¬1 Òş²Ø£¬2 É¾³ı£©
-     * @param signalState ĞÅºÅÔ´×´Ì¬£¨0 Õı³££¬1 Òş²Ø£¬2 É¾³ı£©
+     * ä¿¡å·æºçŠ¶æ€ï¼ˆ0 æ­£å¸¸ï¼Œ1 éšè—ï¼Œ2 åˆ é™¤ï¼‰
+     * @param signalState ä¿¡å·æºçŠ¶æ€ï¼ˆ0 æ­£å¸¸ï¼Œ1 éšè—ï¼Œ2 åˆ é™¤ï¼‰
      */
     public void setSignalState(Integer signalState) {
         this.signalState = signalState;
     }
 
     /**
-     * ÉêÇëÊ±¼ä
-     * @return apply_date ÉêÇëÊ±¼ä
+     * ç”³è¯·æ—¶é—´
+     * @return apply_date ç”³è¯·æ—¶é—´
      */
     public Date getApplyDate() {
         return applyDate;
     }
 
     /**
-     * ÉêÇëÊ±¼ä
-     * @param applyDate ÉêÇëÊ±¼ä
+     * ç”³è¯·æ—¶é—´
+     * @param applyDate ç”³è¯·æ—¶é—´
      */
     public void setApplyDate(Date applyDate) {
         this.applyDate = applyDate;
     }
 
     /**
-     * ÉóºËÊ±¼ä
-     * @return check_date ÉóºËÊ±¼ä
+     * å®¡æ ¸æ—¶é—´
+     * @return check_date å®¡æ ¸æ—¶é—´
      */
     public Date getCheckDate() {
         return checkDate;
     }
 
     /**
-     * ÉóºËÊ±¼ä
-     * @param checkDate ÉóºËÊ±¼ä
+     * å®¡æ ¸æ—¶é—´
+     * @param checkDate å®¡æ ¸æ—¶é—´
      */
     public void setCheckDate(Date checkDate) {
         this.checkDate = checkDate;
     }
 
     /**
-     * ÍÅ¶ÓÃèÊö
-     * @return signal_tem ÍÅ¶ÓÃèÊö
+     * å›¢é˜Ÿæè¿°
+     * @return signal_tem å›¢é˜Ÿæè¿°
      */
     public String getSignalTem() {
         return signalTem;
     }
 
     /**
-     * ÍÅ¶ÓÃèÊö
-     * @param signalTem ÍÅ¶ÓÃèÊö
+     * å›¢é˜Ÿæè¿°
+     * @param signalTem å›¢é˜Ÿæè¿°
      */
     public void setSignalTem(String signalTem) {
         this.signalTem = signalTem == null ? null : signalTem.trim();
     }
 
     /**
-     * ½»Ò×ÊÖÊı
-     * @return signal_lots ½»Ò×ÊÖÊı
+     * äº¤æ˜“æ‰‹æ•°
+     * @return signal_lots äº¤æ˜“æ‰‹æ•°
      */
     public Integer getSignalLots() {
         return signalLots;
     }
 
     /**
-     * ½»Ò×ÊÖÊı
-     * @param signalLots ½»Ò×ÊÖÊı
+     * äº¤æ˜“æ‰‹æ•°
+     * @param signalLots äº¤æ˜“æ‰‹æ•°
      */
     public void setSignalLots(Integer signalLots) {
         this.signalLots = signalLots;
     }
 
     /**
-     * ½»Ò×Ó®ÊÖÊı
-     * @return signal_lots_profit ½»Ò×Ó®ÊÖÊı
+     * äº¤æ˜“èµ¢æ‰‹æ•°
+     * @return signal_lots_profit äº¤æ˜“èµ¢æ‰‹æ•°
      */
     public Integer getSignalLotsProfit() {
         return signalLotsProfit;
     }
 
     /**
-     * ½»Ò×Ó®ÊÖÊı
-     * @param signalLotsProfit ½»Ò×Ó®ÊÖÊı
+     * äº¤æ˜“èµ¢æ‰‹æ•°
+     * @param signalLotsProfit äº¤æ˜“èµ¢æ‰‹æ•°
      */
     public void setSignalLotsProfit(Integer signalLotsProfit) {
         this.signalLotsProfit = signalLotsProfit;
     }
 
     /**
-     * ÕË»§Óà¶î
-     * @return signal_account_money ÕË»§Óà¶î
+     * è´¦æˆ·ä½™é¢
+     * @return signal_account_money è´¦æˆ·ä½™é¢
      */
     public BigDecimal getSignalAccountMoney() {
         return signalAccountMoney;
     }
 
     /**
-     * ÕË»§Óà¶î
-     * @param signalAccountMoney ÕË»§Óà¶î
+     * è´¦æˆ·ä½™é¢
+     * @param signalAccountMoney è´¦æˆ·ä½™é¢
      */
     public void setSignalAccountMoney(BigDecimal signalAccountMoney) {
         this.signalAccountMoney = signalAccountMoney;
     }
 
     /**
-     * Ö÷Òª½»Ò×±ÒÖÖ
-     * @return signal_currency Ö÷Òª½»Ò×±ÒÖÖ
+     * ä¸»è¦äº¤æ˜“å¸ç§
+     * @return signal_currency ä¸»è¦äº¤æ˜“å¸ç§
      */
     public String getSignalCurrency() {
         return signalCurrency;
     }
 
     /**
-     * Ö÷Òª½»Ò×±ÒÖÖ
-     * @param signalCurrency Ö÷Òª½»Ò×±ÒÖÖ
+     * ä¸»è¦äº¤æ˜“å¸ç§
+     * @param signalCurrency ä¸»è¦äº¤æ˜“å¸ç§
      */
     public void setSignalCurrency(String signalCurrency) {
         this.signalCurrency = signalCurrency == null ? null : signalCurrency.trim();
     }
 
     /**
-     * ¸úËæÈËÊı
-     * @return signal_follows ¸úËæÈËÊı
+     * è·Ÿéšäººæ•°
+     * @return signal_follows è·Ÿéšäººæ•°
      */
     public Integer getSignalFollows() {
         return signalFollows;
     }
 
     /**
-     * ¸úËæÈËÊı
-     * @param signalFollows ¸úËæÈËÊı
+     * è·Ÿéšäººæ•°
+     * @param signalFollows è·Ÿéšäººæ•°
      */
     public void setSignalFollows(Integer signalFollows) {
         this.signalFollows = signalFollows;
     }
 
     /**
-     * ÔÂ¾ùÊÕÒæ
-     * @return monthly_average_income ÔÂ¾ùÊÕÒæ
+     * æœˆå‡æ”¶ç›Š
+     * @return monthly_average_income æœˆå‡æ”¶ç›Š
      */
     public BigDecimal getMonthlyAverageIncome() {
         return monthlyAverageIncome;
     }
 
     /**
-     * ÔÂ¾ùÊÕÒæ
-     * @param monthlyAverageIncome ÔÂ¾ùÊÕÒæ
+     * æœˆå‡æ”¶ç›Š
+     * @param monthlyAverageIncome æœˆå‡æ”¶ç›Š
      */
     public void setMonthlyAverageIncome(BigDecimal monthlyAverageIncome) {
         this.monthlyAverageIncome = monthlyAverageIncome;
     }
 
     /**
-     * ÀúÊ·ÊÕÒæ
-     * @return history_income ÀúÊ·ÊÕÒæ
+     * å†å²æ”¶ç›Š
+     * @return history_income å†å²æ”¶ç›Š
      */
     public BigDecimal getHistoryIncome() {
         return historyIncome;
     }
 
     /**
-     * ÀúÊ·ÊÕÒæ
-     * @param historyIncome ÀúÊ·ÊÕÒæ
+     * å†å²æ”¶ç›Š
+     * @param historyIncome å†å²æ”¶ç›Š
      */
     public void setHistoryIncome(BigDecimal historyIncome) {
         this.historyIncome = historyIncome;
     }
 
     /**
-     * ÀúÊ·×î´ó»Ø³·
-     * @return history_withdraw ÀúÊ·×î´ó»Ø³·
+     * å†å²æœ€å¤§å›æ’¤
+     * @return history_withdraw å†å²æœ€å¤§å›æ’¤
      */
     public BigDecimal getHistoryWithdraw() {
         return historyWithdraw;
     }
 
     /**
-     * ÀúÊ·×î´ó»Ø³·
-     * @param historyWithdraw ÀúÊ·×î´ó»Ø³·
+     * å†å²æœ€å¤§å›æ’¤
+     * @param historyWithdraw å†å²æœ€å¤§å›æ’¤
      */
     public void setHistoryWithdraw(BigDecimal historyWithdraw) {
         this.historyWithdraw = historyWithdraw;
     }
 
     /**
-     * µç×ÓÓÊ¼ş
-     * @return email µç×ÓÓÊ¼ş
+     * ç”µå­é‚®ä»¶
+     * @return email ç”µå­é‚®ä»¶
      */
     public String getEmail() {
         return email;
     }
 
     /**
-     * µç×ÓÓÊ¼ş
-     * @param email µç×ÓÓÊ¼ş
+     * ç”µå­é‚®ä»¶
+     * @param email ç”µå­é‚®ä»¶
      */
     public void setEmail(String email) {
         this.email = email == null ? null : email.trim();
     }
 
     /**
-     * µç»°ºÅÂë
-     * @return phone µç»°ºÅÂë
+     * ç”µè¯å·ç 
+     * @return phone ç”µè¯å·ç 
      */
     public String getPhone() {
         return phone;
     }
 
     /**
-     * µç»°ºÅÂë
-     * @param phone µç»°ºÅÂë
+     * ç”µè¯å·ç 
+     * @param phone ç”µè¯å·ç 
      */
     public void setPhone(String phone) {
         this.phone = phone == null ? null : phone.trim();
     }
 
     /**
-     * qqºÅÂë
-     * @return qq_number qqºÅÂë
+     * qqå·ç 
+     * @return qq_number qqå·ç 
      */
     public String getQqNumber() {
         return qqNumber;
     }
 
     /**
-     * qqºÅÂë
-     * @param qqNumber qqºÅÂë
+     * qqå·ç 
+     * @param qqNumber qqå·ç 
      */
     public void setQqNumber(String qqNumber) {
         this.qqNumber = qqNumber == null ? null : qqNumber.trim();
     }
 
     /**
-     * ·şÎñÆ÷Ãû³Æ
-     * @return server_name ·şÎñÆ÷Ãû³Æ
+     * æœåŠ¡å™¨åç§°
+     * @return server_name æœåŠ¡å™¨åç§°
      */
     public String getServerName() {
         return serverName;
     }
 
     /**
-     * ·şÎñÆ÷Ãû³Æ
-     * @param serverName ·şÎñÆ÷Ãû³Æ
+     * æœåŠ¡å™¨åç§°
+     * @param serverName æœåŠ¡å™¨åç§°
      */
     public void setServerName(String serverName) {
         this.serverName = serverName == null ? null : serverName.trim();
     }
 
     /**
-     * mtÆ½Ì¨ÕËºÅ
-     * @return mt_acc_id mtÆ½Ì¨ÕËºÅ
+     * mtå¹³å°è´¦å·
+     * @return mt_acc_id mtå¹³å°è´¦å·
      */
     public String getMtAccId() {
         return mtAccId;
     }
 
     /**
-     * mtÆ½Ì¨ÕËºÅ
-     * @param mtAccId mtÆ½Ì¨ÕËºÅ
+     * mtå¹³å°è´¦å·
+     * @param mtAccId mtå¹³å°è´¦å·
      */
     public void setMtAccId(String mtAccId) {
         this.mtAccId = mtAccId == null ? null : mtAccId.trim();
     }
 
     /**
-     * ÃÜÂë½»Ò×
-     * @return mt_password_trade ÃÜÂë½»Ò×
+     * å¯†ç äº¤æ˜“
+     * @return mt_password_trade å¯†ç äº¤æ˜“
      */
     public String getMtPasswordTrade() {
         return mtPasswordTrade;
     }
 
     /**
-     * ÃÜÂë½»Ò×
-     * @param mtPasswordTrade ÃÜÂë½»Ò×
+     * å¯†ç äº¤æ˜“
+     * @param mtPasswordTrade å¯†ç äº¤æ˜“
      */
     public void setMtPasswordTrade(String mtPasswordTrade) {
         this.mtPasswordTrade = mtPasswordTrade == null ? null : mtPasswordTrade.trim();
     }
 
     /**
-     * ¹ÛÄ¦ÃÜÂë
-     * @return mt_password_watch ¹ÛÄ¦ÃÜÂë
+     * è§‚æ‘©å¯†ç 
+     * @return mt_password_watch è§‚æ‘©å¯†ç 
      */
     public String getMtPasswordWatch() {
         return mtPasswordWatch;
     }
 
     /**
-     * ¹ÛÄ¦ÃÜÂë
-     * @param mtPasswordWatch ¹ÛÄ¦ÃÜÂë
+     * è§‚æ‘©å¯†ç 
+     * @param mtPasswordWatch è§‚æ‘©å¯†ç 
      */
     public void setMtPasswordWatch(String mtPasswordWatch) {
         this.mtPasswordWatch = mtPasswordWatch == null ? null : mtPasswordWatch.trim();
     }
 
     /**
-     * ×îÉÙ²ÎÓë×Ê½ğ
-     * @return minimum ×îÉÙ²ÎÓë×Ê½ğ
+     * æœ€å°‘å‚ä¸èµ„é‡‘
+     * @return minimum æœ€å°‘å‚ä¸èµ„é‡‘
      */
     public BigDecimal getMinimum() {
         return minimum;
     }
 
     /**
-     * ×îÉÙ²ÎÓë×Ê½ğ
-     * @param minimum ×îÉÙ²ÎÓë×Ê½ğ
+     * æœ€å°‘å‚ä¸èµ„é‡‘
+     * @param minimum æœ€å°‘å‚ä¸èµ„é‡‘
      */
     public void setMinimum(BigDecimal minimum) {
         this.minimum = minimum;
     }
 
     /**
-     * Äê»¯Ô¤ÆÚÊÕÒæÂÊ
-     * @return annualized_expected_return Äê»¯Ô¤ÆÚÊÕÒæÂÊ
+     * å¹´åŒ–é¢„æœŸæ”¶ç›Šç‡
+     * @return annualized_expected_return å¹´åŒ–é¢„æœŸæ”¶ç›Šç‡
      */
     public BigDecimal getAnnualizedExpectedReturn() {
         return annualizedExpectedReturn;
     }
 
     /**
-     * Äê»¯Ô¤ÆÚÊÕÒæÂÊ
-     * @param annualizedExpectedReturn Äê»¯Ô¤ÆÚÊÕÒæÂÊ
+     * å¹´åŒ–é¢„æœŸæ”¶ç›Šç‡
+     * @param annualizedExpectedReturn å¹´åŒ–é¢„æœŸæ”¶ç›Šç‡
      */
     public void setAnnualizedExpectedReturn(BigDecimal annualizedExpectedReturn) {
         this.annualizedExpectedReturn = annualizedExpectedReturn;
     }
 
     /**
-     * ÀúÊ·ÊÕÒæÂÊ(Äê)
-     * @return historical_return ÀúÊ·ÊÕÒæÂÊ(Äê)
+     * å†å²æ”¶ç›Šç‡(å¹´)
+     * @return historical_return å†å²æ”¶ç›Šç‡(å¹´)
      */
     public BigDecimal getHistoricalReturn() {
         return historicalReturn;
     }
 
     /**
-     * ÀúÊ·ÊÕÒæÂÊ(Äê)
-     * @param historicalReturn ÀúÊ·ÊÕÒæÂÊ(Äê)
+     * å†å²æ”¶ç›Šç‡(å¹´)
+     * @param historicalReturn å†å²æ”¶ç›Šç‡(å¹´)
      */
     public void setHistoricalReturn(BigDecimal historicalReturn) {
         this.historicalReturn = historicalReturn;
     }
 
     /**
-     * ½¨Òé¸úËæÖÜÆÚ
-     * @return suggest_cycle ½¨Òé¸úËæÖÜÆÚ
+     * å»ºè®®è·Ÿéšå‘¨æœŸ
+     * @return suggest_cycle å»ºè®®è·Ÿéšå‘¨æœŸ
      */
     public BigDecimal getSuggestCycle() {
         return suggestCycle;
     }
 
     /**
-     * ½¨Òé¸úËæÖÜÆÚ
-     * @param suggestCycle ½¨Òé¸úËæÖÜÆÚ
+     * å»ºè®®è·Ÿéšå‘¨æœŸ
+     * @param suggestCycle å»ºè®®è·Ÿéšå‘¨æœŸ
      */
     public void setSuggestCycle(BigDecimal suggestCycle) {
         this.suggestCycle = suggestCycle;
     }
 
     /**
-     * ±¸×¢
-     * @return remarks ±¸×¢
+     * å¤‡æ³¨
+     * @return remarks å¤‡æ³¨
      */
     public String getRemarks() {
         return remarks;
     }
 
     /**
-     * ±¸×¢
-     * @param remarks ±¸×¢
+     * å¤‡æ³¨
+     * @param remarks å¤‡æ³¨
      */
     public void setRemarks(String remarks) {
         this.remarks = remarks == null ? null : remarks.trim();
     }
 
     /**
-     * ¼àÌı×´Ì¬£¨0 Î´¼àÌı£¬1 ÒÑ¼àÌı£©
-     * @return connect_state ¼àÌı×´Ì¬£¨0 Î´¼àÌı£¬1 ÒÑ¼àÌı£©
+     * ç›‘å¬çŠ¶æ€ï¼ˆ0 æœªç›‘å¬ï¼Œ1 å·²ç›‘å¬ï¼‰
+     * @return connect_state ç›‘å¬çŠ¶æ€ï¼ˆ0 æœªç›‘å¬ï¼Œ1 å·²ç›‘å¬ï¼‰
      */
     public Integer getConnectState() {
         return connectState;
     }
 
     /**
-     * ¼àÌı×´Ì¬£¨0 Î´¼àÌı£¬1 ÒÑ¼àÌı£©
-     * @param connectState ¼àÌı×´Ì¬£¨0 Î´¼àÌı£¬1 ÒÑ¼àÌı£©
+     * ç›‘å¬çŠ¶æ€ï¼ˆ0 æœªç›‘å¬ï¼Œ1 å·²ç›‘å¬ï¼‰
+     * @param connectState ç›‘å¬çŠ¶æ€ï¼ˆ0 æœªç›‘å¬ï¼Œ1 å·²ç›‘å¬ï¼‰
      */
     public void setConnectState(Integer connectState) {
         this.connectState = connectState;
     }
 
     /**
-     * ÏîÄ¿¹¤³ÌKEY
-     * @return proj_key ÏîÄ¿¹¤³ÌKEY
+     * é¡¹ç›®å·¥ç¨‹KEY
+     * @return proj_key é¡¹ç›®å·¥ç¨‹KEY
      */
     public Integer getProjKey() {
         return projKey;
     }
 
     /**
-     * ÏîÄ¿¹¤³ÌKEY
-     * @param projKey ÏîÄ¿¹¤³ÌKEY
+     * é¡¹ç›®å·¥ç¨‹KEY
+     * @param projKey é¡¹ç›®å·¥ç¨‹KEY
      */
     public void setProjKey(Integer projKey) {
         this.projKey = projKey;
     }
 
     /**
-     * ÏîÄ¿¹¤³ÌÃû³Æ
-     * @return proj_name ÏîÄ¿¹¤³ÌÃû³Æ
+     * é¡¹ç›®å·¥ç¨‹åç§°
+     * @return proj_name é¡¹ç›®å·¥ç¨‹åç§°
      */
     public String getProjName() {
         return projName;
     }
 
     /**
-     * ÏîÄ¿¹¤³ÌÃû³Æ
-     * @param projName ÏîÄ¿¹¤³ÌÃû³Æ
+     * é¡¹ç›®å·¥ç¨‹åç§°
+     * @param projName é¡¹ç›®å·¥ç¨‹åç§°
      */
     public void setProjName(String projName) {
         this.projName = projName == null ? null : projName.trim();
     }
 
     /**
-     * ÉêÇëÈËID
-     * @return oper_user_id ÉêÇëÈËID
+     * ç”³è¯·äººID
+     * @return oper_user_id ç”³è¯·äººID
      */
     public Integer getOperUserId() {
         return operUserId;
     }
 
     /**
-     * ÉêÇëÈËID
-     * @param operUserId ÉêÇëÈËID
+     * ç”³è¯·äººID
+     * @param operUserId ç”³è¯·äººID
      */
     public void setOperUserId(Integer operUserId) {
         this.operUserId = operUserId;

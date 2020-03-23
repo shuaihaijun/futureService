@@ -24,7 +24,7 @@ public class FutureApplication {
 	@Bean
 	MultipartConfigElement multipartConfigElement() {
 		MultipartConfigFactory factory = new MultipartConfigFactory();
-		factory.setLocation("D:/tmp");
+		factory.setLocation("D:/upload/tmp");
 		return factory.createMultipartConfig();
 	}
 }

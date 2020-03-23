@@ -27,6 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ObjectUtils;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -203,7 +204,7 @@ public class PermissionProjectService extends ServiceImpl<FuPermissionProjectMap
             throw new BusinessException(GlobalResultCode.PARAM_NULL_POINTER);
         }
         FuPermissionProject conditionProject=new FuPermissionProject();
-        if(conditionMap.get("userId")!=null){
+        if(!ObjectUtils.isEmpty(conditionMap.get("userId"))){
             // 使用用户id进行查找
             Integer userId=Integer.parseInt(String.valueOf(conditionMap.get("userId")));
             List<Integer> prokeys= permissionUserProjectService.findPorjKeysByUserId(userId);
@@ -213,13 +214,13 @@ public class PermissionProjectService extends ServiceImpl<FuPermissionProjectMap
             conditionProject.setProjKey(prokeys.get(0));
 
         }
-        if(conditionMap.get("id")!=null){
+        if(!ObjectUtils.isEmpty(conditionMap.get("id"))){
             conditionProject.setId(Integer.parseInt(String.valueOf(conditionMap.get("id"))));
         }
-        if(conditionMap.get("projKey")!=null){
+        if(!ObjectUtils.isEmpty(conditionMap.get("projKey"))){
             conditionProject.setProjKey(Integer.parseInt(String.valueOf(conditionMap.get("projKey"))));
         }
-        if(conditionMap.get("projName")!=null){
+        if(!ObjectUtils.isEmpty(conditionMap.get("projName"))){
             conditionProject.setProjName(String.valueOf(conditionMap.get("projName")));
         }
         FuPermissionProject proj = fuPermissionProjectMapper.selectOne(conditionProject);

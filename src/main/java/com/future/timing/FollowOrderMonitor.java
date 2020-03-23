@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.util.ObjectUtils;
 
 import java.util.List;
 
@@ -87,10 +88,10 @@ public class FollowOrderMonitor {
                     log.info("同步跟单错误数据------");
                     JSONObject errorData=(JSONObject)errorInfo;
                     log.info(errorData.toJSONString());
-                    if(errorData.get("updateAction")!=null){
+                    if(!ObjectUtils.isEmpty(errorData.get("updateAction"))){
                         updateAction=errorData.getInteger("updateAction");
                     }
-                    if(errorData.get("errorCode")!=null){
+                    if(!ObjectUtils.isEmpty(errorData.get("errorCode"))){
                         errorCode=errorData.getInteger("errorCode");
                     }
                     order=errorData.getJSONObject("order");

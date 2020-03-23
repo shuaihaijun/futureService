@@ -254,7 +254,7 @@ public class FuUserFollowsService extends ServiceImpl<FuUserFollowsMapper, FuUse
         String userMtAccId = String.valueOf(dataMap.get("userMtAccId"));
         String signalId = String.valueOf(dataMap.get("signalId"));
 
-        /*判断权限 1 userId是不是信号源，2 oerUserId userId是不是同一团队，3 signalId是不是有权限， 4校验是否已存在*/
+        /*判断权限 1 userId是不是信号源，2 oerUserId userId是不是同一团队，3 signalId是不是有权限， 4校验是否已存在， 5上限跟3个*/
         /*查看 申请人和用户 是否属于同一团队工程*/
         Integer userProjKey= userCommonService.getUserProjKey(Integer.parseInt(userId));
         Integer operProjKey= userCommonService.getUserProjKey(Integer.parseInt(operUserId));
@@ -262,9 +262,21 @@ public class FuUserFollowsService extends ServiceImpl<FuUserFollowsMapper, FuUse
             log.error("查询用户和申请人团队信息失败！");
             throw new BusinessException(GlobalResultCode.RESULE_DATA_NONE,"查询用户和申请人团队信息失败！");
         }
-        if(userProjKey!=operProjKey){
-            log.error("无权限操作该用户，只能设置自己团队用户跟随！");
-            throw new BusinessException("无权限操作该用户，只能设置自己团队用户跟随！");
+        Boolean isProjAdmin=userCommonService.isAdministrator(Integer.parseInt(operUserId),operProjKey);
+        if(isProjAdmin&&operProjKey==0){
+            /*超管查询*/
+        }else if(isProjAdmin){
+            /*资源组管理员查找*/
+            if(userProjKey!=operProjKey){
+                log.error("无权限操作该用户，只能设置自己团队用户跟随！");
+                throw new BusinessException("无权限操作该用户，只能设置自己团队用户跟随！");
+            }
+        }else {
+            /*普通用户 只能操作自己账号*/
+            if(!operUserId.equalsIgnoreCase(userId)){
+                log.error("无权限操作该用户，只能设置自己账户跟随！");
+                throw new BusinessException("无权限操作该用户，只能设置自己账户跟随！");
+            }
         }
 
         /* userId是不是信号源 信号源不能跟随信号源！*/
@@ -294,20 +306,27 @@ public class FuUserFollowsService extends ServiceImpl<FuUserFollowsMapper, FuUse
         List<FuProductSignalPermit> permits= fuProductSignalPermitService.selectByMap(conMap);
         if(permits==null||permits.isEmpty()){
             log.error("无跟随该信号源的权限！");
-            throw new ParameterInvalidException("无跟随该信号源的权限！");
+            throw new BusinessException("无跟随该信号源的权限！");
         }
 
-        /*校验是否已存在*/
+        /*校验是否已存在 上限跟三个*/
         Boolean isNew=true;
         FuUserFollows follows = new FuUserFollows();
         Map followConditon=new HashMap();
         followConditon.put(FuUserFollows.USER_ID,userId);
-        followConditon.put(FuUserFollows.SIGNAL_ID,signalId);
+        /*followConditon.put(FuUserFollows.SIGNAL_ID,signalId);*/
         List<FuUserFollows> followList= fuUserFollowsMapper.selectByMap(followConditon);
-        if(followList!=null && !followList.isEmpty() && followList.size()>0){
-            // 根据条件查询到跟单关系 已存在
-            isNew=false;
-            follows=followList.get(0);
+        if(followList!=null&&followList.size()>=3){
+            log.error("该用户已跟随3个信号源，已达到跟随上限！");
+            throw new BusinessException("该用户已跟随3个信号源，已达到跟随上限！");
+        }
+        for (FuUserFollows oldFollows:followList){
+            if(oldFollows.getSignalId()==Integer.parseInt(signalId)){
+                // 根据条件查询到跟单关系 已存在
+                isNew=false;
+                follows=followList.get(0);
+                break;
+            }
         }
 
         follows.setUserId(userMTAccountBO.getUserId());
@@ -364,10 +383,10 @@ public class FuUserFollowsService extends ServiceImpl<FuUserFollowsMapper, FuUse
 
         if(follows.getFollowState()==FollowConstant.FOLLOW_STATE_NORMAL){
             /*启动用户账户监听*/
-            int isConnect=fuTradeAccountService.setAccountConnectTradeAllowed(userMTAccountBO.getServerName(),Integer.parseInt(userMTAccountBO.getMtAccId()),userMTAccountBO.getMtPasswordTrade());
-            if(isConnect== 0){
-                log.error("用户账号监听失败！"+TradeErrorEnum.getMessage(isConnect));
-                throw new BusinessException("用户账号监听失败！"+TradeErrorEnum.getMessage(isConnect));
+            int clientId=fuTradeAccountService.setAccountConnectTradeAllowed(userMTAccountBO.getServerName(),Integer.parseInt(userMTAccountBO.getMtAccId()),userMTAccountBO.getMtPasswordTrade());
+            if(clientId== 0){
+                log.error("用户账号监听失败！"+TradeErrorEnum.getMessage(1));
+                throw new BusinessException("用户账号监听失败！");
             }
 
             // /*更新监听数据*/
