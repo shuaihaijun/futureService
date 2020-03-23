@@ -3,15 +3,20 @@ package com.future.service.order;
 import com.alibaba.druid.util.StringUtils;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.future.common.constants.AccountConstant;
 import com.future.common.constants.OrderConstant;
 import com.future.common.constants.UserConstant;
+import com.future.common.enums.GlobalResultCode;
 import com.future.common.exception.BusinessException;
+import com.future.common.exception.DataConflictException;
 import com.future.common.exception.ParameterInvalidException;
+import com.future.common.helper.PageInfoHelper;
 import com.future.common.util.ConvertUtil;
 import com.future.common.util.DateUtil;
 import com.future.common.util.RedisManager;
+import com.future.entity.order.FuOrderCustomer;
 import com.future.entity.order.FuOrderFollowInfo;
 import com.future.entity.product.FuProductSignal;
 import com.future.entity.user.FuUserFollows;
@@ -22,6 +27,9 @@ import com.future.service.product.FuProductSignalService;
 import com.future.service.trade.FuTradeOrderService;
 import com.future.service.user.AdminService;
 import com.future.service.user.FuUserFollowsService;
+import com.future.service.user.UserCommonService;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,6 +59,8 @@ public class FuOrderFollowInfoService extends ServiceImpl<FuOrderFollowInfoMappe
     FuUserFollowsService fuUserFollowsService;
     @Autowired
     FuProductSignalService fuProductSignalService;
+    @Autowired
+    UserCommonService userCommonService;
     @Autowired
     FuOrderFollowInfoMapper fuOrderFollowInfoMapper;
     @Autowired
@@ -342,5 +352,150 @@ public class FuOrderFollowInfoService extends ServiceImpl<FuOrderFollowInfoMappe
         }
         fuOrderFollowInfoMapper.insertSelective(followInfo);
         return true;
+    }
+
+    /**
+     * 查询社区跟随订单
+     * @param requestMap
+     * @param helper
+     * @return
+     */
+    public Page<FuOrderFollowInfo> queryOrderFollowInfo(Map requestMap, PageInfoHelper helper){
+
+        /*校验信息*/
+        if(ObjectUtils.isEmpty(requestMap.get("operUserId"))){
+            throw new DataConflictException(GlobalResultCode.PARAM_NULL_POINTER.message());
+        }
+        /*判断权限*/
+        String operUserId=String.valueOf(requestMap.get("operUserId"));
+        if(StringUtils.isEmpty(operUserId)){
+            log.error("查询用户列表,用户未登录！");
+            throw new ParameterInvalidException("查询用户列表,获取参数为空！");
+        }
+        /*校验信息*/
+        Integer operUserProj=userCommonService.getUserProjKey(Integer.parseInt(operUserId));
+        Boolean isProjAdmin=userCommonService.isAdministrator(Integer.parseInt(operUserId),operUserProj);
+        if(operUserProj==null){
+            log.error("查询用户列表,用户权限有误！");
+            throw new ParameterInvalidException("查询用户列表,用户权限有误！");
+        }
+        if(isProjAdmin&&operUserProj==0){
+            /*超管查询*/
+            return queryUserFollowOrder(requestMap,helper);
+        }else if(isProjAdmin){
+            /*资源组管理员查找*/
+            requestMap.put("projKey",operUserProj);
+            return queryProjectFollowOrder(requestMap,helper);
+        }else {
+            /*普通用户查找*/
+            requestMap.put("userId",operUserId);
+            return queryUserFollowOrder(requestMap,helper);
+        }
+    }
+
+    /**
+     * 查询社区跟随订单
+     * @param requestMap
+     * @param helper
+     * @return
+     */
+    public Page<FuOrderFollowInfo> queryUserFollowOrder(Map requestMap, PageInfoHelper helper){
+        EntityWrapper<FuOrderFollowInfo> wrapper=new EntityWrapper<FuOrderFollowInfo>();
+        if(requestMap.get("userId")!=null){
+            wrapper.eq(FuOrderFollowInfo.USER_ID,requestMap.get("userId"));
+        }
+        if(requestMap.get("signalId")!=null){
+            wrapper.eq(FuOrderFollowInfo.SIGNAL_ID,requestMap.get("signalId"));
+        }
+        if( requestMap.get("orderId")!=null){
+            wrapper.eq(FuOrderFollowInfo.ORDER_ID,requestMap.get("orderId"));
+        }
+        if( requestMap.get("signalOrderId")!=null){
+            wrapper.eq(FuOrderFollowInfo.SIGNAL_ORDER_ID,requestMap.get("signalOrderId"));
+        }
+        if( requestMap.get("orderSymbol")!=null){
+            wrapper.eq(FuOrderFollowInfo.ORDER_SYMBOL,requestMap.get("orderSymbol"));
+        }
+        if(!com.future.common.util.StringUtils.isEmpty(requestMap.get("orderType"))){
+            wrapper.eq(FuOrderFollowInfo.ORDER_TYPE,requestMap.get("orderType"));
+        }
+        if(!ObjectUtils.isEmpty(requestMap.get("orderOpenDate"))){
+            if(String.valueOf(requestMap.get("orderOpenDate")).indexOf(",")<0){
+                wrapper.eq(FuOrderFollowInfo.ORDER_OPEN_DATE,requestMap.get("orderOpenDate"));
+            }else {
+                List dateList=(List) requestMap.get("orderOpenDate");
+                if(dateList.size()!=2){
+                    log.error("建仓时间段数据传入错误！"+requestMap.get("orderOpenDate"));
+                    throw new DataConflictException(GlobalResultCode.PARAM_VERIFY_ERROR,"建仓时间段数据传入错误！"+requestMap.get("orderOpenDate"));
+                }
+                wrapper.gt(FuOrderFollowInfo.ORDER_OPEN_DATE,dateList.get(0));
+                wrapper.lt(FuOrderFollowInfo.ORDER_OPEN_DATE,dateList.get(1));
+            }
+        }
+        if(!ObjectUtils.isEmpty(requestMap.get("orderOpenDate"))){
+            if(String.valueOf(requestMap.get("orderOpenDate")).indexOf(",")<0){
+                wrapper.eq(FuOrderFollowInfo.ORDER_CLOSE_DATE,requestMap.get("orderCloseDate"));
+            }else {
+                //时间段
+                List dateList=(List) requestMap.get("orderCloseDate");
+                if(dateList.size()!=2){
+                    log.error("平仓时间段数据传入错误！"+requestMap.get("orderCloseDate"));
+                    throw new DataConflictException(GlobalResultCode.PARAM_VERIFY_ERROR,"平仓时间段数据传入错误！"+requestMap.get("orderCloseDate"));
+                }
+                wrapper.gt(FuOrderFollowInfo.ORDER_OPEN_DATE,dateList.get(0));
+                wrapper.lt(FuOrderFollowInfo.ORDER_OPEN_DATE,dateList.get(1));
+            }
+        }
+
+        if(helper==null){
+            helper=new PageInfoHelper();
+        }
+        Page<FuOrderFollowInfo> followOrders=  PageHelper.startPage(helper.getPageNo(),helper.getPageSize());
+        selectList(wrapper);
+        return followOrders;
+    }
+
+
+    /**
+     * 查找团队用户跟随订单
+     * @param condtionMap
+     * @param helper
+     * @return
+     */
+    public Page<FuOrderFollowInfo> queryProjectFollowOrder(Map condtionMap,PageInfoHelper helper){
+        if(condtionMap==null||condtionMap.get("projKey")==null){
+            throw new DataConflictException(GlobalResultCode.PARAM_NULL_POINTER.message());
+        }
+        if(!ObjectUtils.isEmpty(condtionMap.get("orderOpenDate"))){
+            if(String.valueOf(condtionMap.get("orderOpenDate")).indexOf(",")>0){
+                List dateList=(List) condtionMap.get("orderOpenDate");
+                if(dateList.size()!=2){
+                    log.error("建仓时间段数据传入错误！"+condtionMap.get("orderOpenDate"));
+                    throw new DataConflictException(GlobalResultCode.PARAM_VERIFY_ERROR,"建仓时间段数据传入错误！"+condtionMap.get("orderOpenDate"));
+                }
+                condtionMap.put("orderOpenDateBegin",dateList.get(0));
+                condtionMap.put("orderOpenDateEnd",dateList.get(1));
+                condtionMap.remove("orderOpenDate");
+            }
+        }
+        if(!ObjectUtils.isEmpty(condtionMap.get("orderOpenDate"))){
+            if(String.valueOf(condtionMap.get("orderOpenDate")).indexOf(",")>0){
+                //时间段
+                List dateList=(List) condtionMap.get("orderCloseDate");
+                if(dateList.size()!=2){
+                    log.error("平仓时间段数据传入错误！"+condtionMap.get("orderCloseDate"));
+                    throw new DataConflictException(GlobalResultCode.PARAM_VERIFY_ERROR,"平仓时间段数据传入错误！"+condtionMap.get("orderCloseDate"));
+                }
+                condtionMap.put("orderCloseDateBegin",dateList.get(0));
+                condtionMap.put("orderCloseDateEnd",dateList.get(1));
+                condtionMap.remove("orderCloseDate");
+            }
+        }
+        if(helper==null){
+            helper=new PageInfoHelper();
+        }
+        Page<FuOrderFollowInfo> followOrders=  PageHelper.startPage(helper.getPageNo(),helper.getPageSize());
+        fuOrderFollowInfoMapper.queryProjectFollowOrder(condtionMap);
+        return followOrders;
     }
 }

@@ -531,4 +531,60 @@
         and v.LEVEL = #{level,jdbcType=INTEGER}
       </if>
   </select>
+  <select id="querySignalAllowed" parameterType="java.util.Map" resultMap="BaseResultMap">
+    SELECT
+      DISTINCT
+      s.id,
+      s.create_date,
+      s.modify_date,
+      s.user_id,
+      s.signal_name,
+      s.signal_level,
+      s.signal_desc,
+      s.signal_ratings,
+      s.signal_state,
+      s.apply_date,
+      s.check_date,
+      s.signal_tem,
+      s.signal_lots,
+      s.signal_lots_profit,
+      s.signal_account_money,
+      s.signal_currency,
+      s.signal_follows,
+      s.monthly_average_income,
+      s.history_income,
+      s.history_withdraw,
+      s.email,
+      s.phone,
+      s.qq_number,
+      s.server_name,
+      s.mt_acc_id,
+      s.mt_password_trade,
+      s.mt_password_watch,
+      s.minimum,
+      s.annualized_expected_return,
+      s.historical_return,
+      s.suggest_cycle,
+      s.remarks,
+      s.connect_state,
+      s.proj_key,
+      s.proj_name,
+      s.oper_user_id
+    FROM
+        fu_product_signal s
+    LEFT JOIN fu_product_signal_permit p on s.id=p.signal_id
+    where 1=1
+      <if test="userId != null">
+        and s.user_id = #{userId,jdbcType=INTEGER}
+      </if>
+      <if test="signalId != null">
+        and s.id = #{signalId,jdbcType=INTEGER}
+      </if>
+      <if test="mtAccId != null">
+        and s.mt_acc_id = #{mtAccId,jdbcType=INTEGER}
+      </if>
+      <if test="projKey != null">
+        and p.proj_key = #{projKey,jdbcType=INTEGER}
+      </if>
+  </select>
 </mapper>

@@ -285,7 +285,7 @@ public class FuProductSignalApplyService extends ServiceImpl<FuProductSignalAppl
         /*查看 申请人和用户 是否属于同一团队工程*/
         Integer userProjKey= userCommonService.getUserProjKey(signal.getUserId());
         Integer operProjKey= userCommonService.getUserProjKey(signal.getOperUserId());
-        if(userProjKey==null||userProjKey==0||operProjKey==null||operProjKey==0){
+        if(userProjKey==null||operProjKey==null){
             log.error("查询用户和申请人团队信息失败！");
             throw new BusinessException(GlobalResultCode.RESULE_DATA_NONE,"查询用户和申请人团队信息失败！");
         }
@@ -367,7 +367,7 @@ public class FuProductSignalApplyService extends ServiceImpl<FuProductSignalAppl
 
     /**
      * 审核信号源信息
-     * @param signalId
+     * @param signalApplyId
      * @param state
      * @param mesage
      */
@@ -433,14 +433,21 @@ public class FuProductSignalApplyService extends ServiceImpl<FuProductSignalAppl
             fuAccountMtService.checkSignalMtAccount(apply.getUserId(),apply.getServerName(),apply.getMtAccId());
 
             /*保存信号源*/
-            int signalId= fuProductSignalMapper.insertSelective(signal);
-            if(signalId==0){
+            int isInsert= fuProductSignalMapper.insertSelective(signal);
+            if(isInsert==0){
                 throw new BusinessException("信号源保存失败！");
             }
 
             /*设置信号源权限*/
+            Map condition=new HashMap();
+            condition.put(FuProductSignal.MT_ACC_ID,signal.getMtAccId());
+            condition.put(FuProductSignal.USER_ID,signal.getUserId());
+            List<FuProductSignal> newSignals= fuProductSignalService.selectByMap(condition);
+            if(newSignals==null||newSignals.size()==0){
+                throw new BusinessException("信号源保存失败！");
+            }
             FuProductSignalPermit permit=new FuProductSignalPermit();
-            permit.setSignalId(signalId);
+            permit.setSignalId(newSignals.get(0).getId());
             permit.setProjKey(signal.getProjKey());
             fuProductSignalPermitService.insertSelective(permit);
 
@@ -495,6 +502,12 @@ public class FuProductSignalApplyService extends ServiceImpl<FuProductSignalAppl
             }
             if(!ObjectUtils.isEmpty(signalMap.get("serverName"))){
                 signal.setServerName(String.valueOf(signalMap.get("serverName")));
+            }
+            if(!ObjectUtils.isEmpty(signalMap.get("state"))){
+                signal.setApplyState(Integer.parseInt(String.valueOf(signalMap.get("state"))));
+            }
+            if(!ObjectUtils.isEmpty(signalMap.get("applyState"))){
+                signal.setApplyState(Integer.parseInt(String.valueOf(signalMap.get("applyState"))));
             }
             if(!ObjectUtils.isEmpty(signalMap.get("mtAccId"))){
                 signal.setMtAccId(String.valueOf(signalMap.get("mtAccId")));

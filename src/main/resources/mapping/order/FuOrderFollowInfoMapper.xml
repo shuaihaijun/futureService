@@ -458,4 +458,123 @@
       comment = #{comment,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  <select id="queryProjectFollowOrder" parameterType="java.util.Map" resultMap="BaseResultMap">
+    SELECT
+      o.id,
+      o.create_date,
+      o.modify_date,
+      o.order_id,
+      o.user_id,
+      o.signal_id,
+      o.user_mt_acc_id,
+      o.user_server_id,
+      o.user_server_name,
+      o.signal_server_id,
+      o.signal_server_name,
+      o.signal_mt_acc_id,
+      o.signal_order_id,
+      o.order_symbol,
+      o.order_lots,
+      o.order_stoploss,
+      o.order_takeprofit,
+      o.order_source_flag,
+      o.order_trade_operation,
+      o.order_type,
+      o.order_split_type,
+      o.order_superior,
+      o.order_profit,
+      o.order_swap,
+      o.order_commission,
+      o.order_magic,
+      o.order_open_price,
+      o.order_open_date,
+      o.order_close_price,
+      o.order_close_date,
+      o.order_expiration,
+      o.follow_direct,
+      o.follow_mode,
+      o.follow_type,
+      o.follow_amount,
+      o. COMMENT
+    FROM
+        fu_order_follow_info o
+    LEFT JOIN fu_permission_userproject p ON o.user_id = p.user_id
+    where 1=1
+      <if test="userId != null">
+        and o.user_id = #{userId,jdbcType=INTEGER}
+      </if>
+      <if test="signalId != null">
+        and o.signal_id = #{signalId,jdbcType=INTEGER}
+      </if>
+      <if test="projKey != null">
+        and p.proj_key = #{projKey,jdbcType=INTEGER}
+      </if>
+      <if test="orderId != null">
+        and o.order_id = #{orderId,jdbcType=VARCHAR},
+      </if>
+      <if test="userMtAccId != null">
+        and o.user_mt_acc_id = #{userMtAccId,jdbcType=VARCHAR},
+      </if>
+      <if test="userServerId != null">
+        and o.user_server_id = #{userServerId,jdbcType=INTEGER},
+      </if>
+      <if test="userServerName != null">
+        and o.user_server_name = #{userServerName,jdbcType=VARCHAR},
+      </if>
+      <if test="signalServerId != null">
+        and o.signal_server_id = #{signalServerId,jdbcType=INTEGER},
+      </if>
+      <if test="signalServerName != null">
+        and o.signal_server_name = #{signalServerName,jdbcType=VARCHAR},
+      </if>
+      <if test="signalMtAccId != null">
+        and o.signal_mt_acc_id = #{signalMtAccId,jdbcType=VARCHAR},
+      </if>
+      <if test="signalOrderId != null">
+        and o.signal_order_id = #{signalOrderId,jdbcType=VARCHAR},
+      </if>
+      <if test="orderSymbol != null">
+        and o.order_symbol = #{orderSymbol,jdbcType=VARCHAR},
+      </if>
+      <if test="orderLots != null">
+        and o.order_lots = #{orderLots,jdbcType=DECIMAL},
+      </if>
+      <if test="orderTradeOperation != null">
+        and o.order_trade_operation = #{orderTradeOperation,jdbcType=TINYINT},
+      </if>
+      <if test="orderType != null">
+        and o.order_type = #{orderType,jdbcType=TINYINT},
+      </if>
+      <if test="orderMagic != null">
+        and o.order_magic = #{orderMagic,jdbcType=DECIMAL},
+      </if>
+      <if test="orderOpenDate != null">
+        and o.order_open_date = #{orderOpenDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="orderCloseDate != null">
+        and o.order_close_date = #{orderCloseDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="followDirect != null">
+        and o.follow_direct = #{followDirect,jdbcType=TINYINT},
+      </if>
+      <if test="followMode != null">
+        and o.follow_mode = #{followMode,jdbcType=TINYINT},
+      </if>
+      <if test="followType != null">
+        and o.follow_type = #{followType,jdbcType=TINYINT},
+      </if>
+      <if test="orderOpenDateBegin != null">
+        and o.order_open_date &gt;= #{orderOpenDateBegin,jdbcType=TINYINT},
+      </if>
+      <if test="orderOpenDateEnd != null">
+        and o.order_open_date &lt;= #{orderOpenDateEnd,jdbcType=TINYINT},
+      </if>
+      <if test="orderCloseDateBegin != null">
+        and o.order_close_date &gt;= #{orderCloseDateBegin,jdbcType=TINYINT},
+      </if>
+      <if test="orderCloseDateEnd != null">
+        and o.order_close_date &lt;= #{orderCloseDateEnd,jdbcType=TINYINT},
+      </if>
+    ORDER BY o.create_date desc
+  </select>
 </mapper>

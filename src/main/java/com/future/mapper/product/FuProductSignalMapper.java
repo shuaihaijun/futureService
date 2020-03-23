@@ -24,4 +24,6 @@ public interface FuProductSignalMapper extends BaseMapper<FuProductSignal> {
 
     List<FuUserSignalVO> querySignalUsers(Map conditionMap);
 
+    List<FuProductSignal> querySignalAllowed(Map conditionMap);
+
 }

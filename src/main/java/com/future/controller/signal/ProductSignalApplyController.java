@@ -85,7 +85,7 @@ public class ProductSignalApplyController {
             throw new DataConflictException(GlobalResultCode.PARAM_NULL_POINTER,"信息不能为空！");
         }
         /*校验参数*/
-        if(ObjectUtils.isEmpty(requestMap.getString("id"))){
+        if(ObjectUtils.isEmpty(requestMap.get("id"))){
            // 保存
             return fuProductSignalApplyService.saveProductSignal(requestMap);
         }else {

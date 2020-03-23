@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.toolkit.MapUtils;
 import com.future.common.constants.CommonConstant;
 import com.future.common.constants.FollowConstant;
 import com.future.common.constants.RedisConstant;
+import com.future.common.constants.UserConstant;
 import com.future.common.enums.GlobalResultCode;
 import com.future.common.enums.TradeErrorEnum;
 import com.future.common.exception.BusinessException;
@@ -16,6 +17,7 @@ import com.future.common.helper.PageInfoHelper;
 import com.future.common.util.RedisManager;
 import com.future.common.util.StringUtils;
 import com.future.entity.product.FuProductSignal;
+import com.future.entity.product.FuProductSignalPermit;
 import com.future.entity.user.FuUserFollows;
 import com.future.mapper.product.FuProductSignalMapper;
 import com.future.mapper.user.FuUserFollowsMapper;
@@ -23,6 +25,7 @@ import com.future.pojo.bo.order.UserMTAccountBO;
 import com.future.pojo.vo.signal.FuFollowStateVO;
 import com.future.pojo.vo.signal.FuFollowUserVO;
 import com.future.service.account.FuAccountMtService;
+import com.future.service.product.FuProductSignalPermitService;
 import com.future.service.product.FuProductSignalService;
 import com.future.service.trade.FuTradeAccountService;
 import com.github.pagehelper.Page;
@@ -55,6 +58,8 @@ public class FuUserFollowsService extends ServiceImpl<FuUserFollowsMapper, FuUse
     UserCommonService userCommonService;
     @Autowired
     FuTradeAccountService fuTradeAccountService;
+    @Autowired
+    FuProductSignalPermitService fuProductSignalPermitService;
     @Autowired
     FuUserFollowsMapper fuUserFollowsMapper;
 
@@ -179,7 +184,7 @@ public class FuUserFollowsService extends ServiceImpl<FuUserFollowsMapper, FuUse
             return queryProjectSignalFollows(conditionMap,helper);
         }else {
             /*普通用户查找*/
-            serchMap.put("userId",operId);
+            conditionMap.put("userId",operId);
         }
 
         if(!StringUtils.isEmpty(conditionMap.get("userId"))){
@@ -249,19 +254,20 @@ public class FuUserFollowsService extends ServiceImpl<FuUserFollowsMapper, FuUse
         String userMtAccId = String.valueOf(dataMap.get("userMtAccId"));
         String signalId = String.valueOf(dataMap.get("signalId"));
 
-        /*判断权限*/
+        /*判断权限 1 userId是不是信号源，2 oerUserId userId是不是同一团队，3 signalId是不是有权限， 4校验是否已存在*/
         /*查看 申请人和用户 是否属于同一团队工程*/
         Integer userProjKey= userCommonService.getUserProjKey(Integer.parseInt(userId));
         Integer operProjKey= userCommonService.getUserProjKey(Integer.parseInt(operUserId));
-        if(userProjKey==null||userProjKey==0||operProjKey==null||operProjKey==0){
+        if(userProjKey==null||operProjKey==null){
             log.error("查询用户和申请人团队信息失败！");
             throw new BusinessException(GlobalResultCode.RESULE_DATA_NONE,"查询用户和申请人团队信息失败！");
         }
         if(userProjKey!=operProjKey){
-            log.error("无权限跟随该信号源！");
-            throw new BusinessException("无权限跟随该信号源！");
+            log.error("无权限操作该用户，只能设置自己团队用户跟随！");
+            throw new BusinessException("无权限操作该用户，只能设置自己团队用户跟随！");
         }
 
+        /* userId是不是信号源 信号源不能跟随信号源！*/
         Map conMap=new HashMap();
         conMap.put("userId",userId);
         conMap.put("mtAccId",userMtAccId);
@@ -276,6 +282,20 @@ public class FuUserFollowsService extends ServiceImpl<FuUserFollowsMapper, FuUse
             throw new ParameterInvalidException("根据用户ID 查询用户账户信息失败！");
         }
         UserMTAccountBO userMTAccountBO=userAccounts.get(0);
+        if(userMTAccountBO.getUserType()== UserConstant.USER_TYPE_SIGNAL){
+            log.error("信号源不能跟随信号源！");
+            throw new ParameterInvalidException("该用户为信号源 信号源不能跟随信号源！");
+        }
+
+        /*signalId是不是有权限*/
+        conMap.clear();
+        conMap.put(FuProductSignalPermit.SIGNAL_ID,signalId);
+        conMap.put(FuProductSignalPermit.PROJ_KEY,userProjKey);
+        List<FuProductSignalPermit> permits= fuProductSignalPermitService.selectByMap(conMap);
+        if(permits==null||permits.isEmpty()){
+            log.error("无跟随该信号源的权限！");
+            throw new ParameterInvalidException("无跟随该信号源的权限！");
+        }
 
         /*校验是否已存在*/
         Boolean isNew=true;

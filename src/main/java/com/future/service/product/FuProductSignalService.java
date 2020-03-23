@@ -223,4 +223,50 @@ public class FuProductSignalService extends ServiceImpl<FuProductSignalMapper,Fu
         return deleteById(signalId);
     }
 
+    /**
+     * 根据条件查找可跟随信号源
+     * @param conditionMap
+     * @param helper
+     * @return
+     */
+    public Page<FuProductSignal> querySignalAllowed(Map conditionMap, PageInfoHelper helper){
+        /*校验信息*/
+        if(ObjectUtils.isEmpty(conditionMap.get("operId"))){
+            throw new DataConflictException(GlobalResultCode.PARAM_NULL_POINTER.message());
+        }
+        /*判断权限*/
+        String operId=String.valueOf(conditionMap.get("operId"));
+        if(StringUtils.isEmpty(operId)){
+            log.error("查询用户列表,用户未登录！");
+            throw new ParameterInvalidException("查询用户列表,获取参数为空！");
+        }
+        /*校验信息*/
+        Integer operUserProj=userCommonService.getUserProjKey(Integer.parseInt(operId));
+        Boolean isProjAdmin=userCommonService.isAdministrator(Integer.parseInt(operId),operUserProj);
+        if(operUserProj==null){
+            log.error("查询用户列表,用户权限有误！");
+            throw new ParameterInvalidException("查询用户列表,用户权限有误！");
+        }
+        if(isProjAdmin&&operUserProj==0){
+            /*超管查询*/
+        }else if(isProjAdmin){
+            /*资源组管理员查找*/
+            conditionMap.put("projKey",operUserProj);
+        }else {
+            /*普通用户查找*/
+        }
+
+        if(helper==null){
+            helper=new PageInfoHelper();
+        }
+        Page<FuProductSignal> signals= PageHelper.startPage(helper.getPageNo(),helper.getPageSize());
+        fuProductSignalMapper.querySignalAllowed(conditionMap);
+        /*设置监听状态*/
+        for(FuProductSignal signal:signals.getResult()){
+            if(redisManager.hget(RedisConstant.H_ACCOUNT_CONNECT_INFO,signal.getMtAccId())!=null){
+                signal.setConnectState(CommonConstant.COMMON_YES);
+            }
+        }
+        return signals;
+    }
 }
