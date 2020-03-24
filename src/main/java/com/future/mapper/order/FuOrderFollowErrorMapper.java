@@ -4,6 +4,9 @@ import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.future.entity.order.FuOrderFollowError;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+import java.util.Map;
+
 @Component
 public interface FuOrderFollowErrorMapper extends BaseMapper<FuOrderFollowError> {
     int deleteByPrimaryKey(Integer id);
@@ -17,4 +20,6 @@ public interface FuOrderFollowErrorMapper extends BaseMapper<FuOrderFollowError>
     int updateByPrimaryKeySelective(FuOrderFollowError record);
 
     int updateByPrimaryKey(FuOrderFollowError record);
+
+    List<FuOrderFollowError> queryProjectFollowError(Map condition);
 }

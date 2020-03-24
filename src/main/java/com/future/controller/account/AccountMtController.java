@@ -180,7 +180,7 @@ public class AccountMtController {
         /*判断权限*/
         FuProductSignal signal= fuProductSignalService.findSignalById(signalId);
         Integer operProjectKey= userCommonService.getUserProjKey(operUserId);
-        if(signal==null||signal.getProjKey()==0||operProjectKey==0){
+        if(signal==null||operProjectKey==null){
             log.warn("查询信号源和团队信息失败!");
             throw new ParameterInvalidException("查询信号源和团队信息失败!");
         }
@@ -207,7 +207,7 @@ public class AccountMtController {
         /*判断权限*/
         FuProductSignal signal= fuProductSignalService.findSignalById(signalId);
         Integer operProjectKey= userCommonService.getUserProjKey(operUserId);
-        if(signal==null||signal.getProjKey()==0||operProjectKey==0){
+        if(signal==null||operProjectKey==null){
             log.warn("查询信号源和团队信息失败!");
             throw new ParameterInvalidException("查询信号源和团队信息失败!");
         }

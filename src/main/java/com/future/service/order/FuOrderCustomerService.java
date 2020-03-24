@@ -390,7 +390,7 @@ public class FuOrderCustomerService extends ServiceImpl<FuOrderCustomerMapper, F
                 wrapper.eq(FuOrderCustomer.ORDER_OPEN_DATE,conditionMap.get("orderCloseDate"));
             }else {
                 //时间段
-                List dateList=(List) conditionMap.get("orderOpenDate");
+                List dateList=(List) conditionMap.get("orderCloseDate");
                 if(dateList.size()!=2){
                     log.error("平仓时间段数据传入错误！"+conditionMap.get("orderCloseDate"));
                     throw new DataConflictException(GlobalResultCode.PARAM_VERIFY_ERROR,"平仓时间段数据传入错误！"+conditionMap.get("orderCloseDate"));

@@ -363,4 +363,91 @@
       error_msg = #{errorMsg,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  <select id="queryProjectFollowError" parameterType="java.util.Map" resultMap="BaseResultMap">
+    SELECT
+      e.id,
+      e.create_date,
+      e.modify_date,
+      e.user_order_id,
+      e.user_id,
+      e.user_server_id,
+      e.user_server_name,
+      e.user_mt_acc_id,
+      e.signal_id,
+      e.signal_order_id,
+      e.signal_server_id,
+      e.signal_server_name,
+      e.signal_mt_acc_id,
+      e.signal_order_superior,
+      e.follow_direct,
+      e.follow_mode,
+      e.follow_type,
+      e.follow_amount,
+      e.order_lots,
+      e.order_symbol,
+      e.order_type,
+      e.order_trade_operation,
+      e.order_open_price,
+      e.order_open_date,
+      e.order_close_price,
+      e.order_close_date,
+      e.error_code,
+      e.error_msg
+    FROM
+        fu_order_follow_error e
+    LEFT JOIN fu_permission_userproject p ON e.user_id = p.user_id
+    where 1=1
+      <if test="projKey != null">
+        and p.proj_key = #{projKey,jdbcType=INTEGER}
+      </if>
+      <if test="userOrderId != null">
+        and e.user_order_id = #{userOrderId,jdbcType=INTEGER}
+      </if>
+      <if test="userId != null">
+        and e.user_id = #{userId,jdbcType=INTEGER}
+      </if>
+      <if test="userMtAccId != null">
+        and e.user_mt_acc_id = #{userMtAccId,jdbcType=VARCHAR}
+      </if>
+      <if test="signalId != null">
+        and e.signal_id = #{signalId,jdbcType=INTEGER}
+      </if>
+      <if test="signalOrderId != null">
+        and e.signal_order_id = #{signalOrderId,jdbcType=VARCHAR}
+      </if>
+      <if test="signalMtAccId != null">
+        and e.signal_mt_acc_id = #{signalMtAccId,jdbcType=VARCHAR}
+      </if>
+      <if test="signalOrderSuperior != null">
+        and e.signal_order_superior = #{signalOrderSuperior,jdbcType=VARCHAR}
+      </if>
+      <if test="followDirect != null">
+        and e.follow_direct = #{followDirect,jdbcType=TINYINT}
+      </if>
+      <if test="followMode != null">
+        and e.follow_mode = #{followMode,jdbcType=TINYINT}
+      </if>
+      <if test="followType != null">
+        and e.follow_type = #{followType,jdbcType=TINYINT}
+      </if>
+      <if test="orderSymbol != null">
+        and e.order_symbol = #{orderSymbol,jdbcType=VARCHAR}
+      </if>
+      <if test="orderType != null">
+        and e.order_type = #{orderType,jdbcType=TINYINT}
+      </if>
+      <if test="orderTradeOperation != null">
+        and e.order_trade_operation = #{orderTradeOperation,jdbcType=TINYINT}
+      </if>
+      <if test="orderOpenDate != null">
+        and e.order_open_date = #{orderOpenDate,jdbcType=TIMESTAMP}
+      </if>
+      <if test="orderOpenDateBegin != null">
+        and e.order_open_date &gt;= #{orderOpenDateBegin,jdbcType=TIMESTAMP}
+      </if>
+      <if test="orderOpenDateEnd != null">
+        and e.order_open_date &lt;= #{orderOpenDateEnd,jdbcType=TIMESTAMP}
+      </if>
+      order by id desc
+  </select>
 </mapper>

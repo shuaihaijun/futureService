@@ -220,16 +220,16 @@
     where
       1 = 1
       <if test="userId != null">
-        and c.user_id = #{userId,jdbcType=INTEGER},
+        and c.user_id = #{userId,jdbcType=INTEGER}
       </if>
       <if test="accountId != null">
-        and c.account_id = #{accountId,jdbcType=INTEGER},
+        and c.account_id = #{accountId,jdbcType=INTEGER}
       </if>
       <if test="commissionLevel != null">
-        and c.commission_level = #{commissionLevel,jdbcType=TINYINT},
+        and c.commission_level = #{commissionLevel,jdbcType=TINYINT}
       </if>
       <if test="accountState != null">
-        and c.account_state = #{accountState,jdbcType=TINYINT},
+        and c.account_state = #{accountState,jdbcType=TINYINT}
       </if>
       <if test="projKey != null">
         and p.proj_key = #{projKey,jdbcType=INTEGER}

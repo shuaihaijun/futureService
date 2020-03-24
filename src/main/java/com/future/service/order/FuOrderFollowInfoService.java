@@ -4,6 +4,7 @@ import com.alibaba.druid.util.StringUtils;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.future.common.constants.AccountConstant;
 import com.future.common.constants.OrderConstant;
@@ -16,6 +17,7 @@ import com.future.common.helper.PageInfoHelper;
 import com.future.common.util.ConvertUtil;
 import com.future.common.util.DateUtil;
 import com.future.common.util.RedisManager;
+import com.future.entity.account.FuAccountMt;
 import com.future.entity.order.FuOrderCustomer;
 import com.future.entity.order.FuOrderFollowInfo;
 import com.future.entity.product.FuProductSignal;
@@ -270,16 +272,17 @@ public class FuOrderFollowInfoService extends ServiceImpl<FuOrderFollowInfoMappe
         }
 
         //根据mtaccId 查询user
-        Map conditionMap=new HashMap();
-        conditionMap.put("mtAccId",followMtAccId);
-        List<UserMTAccountBO> followAccountInfo= fuAccountMtService.getUserMTAccByCondition(conditionMap);
+        Wrapper<FuAccountMt> wrapper = new EntityWrapper<FuAccountMt>();
+        wrapper.eq(FuAccountMt.MT_ACC_ID,followMtAccId);
+        FuAccountMt accountMt= fuAccountMtService.selectOne(wrapper);
         /*判断数据*/
-        if(followAccountInfo==null||followAccountInfo.size()<=0){
-            log.error("根据服务器和账号，查询用户账户信息错误！");
+        if(accountMt==null){
+            log.error("查询信号源账户信息错误！");
             return false;
         }
+
         /*根据信号源mtAccId 查询信号源*/
-        conditionMap.clear();
+        Map conditionMap=new HashMap();
         conditionMap.put(FuProductSignal.MT_ACC_ID,signalMtAccId);
         List<FuProductSignal> signals= fuProductSignalService.selectByMap(conditionMap);
         if(signals==null||signals.size()<=0){
@@ -288,8 +291,8 @@ public class FuOrderFollowInfoService extends ServiceImpl<FuOrderFollowInfoMappe
         }
         /*跟单数据*/
         conditionMap.clear();
-        conditionMap.put("userId",followAccountInfo.get(0).getUserId());
-        conditionMap.put("userMtAccId",followAccountInfo.get(0).getMtAccId());
+        conditionMap.put("userId",accountMt.getUserId());
+        conditionMap.put("userMtAccId",accountMt.getMtAccId());
         conditionMap.put("signalId",signals.get(0).getId());
         conditionMap.put("signalMtAccId",signals.get(0).getMtAccId());
         conditionMap.put("followState", AccountConstant.ACCOUNT_STATE_NORMAL);
@@ -302,10 +305,10 @@ public class FuOrderFollowInfoService extends ServiceImpl<FuOrderFollowInfoMappe
         FuOrderFollowInfo followInfo=new FuOrderFollowInfo();
         followInfo.setSignalId(signals.get(0).getId());
 
-        followInfo.setUserId(followAccountInfo.get(0).getUserId());
-        followInfo.setUserServerName(followAccountInfo.get(0).getServerName());
-        followInfo.setUserMtAccId(followAccountInfo.get(0).getMtAccId());
-        followInfo.setUserServerId(followAccountInfo.get(0).getServerId());
+        followInfo.setUserId(accountMt.getUserId());
+        followInfo.setUserServerName(accountMt.getServerName());
+        followInfo.setUserMtAccId(accountMt.getMtAccId());
+        followInfo.setUserServerId(accountMt.getServerId());
 
         followInfo.setSignalMtAccId(signals.get(0).getMtAccId());
         followInfo.setSignalOrderId(String.valueOf(signalOrderId));

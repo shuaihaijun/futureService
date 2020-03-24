@@ -8,12 +8,15 @@ import com.future.common.constants.OrderConstant;
 import com.future.common.enums.GlobalResultCode;
 import com.future.common.enums.TradeErrorEnum;
 import com.future.common.exception.DataConflictException;
+import com.future.common.exception.ParameterInvalidException;
 import com.future.common.helper.PageInfoHelper;
 import com.future.common.util.DateUtil;
 import com.future.common.util.StringUtils;
 import com.future.entity.order.FuOrderFollowError;
+import com.future.entity.order.FuOrderFollowInfo;
 import com.future.entity.user.FuUserFollows;
 import com.future.mapper.order.FuOrderFollowErrorMapper;
+import com.future.service.user.UserCommonService;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import org.slf4j.Logger;
@@ -23,6 +26,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -31,15 +35,57 @@ public class FuOrderFollowErrorService extends ServiceImpl<FuOrderFollowErrorMap
     Logger log = LoggerFactory.getLogger(FuOrderFollowErrorService.class);
 
     @Autowired
+    UserCommonService userCommonService;
+    @Autowired
     FuOrderFollowErrorMapper fuOrderFollowErrorMapper;
 
     /**
-     * 查询信息
+     * 查询跟单错误信息
      * @param condition
      * @param helper
      * @return
      */
     public Page<FuOrderFollowError> queryOrderFollowError(Map condition, PageInfoHelper helper){
+
+        /*校验信息*/
+        if(ObjectUtils.isEmpty(condition.get("operUserId"))){
+            throw new DataConflictException(GlobalResultCode.PARAM_NULL_POINTER.message());
+        }
+        /*判断权限*/
+        String operUserId=String.valueOf(condition.get("operUserId"));
+        if(StringUtils.isEmpty(condition)){
+            log.error("查询列表,用户未登录！");
+            throw new ParameterInvalidException("查询列表,获取参数为空！");
+        }
+        /*校验信息*/
+        Integer operUserProj=userCommonService.getUserProjKey(Integer.parseInt(operUserId));
+        Boolean isProjAdmin=userCommonService.isAdministrator(Integer.parseInt(operUserId),operUserProj);
+        if(operUserProj==null){
+            log.error("查询用户列表,用户权限有误！");
+            throw new ParameterInvalidException("查询用户列表,用户权限有误！");
+        }
+        if(isProjAdmin&&operUserProj==0){
+            /*超管查询*/
+            return queryUserFollowError(condition,helper);
+        }else if(isProjAdmin){
+            /*资源组管理员查找*/
+            condition.put("projKey",operUserProj);
+            return queryProjectFollowError(condition,helper);
+        }else {
+            /*普通用户查找*/
+            condition.put("userId",operUserId);
+            return queryUserFollowError(condition,helper);
+        }
+    }
+
+
+    /**
+     * 查询用户跟单的信息
+     * @param condition
+     * @param helper
+     * @return
+     */
+    public Page<FuOrderFollowError> queryUserFollowError(Map condition, PageInfoHelper helper){
         EntityWrapper<FuOrderFollowError> wrapper=new EntityWrapper<FuOrderFollowError>();
         if(!ObjectUtils.isEmpty(condition.get("userId"))){
             wrapper.eq(FuOrderFollowError.USER_ID,condition.get("userId"));
@@ -86,6 +132,7 @@ public class FuOrderFollowErrorService extends ServiceImpl<FuOrderFollowErrorMap
                 wrapper.lt(FuOrderFollowError.ORDER_OPEN_DATE,dateOpen.getString(1));
             }
         }
+        wrapper.orderBy("id desc");
 
         if(helper==null){
             helper=new PageInfoHelper();
@@ -94,7 +141,50 @@ public class FuOrderFollowErrorService extends ServiceImpl<FuOrderFollowErrorMap
         fuOrderFollowErrorMapper.selectList(wrapper);
         return errors;
     }
+    /**
+     * 查询团队跟单的信息
+     * @param condition
+     * @param helper
+     * @return
+     */
+    public Page<FuOrderFollowError> queryProjectFollowError(Map condition, PageInfoHelper helper){
+        if(condition==null||condition.get("projKey")==null){
+            log.error("查询团队跟单的信息 团队参数为空！");
+            throw new DataConflictException("查询团队跟单的信息 团队参数为空！");
+        }
+        if(!ObjectUtils.isEmpty(condition.get("orderOpenDate"))){
+            if(String.valueOf(condition.get("orderOpenDate")).indexOf(",")>0){
+                List dateList=(List) condition.get("orderOpenDate");
+                if(dateList.size()!=2){
+                    log.error("建仓时间段数据传入错误！"+condition.get("orderOpenDate"));
+                    throw new DataConflictException(GlobalResultCode.PARAM_VERIFY_ERROR,"建仓时间段数据传入错误！"+condition.get("orderOpenDate"));
+                }
+                condition.put("orderOpenDateBegin",dateList.get(0));
+                condition.put("orderOpenDateEnd",dateList.get(1));
+                condition.remove("orderOpenDate");
+            }
+        }
+        if(!ObjectUtils.isEmpty(condition.get("orderOpenDate"))){
+            if(String.valueOf(condition.get("orderOpenDate")).indexOf(",")>0){
+                //时间段
+                List dateList=(List) condition.get("orderCloseDate");
+                if(dateList.size()!=2){
+                    log.error("平仓时间段数据传入错误！"+condition.get("orderCloseDate"));
+                    throw new DataConflictException(GlobalResultCode.PARAM_VERIFY_ERROR,"平仓时间段数据传入错误！"+condition.get("orderCloseDate"));
+                }
+                condition.put("orderCloseDateBegin",dateList.get(0));
+                condition.put("orderCloseDateEnd",dateList.get(1));
+                condition.remove("orderCloseDate");
+            }
+        }
+        if(helper==null){
+            helper=new PageInfoHelper();
+        }
+        Page<FuOrderFollowError> followErrors=  PageHelper.startPage(helper.getPageNo(),helper.getPageSize());
+        fuOrderFollowErrorMapper.queryProjectFollowError(condition);
+        return followErrors;
 
+    }
 
     /**
      * 处理跟单失败逻辑

@@ -11,11 +11,15 @@ public class RedisConstant {
 	public static final String L_ORDER_FOLLOW_ORDERS="tradeOrderFollowOrders";
 	/*订单 跟随错误 此key与tarder项目中的key同步 不可随意修改,这边只取 不存*/
 	public static final String L_ORDER_FOLLOW_ERROR_DATA="tradeOrderFollowErrorData";
+	/*订单 信号源订单 此key与tarder项目中的key同步 不可随意修改,这边只取 不存*/
+	public static final String L_ORDER_FOLLOW_SIGNAL_ORDER="tradeOrderFollowSignalOrder";
 
 	/*订单 跟随订单信息 处理失败暂存*/
 	public static final String L_ORDER_FOLLOW_ORDERS_BAK="tradeOrderFollowOrdersBak";
 	/*订单 跟随错误 处理失败暂存*/
 	public static final String L_ORDER_FOLLOW_ERROR_DATA_BAK="tradeOrderFollowErrorDataBak";
+	/*订单 信号源订单信息 处理失败暂存*/
+	public static final String L_ORDER_FOLLOW_SIGNAL_ORDER_BAK="tradeOrderFollowSignalOrderBak";
 
 	/*user login token*/
 	public static final String H_USER_LOGIN_TOKEN="userLoginToken";

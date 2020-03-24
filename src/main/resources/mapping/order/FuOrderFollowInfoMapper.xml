@@ -510,70 +510,70 @@
         and p.proj_key = #{projKey,jdbcType=INTEGER}
       </if>
       <if test="orderId != null">
-        and o.order_id = #{orderId,jdbcType=VARCHAR},
+        and o.order_id = #{orderId,jdbcType=VARCHAR}
       </if>
       <if test="userMtAccId != null">
-        and o.user_mt_acc_id = #{userMtAccId,jdbcType=VARCHAR},
+        and o.user_mt_acc_id = #{userMtAccId,jdbcType=VARCHAR}
       </if>
       <if test="userServerId != null">
-        and o.user_server_id = #{userServerId,jdbcType=INTEGER},
+        and o.user_server_id = #{userServerId,jdbcType=INTEGER}
       </if>
       <if test="userServerName != null">
-        and o.user_server_name = #{userServerName,jdbcType=VARCHAR},
+        and o.user_server_name = #{userServerName,jdbcType=VARCHAR}
       </if>
       <if test="signalServerId != null">
-        and o.signal_server_id = #{signalServerId,jdbcType=INTEGER},
+        and o.signal_server_id = #{signalServerId,jdbcType=INTEGER}
       </if>
       <if test="signalServerName != null">
-        and o.signal_server_name = #{signalServerName,jdbcType=VARCHAR},
+        and o.signal_server_name = #{signalServerName,jdbcType=VARCHAR}
       </if>
       <if test="signalMtAccId != null">
-        and o.signal_mt_acc_id = #{signalMtAccId,jdbcType=VARCHAR},
+        and o.signal_mt_acc_id = #{signalMtAccId,jdbcType=VARCHAR}
       </if>
       <if test="signalOrderId != null">
-        and o.signal_order_id = #{signalOrderId,jdbcType=VARCHAR},
+        and o.signal_order_id = #{signalOrderId,jdbcType=VARCHAR}
       </if>
       <if test="orderSymbol != null">
-        and o.order_symbol = #{orderSymbol,jdbcType=VARCHAR},
+        and o.order_symbol = #{orderSymbol,jdbcType=VARCHAR}
       </if>
       <if test="orderLots != null">
-        and o.order_lots = #{orderLots,jdbcType=DECIMAL},
+        and o.order_lots = #{orderLots,jdbcType=DECIMAL}
       </if>
       <if test="orderTradeOperation != null">
-        and o.order_trade_operation = #{orderTradeOperation,jdbcType=TINYINT},
+        and o.order_trade_operation = #{orderTradeOperation,jdbcType=TINYINT}
       </if>
       <if test="orderType != null">
-        and o.order_type = #{orderType,jdbcType=TINYINT},
+        and o.order_type = #{orderType,jdbcType=TINYINT}
       </if>
       <if test="orderMagic != null">
-        and o.order_magic = #{orderMagic,jdbcType=DECIMAL},
+        and o.order_magic = #{orderMagic,jdbcType=DECIMAL}
       </if>
       <if test="orderOpenDate != null">
-        and o.order_open_date = #{orderOpenDate,jdbcType=TIMESTAMP},
+        and o.order_open_date = #{orderOpenDate,jdbcType=TIMESTAMP}
       </if>
       <if test="orderCloseDate != null">
-        and o.order_close_date = #{orderCloseDate,jdbcType=TIMESTAMP},
+        and o.order_close_date = #{orderCloseDate,jdbcType=TIMESTAMP}
       </if>
       <if test="followDirect != null">
-        and o.follow_direct = #{followDirect,jdbcType=TINYINT},
+        and o.follow_direct = #{followDirect,jdbcType=TINYINT}
       </if>
       <if test="followMode != null">
-        and o.follow_mode = #{followMode,jdbcType=TINYINT},
+        and o.follow_mode = #{followMode,jdbcType=TINYINT}
       </if>
       <if test="followType != null">
-        and o.follow_type = #{followType,jdbcType=TINYINT},
+        and o.follow_type = #{followType,jdbcType=TINYINT}
       </if>
       <if test="orderOpenDateBegin != null">
-        and o.order_open_date &gt;= #{orderOpenDateBegin,jdbcType=TINYINT},
+        and o.order_open_date &gt;= #{orderOpenDateBegin,jdbcType=TIMESTAMP}
       </if>
       <if test="orderOpenDateEnd != null">
-        and o.order_open_date &lt;= #{orderOpenDateEnd,jdbcType=TINYINT},
+        and o.order_open_date &lt;= #{orderOpenDateEnd,jdbcType=TIMESTAMP}
       </if>
       <if test="orderCloseDateBegin != null">
-        and o.order_close_date &gt;= #{orderCloseDateBegin,jdbcType=TINYINT},
+        and o.order_close_date &gt;= #{orderCloseDateBegin,jdbcType=TIMESTAMP}
       </if>
       <if test="orderCloseDateEnd != null">
-        and o.order_close_date &lt;= #{orderCloseDateEnd,jdbcType=TINYINT},
+        and o.order_close_date &lt;= #{orderCloseDateEnd,jdbcType=TIMESTAMP}
       </if>
     ORDER BY o.create_date desc
   </select>
