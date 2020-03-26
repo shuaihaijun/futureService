@@ -397,46 +397,46 @@
         fu_order_follow_error e
     LEFT JOIN fu_permission_userproject p ON e.user_id = p.user_id
     where 1=1
-      <if test="projKey != null">
+      <if test="projKey != null and projKey != ''">
         and p.proj_key = #{projKey,jdbcType=INTEGER}
       </if>
-      <if test="userOrderId != null">
+      <if test="userOrderId != null and userOrderId != ''">
         and e.user_order_id = #{userOrderId,jdbcType=INTEGER}
       </if>
-      <if test="userId != null">
+      <if test="userId != null and userId != ''">
         and e.user_id = #{userId,jdbcType=INTEGER}
       </if>
-      <if test="userMtAccId != null">
+      <if test="userMtAccId != null and userMtAccId != ''">
         and e.user_mt_acc_id = #{userMtAccId,jdbcType=VARCHAR}
       </if>
-      <if test="signalId != null">
+      <if test="signalId != null and signalId != ''">
         and e.signal_id = #{signalId,jdbcType=INTEGER}
       </if>
-      <if test="signalOrderId != null">
+      <if test="signalOrderId != null and signalOrderId != ''">
         and e.signal_order_id = #{signalOrderId,jdbcType=VARCHAR}
       </if>
-      <if test="signalMtAccId != null">
+      <if test="signalMtAccId != null and signalMtAccId != ''">
         and e.signal_mt_acc_id = #{signalMtAccId,jdbcType=VARCHAR}
       </if>
-      <if test="signalOrderSuperior != null">
+      <if test="signalOrderSuperior != null and signalOrderSuperior != ''">
         and e.signal_order_superior = #{signalOrderSuperior,jdbcType=VARCHAR}
       </if>
-      <if test="followDirect != null">
+      <if test="followDirect != null and  followDirect != '' or  followDirect == '0'.toString()">
         and e.follow_direct = #{followDirect,jdbcType=TINYINT}
       </if>
-      <if test="followMode != null">
+      <if test="followMode != null and  followMode != '' or  followMode == '0'.toString()">
         and e.follow_mode = #{followMode,jdbcType=TINYINT}
       </if>
-      <if test="followType != null">
+      <if test="followType != null and  followType != '' or  followType == '0'.toString()">
         and e.follow_type = #{followType,jdbcType=TINYINT}
       </if>
-      <if test="orderSymbol != null">
+      <if test="orderSymbol != null and orderSymbol != ''">
         and e.order_symbol = #{orderSymbol,jdbcType=VARCHAR}
       </if>
-      <if test="orderType != null">
+      <if test="orderType != null and  orderType != '' or  orderType == '0'.toString()">
         and e.order_type = #{orderType,jdbcType=TINYINT}
       </if>
-      <if test="orderTradeOperation != null">
+      <if test="orderTradeOperation != null and  orderTradeOperation != '' or  orderTradeOperation == '0'.toString()">
         and e.order_trade_operation = #{orderTradeOperation,jdbcType=TINYINT}
       </if>
       <if test="orderOpenDate != null">

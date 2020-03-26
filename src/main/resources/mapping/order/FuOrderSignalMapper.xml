@@ -385,48 +385,47 @@
         fu_order_signal s
     LEFT JOIN fu_product_signal_permit p ON s.signal_id = p.signal_id
     where 1=1
-      <if test="projKey != null">
+      <if test="projKey != null and projKey != ''">
         and p.proj_key = #{projKey,jdbcType=INTEGER}
       </if>
-
-      <if test="userId != null">
-        and s.user_id = #{userId,jdbcType=INTEGER},
+      <if test="userId != null and userId != ''">
+        and s.user_id = #{userId,jdbcType=INTEGER}
       </if>
-      <if test="signalId != null">
-        and s.signal_id = #{signalId,jdbcType=INTEGER},
+      <if test="signalId != null and signalId != ''">
+        and s.signal_id = #{signalId,jdbcType=INTEGER}
       </if>
-      <if test="mtServerId != null">
-        and s.mt_server_id = #{mtServerId,jdbcType=INTEGER},
+      <if test="mtServerId != null and mtServerId != ''">
+        and s.mt_server_id = #{mtServerId,jdbcType=INTEGER}
       </if>
-      <if test="mtServerName != null">
-        and s.mt_server_name = #{mtServerName,jdbcType=VARCHAR},
+      <if test="mtServerName != null and mtServerName != ''">
+        and s.mt_server_name = #{mtServerName,jdbcType=VARCHAR}
       </if>
-      <if test="mtAccId != null">
-        and s.mt_acc_id = #{mtAccId,jdbcType=VARCHAR},
+      <if test="mtAccId != null and mtAccId != ''">
+        and s.mt_acc_id = #{mtAccId,jdbcType=VARCHAR}
       </if>
-      <if test="orderId != null">
-        and s.order_id = #{orderId,jdbcType=VARCHAR},
+      <if test="orderId != null and orderId != ''">
+        and s.order_id = #{orderId,jdbcType=VARCHAR}
       </if>
-      <if test="orderSymbol != null">
-        and s.order_symbol = #{orderSymbol,jdbcType=VARCHAR},
+      <if test="orderSymbol != null and orderSymbol != ''">
+        and s.order_symbol = #{orderSymbol,jdbcType=VARCHAR}
       </if>
-      <if test="orderType != null">
-        and s.order_type = #{orderType,jdbcType=TINYINT},
+      <if test="orderType != null and  orderType != '' or  orderType == '0'.toString()">
+        and s.order_type = #{orderType,jdbcType=TINYINT}
       </if>
-      <if test="orderState != null">
-        and s.order_state = #{orderState,jdbcType=TINYINT},
+      <if test="orderState != null and  orderState != '' or  orderState == '0'.toString()">
+        and s.order_state = #{orderState,jdbcType=TINYINT}
       </if>
       <if test="orderOpenDate != null">
-        and s.order_open_date = #{orderOpenDate,jdbcType=TIMESTAMP},
+        and s.order_open_date = #{orderOpenDate,jdbcType=TIMESTAMP}
       </if>
-      <if test="orderTradeOperation != null">
-        and s.order_trade_operation = #{orderTradeOperation,jdbcType=TINYINT},
+      <if test="orderTradeOperation != null and  orderTradeOperation != '' or  orderTradeOperation == '0'.toString()">
+        and s.order_trade_operation = #{orderTradeOperation,jdbcType=TINYINT}
       </if>
-      <if test="orderTradeType != null">
-        and s.order_trade_type = #{orderTradeType,jdbcType=TINYINT},
+      <if test="orderTradeType != null and  orderTradeType != '' or  orderTradeType == '0'.toString()">
+        and s.order_trade_type = #{orderTradeType,jdbcType=TINYINT}
       </if>
       <if test="orderCloseDate != null">
-        and s.order_close_date = #{orderCloseDate,jdbcType=TIMESTAMP},
+        and s.order_close_date = #{orderCloseDate,jdbcType=TIMESTAMP}
       </if>
       <if test="orderOpenDateBegin != null">
         and s.order_open_date &gt;= #{orderOpenDateBegin,jdbcType=TIMESTAMP}

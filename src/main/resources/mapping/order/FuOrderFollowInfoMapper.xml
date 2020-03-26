@@ -500,52 +500,52 @@
         fu_order_follow_info o
     LEFT JOIN fu_permission_userproject p ON o.user_id = p.user_id
     where 1=1
-      <if test="userId != null">
+      <if test="userId != null and userId != ''">
         and o.user_id = #{userId,jdbcType=INTEGER}
       </if>
-      <if test="signalId != null">
+      <if test="signalId != null and signalId != ''">
         and o.signal_id = #{signalId,jdbcType=INTEGER}
       </if>
-      <if test="projKey != null">
+      <if test="projKey != null and projKey != ''">
         and p.proj_key = #{projKey,jdbcType=INTEGER}
       </if>
-      <if test="orderId != null">
+      <if test="orderId != null and orderId != ''">
         and o.order_id = #{orderId,jdbcType=VARCHAR}
       </if>
-      <if test="userMtAccId != null">
+      <if test="userMtAccId != null and userMtAccId != ''">
         and o.user_mt_acc_id = #{userMtAccId,jdbcType=VARCHAR}
       </if>
-      <if test="userServerId != null">
+      <if test="userServerId != null and userServerId != ''">
         and o.user_server_id = #{userServerId,jdbcType=INTEGER}
       </if>
-      <if test="userServerName != null">
+      <if test="userServerName != null and userServerName != ''">
         and o.user_server_name = #{userServerName,jdbcType=VARCHAR}
       </if>
-      <if test="signalServerId != null">
+      <if test="signalServerId != null and signalServerId != ''">
         and o.signal_server_id = #{signalServerId,jdbcType=INTEGER}
       </if>
-      <if test="signalServerName != null">
+      <if test="signalServerName != null and signalServerName != ''">
         and o.signal_server_name = #{signalServerName,jdbcType=VARCHAR}
       </if>
-      <if test="signalMtAccId != null">
+      <if test="signalMtAccId != null and signalMtAccId != ''">
         and o.signal_mt_acc_id = #{signalMtAccId,jdbcType=VARCHAR}
       </if>
-      <if test="signalOrderId != null">
+      <if test="signalOrderId != null and signalOrderId != ''">
         and o.signal_order_id = #{signalOrderId,jdbcType=VARCHAR}
       </if>
-      <if test="orderSymbol != null">
+      <if test="orderSymbol != null and orderSymbol != ''">
         and o.order_symbol = #{orderSymbol,jdbcType=VARCHAR}
       </if>
-      <if test="orderLots != null">
+      <if test="orderLots != null and orderLots != ''">
         and o.order_lots = #{orderLots,jdbcType=DECIMAL}
       </if>
-      <if test="orderTradeOperation != null">
+      <if test="orderTradeOperation != null and  orderTradeOperation != '' or  orderTradeOperation == '0'.toString()">
         and o.order_trade_operation = #{orderTradeOperation,jdbcType=TINYINT}
       </if>
-      <if test="orderType != null">
+      <if test="orderType != null and  orderType != '' or  orderType == '0'.toString()">
         and o.order_type = #{orderType,jdbcType=TINYINT}
       </if>
-      <if test="orderMagic != null">
+      <if test="orderMagic != null and orderMagic != ''">
         and o.order_magic = #{orderMagic,jdbcType=DECIMAL}
       </if>
       <if test="orderOpenDate != null">
@@ -554,13 +554,13 @@
       <if test="orderCloseDate != null">
         and o.order_close_date = #{orderCloseDate,jdbcType=TIMESTAMP}
       </if>
-      <if test="followDirect != null">
+      <if test="followDirect != null and  followDirect != '' or  followDirect == '0'.toString()">
         and o.follow_direct = #{followDirect,jdbcType=TINYINT}
       </if>
-      <if test="followMode != null">
+      <if test="followMode != null and  followMode != '' or  followMode == '0'.toString()">
         and o.follow_mode = #{followMode,jdbcType=TINYINT}
       </if>
-      <if test="followType != null">
+      <if test="followType != null and  followType != '' or  followType == '0'.toString()">
         and o.follow_type = #{followType,jdbcType=TINYINT}
       </if>
       <if test="orderOpenDateBegin != null">

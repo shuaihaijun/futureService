@@ -405,28 +405,28 @@
         fu_order_customer o LEFT JOIN fu_permission_userproject p on o.user_id=p.user_id
     where
       1 = 1
-      <if test="userId != null">
+      <if test="userId != null and userId != ''">
         and o.user_id = #{userId,jdbcType=INTEGER}
       </if>
-      <if test="mtServerName != null">
+      <if test="mtServerName != null and mtServerName != ''">
         and o.mt_server_name = #{mtServerName,jdbcType=VARCHAR}
       </if>
-      <if test="mtAccId != null">
+      <if test="mtAccId != null and mtAccId != ''">
         and o.mt_acc_id = #{mtAccId,jdbcType=VARCHAR}
       </if>
-      <if test="orderId != null">
+      <if test="orderId != null and orderId != ''">
         and o.order_id = #{orderId,jdbcType=VARCHAR}
       </if>
-      <if test="orderSymbol != null">
+      <if test="orderSymbol != null and orderSymbol != ''">
         and o.order_symbol = #{orderSymbol,jdbcType=VARCHAR}
       </if>
-      <if test="orderType != null">
+      <if test="orderType != null and  orderType != '' or  orderType == '0'.toString()">
         and o.order_type = #{orderType,jdbcType=TINYINT}
       </if>
-      <if test="orderFlag != null">
+      <if test="orderFlag != null and  orderFlag != '' or  orderFlag == '0'.toString()">
         and o.order_flag = #{orderFlag,jdbcType=TINYINT}
       </if>
-      <if test="orderSuperior != null">
+      <if test="orderSuperior != null and orderSuperior != ''">
         and  o.order_superior = #{orderSuperior,jdbcType=VARCHAR}
       </if>
       <if test="orderOpenDate != null">
@@ -447,7 +447,7 @@
       <if test="orderCloseDateEnd != null">
         and o.order_close_date &lt;= #{orderCloseDateEnd,jdbcType=TIMESTAMP}
       </if>
-      <if test="projKey != null">
+      <if test="projKey != null and projKey != ''">
         and p.proj_key = #{projKey,jdbcType=INTEGER}
       </if>
     order by o.order_close_date desc

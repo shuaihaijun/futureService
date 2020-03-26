@@ -464,55 +464,55 @@
 	  fu_user b LEFT JOIN fu_permission_userproject p ON b.id=p.user_id
     WHERE
 	  1=1
-    <if test="userId != null">
+    <if test="userId != null and userId != ''">
       and b.id = #{userId,jdbcType=VARCHAR}
     </if>
-    <if test="username != null">
+    <if test="username != null and username != ''">
       and b.username = #{username,jdbcType=VARCHAR}
     </if>
-    <if test="realName != null">
+    <if test="realName != null and realName != ''">
       and b.real_name = #{realName,jdbcType=VARCHAR}
     </if>
-    <if test="refName != null">
+    <if test="refName != null and refName != ''">
       and b.ref_name = #{refName,jdbcType=VARCHAR}
     </if>
-    <if test="userType != null">
+    <if test="userType != null and  userType != '' or  userType == '0'.toString()">
       and  b.user_type = #{userType,jdbcType=TINYINT}
     </if>
-    <if test="email != null">
+    <if test="email != null and email != ''">
       and b.email = #{email,jdbcType=VARCHAR}
     </if>
-    <if test="phone != null">
+    <if test="phone != null and phone != ''">
       and b.phone = #{phone,jdbcType=VARCHAR}
     </if>
-    <if test="mobile != null">
+    <if test="mobile != null and mobile != ''">
       and b.mobile = #{mobile,jdbcType=VARCHAR}
     </if>
-    <if test="isVerified != null">
+    <if test="isVerified != null and  isVerified != '' or  isVerified == '0'.toString()">
       and b.is_verified = #{isVerified,jdbcType=TINYINT}
     </if>
-    <if test="isAccount != null">
+    <if test="isAccount != null and  isAccount != '' or  isAccount == '0'.toString()">
       and b.is_account = #{isAccount,jdbcType=TINYINT}
     </if>
-    <if test="introducer != null">
+    <if test="introducer != null and introducer != ''">
       and b.introducer = #{introducer,jdbcType=INTEGER}
     </if>
-    <if test="recommend != null">
+    <if test="recommend != null and recommend != ''">
       and b.recommend = #{recommend,jdbcType=INTEGER}
     </if>
-    <if test="sex != null">
+    <if test="sex != null and  sex != '' or  sex == '0'.toString()">
       and b.sex = #{sex,jdbcType=TINYINT}
     </if>
-    <if test="country != null">
+    <if test="country != null and country != ''">
       and b.country = #{country,jdbcType=VARCHAR}
     </if>
-    <if test="province != null">
+    <if test="province != null and province != ''">
       and b.province = #{province,jdbcType=VARCHAR}
     </if>
-    <if test="city != null">
+    <if test="city != null and city != ''">
       and b.city = #{city,jdbcType=VARCHAR}
     </if>
-    <if test="followLevel != null">
+    <if test="followLevel != null and followLevel != ''">
       and b.follow_level = #{followLevel,jdbcType=DECIMAL}
     </if>
     <if test="createDate != null">
@@ -521,10 +521,10 @@
     <if test="modifyDate != null">
       and b.modify_date = #{modifyDate,jdbcType=TIMESTAMP}
     </if>
-    <if test="userState != null">
+    <if test="userState != null and  userState != '' or  userState == '0'.toString()">
       and b.user_state = #{userState,jdbcType=TINYINT}
     </if>
-    <if test="projKey != null">
+    <if test="projKey != null and projKey != ''">
       and p.proj_key = #{projKey,jdbcType=INTEGER}
     </if>
   </select>

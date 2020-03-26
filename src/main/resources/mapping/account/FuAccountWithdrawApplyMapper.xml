@@ -255,40 +255,40 @@
         fu_account_withdraw_apply a
       LEFT JOIN fu_permission_userproject p ON a.user_id = p.user_id
       where 1=1
-        <if test="id != null">
+        <if test="id != null and id != ''">
           and a.id = #{id,jdbcType=INTEGER}
         </if>
-        <if test="userId != null">
+        <if test="userId != null and userId != ''">
           and a.user_id = #{userId,jdbcType=INTEGER}
         </if>
-        <if test="accountId != null">
+        <if test="accountId != null and accountId != ''">
           and a.account_id = #{accountId,jdbcType=INTEGER}
         </if>
-        <if test="username != null">
+        <if test="username != null and username != ''">
           and a.username = #{username,jdbcType=VARCHAR}
         </if>
-        <if test="refName != null">
+        <if test="refName != null and refName != ''">
           and a.ref_name = #{refName,jdbcType=VARCHAR}
         </if>
-        <if test="applyUserId != null">
+        <if test="applyUserId != null and applyUserId != ''">
           and a.apply_user_id = #{applyUserId,jdbcType=INTEGER}
         </if>
-        <if test="applyState != null">
+        <if test="applyState != null and  applyState != '' or  applyState == '0'.toString()">
           and a.apply_state = #{applyState,jdbcType=TINYINT}
         </if>
-        <if test="withdrawType != null">
+        <if test="withdrawType != null and  withdrawType != '' or  withdrawType == '0'.toString()">
           and a.withdraw_type = #{withdrawType,jdbcType=TINYINT}
         </if>
-        <if test="withdrawAmount != null">
+        <if test="withdrawAmount != null and withdrawAmount != ''">
           and a.withdraw_amount = #{withdrawAmount,jdbcType=DECIMAL}
         </if>
-        <if test="bankName != null">
+        <if test="bankName != null and bankName != ''">
           and a.bank_name = #{bankName,jdbcType=VARCHAR}
         </if>
-        <if test="bankCode != null">
+        <if test="bankCode != null and bankCode != ''">
           and a.bank_code = #{bankCode,jdbcType=VARCHAR}
         </if>
-        <if test="hostName != null">
+        <if test="hostName != null and hostName != ''">
           and a.host_name = #{hostName,jdbcType=VARCHAR}
         </if>
         <if test="applyDate != null">
@@ -297,13 +297,13 @@
         <if test="checkDate != null">
           and a.check_date = #{checkDate,jdbcType=TIMESTAMP}
         </if>
-        <if test="checkDesc != null">
+        <if test="checkDesc != null and checkDesc != ''">
           and a.check_desc = #{checkDesc,jdbcType=VARCHAR}
         </if>
-        <if test="comment != null">
+        <if test="comment != null and comment != ''">
           and a.comment = #{comment,jdbcType=VARCHAR}
         </if>
-        <if test="projKey != null">
+        <if test="projKey != null and projKey != ''">
           and p.proj_key = #{projKey,jdbcType=INTEGER}
         </if>
         order by id desc

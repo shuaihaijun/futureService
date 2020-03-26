@@ -219,19 +219,19 @@
       fu_account_commission c LEFT JOIN fu_permission_userproject p on c.user_id=p.user_id
     where
       1 = 1
-      <if test="userId != null">
+      <if test="userId != null and userId != ''">
         and c.user_id = #{userId,jdbcType=INTEGER}
       </if>
-      <if test="accountId != null">
+      <if test="accountId != null and accountId != ''">
         and c.account_id = #{accountId,jdbcType=INTEGER}
       </if>
-      <if test="commissionLevel != null">
+      <if test="commissionLevel != null and  commissionLevel != '' or  commissionLevel == '0'.toString()">
         and c.commission_level = #{commissionLevel,jdbcType=TINYINT}
       </if>
-      <if test="accountState != null">
+      <if test="accountState != null and  accountState != '' or  accountState == '0'.toString()">
         and c.account_state = #{accountState,jdbcType=TINYINT}
       </if>
-      <if test="projKey != null">
+      <if test="projKey != null and projKey != ''">
         and p.proj_key = #{projKey,jdbcType=INTEGER}
       </if>
   </select>

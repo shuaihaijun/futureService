@@ -2,6 +2,7 @@ package com.future.service.order;
 
 import com.alibaba.fastjson.JSONArray;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.future.common.constants.OrderConstant;
 import com.future.common.enums.GlobalResultCode;
@@ -12,13 +13,16 @@ import com.future.common.helper.PageInfoHelper;
 import com.future.common.util.ConvertUtil;
 import com.future.common.util.DateUtil;
 import com.future.common.util.StringUtils;
+import com.future.entity.account.FuAccountMt;
 import com.future.entity.order.FuOrderCustomer;
 import com.future.entity.order.FuOrderFollowInfo;
+import com.future.entity.user.FuUser;
 import com.future.mapper.order.FuOrderCustomerMapper;
 import com.future.pojo.bo.order.UserMTAccountBO;
 import com.future.service.account.FuAccountMtService;
 import com.future.service.commission.FuCommissionCustomerService;
 import com.future.service.trade.FuTradeOrderService;
+import com.future.service.user.AdminService;
 import com.future.service.user.FuUserFollowsService;
 import com.future.service.user.UserCommonService;
 import com.github.pagehelper.Page;
@@ -52,6 +56,8 @@ public class FuOrderCustomerService extends ServiceImpl<FuOrderCustomerMapper, F
     FuUserFollowsService fuUserFollowsService;
     @Autowired
     UserCommonService userCommonService;
+    @Autowired
+    AdminService adminService;
     @Autowired
     FuOrderCustomerMapper fuOrderCustomerMapper;
 
@@ -87,7 +93,7 @@ public class FuOrderCustomerService extends ServiceImpl<FuOrderCustomerMapper, F
     @Transactional
     public void synUserMTOrder(Integer userId,String username){
 
-        if(StringUtils.isEmpty(username)&&userId==0){
+        if(userId==null||userId==0){
             log.error("同步用户历史订单时，传入用户数据为空！");
             throw new DataConflictException("同步用户历史订单时，传入用户数据为空！");
         }
@@ -110,9 +116,15 @@ public class FuOrderCustomerService extends ServiceImpl<FuOrderCustomerMapper, F
         Date lastCLostTime=null;
         if(!ObjectUtils.isEmpty(lastOrder)){
             lastCLostTime=lastOrder.getCreateDate();
+        }else {
+            Wrapper<FuUser> wrapper=new EntityWrapper<>();
+            wrapper.eq(FuUser.USER_ID,userId);
+            FuUser user= adminService.selectOne(wrapper);
+            lastCLostTime=user.getModifyDate();
         }
 
-        List<FuOrderCustomer> customers=new ArrayList<FuOrderCustomer>();
+        List<FuOrderCustomer> selectOrdercustomers=new ArrayList<FuOrderCustomer>();
+        List<FuOrderCustomer> newOrderCustomers=new ArrayList<FuOrderCustomer>();
         FuOrderFollowInfo info;
         Broker broker;
         String server;
@@ -122,7 +134,8 @@ public class FuOrderCustomerService extends ServiceImpl<FuOrderCustomerMapper, F
         selectMap.put(FuOrderCustomer.USER_ID,userId);
         try {
             for(UserMTAccountBO userMTAccountBO:accounts){
-                customers.clear();
+                selectOrdercustomers.clear();
+                newOrderCustomers.clear();
                 server=String.valueOf(userMTAccountBO.getServerName());
                 password=String.valueOf(userMTAccountBO.getMtPasswordWatch());
                 userId=Integer.valueOf(userMTAccountBO.getUserId());
@@ -135,17 +148,33 @@ public class FuOrderCustomerService extends ServiceImpl<FuOrderCustomerMapper, F
                     continue;
                 }
                 JSONArray orders= fuTradeOrderService.getUserCloseOrders(server,Integer.parseInt(mtAccId),password,lastCLostTime.getTime(),0);
+                if(orders==null||orders.size()==0){
+                    return;
+                }
                 /*只同步已完成的订单*/
-                customers=ConvertUtil.convertOrderCustomers(orders);
+                selectOrdercustomers=ConvertUtil.convertOrderCustomers(orders);
 
                 /*跟新 userId 的 mtAccId 账户信息*/ // todo
                 /*fuAccountMtService.updateAccFromMt(userId,mtAccountId,accountInfo);*/
 
                 /*处理订单*/
-                if(ObjectUtils.isEmpty(customers)) {
+                if(ObjectUtils.isEmpty(selectOrdercustomers)) {
                     return;
                 }
-                for(FuOrderCustomer customer:customers){
+                for(FuOrderCustomer customer:selectOrdercustomers){
+                    /*判断是否是初始化数据*/
+                    if(StringUtils.isEmpty(customer.getOrderSymbol())){
+                        continue;
+                    }
+                    /*判断时间范围*/
+                    if(lastCLostTime.compareTo(customer.getOrderCloseDate())<=0){
+                        continue;
+                    }
+                    //限定交易类型 挂单的订单不做佣金处理
+                    if(customer.getOrderType()!=OrderConstant.ORDER_TYPE_BUY
+                            &&customer.getOrderType()!=OrderConstant.ORDER_TYPE_SELL){
+                        continue;
+                    }
                     /*与社区订单查重，已有订单无需操作*/
                     selectMap.put(FuOrderCustomer.ORDER_ID,customer.getOrderId());
                     List<FuOrderCustomer> infos=fuOrderCustomerMapper.selectByMap(selectMap);
@@ -153,12 +182,7 @@ public class FuOrderCustomerService extends ServiceImpl<FuOrderCustomerMapper, F
                         /*数据已存在=*/
                         continue;
                     }
-                    //TODO 非跟单订单 计算佣金（代理佣金+信号源佣金）
-                    /*FuOrderFollowInfo followInfo= fuOrderFollowInfoService.getOrderByCondition(userId,customer.getOrderId());
-                    if(followInfo!=null){
-                        *//*跟单时 已处理过的数据=*//*
-                        continue;
-                    }*/
+
                     /*转换订单*/
                     customer.setUserId(userId);
                     customer.setMtAccId(mtAccId);
@@ -170,15 +194,14 @@ public class FuOrderCustomerService extends ServiceImpl<FuOrderCustomerMapper, F
                     fuOrderCustomerMapper.insertSelective(customer);
                     //计算出入金
                     if(customer.getOrderType()==OrderConstant.ORDER_TYPE_DEPOSIT){
-                        //TODO  计算出入金
                     }
-                    if(customer.getOrderType()==OrderConstant.ORDER_TYPE_BUY
-                        ||customer.getOrderType()==OrderConstant.ORDER_TYPE_SELL){
-                        customers.add(customer);
-                    }
+                    /*需要计算佣金的数据  暂存*/
+                    newOrderCustomers.add(customer);
                 }
                 /*用户自交易订单 计算代理佣金*/
-                fuCommissionCustomerService.dealUserOrderCommission(userId,customers);
+                if(newOrderCustomers!=null&&newOrderCustomers.size()>0){
+                    fuCommissionCustomerService.dealUserOrderCommission(userId,newOrderCustomers);
+                }
             }
         }catch (Exception e){
             log.error("同步用户历史订单至社区："+e.getMessage());
@@ -289,6 +312,9 @@ public class FuOrderCustomerService extends ServiceImpl<FuOrderCustomerMapper, F
         /*条件查询日期范围不能超过1周*/
 
         List<FuOrderFollowInfo> orders= fuOrderFollowInfoService.getMTAliveOrders(userId,username,accountId, DateUtil.toDate(dateFrom),DateUtil.toDate(dataTo));
+        if(orders==null){
+            return null;
+        }
         return new PageInfo<FuOrderFollowInfo>(orders);
     }
 

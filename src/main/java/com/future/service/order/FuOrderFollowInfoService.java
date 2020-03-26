@@ -153,6 +153,7 @@ public class FuOrderFollowInfoService extends ServiceImpl<FuOrderFollowInfoMappe
         }
         UserMTAccountBO userMtAcc=mts.get(0);
         // todo 考虑多账户问题
+        mtAccId =userMtAcc.getMtAccId();
         Integer userType=userMtAcc.getUserType();
         String serverName=String.valueOf(userMtAcc.getServerName());
         String mtPassword=String.valueOf(userMtAcc.getMtPasswordTrade());
@@ -165,6 +166,10 @@ public class FuOrderFollowInfoService extends ServiceImpl<FuOrderFollowInfoMappe
             orderJson= fuTradeOrderService.getUserCloseOrders(serverName,Integer.parseInt(mtAccId),mtPassword, dataFrom.getTime(),dateTo.getTime());
         }else {
             orderJson= fuTradeOrderService.getUserOpenOrders(serverName,Integer.parseInt(mtAccId),mtPassword, dataFrom.getTime(),dateTo.getTime());
+        }
+
+        if(ObjectUtils.isEmpty(orderJson)){
+            return null;
         }
         List<FuOrderFollowInfo> infos=ConvertUtil.convertOrderInfos(orderJson);
 
@@ -481,8 +486,8 @@ public class FuOrderFollowInfoService extends ServiceImpl<FuOrderFollowInfoMappe
                 condtionMap.remove("orderOpenDate");
             }
         }
-        if(!ObjectUtils.isEmpty(condtionMap.get("orderOpenDate"))){
-            if(String.valueOf(condtionMap.get("orderOpenDate")).indexOf(",")>0){
+        if(!ObjectUtils.isEmpty(condtionMap.get("orderCloseDate"))){
+            if(String.valueOf(condtionMap.get("orderCloseDate")).indexOf(",")>0){
                 //时间段
                 List dateList=(List) condtionMap.get("orderCloseDate");
                 if(dateList.size()!=2){

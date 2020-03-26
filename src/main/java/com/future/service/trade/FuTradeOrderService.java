@@ -49,29 +49,36 @@ public class FuTradeOrderService {
             throw new DataConflictException("根据时间段获取用户关闭订单,传入参数为空！");
         }
         long time = LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().getEpochSecond();
-        if(nHisTimeFrom==0){
+        /*判断时间格式*/
+        if(String.valueOf(nHisTimeFrom).length()>10){
+            nHisTimeFrom=nHisTimeFrom/1000;
+        }
+        if(String.valueOf(nHisTimeTo).length()>10){
+            nHisTimeTo=nHisTimeTo/1000;
+        }
+        /*if(nHisTimeFrom==0){
             // 由于时区原因，扩展为8天
             nHisTimeFrom= (int)DateUtil.getFutureDate(time,-7);
         }
         if(nHisTimeTo==0){
             // 由于时区原因，扩展为8天
             nHisTimeTo= (int)DateUtil.getFutureDate(time,1);
-        }
-
+        }*/
+        // 为了提供查询效率，不在新生成clientId 默认查询近一个月的订单
         String url=tradeServerHost+":"+tradeServerPort+ GlobalConstant.TRADE_ORDER_CLOSE_ORDERS;
         Map dataMap=new HashMap();
         dataMap.put("serverName",serverName);
         dataMap.put("username",mtAccId);
         dataMap.put("password",password);
-        dataMap.put("nHisTimeFrom",nHisTimeFrom);
-        dataMap.put("nHisTimeTo",nHisTimeTo);
+        /*dataMap.put("nHisTimeFrom",nHisTimeFrom);
+        dataMap.put("nHisTimeTo",nHisTimeTo);*/
         Map requestMap= new HashMap<>();
         requestMap.put("params",dataMap);
         // 请求
         String result= HttpUtils.httpPost(url,requestMap);
         JSONObject resultJson=JSONObject.parseObject(result);
         JSONObject content=resultJson.getJSONObject("content");
-        if(content==null||content.getJSONObject("data")==null){
+        if(content==null||content.getJSONArray("data")==null){
             log.error(resultJson.getString("msg"));
             return null;
         }
@@ -124,6 +131,13 @@ public class FuTradeOrderService {
             log.error("获取用户open订单,传入参数为空！");
             throw new DataConflictException("获取用户open订单,传入参数为空！");
         }
+        /*判断时间格式*/
+        if(String.valueOf(nHisTimeFrom).length()>10){
+            nHisTimeFrom=nHisTimeFrom/1000;
+        }
+        if(String.valueOf(nHisTimeTo).length()>10){
+            nHisTimeTo=nHisTimeTo/1000;
+        }
         String url=tradeServerHost+":"+tradeServerPort+ GlobalConstant.TRADE_ORDER_OPEN_ORDERS;
         Map dataMap=new HashMap();
         dataMap.put("serverName",serverName);
@@ -135,7 +149,7 @@ public class FuTradeOrderService {
         String result= HttpUtils.httpPost(url,requestMap);
         JSONObject resultJson=JSONObject.parseObject(result);
         JSONObject content=resultJson.getJSONObject("content");
-        if(content==null||content.getJSONObject("data")==null){
+        if(content==null||content.getJSONArray("data")==null){
             log.error(resultJson.getString("msg"));
             return null;
         }

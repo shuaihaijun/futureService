@@ -164,8 +164,8 @@ public class FuOrderFollowErrorService extends ServiceImpl<FuOrderFollowErrorMap
                 condition.remove("orderOpenDate");
             }
         }
-        if(!ObjectUtils.isEmpty(condition.get("orderOpenDate"))){
-            if(String.valueOf(condition.get("orderOpenDate")).indexOf(",")>0){
+        if(!ObjectUtils.isEmpty(condition.get("orderCloseDate"))){
+            if(String.valueOf(condition.get("orderCloseDate")).indexOf(",")>0){
                 //时间段
                 List dateList=(List) condition.get("orderCloseDate");
                 if(dateList.size()!=2){

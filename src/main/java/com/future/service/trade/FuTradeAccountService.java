@@ -60,7 +60,7 @@ public class FuTradeAccountService {
         JSONObject resultJson=JSONObject.parseObject(result);
         JSONObject content=resultJson.getJSONObject("content");
         int clientId=0;
-        if(content.get("data")!=null){
+        if(content!=null&&content.get("data")!=null){
             clientId=content.getInteger("data");
         }
         return clientId;
@@ -156,7 +156,7 @@ public class FuTradeAccountService {
         JSONObject resultJson=JSONObject.parseObject(result);
         JSONObject content=resultJson.getJSONObject("content");
         int clientId=0;
-        if(content.get("data")!=null){
+        if(content!=null&&content.get("data")!=null){
             clientId=content.getInteger("data");
         }
         return clientId;

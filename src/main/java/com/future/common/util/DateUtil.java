@@ -76,9 +76,11 @@ public class DateUtil {
      */
     public static Date toDataFormTimeStamp(long timeStamp){
         try {
-            String s = timeStampFormat.format(timeStamp);
-            if (s.length() <= 10) {
-                return datetimeFormat.parse(s);
+            String s = "";
+            if (String.valueOf(timeStamp).length()<=10) {
+                s = timeStampFormat.format(timeStamp*1000);
+            }else {
+                s = timeStampFormat.format(timeStamp);
             }
             return toDate(Timestamp.valueOf(s));
         } catch (Exception e) {

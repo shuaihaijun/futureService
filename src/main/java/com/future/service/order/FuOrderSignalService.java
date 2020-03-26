@@ -114,8 +114,8 @@ public class FuOrderSignalService extends ServiceImpl<FuOrderSignalMapper, FuOrd
                 condtionMap.remove("orderOpenDate");
             }
         }
-        if(!ObjectUtils.isEmpty(condtionMap.get("orderOpenDate"))){
-            if(String.valueOf(condtionMap.get("orderOpenDate")).indexOf(",")>0){
+        if(!ObjectUtils.isEmpty(condtionMap.get("orderCloseDate"))){
+            if(String.valueOf(condtionMap.get("orderCloseDate")).indexOf(",")>0){
                 //时间段
                 List dateList=(List) condtionMap.get("orderCloseDate");
                 if(dateList.size()!=2){
@@ -158,6 +158,9 @@ public class FuOrderSignalService extends ServiceImpl<FuOrderSignalMapper, FuOrd
         }
         if(!StringUtils.isEmpty(requestMap.get("orderType"))){
             wrapper.eq(FuOrderSignal.ORDER_TYPE,requestMap.get("orderType"));
+        }
+        if(!StringUtils.isEmpty(requestMap.get("orderTradeOperation"))){
+            wrapper.eq(FuOrderSignal.ORDER_TRADE_OPERATION,requestMap.get("orderTradeOperation"));
         }
         if(!StringUtils.isEmpty(requestMap.get("orderOpenDate"))){
             if(String.valueOf(requestMap.get("orderOpenDate")).indexOf(",")<0){

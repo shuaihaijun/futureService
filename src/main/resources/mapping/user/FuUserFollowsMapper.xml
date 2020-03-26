@@ -342,13 +342,13 @@
       LEFT JOIN fu_account_mt m ON f.user_id = m.user_id
       AND f.user_mt_acc_id = m.mt_acc_id
     where 1=1
-      <if test="userId != null">
+      <if test="userId != null and userId != ''">
         and f.user_id = #{userId,jdbcType=INTEGER}
       </if>
-      <if test="signalId != null">
+      <if test="signalId != null and signalId != ''">
         and f.signal_id = #{signalId,jdbcType=INTEGER}
       </if>
-      <if test="followState != null">
+      <if test="followState != null and followState != ''">
         and f.follow_state = #{followState,jdbcType=INTEGER}
       </if>
   </select>
@@ -381,37 +381,37 @@
         fu_user_follows f
     LEFT JOIN fu_permission_userproject p ON f.user_id = p.user_id
     WHERE 1=1
-      <if test="projKey != null">
+      <if test="projKey != null and projKey != ''">
         and p.proj_key = #{projKey,jdbcType=INTEGER}
       </if>
-      <if test="signalId != null">
+      <if test="signalId != null and signalId != ''">
         and f.signal_id = #{signalId,jdbcType=INTEGER}
       </if>
-      <if test="followState != null">
+      <if test="followState != null and followState != ''">
         and f.follow_state = #{followState,jdbcType=INTEGER}
       </if>
-      <if test="userId != null">
+      <if test="userId != null and userId != ''">
         and f.user_id = #{userId,jdbcType=INTEGER}
       </if>
-      <if test="userServerName != null">
+      <if test="userServerName != null and userServerName != ''">
         and f.user_server_name = #{userServerName,jdbcType=VARCHAR}
       </if>
-      <if test="userMtAccId != null">
+      <if test="userMtAccId != null and userMtAccId != ''">
         and f.user_mt_acc_id = #{userMtAccId,jdbcType=VARCHAR}
       </if>
-      <if test="signalServerName != null">
+      <if test="signalServerName != null and signalServerName != ''">
         and f.signal_server_name = #{signalServerName,jdbcType=VARCHAR}
       </if>
-      <if test="signalMtAccId != null">
+      <if test="signalMtAccId != null and signalMtAccId != ''">
         and f.signal_mt_acc_id = #{signalMtAccId,jdbcType=VARCHAR}
       </if>
-      <if test="followDirect != null">
+      <if test="followDirect != null and  followDirect != '' or  followDirect == '0'.toString()">
         and f.follow_direct = #{followDirect,jdbcType=TINYINT}
       </if>
-      <if test="followMode != null">
+      <if test="followMode != null and  followMode != '' or  orderTradeOperation == '0'.toString()">
         and f.follow_mode = #{followMode,jdbcType=TINYINT}
       </if>
-      <if test="followType != null">
+      <if test="followType != null and  followType != '' or  followType == '0'.toString()">
         and f.follow_type = #{followType,jdbcType=TINYINT}
       </if>
   </select>

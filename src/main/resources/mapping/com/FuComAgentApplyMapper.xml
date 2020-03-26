@@ -231,19 +231,19 @@
     LEFT JOIN fu_permission_userproject p ON a.user_id = p.user_id
     WHERE
       1=1
-      <if test="id != null">
+      <if test="id != null and id != ''">
         and a.id = #{id,jdbcType=INTEGER}
       </if>
-      <if test="userId != null">
+      <if test="userId != null and userId != ''">
         and a.user_id = #{userId,jdbcType=INTEGER}
       </if>
-      <if test="projKey != null">
+      <if test="projKey != null and projKey != ''">
         and p.proj_key = #{projKey,jdbcType=INTEGER}
       </if>
-      <if test="agentName != null">
+      <if test="agentName != null and agentName != ''">
         and a.agent_name = #{agentName,jdbcType=VARCHAR}
       </if>
-      <if test="agentType != null">
+      <if test="agentType != null and  agentType != '' or  agentType == '0'.toString()">
         and a.agent_type = #{agentType,jdbcType=TINYINT}
       </if>
       <if test="createDate != null">
@@ -255,16 +255,16 @@
       <if test="applyDate != null">
         and a.apply_date = #{applyDate,jdbcType=TIMESTAMP}
       </if>
-      <if test="agentLevel != null">
+      <if test="agentLevel != null and  agentLevel != '' or  agentLevel == '0'.toString()">
         and a.agent_level = #{agentLevel,jdbcType=TINYINT}
       </if>
-      <if test="applyType != null">
+      <if test="applyType != null and  applyType != '' or  applyType == '0'.toString()">
         and a.apply_type = #{applyType,jdbcType=TINYINT}
       </if>
-      <if test="applyLevel != null">
+      <if test="applyLevel != null and  applyLevel != '' or  applyLevel == '0'.toString()">
         and a.apply_level = #{applyLevel,jdbcType=TINYINT}
       </if>
-      <if test="applyState != null">
+      <if test="applyState != null and  applyState != '' or  applyState == '0'.toString()">
         and a.apply_state = #{applyState,jdbcType=TINYINT}
       </if>
   </select>
