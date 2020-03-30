@@ -1,14 +1,14 @@
 package com.future.common;
 
-import com.future.common.util.FileUtil;
-import com.future.service.com.FuComService;
+import com.future.common.util.DateUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import java.util.Date;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -16,15 +16,24 @@ import org.springframework.test.context.junit4.SpringRunner;
 @Ignore
 public class CommonTests {
 
-    @Autowired
-    FuComService fuComService;
 
     @Test
     public void testGetHistoryOrder(){
-        String path=fuComService.getLoactionPath();
-        System.out.println(path);
-        path=FileUtil.getFileRelativePath("D:\\test\\2019\\12\\f703738da97739120aeff204f5198618377ae28e.png");
-        System.out.println(path);
+        String date="2020-01-04 02:00:35";
+        long time =1582058292;
+        Date dataTime= DateUtil.toDataFormTimeStamp(time);
+        System.out.println(dataTime);
+        System.out.println(DateUtil.toDatetimeString(dataTime));
+        /*Date getDate=DateUtil.toDate(date);
+        System.out.println(getDate);
+        System.out.println(getDate.getTime());
+        System.out.println(DateUtil.toTimestamp(getDate));
+
+        System.out.println("```````````````1111111111111111111111```````````````");
+        Date thisDate= new Date();
+        System.out.println(thisDate);
+        System.out.println(thisDate.getTime());
+        System.out.println(DateUtil.toTimestamp(thisDate));*/
     }
 
 }

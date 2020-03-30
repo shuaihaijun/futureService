@@ -75,8 +75,8 @@ public class followTest {
         conditionMap.put("signalMtAccId",1100551517);
         conditionMap.put("signalId",2);
         conditionMap.put("followState", AccountConstant.ACCOUNT_STATE_NORMAL);
-        List<FuUserFollows> fuUserFollows= fuUserFollowsService.signalFollowsQuery(conditionMap);
-        System.out.println(fuUserFollows.size());
+        /*List<FuUserFollows> fuUserFollows= fuUserFollowsService.querySignalFollows(conditionMap);
+        System.out.println(fuUserFollows.size());*/
     }
 
 }
