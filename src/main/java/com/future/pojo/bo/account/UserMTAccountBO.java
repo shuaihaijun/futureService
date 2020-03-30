@@ -1,4 +1,4 @@
-package com.future.pojo.bo.order;
+package com.future.pojo.bo.account;
 
 import java.math.BigDecimal;
 

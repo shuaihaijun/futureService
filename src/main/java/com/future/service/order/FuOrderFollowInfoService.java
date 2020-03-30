@@ -18,12 +18,11 @@ import com.future.common.util.ConvertUtil;
 import com.future.common.util.DateUtil;
 import com.future.common.util.RedisManager;
 import com.future.entity.account.FuAccountMt;
-import com.future.entity.order.FuOrderCustomer;
 import com.future.entity.order.FuOrderFollowInfo;
 import com.future.entity.product.FuProductSignal;
 import com.future.entity.user.FuUserFollows;
 import com.future.mapper.order.FuOrderFollowInfoMapper;
-import com.future.pojo.bo.order.UserMTAccountBO;
+import com.future.pojo.bo.account.UserMTAccountBO;
 import com.future.service.account.FuAccountMtService;
 import com.future.service.product.FuProductSignalService;
 import com.future.service.trade.FuTradeOrderService;
@@ -123,11 +122,11 @@ public class FuOrderFollowInfoService extends ServiceImpl<FuOrderFollowInfoMappe
      * @param userId
      * @param username
      * @param mtAccId
-     * @param dataFrom
+     * @param dateFrom
      * @param dateTo
      * @return
      */
-    public List<FuOrderFollowInfo> getMTOrders(Boolean isHistoryOrder, String userId,String username, String mtAccId,Date dataFrom,Date dateTo){
+    public List<FuOrderFollowInfo> getMTOrders(Boolean isHistoryOrder, String userId,String username, String mtAccId,Date dateFrom,Date dateTo){
         if(StringUtils.isEmpty(username)&&StringUtils.isEmpty(userId)){
             log.error("根据时间段 查询用户历史订单，用户信息为空！");
             return null;
@@ -162,10 +161,12 @@ public class FuOrderFollowInfoService extends ServiceImpl<FuOrderFollowInfoMappe
             return null;
         }
         JSONArray orderJson=new JSONArray();
+        long dateTimeFrom=dateFrom==null?0:dateFrom.getTime();
+        long dateTimeTo=dateTo==null?0:dateTo.getTime();
         if(isHistoryOrder){
-            orderJson= fuTradeOrderService.getUserCloseOrders(serverName,Integer.parseInt(mtAccId),mtPassword, dataFrom.getTime(),dateTo.getTime());
+            orderJson= fuTradeOrderService.getUserCloseOrders(serverName,Integer.parseInt(mtAccId),mtPassword, dateTimeFrom,dateTimeTo);
         }else {
-            orderJson= fuTradeOrderService.getUserOpenOrders(serverName,Integer.parseInt(mtAccId),mtPassword, dataFrom.getTime(),dateTo.getTime());
+            orderJson= fuTradeOrderService.getUserOpenOrders(serverName,Integer.parseInt(mtAccId),mtPassword, dateTimeFrom,dateTimeTo);
         }
 
         if(ObjectUtils.isEmpty(orderJson)){

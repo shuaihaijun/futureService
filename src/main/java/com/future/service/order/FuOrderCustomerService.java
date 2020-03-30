@@ -13,12 +13,11 @@ import com.future.common.helper.PageInfoHelper;
 import com.future.common.util.ConvertUtil;
 import com.future.common.util.DateUtil;
 import com.future.common.util.StringUtils;
-import com.future.entity.account.FuAccountMt;
 import com.future.entity.order.FuOrderCustomer;
 import com.future.entity.order.FuOrderFollowInfo;
 import com.future.entity.user.FuUser;
 import com.future.mapper.order.FuOrderCustomerMapper;
-import com.future.pojo.bo.order.UserMTAccountBO;
+import com.future.pojo.bo.account.UserMTAccountBO;
 import com.future.service.account.FuAccountMtService;
 import com.future.service.commission.FuCommissionCustomerService;
 import com.future.service.trade.FuTradeOrderService;
@@ -167,7 +166,7 @@ public class FuOrderCustomerService extends ServiceImpl<FuOrderCustomerMapper, F
                         continue;
                     }
                     /*判断时间范围*/
-                    if(lastCLostTime.compareTo(customer.getOrderCloseDate())<=0){
+                    if(lastCLostTime.compareTo(customer.getOrderCloseDate())>0){
                         continue;
                     }
                     //限定交易类型 挂单的订单不做佣金处理
@@ -292,14 +291,7 @@ public class FuOrderCustomerService extends ServiceImpl<FuOrderCustomerMapper, F
             log.error("查询时 用户数据不能为空！");
             new DataConflictException(GlobalResultCode.PARAM_NULL_POINTER,"查询时 用户数据不能为空！");
         }
-        if(StringUtils.isEmpty(orderOpenDate)){
-            log.error("查询时间段不能为空！");
-            new DataConflictException(GlobalResultCode.PARAM_NULL_POINTER,"查询时间段不能为空！");
-        }
-        if(ObjectUtils.isEmpty(orderOpenDate)||orderOpenDate.indexOf(",")<0){
-            log.error("查询时间段必须包含起、始时间！");
-            new DataConflictException(GlobalResultCode.PARAM_NULL_POINTER,"查询时间段必须包含起、始时间！");
-        }else {
+        if(!ObjectUtils.isEmpty(orderOpenDate)&&orderOpenDate.indexOf(",")>0){
             //时间段
             List dateList=(List) conditionMap.get("orderOpenDate");
             if(dateList.size()!=2){

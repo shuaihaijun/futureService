@@ -15,7 +15,7 @@ import com.future.entity.product.FuProductSignal;
 import com.future.entity.user.FuUserFollows;
 import com.future.mapper.order.FuOrderFollowErrorMapper;
 import com.future.mapper.user.FuUserFollowsMapper;
-import com.future.pojo.bo.order.UserMTAccountBO;
+import com.future.pojo.bo.account.UserMTAccountBO;
 import com.future.service.account.FuAccountMtService;
 import com.future.service.order.FuOrderFollowActionService;
 import com.future.service.order.FuOrderFollowInfoService;

@@ -338,7 +338,7 @@
       plat_type = #{platType,jdbcType=TINYINT}
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <select id="selectUserMTAccByCondition" parameterType="java.util.Map" resultType="com.future.pojo.bo.order.UserMTAccountBO">
+  <select id="selectUserMTAccByCondition" parameterType="java.util.Map" resultType="com.future.pojo.bo.account.UserMTAccountBO">
     SELECT
     a.id accountId,
     acc.id,
@@ -508,7 +508,7 @@
       </if>
     </trim>
   </update>
-  <select id="selectUserMTAccByProjectCondition" parameterType="java.util.Map" resultType="com.future.pojo.bo.order.UserMTAccountBO">
+  <select id="selectUserMTAccByProjectCondition" parameterType="java.util.Map" resultType="com.future.pojo.bo.account.UserMTAccountBO">
     SELECT
     a.id accountId,
     acc.id,

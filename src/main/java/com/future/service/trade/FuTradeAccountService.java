@@ -8,6 +8,7 @@ import com.future.common.util.HttpUtils;
 import com.future.common.util.RedisManager;
 import com.future.common.util.StringUtils;
 import com.future.entity.user.FuUserFollows;
+import com.future.pojo.bo.account.MtAccountInfoBo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -131,19 +132,19 @@ public class FuTradeAccountService {
 
     /**
      * 设置信号源监听
-     * @param brokerName
+     * @param serverName
      * @param mtAccId
      * @param password
      * @return
      */
-    public int setMtSignalMonitor(String brokerName,int mtAccId,String password){
+    public int setMtSignalMonitor(String serverName,int mtAccId,String password){
         /*校验数据*/
-        if(StringUtils.isEmpty(brokerName)||mtAccId==0||StringUtils.isEmpty(password)){
+        if(StringUtils.isEmpty(serverName)||mtAccId==0||StringUtils.isEmpty(password)){
             log.error("getMtAccountConnect null params!");
             throw new DataConflictException("setAccountConnnect null params!");
         }
         Map dataMap= new HashMap<>();
-        dataMap.put("serverName",brokerName);
+        dataMap.put("serverName",serverName);
         dataMap.put("username",mtAccId);
         dataMap.put("password",password);
         Map requestMap= new HashMap<>();
@@ -226,5 +227,38 @@ public class FuTradeAccountService {
             return false;
         }
         return true;
+    }
+
+
+    /**
+     * 获取用户MT账户信息
+     * @param serverName
+     * @param mtAccId
+     * @param password
+     */
+    public MtAccountInfoBo getMtAccountInfo(String serverName, int mtAccId, String password){
+        /*校验数据*/
+        if(StringUtils.isEmpty(serverName)||mtAccId==0||StringUtils.isEmpty(password)){
+            log.error("getMtAccountConnect null params!");
+            throw new DataConflictException("setAccountConnnect null params!");
+        }
+        Map dataMap= new HashMap<>();
+        dataMap.put("serverName",serverName);
+        dataMap.put("username",mtAccId);
+        dataMap.put("password",password);
+        Map requestMap= new HashMap<>();
+        requestMap.put("params",dataMap);
+        String url=tradeServerHost+":"+tradeServerPort+ GlobalConstant.TRADE_ACC_GET_INFO;
+        String result= HttpUtils.httpPost(url,requestMap);
+        if(StringUtils.isEmpty(result)){
+            log.error("设置信号源监听失败：mtAccId:"+mtAccId);
+        }
+        JSONObject resultJson=JSONObject.parseObject(result);
+        JSONObject content=resultJson.getJSONObject("content");
+        MtAccountInfoBo info=new MtAccountInfoBo();
+        if(content!=null){
+            info=JSONObject.toJavaObject(content,MtAccountInfoBo.class);
+        }
+        return info;
     }
 }

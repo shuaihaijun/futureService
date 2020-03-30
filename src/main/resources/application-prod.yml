@@ -60,6 +60,9 @@ swagger:
   base-package: com.future.controller
 
 # constant
+#跟单服务器地址
+tradeServerHost: http://47.99.240.111
+tradeServerPort: 8848
 #用户服务器地址
 userTermServerHost: 47.99.240.111
 userTermServerPort: 7788

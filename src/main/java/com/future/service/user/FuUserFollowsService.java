@@ -21,7 +21,7 @@ import com.future.entity.product.FuProductSignalPermit;
 import com.future.entity.user.FuUserFollows;
 import com.future.mapper.product.FuProductSignalMapper;
 import com.future.mapper.user.FuUserFollowsMapper;
-import com.future.pojo.bo.order.UserMTAccountBO;
+import com.future.pojo.bo.account.UserMTAccountBO;
 import com.future.pojo.vo.signal.FuFollowStateVO;
 import com.future.pojo.vo.signal.FuFollowUserVO;
 import com.future.service.account.FuAccountMtService;

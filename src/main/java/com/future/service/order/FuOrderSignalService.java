@@ -1,11 +1,9 @@
 package com.future.service.order;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
-import com.future.common.constants.AccountConstant;
 import com.future.common.constants.OrderConstant;
 import com.future.common.enums.GlobalResultCode;
 import com.future.common.exception.DataConflictException;
@@ -14,14 +12,9 @@ import com.future.common.helper.PageInfoHelper;
 import com.future.common.util.DateUtil;
 import com.future.common.util.StringUtils;
 import com.future.entity.account.FuAccountMt;
-import com.future.entity.com.FuComDictionary;
-import com.future.entity.order.FuOrderCustomer;
-import com.future.entity.order.FuOrderFollowInfo;
 import com.future.entity.order.FuOrderSignal;
 import com.future.entity.product.FuProductSignal;
-import com.future.entity.user.FuUserFollows;
 import com.future.mapper.order.FuOrderSignalMapper;
-import com.future.pojo.bo.order.UserMTAccountBO;
 import com.future.service.account.FuAccountMtService;
 import com.future.service.product.FuProductSignalService;
 import com.future.service.user.UserCommonService;

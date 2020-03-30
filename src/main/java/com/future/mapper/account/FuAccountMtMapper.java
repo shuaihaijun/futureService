@@ -2,7 +2,7 @@ package com.future.mapper.account;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.future.entity.account.FuAccountMt;
-import com.future.pojo.bo.order.UserMTAccountBO;
+import com.future.pojo.bo.account.UserMTAccountBO;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

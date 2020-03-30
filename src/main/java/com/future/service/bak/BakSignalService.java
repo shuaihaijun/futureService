@@ -8,7 +8,7 @@ import com.future.entity.order.FuOrderFollowAction;
 import com.future.entity.order.FuOrderSignal;
 import com.future.entity.product.FuProductSignal;
 import com.future.mapper.order.FuOrderSignalMapper;
-import com.future.pojo.bo.order.UserMTAccountBO;
+import com.future.pojo.bo.account.UserMTAccountBO;
 import com.future.service.account.FuAccountMtService;
 import com.future.service.order.FuOrderFollowActionService;
 import com.future.service.product.FuProductSignalService;

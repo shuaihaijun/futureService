@@ -2,6 +2,7 @@ package com.future.service.account;
 
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.baomidou.mybatisplus.toolkit.MapUtils;
 import com.future.common.constants.CommonConstant;
@@ -20,13 +21,13 @@ import com.future.entity.product.FuProductSignal;
 import com.future.mapper.account.FuAccountMtMapper;
 import com.future.mapper.product.FuProductSignalMapper;
 import com.future.mapper.user.FuUserMapper;
-import com.future.pojo.bo.order.UserMTAccountBO;
+import com.future.pojo.bo.account.MtAccountInfoBo;
+import com.future.pojo.bo.account.UserMTAccountBO;
 import com.future.service.com.FuComServerService;
 import com.future.service.trade.FuTradeAccountService;
 import com.future.service.user.UserCommonService;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
-import com.jfx.AccountInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -485,32 +486,31 @@ public class FuAccountMtService extends ServiceImpl<FuAccountMtMapper, FuAccount
     /**
      * 根据MT账户信息 更新
      * @param userId
-     * @param mtAccId
-     * @param accountInfo
      */
-    public void updateAccFromMt(Integer userId,String mtAccId, AccountInfo accountInfo){
-        if (userId==0
-            ||StringUtils.isEmpty(mtAccId)
-                ||ObjectUtils.isEmpty(accountInfo)){
+    public void updateAccountInfoFromMt(Integer userId){
+        if (userId==0){
             log.error("传入参数为空！");
             throw new RuntimeException("根据MT账户信息更新；传入参数为空！");
         }
-        Map conditionMap=new HashMap();
-        conditionMap.put(FuAccountMt.USER_ID,userId);
-        conditionMap.put(FuAccountMt.MT_ACC_ID,mtAccId);
-        List<FuAccountMt> accountMts= fuAccountMtMapper.selectByMap(conditionMap);
-        if(accountMts==null||accountMts.size()==0){
-            log.error("根据传入参数，查询结果为空！");
-            throw new RuntimeException("根据MT账户信息更新；根据传入参数，查询结果为空！");
+
+        Wrapper<FuAccountMt> wrapper=new EntityWrapper<>();
+        wrapper.eq(FuAccountMt.USER_ID,userId);
+        List<FuAccountMt> accountMts=selectList(wrapper);
+
+        for(FuAccountMt accountMt:accountMts){
+            /*查询数据*/
+           MtAccountInfoBo infoBo= fuTradeAccountService.getMtAccountInfo(accountMt.getServerName(),Integer.parseInt(accountMt.getMtAccId()),accountMt.getMtPasswordWatch());
+           if(infoBo==null){
+               continue;
+           }
+            accountMt.setBalance(new BigDecimal(infoBo.getBalance()));
+            accountMt.setLeverage(new BigDecimal(infoBo.getLeverage()));
+            accountMt.setCredit(new BigDecimal(infoBo.getCredit()));
+            accountMt.setProfit(new BigDecimal(infoBo.getProfit()));
+            accountMt.setEquity(new BigDecimal(infoBo.getEquity()));
+            accountMt.setMargin(new BigDecimal(infoBo.getMargin()));
+            fuAccountMtMapper.updateByPrimaryKey(accountMt);
         }
-        FuAccountMt accountMt=accountMts.get(0);
-        accountMt.setBalance(new BigDecimal(accountInfo.getBalance()));
-        accountMt.setLeverage(new BigDecimal(accountInfo.getLeverage()));
-        accountMt.setCredit(new BigDecimal(accountInfo.getCredit()));
-        accountMt.setProfit(new BigDecimal(accountInfo.getProfit()));
-        accountMt.setEquity(new BigDecimal(accountInfo.getEquity()));
-        accountMt.setMargin(new BigDecimal(accountInfo.getMargin()));
-        fuAccountMtMapper.updateByPrimaryKey(accountMt);
     }
 
 

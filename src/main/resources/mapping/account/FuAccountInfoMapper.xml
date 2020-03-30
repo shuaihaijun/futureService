@@ -210,4 +210,59 @@
       isrelative_content = #{isrelativeContent,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  <select id="selectUserAccountByCondition" parameterType="java.util.Map" resultType="com.future.pojo.bo.account.UserAccountInfoBO">
+    SELECT
+      a.id accountId,
+      a.create_date createDate,
+      a.modify_date modifyDate,
+      a.user_id userId,
+      a.account_level accountLevel,
+      a.account_securities accountSecurities,
+      a.account_options accountOptions,
+      a.account_commodity accountCommodity,
+      a.account_money accountMoney,
+      a.account_coin accountCoin,
+      a.account_debt accountDebt,
+      a.account_last_amt accountLastAmt,
+      a.account_investment accountInvestment,
+      a.account_state accountState,
+      a.isrelative_content isrelativeContent,
+      u.username,
+      u.password,
+      u.real_name realName,
+      u.ref_name refName,
+      u.user_type userType,
+      u.user_state userState,
+      u.email,
+      u.phone,
+      u.mobile,
+      u.is_verified isVerified,
+      u.is_account isAccount,
+      u.introducer
+    FROM
+        fu_account_info a
+    LEFT JOIN fu_user u ON a.user_id = u.id
+    where 1=1
+    <if test="accountId != null and userId != ''">
+      and a.id = #{accountId,jdbcType=INTEGER}
+    </if>
+    <if test="accountState != null and  accountState != '' or  accountState == '0'.toString()">
+      and a.account_state = #{accountState,jdbcType=TINYINT}
+    </if>
+    <if test="userId != null and userId != ''">
+      and u.user_id = #{userId,jdbcType=INTEGER}
+    </if>
+    <if test="userType != null and  userType != '' or  userType == '0'.toString()">
+      and u.user_type = #{userType,jdbcType=TINYINT}
+    </if>
+    <if test="userState != null and  userState != '' or  userState == '0'.toString()">
+      and u.user_state = #{userState,jdbcType=TINYINT}
+    </if>
+    <if test="isVerified != null and  isVerified != '' or  isVerified == '0'.toString()">
+      and u.is_verified = #{isVerified,jdbcType=TINYINT}
+    </if>
+    <if test="isAccount != null and  isAccount != '' or  isAccount == '0'.toString()">
+      and u.is_account = #{isAccount,jdbcType=TINYINT}
+    </if>
+  </select>
 </mapper>

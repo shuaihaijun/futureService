@@ -9,6 +9,7 @@ import java.util.Date;
 public class FuAccountInfo {
 
     public static String USER_ID ="user_id";
+    public static String ACCOUNT_STATE ="account_state";
     /**
      * 
      */

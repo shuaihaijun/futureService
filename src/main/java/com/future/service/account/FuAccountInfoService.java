@@ -4,8 +4,11 @@ import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.future.common.constants.AccountConstant;
+import com.future.common.enums.GlobalResultCode;
+import com.future.common.exception.DataConflictException;
 import com.future.entity.account.FuAccountInfo;
 import com.future.mapper.account.FuAccountInfoMapper;
+import com.future.pojo.bo.account.UserAccountInfoBO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,5 +71,18 @@ public class FuAccountInfoService extends ServiceImpl<FuAccountInfoMapper, FuAcc
             return null;
         }
         return accountInfo;
+    }
+
+    /**
+     * 根据条件查询用户账户信息
+     * @param condition
+     * @return
+     */
+    public List<UserAccountInfoBO> selectUserAccountByCondition(Map condition){
+        if(condition==null){
+            log.error("参数为空！");
+            throw new DataConflictException(GlobalResultCode.PARAM_NULL_POINTER);
+        }
+        return fuAccountInfoMapper.selectUserAccountByCondition(condition);
     }
 }

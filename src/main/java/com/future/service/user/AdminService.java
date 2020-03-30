@@ -22,7 +22,7 @@ import com.future.entity.permission.FuPermissionUserRole;
 import com.future.entity.user.FuUser;
 import com.future.mapper.user.FuUserMapper;
 import com.future.pojo.bo.AdminInfo;
-import com.future.pojo.bo.order.UserMTAccountBO;
+import com.future.pojo.bo.account.UserMTAccountBO;
 import com.future.service.account.FuAccountInfoService;
 import com.future.service.account.FuAccountMtService;
 import com.future.service.com.FuComAgentService;

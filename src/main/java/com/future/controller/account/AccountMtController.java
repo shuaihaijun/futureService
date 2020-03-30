@@ -8,7 +8,7 @@ import com.future.common.helper.PageInfoHelper;
 import com.future.common.result.RequestParams;
 import com.future.common.util.ThreadCache;
 import com.future.entity.product.FuProductSignal;
-import com.future.pojo.bo.order.UserMTAccountBO;
+import com.future.pojo.bo.account.UserMTAccountBO;
 import com.future.service.account.FuAccountMtService;
 import com.future.service.product.FuProductSignalService;
 import com.future.service.user.UserCommonService;

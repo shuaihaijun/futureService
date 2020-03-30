@@ -37,6 +37,8 @@ public class GlobalConstant {
     public static final String TRADE_ACC_SET_FOLLOW_RALATION = "/trader/account/addAccountFollowRelation";
     // 移除跟单关系
     public static final String TRADE_ACC_REMOVE_FOLLOW_RALATION = "/trader/account/removeAccountFollowRelation";
+    // 获取MT账户信息
+    public static final String TRADE_ACC_GET_INFO = "/trader/account/getAccountInfo";
 
     // 获取用户close订单
     public static final String TRADE_ORDER_CLOSE_ORDERS = "/trader/order/getUserCloseOrders";
