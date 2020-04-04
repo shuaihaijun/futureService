@@ -6,6 +6,7 @@ import com.future.common.exception.DataConflictException;
 import com.future.common.exception.ParameterInvalidException;
 import com.future.common.helper.PageInfoHelper;
 import com.future.common.result.RequestParams;
+import com.future.common.util.StringUtils;
 import com.future.common.util.ThreadCache;
 import com.future.entity.user.FuUser;
 import com.future.service.user.AdminService;
@@ -39,6 +40,19 @@ public class AdminController{
         return resMap;
     }
 
+    //登录操作
+    @RequestMapping(value= "/tokenLogin",method=RequestMethod.POST)
+    public @ResponseBody Map tokenLogin(@RequestBody RequestParams<Map> requestParams) {
+        // 获取请求参数
+        if(requestParams==null||requestParams.getParams()==null||requestParams.getParams().get("token")==null){
+            log.error("tokenLogin 传入参数为空！");
+            throw new DataConflictException(GlobalResultCode.PARAM_NULL_POINTER);
+        }
+        String token=String.valueOf(requestParams.getParams().get("token"));
+        Map resMap=adminService.tokenLogin(token);
+        return resMap;
+    }
+
     //登出操作
     @RequestMapping(value= "/logout",method=RequestMethod.POST)
     public @ResponseBody void logout(){
@@ -46,7 +60,12 @@ public class AdminController{
         String requestJSONStr = ThreadCache.getPostRequestParams();
         JSONObject requestMap = JSONObject.parseObject(requestJSONStr);
         String username=requestMap.getString("username");
-        adminService.logout(username);
+        String userId=requestMap.getString("userId");
+        String token=requestMap.getString("token");
+        if(StringUtils.isEmpty(userId)){
+            throw new DataConflictException(GlobalResultCode.PARAM_NULL_POINTER);
+        }
+        adminService.logout(Integer.parseInt(userId),username,token);
     }
 
     //注册操作

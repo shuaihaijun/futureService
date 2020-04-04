@@ -105,18 +105,17 @@ public class AdminService extends ServiceImpl<FuUserMapper,FuUser> {
 
         /*设置session 用户+token,回头价格session共享*/
         String token=CommonUtil.getUUID();
-        AdminInfo adminInfo = new AdminInfo();
+        /*AdminInfo adminInfo = new AdminInfo();
         adminInfo.setAdminId(fuUser.getId());
         adminInfo.setAdminLogin(fuUser.getUsername());
         adminInfo.setAdminName(fuUser.getRefName());
         adminInfo.setAdminPassword(fuUser.getPassword());
-        /*adminInfo.setR_id();
-        adminInfo.setR_name();*/
-        // TODO session 放置/获取失败
+        *//*adminInfo.setR_id();
+        adminInfo.setR_name();*//*
         RequestContextHolderUtil.setAdminInfo(adminInfo);
-        RequestContextHolderUtil.setAdmintoken(token);
+        RequestContextHolderUtil.setAdmintoken(token);*/
         /*为了解决跨域问题，把token放到redis中*/
-        redisManager.hset(RedisConstant.H_USER_LOGIN_TOKEN,fuUser.getId().toString(),token);
+        redisManager.hset(RedisConstant.H_USER_LOGIN_TOKEN,token,fuUser.getId().toString());
 
         /*返回数据填充*/
         Map userMap=new HashMap();
@@ -126,6 +125,7 @@ public class AdminService extends ServiceImpl<FuUserMapper,FuUser> {
         userMap.put("realName",fuUser.getRealName());
         userMap.put("userType",fuUser.getUserType());
         userMap.put("userState",fuUser.getUserState());
+        userMap.put("token",token);
 
         resultMap.put("code",GlobalResultCode.SUCCESS.code());
         resultMap.put("msg",GlobalResultCode.SUCCESS.message());
@@ -135,15 +135,77 @@ public class AdminService extends ServiceImpl<FuUserMapper,FuUser> {
 
 
     /**
-     * 用户注销
-     * @param username
-     * @param password
+     * 通过用户token登录
+     * @param token
      * @return
      */
-    public void logout(String username){
+    public Map tokenLogin(String token){
+
+        if(StringUtils.isEmpty(token)){
+            throw new DataConflictException(GlobalResultCode.PARAM_NULL_POINTER);
+        }
 
         Map resultMap=new HashMap();
-        FuUser fuUser=fuUserMapper.selectByUsername(username);
+
+        Object key= redisManager.hget(RedisConstant.H_USER_LOGIN_TOKEN,token);
+        if(ObjectUtils.isEmpty(key)){
+            log.error("token 获取失败！");
+            throw new BusinessException(GlobalResultCode.RESULE_DATA_NONE);
+        }
+        Integer userId = Integer.parseInt(String.valueOf(key));
+
+        /*这块儿可以从redis里查询*/
+        FuUser fuUser=fuUserMapper.selectByPrimaryKey(userId);
+        if(ObjectUtils.isEmpty(fuUser)){
+            /*用户不存在*/
+            log.error("用户不存在!");
+            throw new BusinessException(UserResultCode.USER_NOTEXIST_ERROR);
+        }
+
+        //(0 未审核，1 正常，2 待审核，3 删除）
+        if(fuUser.getUserState()>UserConstant.USER_STATE_DELETE){
+            /*用户状态异常*/
+            throw new BusinessException(UserResultCode.USER_STATE_EXCEPTION);
+        }
+
+        /*设置session 用户+token,回头价格session共享*/
+        /*AdminInfo adminInfo = new AdminInfo();
+        adminInfo.setAdminId(fuUser.getId());
+        adminInfo.setAdminLogin(fuUser.getUsername());
+        adminInfo.setAdminName(fuUser.getRefName());
+        adminInfo.setAdminPassword(fuUser.getPassword());
+        RequestContextHolderUtil.setAdminInfo(adminInfo);
+        RequestContextHolderUtil.setAdmintoken(token);*/
+
+        /*返回数据填充*/
+        Map userMap=new HashMap();
+        userMap.put("userId",fuUser.getId());
+        userMap.put("username",fuUser.getUsername());
+        userMap.put("refName",fuUser.getRefName());
+        userMap.put("realName",fuUser.getRealName());
+        userMap.put("userType",fuUser.getUserType());
+        userMap.put("userState",fuUser.getUserState());
+        userMap.put("token",token);
+
+        resultMap.put("code",GlobalResultCode.SUCCESS.code());
+        resultMap.put("msg",GlobalResultCode.SUCCESS.message());
+        resultMap.put("data",JSONObject.toJSON(userMap));
+        return resultMap;
+    }
+
+    /**
+     * 用户注销
+     * @param userId
+     * @param username
+     * @param token
+     */
+    public void logout(Integer userId, String username,String token){
+        if(userId==0){
+            log.error("用户数据为空!");
+            throw new DataConflictException(GlobalResultCode.PARAM_NULL_POINTER);
+        }
+        Map resultMap=new HashMap();
+        FuUser fuUser=fuUserMapper.selectByPrimaryKey(userId);
         if(ObjectUtils.isEmpty(fuUser)){
             /*用户不存在*/
             log.error("用户不存在!");
@@ -154,7 +216,9 @@ public class AdminService extends ServiceImpl<FuUserMapper,FuUser> {
         RequestContextHolderUtil.removeAdminInfo();
         RequestContextHolderUtil.removeAdmintoken();
         /*为了解决跨域问题，把token放到redis中*/
-        redisManager.hdel(RedisConstant.H_USER_LOGIN_TOKEN,fuUser.getId().toString());
+        if(!StringUtils.isEmpty(token)){
+            redisManager.hdel(RedisConstant.H_USER_LOGIN_TOKEN,token);
+        }
     }
 
     /**

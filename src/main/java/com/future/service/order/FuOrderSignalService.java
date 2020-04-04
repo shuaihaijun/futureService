@@ -60,7 +60,7 @@ public class FuOrderSignalService extends ServiceImpl<FuOrderSignalMapper, FuOrd
         }
         /*判断权限*/
         String operUserId=String.valueOf(requestMap.get("operUserId"));
-        if(com.alibaba.druid.util.StringUtils.isEmpty(operUserId)){
+        if(StringUtils.isEmpty(operUserId)){
             log.error("查询用户列表,用户未登录！");
             throw new ParameterInvalidException("查询用户列表,获取参数为空！");
         }

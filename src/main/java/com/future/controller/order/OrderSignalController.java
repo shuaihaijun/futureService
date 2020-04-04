@@ -31,4 +31,13 @@ public class OrderSignalController {
         return fuOrderSignalService.querySignalOrder(requestMap,helper);
     }
 
+    //用户查询信号源订单
+    @RequestMapping(value= "/queryUserSignalOrder",method=RequestMethod.POST)
+    public @ResponseBody
+    Page<FuOrderSignal> queryUserSignalOrder(@RequestBody RequestParams<Map> requestParams) {
+        // 获取请求参数
+        Map requestMap = requestParams.getParams();
+        PageInfoHelper helper = requestParams.getPageInfoHelper();
+        return fuOrderSignalService.queryUserSignalOrder(requestMap,helper);
+    }
 }
