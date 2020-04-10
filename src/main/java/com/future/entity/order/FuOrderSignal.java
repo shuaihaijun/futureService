@@ -17,6 +17,7 @@ public class FuOrderSignal {
     public static final String ORDER_TRADE_OPERATION = "order_trade_operation";
     public static final String ORDER_OPEN_DATE = "order_open_date";
     public static final String ORDER_CLOSE_DATE = "order_close_date";
+    public static final String CREATE_DATE = "createDate";
 
     /**
      * 

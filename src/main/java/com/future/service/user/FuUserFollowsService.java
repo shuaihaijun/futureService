@@ -2,12 +2,11 @@ package com.future.service.user;
 
 
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.baomidou.mybatisplus.toolkit.MapUtils;
-import com.future.common.constants.CommonConstant;
-import com.future.common.constants.FollowConstant;
-import com.future.common.constants.RedisConstant;
-import com.future.common.constants.UserConstant;
+import com.future.common.constants.*;
 import com.future.common.enums.GlobalResultCode;
 import com.future.common.enums.TradeErrorEnum;
 import com.future.common.exception.BusinessException;
@@ -311,22 +310,38 @@ public class FuUserFollowsService extends ServiceImpl<FuUserFollowsMapper, FuUse
 
         /*校验是否已存在 上限跟三个*/
         Boolean isNew=true;
+        int followNum=0;
+        boolean isDelete=false;
         FuUserFollows follows = new FuUserFollows();
-        Map followConditon=new HashMap();
-        followConditon.put(FuUserFollows.USER_ID,userId);
+
+        Wrapper<FuUserFollows> followsWrapper=new EntityWrapper<>();
+        followsWrapper.eq(FuUserFollows.USER_ID,userId);
+        /*followsWrapper.ne(FuUserFollows.FOLLOW_STATE, FollowConstant.FOLLOW_STATE_DELETE);*/
         /*followConditon.put(FuUserFollows.SIGNAL_ID,signalId);*/
-        List<FuUserFollows> followList= fuUserFollowsMapper.selectByMap(followConditon);
-        if(followList!=null&&followList.size()>=3){
-            log.error("该用户已跟随3个信号源，已达到跟随上限！");
-            throw new BusinessException("该用户已跟随3个信号源，已达到跟随上限！");
-        }
+        List<FuUserFollows> followList= selectList(followsWrapper);
         for (FuUserFollows oldFollows:followList){
+            if(!oldFollows.getFollowState().equals(FollowConstant.FOLLOW_STATE_DELETE)){
+                followNum++;
+            }
             if(oldFollows.getSignalId()==Integer.parseInt(signalId)){
                 // 根据条件查询到跟单关系 已存在
                 isNew=false;
-                follows=followList.get(0);
-                break;
+                follows=oldFollows;
+                if(oldFollows.getFollowState().equals(FollowConstant.FOLLOW_STATE_DELETE)){
+                    /*正在修改废弃的 订单*/
+                    isDelete=true;
+                }
             }
+        }
+        if(followNum>=FollowConstant.FOLLOW_MAX_NUM && isNew){
+            //当前已经有3个跟单关系 并且还在新增
+            log.error("该用户已跟随3个信号源，已达到跟随上限！");
+            throw new BusinessException("该用户已跟随3个信号源，已达到跟随上限！");
+        }
+        if(followNum>=FollowConstant.FOLLOW_MAX_NUM && isDelete){
+            //当前已经有3个跟单关系 并且还在修改废弃的订单
+            log.error("该用户已跟随3个信号源，已达到跟随上限，不可以添加或修改！");
+            throw new BusinessException("该用户已跟随3个信号源，已达到跟随上限，不可以添加或修改！");
         }
 
         follows.setUserId(userMTAccountBO.getUserId());

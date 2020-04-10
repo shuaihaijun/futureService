@@ -35,4 +35,7 @@ public class FollowConstant {
 	public static final int FOLLOW_STATE_HIDE=1;
 	/*跟单状态 废弃*/
 	public static final int FOLLOW_STATE_DELETE=2;
+
+	/*最大跟单数量*/
+	public static final int FOLLOW_MAX_NUM=3;
 }

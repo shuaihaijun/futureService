@@ -16,4 +16,7 @@ public class AccountConstant {
 	public static final int ACCOUNT_CION_BI=1;;
 	public static final int ACCOUNT_CION_DEBT=2;;
 
+	/*保留小数位*/
+	public static final int BigDecimal_Scale = 6;
+
 }

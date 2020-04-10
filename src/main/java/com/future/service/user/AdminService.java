@@ -149,7 +149,7 @@ public class AdminService extends ServiceImpl<FuUserMapper,FuUser> {
 
         Object key= redisManager.hget(RedisConstant.H_USER_LOGIN_TOKEN,token);
         if(ObjectUtils.isEmpty(key)){
-            log.error("token 获取失败！");
+            log.error("登录已过期！");
             throw new BusinessException(GlobalResultCode.RESULE_DATA_NONE);
         }
         Integer userId = Integer.parseInt(String.valueOf(key));
@@ -239,14 +239,14 @@ public class AdminService extends ServiceImpl<FuUserMapper,FuUser> {
             throw new ParameterInvalidException("保存用户信息,两次输入的密码不一致！");
         }
         if(userJson.get("introducer")==null){
-            log.error("保存用户信息,推荐码不能为空！");
-            throw new ParameterInvalidException("保存用户信息,推荐码不能为空！");
+            log.error("保存用户信息,邀请码不能为空！");
+            throw new ParameterInvalidException("保存用户信息,邀请码不能为空！");
         }
         if(userJson.get("introducer")!=null
                 &&!userJson.getString("introducer").equals("")
                 &&!StringUtils.isNumber(userJson.getString("introducer"))){
-            log.error("保存用户信息,推荐码错误！");
-            throw new ParameterInvalidException("保存用户信息,推荐码错误！");
+            log.error("保存用户信息,邀请码错误！");
+            throw new ParameterInvalidException("保存用户信息,邀请码错误！");
         }
 
         Map registeredInfo=new HashMap();
@@ -290,7 +290,7 @@ public class AdminService extends ServiceImpl<FuUserMapper,FuUser> {
         if(fuUser.getIntroducer()!=null && fuUser.getIntroducer()>0){
             introducer=fuUserMapper.selectByPrimaryKey(fuUser.getIntroducer());
             if(introducer==null){
-                log.warn("注册用户信息 , 介绍人不存在！");
+                log.warn("注册用户信息 , 邀请码不存在！");
                     throw new BusinessException(UserResultCode.USER_INTRODUCE_NOTEXIST_ERROR);
             }
         }
@@ -353,6 +353,10 @@ public class AdminService extends ServiceImpl<FuUserMapper,FuUser> {
         permissionUserRoleService.insert(userRole);
 
         /*更新缓存*/
+        String token=CommonUtil.getUUID();
+        /*为了解决跨域问题，把token放到redis中*/
+        redisManager.hset(RedisConstant.H_USER_LOGIN_TOKEN,token,newUser.getId().toString());
+
         //*返回数据填充/*
         Map userMap=new HashMap();
         userMap.put("userId",newUser.getId());
@@ -361,6 +365,7 @@ public class AdminService extends ServiceImpl<FuUserMapper,FuUser> {
         userMap.put("realName",fuUser.getRealName());
         userMap.put("userType",fuUser.getUserType());
         userMap.put("userState",fuUser.getUserState());
+        userMap.put("token",token);
 
         registeredInfo.put("code",GlobalResultCode.SUCCESS.code());
         registeredInfo.put("msg",GlobalResultCode.SUCCESS.message());

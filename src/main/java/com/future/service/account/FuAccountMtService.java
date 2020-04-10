@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.baomidou.mybatisplus.toolkit.MapUtils;
+import com.future.common.constants.AccountConstant;
 import com.future.common.constants.CommonConstant;
 import com.future.common.constants.RedisConstant;
 import com.future.common.constants.UserConstant;
@@ -503,12 +504,12 @@ public class FuAccountMtService extends ServiceImpl<FuAccountMtMapper, FuAccount
            if(infoBo==null){
                continue;
            }
-            accountMt.setBalance(new BigDecimal(infoBo.getBalance()));
-            accountMt.setLeverage(new BigDecimal(infoBo.getLeverage()));
-            accountMt.setCredit(new BigDecimal(infoBo.getCredit()));
-            accountMt.setProfit(new BigDecimal(infoBo.getProfit()));
-            accountMt.setEquity(new BigDecimal(infoBo.getEquity()));
-            accountMt.setMargin(new BigDecimal(infoBo.getMargin()));
+            accountMt.setBalance(new BigDecimal(infoBo.getBalance()).setScale(AccountConstant.BigDecimal_Scale,BigDecimal.ROUND_HALF_UP));
+            accountMt.setLeverage(new BigDecimal(infoBo.getLeverage()).setScale(AccountConstant.BigDecimal_Scale,BigDecimal.ROUND_HALF_UP));
+            accountMt.setCredit(new BigDecimal(infoBo.getCredit()).setScale(AccountConstant.BigDecimal_Scale,BigDecimal.ROUND_HALF_UP));
+            accountMt.setProfit(new BigDecimal(infoBo.getProfit()).setScale(AccountConstant.BigDecimal_Scale,BigDecimal.ROUND_HALF_UP));
+            accountMt.setEquity(new BigDecimal(infoBo.getEquity()).setScale(AccountConstant.BigDecimal_Scale,BigDecimal.ROUND_HALF_UP));
+            accountMt.setMargin(new BigDecimal(infoBo.getMargin()).setScale(AccountConstant.BigDecimal_Scale,BigDecimal.ROUND_HALF_UP));
             fuAccountMtMapper.updateByPrimaryKey(accountMt);
         }
     }

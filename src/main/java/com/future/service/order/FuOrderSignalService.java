@@ -183,6 +183,7 @@ public class FuOrderSignalService extends ServiceImpl<FuOrderSignalMapper, FuOrd
                 wrapper.lt(FuOrderSignal.ORDER_CLOSE_DATE,dateList.get(1));
             }
         }
+        wrapper.orderBy(FuOrderSignal.CREATE_DATE,false);
         if(helper==null){
             helper=new PageInfoHelper();
         }

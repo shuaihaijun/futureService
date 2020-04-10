@@ -3,19 +3,17 @@ package com.future.service.product;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
-import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.future.common.constants.SignalConstant;
 import com.future.common.constants.UserConstant;
 import com.future.common.enums.GlobalResultCode;
-import com.future.common.enums.UserRoleCode;
 import com.future.common.exception.BusinessException;
 import com.future.common.exception.DataConflictException;
 import com.future.common.exception.ParameterInvalidException;
 import com.future.common.helper.PageInfoHelper;
+import com.future.common.util.CommonUtil;
 import com.future.common.util.ConvertUtil;
 import com.future.common.util.StringUtils;
-import com.future.entity.account.FuAccountCommission;
 import com.future.entity.account.FuAccountInfo;
 import com.future.entity.permission.FuPermissionProject;
 import com.future.entity.permission.FuPermissionRole;
@@ -239,44 +237,48 @@ public class FuProductSignalApplyService extends ServiceImpl<FuProductSignalAppl
         /*校验信息*/
         if(ObjectUtils.isEmpty(signalMap.get("userId"))){
             log.error("申请人信息不能为空！");
-            throw new DataConflictException(GlobalResultCode.PARAM_NULL_POINTER,"申请人信息不能为空！");
+            throw new DataConflictException("申请人信息不能为空！");
         }
         if(ObjectUtils.isEmpty(signalMap.get("signalName"))){
             log.error("信号源名称不能为空！");
-            throw new DataConflictException(GlobalResultCode.PARAM_NULL_POINTER,"信号源名称不能为空！！");
+            throw new DataConflictException("信号源名称不能为空！！");
         }
         if(ObjectUtils.isEmpty(signalMap.get("serverName"))){
             log.error("服务器名称不能为空！");
-            throw new DataConflictException(GlobalResultCode.PARAM_NULL_POINTER,"服务器名称不能为空！！");
+            throw new DataConflictException("服务器名称不能为空！！");
         }
         if(ObjectUtils.isEmpty(signalMap.get("mtAccId"))){
             log.error("MT账户不能为空！");
-            throw new DataConflictException(GlobalResultCode.PARAM_NULL_POINTER,"MT账户不能为空！！");
+            throw new DataConflictException("MT账户不能为空！！");
+        }
+        if(!CommonUtil.isNumeric(String.valueOf(signalMap.get("mtAccId")))){
+            log.error("MT账户必须为数字类型！");
+            throw new DataConflictException("MT账户必须为数字类型！");
         }
         if(ObjectUtils.isEmpty(signalMap.get("mtPasswordWatch"))){
             log.error("MT账户密码不能为空！");
-            throw new DataConflictException(GlobalResultCode.PARAM_NULL_POINTER,"MT账户密码不能为空！！");
+            throw new DataConflictException("MT账户密码不能为空！！");
         }
         if(ObjectUtils.isEmpty(signalMap.get("email"))){
             log.error("email不能为空！");
-            throw new DataConflictException(GlobalResultCode.PARAM_NULL_POINTER,"email不能为空！！");
+            throw new DataConflictException("email不能为空！！");
         }
         if(ObjectUtils.isEmpty(signalMap.get("phone"))){
             log.error("联系人电话不能为空！");
-            throw new DataConflictException(GlobalResultCode.PARAM_NULL_POINTER,"联系人电话不能为空！！");
+            throw new DataConflictException("联系人电话不能为空！！");
         }
         if(ObjectUtils.isEmpty(signalMap.get("qqNumber"))){
             log.error("联系人QQ不能为空！");
-            throw new DataConflictException(GlobalResultCode.PARAM_NULL_POINTER,"联系人QQ不能为空！！");
+            throw new DataConflictException("联系人QQ不能为空！！");
         }
         if(ObjectUtils.isEmpty(signalMap.get("qqNumber"))){
             log.error("联系人QQ不能为空！");
-            throw new DataConflictException(GlobalResultCode.PARAM_NULL_POINTER,"联系人QQ不能为空！！");
+            throw new DataConflictException("联系人QQ不能为空！！");
         }
         /*校验申请人*/
         if(ObjectUtils.isEmpty(signalMap.get("operUserId"))){
             log.error("申请人信息为空！");
-            throw new DataConflictException(GlobalResultCode.PARAM_NULL_POINTER,"申请人信息为空！");
+            throw new DataConflictException("申请人信息为空！");
         }
 
         /*组装信息*/
@@ -287,7 +289,7 @@ public class FuProductSignalApplyService extends ServiceImpl<FuProductSignalAppl
         Integer operProjKey= userCommonService.getUserProjKey(signal.getOperUserId());
         if(userProjKey==null||operProjKey==null){
             log.error("查询用户和申请人团队信息失败！");
-            throw new BusinessException(GlobalResultCode.RESULE_DATA_NONE,"查询用户和申请人团队信息失败！");
+            throw new BusinessException("查询用户和申请人团队信息失败！");
         }
         if(userProjKey!=operProjKey){
             log.error("只能申请自己团队的用户为信号源！");
@@ -334,7 +336,10 @@ public class FuProductSignalApplyService extends ServiceImpl<FuProductSignalAppl
         }
         /*组装信息*/
         FuProductSignalApply signal=setSignal(signalMap);
-
+        if(!CommonUtil.isNumeric(String.valueOf(signal.getMtAccId()))){
+            log.error("MT账户必须为数字类型！");
+            throw new DataConflictException("MT账户必须为数字类型！");
+        }
         /*默认数据填充*/
         signal.setModifyDate(new Date());
 
