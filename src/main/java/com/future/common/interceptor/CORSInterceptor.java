@@ -1,6 +1,7 @@
 package com.future.common.interceptor;
 
-import com.future.common.util.LogUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
@@ -17,7 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 @Component
 public class CORSInterceptor implements HandlerInterceptor {
 
-    private static LogUtil logger = LogUtil.logger(HandlerInterceptor.class);
+    private static Logger logger = LoggerFactory.getLogger(CORSInterceptor.class);
 
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex)
@@ -33,7 +34,7 @@ public class CORSInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
             throws Exception {
         logger.info("cors intercepter!");
-        response.setHeader("Access-Control-Allow-Origin", request.getHeader("Origin"));
+        response.setHeader("Access-Control-Allow-Origin", "*");
         response.setHeader("Access-Control-Allow-Methods", "*");
         response.setHeader("Access-Control-Allow-Credentials", "true");
         //这里“Access-Token”是我要传到后台的内容key
