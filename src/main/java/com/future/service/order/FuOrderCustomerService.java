@@ -230,9 +230,15 @@ public class FuOrderCustomerService extends ServiceImpl<FuOrderCustomerMapper, F
         return null;
     }
 
+    /**
+     * 查询用户在仓订单
+     * @param conditionMap
+     * @param helper
+     * @return
+     */
     public PageInfo<FuOrderFollowInfo> getMTAliveOrders(Map conditionMap, PageInfoHelper helper){
         // 获取请求参数
-        String accountId="";
+        String mtAccId="";
         String username="";
         String userId="";
         String orderSymbol="";
@@ -244,8 +250,8 @@ public class FuOrderCustomerService extends ServiceImpl<FuOrderCustomerMapper, F
             log.error("查询用户列表,获取参数为空！");
             throw new ParameterInvalidException("查询用户列表,获取参数为空！");
         }
-        if(!ObjectUtils.isEmpty(conditionMap.get("accountId"))){
-            accountId=String.valueOf(conditionMap.get("accountId"));
+        if(!ObjectUtils.isEmpty(conditionMap.get("mtAccId"))){
+            mtAccId=String.valueOf(conditionMap.get("mtAccId"));
         }
         if(!ObjectUtils.isEmpty(conditionMap.get("username"))){
             username=String.valueOf(conditionMap.get("username"));
@@ -303,7 +309,7 @@ public class FuOrderCustomerService extends ServiceImpl<FuOrderCustomerMapper, F
         }
         /*条件查询日期范围不能超过1周*/
 
-        List<FuOrderFollowInfo> orders= fuOrderFollowInfoService.getMTAliveOrders(userId,username,accountId, DateUtil.toDate(dateFrom),DateUtil.toDate(dataTo));
+        List<FuOrderFollowInfo> orders= fuOrderFollowInfoService.getMTAliveOrders(userId,username,mtAccId, DateUtil.toDate(dateFrom),DateUtil.toDate(dataTo));
         if(orders==null){
             return null;
         }

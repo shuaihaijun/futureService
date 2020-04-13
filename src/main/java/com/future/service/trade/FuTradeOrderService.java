@@ -14,8 +14,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -48,30 +47,35 @@ public class FuTradeOrderService {
             log.error("根据时间段获取用户关闭订单,传入参数为空！");
             throw new DataConflictException("根据时间段获取用户关闭订单,传入参数为空！");
         }
-        long time = LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().getEpochSecond();
+        long time = new Date().getTime();
         /*判断时间格式*/
-        if(String.valueOf(nHisTimeFrom).length()>10){
-            nHisTimeFrom=nHisTimeFrom/1000;
-        }
-        if(String.valueOf(nHisTimeTo).length()>10){
-            nHisTimeTo=nHisTimeTo/1000;
-        }
-        /*if(nHisTimeFrom==0){
+        if(nHisTimeFrom==0){
             // 由于时区原因，扩展为8天
             nHisTimeFrom= (int)DateUtil.getFutureDate(time,-7);
         }
         if(nHisTimeTo==0){
             // 由于时区原因，扩展为8天
             nHisTimeTo= (int)DateUtil.getFutureDate(time,1);
-        }*/
+        }
+        //判断日期范围
+        if(nHisTimeTo-nHisTimeFrom>(long)(30 * 24) * 3600000){
+            /*时间超过一个月  改变截止日期*/
+            nHisTimeTo=(int)DateUtil.getFutureDate(nHisTimeFrom,30);
+        }
+        if(String.valueOf(nHisTimeFrom).length()>10){
+            nHisTimeFrom=nHisTimeFrom/1000;
+        }
+        if(String.valueOf(nHisTimeTo).length()>10){
+            nHisTimeTo=nHisTimeTo/1000;
+        }
         // 为了提供查询效率，不在新生成clientId 默认查询近一个月的订单
         String url=tradeServerHost+":"+tradeServerPort+ GlobalConstant.TRADE_ORDER_CLOSE_ORDERS;
         Map dataMap=new HashMap();
         dataMap.put("serverName",serverName);
         dataMap.put("username",mtAccId);
         dataMap.put("password",password);
-        /*dataMap.put("nHisTimeFrom",nHisTimeFrom);
-        dataMap.put("nHisTimeTo",nHisTimeTo);*/
+        dataMap.put("nHisTimeFrom",nHisTimeFrom);
+        dataMap.put("nHisTimeTo",nHisTimeTo);
         Map requestMap= new HashMap<>();
         requestMap.put("params",dataMap);
         // 请求

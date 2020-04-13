@@ -62,6 +62,9 @@ public class DateUtil {
             if (s.length() <= 10) {
                 return dateFormat.parse(s);
             }
+            if (s.length() <= 20) {
+                return datetimeFormat.parse(s);
+            }
             return toDate(Timestamp.valueOf(s));
         } catch (Exception e) {
             e.printStackTrace();

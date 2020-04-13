@@ -31,26 +31,42 @@ public class OrderFollowInfoController {
     @Autowired
     FuOrderFollowErrorService fuOrderFollowErrorService;
 
-    //获得Mt历史订单操作
+    //获得Mt历史订单操作(直接从MT平台查询)
     @RequestMapping(value= "/getMTtHistoryOrders",method=RequestMethod.POST)
+    @Deprecated
     public @ResponseBody
-    List<FuOrderFollowInfo> getMTtHistoryOrders(){
+    List<FuOrderFollowInfo> getMTtHistoryOrders(@RequestBody RequestParams<Map> requestParams) {
         // 获取请求参数
-        String requestJSONStr = ThreadCache.getPostRequestParams();
-        JSONObject requestMap = JSONObject.parseObject(requestJSONStr);
-        String userId=requestMap.getString("userId");
-        String username=requestMap.getString("username");
-        String accountId=requestMap.getString("accountId");
-        String dateFrom=requestMap.getString("dateFrom");
-        String dataTo=requestMap.getString("dataTo");
-        if(StringUtils.isEmpty(dateFrom)){
+        Map requestMap = requestParams.getParams();
+        if(requestMap==null){
+            throw new DataConflictException(GlobalResultCode.PARAM_NULL_POINTER);
+        }
+        String userId="";
+        String username="";
+        String mtAccId="";
+        String dateFrom="";
+        String dataTo="";
+        if(requestMap.get("userId")!=null){
+            userId=String.valueOf(requestMap.get("userId"));
+        }
+        if(requestMap.get("username")!=null){
+            username=String.valueOf(requestMap.get("username"));
+        }
+        if(requestMap.get("mtAccId")!=null){
+            mtAccId=String.valueOf(requestMap.get("mtAccId"));
+        }
+        if(requestMap.get("dateFrom")!=null){
+            dateFrom=String.valueOf(requestMap.get("dateFrom"));
+        }else {
             new DataConflictException(GlobalResultCode.PARAM_NULL_POINTER,"日期数据为空！");
         }
-        if(StringUtils.isEmpty(dataTo)){
+        if(requestMap.get("dataTo")!=null){
+            dataTo=String.valueOf(requestMap.get("dataTo"));
+        }else {
             new DataConflictException(GlobalResultCode.PARAM_NULL_POINTER,"日期数据为空！");
         }
         /*条件查询日期不能超过1周*/
-        return orderService.geMTtHistoryOrders(userId,username,accountId, DateUtil.toDate(dateFrom),DateUtil.toDate(dataTo));
+        return orderService.geMTtHistoryOrders(userId,username,mtAccId, DateUtil.toDate(dateFrom),DateUtil.toDate(dataTo));
     }
 
     //获得社区跟随订单

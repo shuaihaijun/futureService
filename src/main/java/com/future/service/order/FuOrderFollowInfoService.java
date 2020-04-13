@@ -71,13 +71,13 @@ public class FuOrderFollowInfoService extends ServiceImpl<FuOrderFollowInfoMappe
      * 根据时间段 查询用户历史订单
      * @param userId,
      * @param username
-     * @param accountId
+     * @param mtAccId
      * @param dataFrom
      * @param dateTo
      * @return
      */
-    public List<FuOrderFollowInfo> geMTtHistoryOrders(String userId,String username, String accountId,Date dataFrom,Date dateTo){
-        return getMTOrders(true,userId,username,accountId,dataFrom,dateTo);
+    public List<FuOrderFollowInfo> geMTtHistoryOrders(String userId,String username, String mtAccId,Date dataFrom,Date dateTo){
+        return getMTOrders(true,userId,username,mtAccId,dataFrom,dateTo);
     }
 
 
