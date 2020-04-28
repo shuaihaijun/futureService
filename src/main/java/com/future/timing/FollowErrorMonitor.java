@@ -60,7 +60,7 @@ public class FollowErrorMonitor {
                     if(!isSuccess){
                         log.error("同步跟单订单失败，订单："+JSONObject.toJSONString(errorInfo));
                         //redis 暂存处理失败数据(暂时未做处理 需要实例化)
-                        redisManager.lSet(RedisConstant.L_ORDER_FOLLOW_ORDERS_BAK,errorInfo);
+                        redisManager.lSet(RedisConstant.L_ORDER_FOLLOW_ERROR_DATA_BAK,errorInfo);
                     }
                 }catch (Exception e){
                     log.error("同步跟单错误数据失败，订单："+JSONObject.toJSONString(errorInfo));
@@ -71,6 +71,50 @@ public class FollowErrorMonitor {
                 errorInfo=redisManager.lPop(RedisConstant.L_ORDER_FOLLOW_ERROR_DATA);
             }
         }
-        // TODO L_ORDER_FOLLOW_ERROR_DATA_BAK 处理
+    }
+
+    /**
+     * 跟单错误监听 每小时同步一次
+     */
+//    @Scheduled(cron = "0 0 * * * ?")
+    public void bakMonitor(){
+        /*同步跟单异常订单*/
+        long errorSize = redisManager.lGetListSize(RedisConstant.L_ORDER_FOLLOW_ERROR_DATA_BAK);
+        log.info("跟单错误监听 处理失败暂存------size:"+errorSize);
+        if(errorSize>0){
+            JSONObject order=new JSONObject();
+            JSONObject followRule=new JSONObject();
+            int errorCode=1;
+            int updateAction=0;
+            Object errorInfo=redisManager.lPop(RedisConstant.L_ORDER_FOLLOW_ERROR_DATA_BAK);
+            while (errorInfo!=null&&errorSize>0){
+                try {
+                    log.info("同步跟单错误数据------");
+                    JSONObject errorData=(JSONObject)errorInfo;
+                    log.info(errorData.toJSONString());
+                    if(!ObjectUtils.isEmpty(errorData.get("updateAction"))){
+                        updateAction=errorData.getInteger("updateAction");
+                    }
+                    if(!ObjectUtils.isEmpty(errorData.get("errorCode"))){
+                        errorCode=errorData.getInteger("errorCode");
+                    }
+                    order=errorData.getJSONObject("order");
+                    followRule=errorData.getJSONObject("followRule");
+                    boolean isSuccess=fuOrderFollowErrorService.dealFollowErrorData(updateAction,order,followRule,errorCode);
+                    if(!isSuccess){
+                        log.error("同步跟单订单失败，订单："+JSONObject.toJSONString(errorInfo));
+                        //redis 暂存处理失败数据(暂时未做处理 需要实例化)
+                        redisManager.lSet(RedisConstant.L_ORDER_FOLLOW_ERROR_DATA_BAK,errorInfo);
+                    }
+                }catch (Exception e){
+                    log.error("同步跟单错误数据失败，订单："+JSONObject.toJSONString(errorInfo));
+                    log.error(e.getMessage(),e);
+                    //redis 暂存处理失败数据(暂时未做处理 需要实例化)
+                    redisManager.lSet(RedisConstant.L_ORDER_FOLLOW_ERROR_DATA_BAK,errorInfo);
+                }
+                errorSize--;
+                errorInfo=redisManager.lPop(RedisConstant.L_ORDER_FOLLOW_ERROR_DATA_BAK);
+            }
+        }
     }
 }

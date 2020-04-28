@@ -72,10 +72,14 @@ public class FollowOrderMonitor {
     }
 
 
+    /**
+     * 跟单订单监听 每分钟同步一次
+     */
+//    @Scheduled(cron = "0 0 * * * ?")
     public void bakMonitor(){
-
         /*1、同步跟单成功订单*/
         long orderSize = redisManager.lGetListSize(RedisConstant.L_ORDER_FOLLOW_ORDERS_BAK);
+        log.info("跟随订单信息 处理失败暂存------size:"+orderSize);
         if(orderSize>0){
             JSONObject followOrder=new JSONObject();
             int followName=0;
@@ -83,7 +87,7 @@ public class FollowOrderMonitor {
             int signalOrderId=0;
             int orderAction=0;
             Object orderInfo=redisManager.lPop(RedisConstant.L_ORDER_FOLLOW_ORDERS_BAK);
-            while (orderInfo!=null){
+            while (orderInfo!=null&&orderSize>0){
                 try {
                     log.info("同步跟单订单数据------bak");
                     JSONObject orderJson= (JSONObject)orderInfo;
@@ -105,6 +109,7 @@ public class FollowOrderMonitor {
                     redisManager.lSet(RedisConstant.L_ORDER_FOLLOW_ORDERS_BAK,orderInfo);
                     log.error(e.getMessage(),e);
                 }
+                orderSize--;
                 orderInfo=redisManager.lPop(RedisConstant.L_ORDER_FOLLOW_ORDERS_BAK);
             }
         }
