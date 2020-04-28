@@ -70,4 +70,44 @@ public class FollowOrderMonitor {
         }
 
     }
+
+
+    public void bakMonitor(){
+
+        /*1、同步跟单成功订单*/
+        long orderSize = redisManager.lGetListSize(RedisConstant.L_ORDER_FOLLOW_ORDERS_BAK);
+        if(orderSize>0){
+            JSONObject followOrder=new JSONObject();
+            int followName=0;
+            int signalName=0;
+            int signalOrderId=0;
+            int orderAction=0;
+            Object orderInfo=redisManager.lPop(RedisConstant.L_ORDER_FOLLOW_ORDERS_BAK);
+            while (orderInfo!=null){
+                try {
+                    log.info("同步跟单订单数据------bak");
+                    JSONObject orderJson= (JSONObject)orderInfo;
+                    log.info(orderJson.toJSONString());
+                    followOrder=orderJson.getJSONObject("followOrder");
+                    followName=orderJson.getInteger("followName");
+                    signalName=orderJson.getInteger("signalName");
+                    signalOrderId=orderJson.getInteger("signalOrderId");
+                    orderAction=orderJson.getInteger("orderAction");
+                    boolean isSuccess= fuOrderFollowInfoService.saveFollowOrderData(followName,signalName,signalOrderId,orderAction,followOrder);
+                    if(!isSuccess){
+                        log.error("同步跟单订单失败，订单："+JSONObject.toJSONString(orderInfo));
+                        //redis 暂存处理失败数据(暂时未做处理 需要实例化)
+                        redisManager.lSet(RedisConstant.L_ORDER_FOLLOW_ORDERS_BAK,orderInfo);
+                    }
+                }catch (Exception e){
+                    log.error("同步跟单订单失败，订单："+JSONObject.toJSONString(orderInfo));
+                    //redis 暂存处理失败数据(暂时未做处理 需要实例化)
+                    redisManager.lSet(RedisConstant.L_ORDER_FOLLOW_ORDERS_BAK,orderInfo);
+                    log.error(e.getMessage(),e);
+                }
+                orderInfo=redisManager.lPop(RedisConstant.L_ORDER_FOLLOW_ORDERS_BAK);
+            }
+        }
+
+    }
 }

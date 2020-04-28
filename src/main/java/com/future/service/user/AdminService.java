@@ -599,6 +599,7 @@ public class AdminService extends ServiceImpl<FuUserMapper,FuUser> {
                 &&!String.valueOf(userMap.get("introducer")).equals("")){
             wrapper.eq(FuUser.INTRODUCER,userMap.get("introducer"));
         }
+        wrapper.orderBy("id desc");
 
         if(helper==null){
             helper=new PageInfoHelper();

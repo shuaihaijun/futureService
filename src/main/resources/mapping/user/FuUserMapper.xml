@@ -527,5 +527,6 @@
     <if test="projKey != null and projKey != ''">
       and p.proj_key = #{projKey,jdbcType=INTEGER}
     </if>
+    order by b.id desc
   </select>
 </mapper>

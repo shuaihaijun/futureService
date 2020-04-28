@@ -44,4 +44,12 @@ public class MtOrderTest {
         List<FuOrderFollowInfo> data= fuOrderInfoService.geMTtHistoryOrders(null,username,accountId,dateFrom,dateTo);
         System.out.println("end  ========"+new Date().getTime());
     }
+
+    @Test
+    public void testTime(){
+        int nThreadHisTimeFrom =(int)((new Date().getTime()-((long)(30 * 24) * 3600000))/1000);
+        int nThreadHisTimeTo =(int)(new Date().getTime()/1000);
+        System.out.println(nThreadHisTimeFrom);
+        System.out.println(nThreadHisTimeTo);
+    }
 }

@@ -19,6 +19,9 @@ import java.util.Date;
 @Data
 public class FuPermissionResourceBO implements Serializable {
 
+    private Integer userId;
+    private Integer operUserId;
+
     /**
      * 主键
      */

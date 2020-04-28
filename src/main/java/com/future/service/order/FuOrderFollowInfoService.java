@@ -151,7 +151,6 @@ public class FuOrderFollowInfoService extends ServiceImpl<FuOrderFollowInfoMappe
             throw new BusinessException("根据时间段查询用户历史订单|用户MT4账户未绑定！");
         }
         UserMTAccountBO userMtAcc=mts.get(0);
-        // todo 考虑多账户问题
         mtAccId =userMtAcc.getMtAccId();
         Integer userType=userMtAcc.getUserType();
         String serverName=String.valueOf(userMtAcc.getServerName());
@@ -297,11 +296,11 @@ public class FuOrderFollowInfoService extends ServiceImpl<FuOrderFollowInfoMappe
         }
         /*跟单数据*/
         conditionMap.clear();
-        conditionMap.put("userId",accountMt.getUserId());
-        conditionMap.put("userMtAccId",accountMt.getMtAccId());
-        conditionMap.put("signalId",signals.get(0).getId());
-        conditionMap.put("signalMtAccId",signals.get(0).getMtAccId());
-        conditionMap.put("followState", AccountConstant.ACCOUNT_STATE_NORMAL);
+        conditionMap.put(FuUserFollows.USER_ID,accountMt.getUserId());
+        conditionMap.put(FuUserFollows.USER_MT_ACC_ID,accountMt.getMtAccId());
+        conditionMap.put(FuUserFollows.SIGNAL_ID,signals.get(0).getId());
+        conditionMap.put(FuUserFollows.SIGNAL_MT_ACC_ID,signals.get(0).getMtAccId());
+        conditionMap.put(FuUserFollows.FOLLOW_STATE, AccountConstant.ACCOUNT_STATE_NORMAL);
         List<FuUserFollows> fuUserFollows= fuUserFollowsService.selectByMap(conditionMap);
         if(fuUserFollows==null||fuUserFollows.size()<=0){
             log.error("根据订单数据，查询跟单信息错误！");

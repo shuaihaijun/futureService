@@ -153,9 +153,6 @@ public class FuOrderCustomerService extends ServiceImpl<FuOrderCustomerMapper, F
                 /*只同步已完成的订单*/
                 selectOrdercustomers=ConvertUtil.convertOrderCustomers(orders);
 
-                /*跟新 userId 的 mtAccId 账户信息*/ // todo
-                /*fuAccountMtService.updateAccFromMt(userId,mtAccountId,accountInfo);*/
-
                 /*处理订单*/
                 if(ObjectUtils.isEmpty(selectOrdercustomers)) {
                     return;

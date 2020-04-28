@@ -283,9 +283,9 @@ public class PermissionProjectService extends ServiceImpl<FuPermissionProjectMap
     public List<FuPermissionProjectVO> findAllList() throws Exception {
         // 获取当前用户信息
         AdminInfo user = RequestContextHolderUtil.getAdminInfo();
-        //TODO
-        user = new AdminInfo();
-        user.setAdminId(11);
+        if(user==null){
+            user=new AdminInfo();
+        }
         //获取配置文件中超级管理员，判断当前登录用户是否为超级管理员,true为超管
         String[] superAdministrators = superAdministrator.split(",");
         boolean contains = false;

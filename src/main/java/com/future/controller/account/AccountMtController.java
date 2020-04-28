@@ -114,14 +114,14 @@ public class AccountMtController {
 
     //保存MT账户信息
     @RequestMapping(value= "/saveUserMTAccount",method=RequestMethod.POST)
-    public @ResponseBody void saveUserMTAccount(){
+    public @ResponseBody void saveUserMTAccount(@RequestBody RequestParams<List<Map>> requestParams) {
         // 获取请求参数
-        String requestJSONStr = ThreadCache.getPostRequestParams();
-        JSONObject requestData = JSONObject.parseObject(requestJSONStr);
-        if(requestData.isEmpty()||requestData.getJSONObject("mtAccInfo").isEmpty()){
+        List<Map> accountMap = requestParams.getParams();
+        if(accountMap==null||accountMap.isEmpty()||accountMap.get(0).get("userId")==null){
             throw new ParameterInvalidException(GlobalResultCode.PARAM_NULL_POINTER);
         }
-        fuAccountMtService.saveUserMTAccount(requestData.getJSONObject("mtAccInfo"));
+        String userId=String.valueOf(accountMap.get(0).get("userId"));
+        fuAccountMtService.saveUserMTAccount(userId,accountMap);
     }
 
     //连接MT账户信息
@@ -216,6 +216,19 @@ public class AccountMtController {
             throw new ParameterInvalidException("管理员只能操作自己团队的信号源!");
         }
         return fuAccountMtService.disConnectSignalMTAccount(signalId);
+    }
+
+    //移除用户MT账户校验
+    @RequestMapping(value= "/mtAccRemoveCheck",method=RequestMethod.POST)
+    public @ResponseBody boolean mtAccRemoveCheck(@RequestBody RequestParams<Map> requestParams) {
+        Map accMap = requestParams.getParams();
+        if(accMap==null||accMap.get("userId")==null||accMap.get("mtAccId")==null){
+            log.warn("移除用户MT账户校验,数据为空!");
+            throw new ParameterInvalidException(GlobalResultCode.PARAM_NULL_POINTER);
+        }
+        Integer userId=Integer.parseInt(String.valueOf(accMap.get("userId")));
+        Integer mtAccId=Integer.parseInt(String.valueOf(accMap.get("mtAccId")));
+        return fuAccountMtService.mtAccRemoveCheck(userId,mtAccId);
     }
 
 }

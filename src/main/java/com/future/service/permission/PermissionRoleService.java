@@ -83,8 +83,9 @@ public class PermissionRoleService extends ServiceImpl<FuPermissionRoleMapper, F
         }
         //获取当前登录用户信息
         AdminInfo user = RequestContextHolderUtil.getAdminInfo();
-        //TODO:
-        user = new AdminInfo();
+        if(user==null){
+            user=new AdminInfo();
+        }
         permissionRole.setCreater(user.getAdminName());
         boolean isSuccess = true;
         if (permissionRole.getId()!=null&&permissionRole.getId()>0) {
@@ -178,9 +179,9 @@ public class PermissionRoleService extends ServiceImpl<FuPermissionRoleMapper, F
         }
         //获取当前登录用户信息
         AdminInfo user = RequestContextHolderUtil.getAdminInfo();
-        //TODO
-        user = new AdminInfo();
-        user.setAdminLogin("test");
+        if(user==null){
+            user=new AdminInfo();
+        }
         log.warn("user:{},remove permission role[{}]", user.getAdminLogin(), ids);
     }
 
@@ -297,9 +298,9 @@ public class PermissionRoleService extends ServiceImpl<FuPermissionRoleMapper, F
         } else {
             //获取当前登录用户信息
             AdminInfo user = RequestContextHolderUtil.getAdminInfo();
-            //TODO
-            user = new AdminInfo();
-            user.setAdminId(1);
+            if(user==null){
+                user=new AdminInfo();
+            }
             //获取配置文件中超级管理员，判断当前登录用户是否为超级管理员,true为超管
             boolean contains = userCommonService.isAdministrator(user.getAdminId());;
             

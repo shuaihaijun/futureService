@@ -71,5 +71,6 @@ public class FollowErrorMonitor {
                 errorInfo=redisManager.lPop(RedisConstant.L_ORDER_FOLLOW_ERROR_DATA);
             }
         }
+        // TODO L_ORDER_FOLLOW_ERROR_DATA_BAK 处理
     }
 }

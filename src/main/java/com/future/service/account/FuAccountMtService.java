@@ -1,6 +1,5 @@
 package com.future.service.account;
 
-import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
@@ -11,6 +10,7 @@ import com.future.common.constants.RedisConstant;
 import com.future.common.constants.UserConstant;
 import com.future.common.enums.GlobalResultCode;
 import com.future.common.exception.BusinessException;
+import com.future.common.exception.DataConflictException;
 import com.future.common.exception.ParameterInvalidException;
 import com.future.common.helper.PageInfoHelper;
 import com.future.common.util.ConvertUtil;
@@ -24,8 +24,10 @@ import com.future.mapper.product.FuProductSignalMapper;
 import com.future.mapper.user.FuUserMapper;
 import com.future.pojo.bo.account.MtAccountInfoBo;
 import com.future.pojo.bo.account.UserMTAccountBO;
+import com.future.pojo.vo.signal.FuFollowStateVO;
 import com.future.service.com.FuComServerService;
 import com.future.service.trade.FuTradeAccountService;
+import com.future.service.user.FuUserFollowsService;
 import com.future.service.user.UserCommonService;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
@@ -34,6 +36,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
 import java.math.BigDecimal;
@@ -53,6 +56,8 @@ public class FuAccountMtService extends ServiceImpl<FuAccountMtMapper, FuAccount
     UserCommonService userCommonService;
     @Autowired
     FuTradeAccountService fuTradeAccountService;
+    @Autowired
+    FuUserFollowsService fuUserFollowsService;
     @Autowired
     FuAccountMtMapper fuAccountMtMapper;
     @Autowired
@@ -157,58 +162,77 @@ public class FuAccountMtService extends ServiceImpl<FuAccountMtMapper, FuAccount
 
     /**
      * 保存/绑定用户MT账户信息
-     * @param jsonData
+     * @param accMapList
      */
-    public void saveUserMTAccount(JSONObject jsonData){
-        if(ObjectUtils.isEmpty(jsonData)){
+    @Transactional
+    public void saveUserMTAccount(String userId, List<Map> accMapList){
+        if(ObjectUtils.isEmpty(accMapList)){
             log.error("保存/绑定用户MT账户信息,传入参数为空！");
             throw new ParameterInvalidException("保存/绑定用户MT账户信息,传入参数为空！");
         }
 
-        FuAccountMt fuAccountMt=JSONObject.toJavaObject(jsonData,FuAccountMt.class);
+        // 先查询出用户当前所有的账户
+        List<FuAccountMt> accountMts= selectList(new EntityWrapper<FuAccountMt>().eq(FuAccountMt.USER_ID,userId));
 
-        /*校验必要参数*/
-        if(fuAccountMt.getUserId()==null
-                ||fuAccountMt.getUserId()==0){
-            log.error("保存/绑定用户MT账户信息,用户信息为空！");
-            throw new ParameterInvalidException("保存/绑定用户MT账户信息,用户信息为空！");
-        }
-        if(fuAccountMt.getServerName()==null
-            ||StringUtils.isEmpty(fuAccountMt.getMtAccId())){
-            log.error("保存/绑定用户MT账户信息,账户信息为空！");
-            throw new ParameterInvalidException("保存/绑定用户MT账户信息,账户信息为空！");
-        }
-        if(StringUtils.isEmpty(fuAccountMt.getMtPasswordTrade())
-            ||StringUtils.isEmpty(fuAccountMt.getMtPasswordWatch())){
-            log.error("保存/绑定用户MT账户信息,密码信息为空！");
-            throw new ParameterInvalidException("保存/绑定用户MT账户信息,密码信息为空！");
+        for (Map accMap:accMapList){
+            Object accObject= ConvertUtil.MapToJavaBean((HashMap) accMap,FuAccountMt.class);
+            FuAccountMt fuAccountMt=(FuAccountMt)accObject;
+
+            /*校验必要参数*/
+            if(fuAccountMt.getUserId()==null
+                    ||fuAccountMt.getUserId()==0){
+                log.error("保存/绑定用户MT账户信息,用户信息为空！");
+                throw new ParameterInvalidException("保存/绑定用户MT账户信息,用户信息为空！");
+            }
+            if(fuAccountMt.getServerName()==null
+                    ||StringUtils.isEmpty(fuAccountMt.getMtAccId())){
+                log.error("保存/绑定用户MT账户信息,账户信息为空！");
+                throw new ParameterInvalidException("保存/绑定用户MT账户信息,账户信息为空！");
+            }
+            if(StringUtils.isEmpty(fuAccountMt.getMtPasswordTrade())
+                    ||StringUtils.isEmpty(fuAccountMt.getMtPasswordWatch())){
+                log.error("保存/绑定用户MT账户信息,密码信息为空！");
+                throw new ParameterInvalidException("保存/绑定用户MT账户信息,密码信息为空！");
+            }
+
+            /*根据serverName 查询server信息*/
+            FuComServer server= fuComServerService.selectOne(new EntityWrapper<FuComServer>().eq(FuComServer.SERVER_NAME,fuAccountMt.getServerName()));
+            if(server==null){
+                log.error("保存/绑定用户MT账户信息,服务器信息查询失败！");
+                throw new ParameterInvalidException("保存/绑定用户MT账户信息,服务器信息查询失败！");
+            }
+            fuAccountMt.setServerId(server.getId());
+            fuAccountMt.setServerName(server.getServerName());
+            fuAccountMt.setBrokerId(server.getBrokerId());
+            fuAccountMt.setBrokerName(server.getBrokerName());
+
+            FuAccountMt mt=selectOne(new EntityWrapper<FuAccountMt>().eq(FuAccountMt.MT_ACC_ID,fuAccountMt.getMtAccId()));
+            if(mt!=null && mt.getUserId()!=null&& mt.getUserId().intValue()!=fuAccountMt.getUserId().intValue()){
+                log.error("该账户已经被绑定，请重新选择账户！");
+                throw new ParameterInvalidException("该账户已经被绑定，请重新选择账户！");
+            }
+
+            /*保存账户信息*/
+            if(fuAccountMt.getId()!=null&&fuAccountMt.getId()>0){
+                fuAccountMtMapper.updateByPrimaryKeySelective(fuAccountMt);
+            }else if(mt!=null){
+                fuAccountMt.setId(mt.getId());
+                fuAccountMtMapper.updateByPrimaryKeySelective(fuAccountMt);
+            }else {
+                fuAccountMtMapper.insertSelective(fuAccountMt);
+            }
+
+            /*移除列表中 已经处理过的账户*/
+            for(int i=0;i<accountMts.size();i++){
+                if(accountMts.get(i).getMtAccId().equalsIgnoreCase(fuAccountMt.getMtAccId())){
+                    accountMts.remove(i);
+                }
+            }
         }
 
-        /*根据serverName 查询server信息*/
-        FuComServer server= fuComServerService.selectOne(new EntityWrapper<FuComServer>().eq(FuComServer.SERVER_NAME,fuAccountMt.getServerName()));
-        if(server==null){
-            log.error("保存/绑定用户MT账户信息,服务器信息查询失败！");
-            throw new ParameterInvalidException("保存/绑定用户MT账户信息,服务器信息查询失败！");
-        }
-        fuAccountMt.setServerId(server.getId());
-        fuAccountMt.setServerName(server.getServerName());
-        fuAccountMt.setBrokerId(server.getBrokerId());
-        fuAccountMt.setBrokerName(server.getBrokerName());
-
-        FuAccountMt mt=selectOne(new EntityWrapper<FuAccountMt>().eq(FuAccountMt.MT_ACC_ID,fuAccountMt.getMtAccId()));
-        if(mt!=null && mt.getUserId()!=null&& mt.getUserId()!=fuAccountMt.getUserId()){
-            log.error("该账户已经被绑定，请重新选择账户！");
-            throw new ParameterInvalidException("该账户已经被绑定，请重新选择账户！");
-        }
-
-        /*保存账户信息*/
-        if(fuAccountMt.getId()!=null&&fuAccountMt.getId()>0){
-            fuAccountMtMapper.updateByPrimaryKeySelective(fuAccountMt);
-        }else if(mt!=null){
-            fuAccountMt.setId(mt.getId());
-            fuAccountMtMapper.updateByPrimaryKeySelective(fuAccountMt);
-        }else {
-            fuAccountMtMapper.insertSelective(fuAccountMt);
+        /*没有处理过的数据需要删除*/
+        for(int i=0;i<accountMts.size();i++){
+            deleteById(accountMts.get(i).getId());
         }
     }
 
@@ -514,6 +538,40 @@ public class FuAccountMtService extends ServiceImpl<FuAccountMtMapper, FuAccount
         }
     }
 
+
+    /**
+     * 移除用户MT账户校验
+     * @param userId
+     * @param mtAccId
+     * @return
+     */
+    public boolean mtAccRemoveCheck(Integer userId,Integer mtAccId){
+        if(userId==null||mtAccId==null||userId==0||StringUtils.isEmpty(mtAccId)){
+            log.error("移除用户MT账户校验失败，用户信息为空！");
+            throw new DataConflictException(GlobalResultCode.PARAM_NULL_POINTER.message());
+        }
+        /*1、查询是否正在跟单*/
+        Map conditionMap=new HashMap();
+        conditionMap.put("userId",userId);
+        conditionMap.put("userMtAccId",mtAccId);
+        FuFollowStateVO userFollows= fuUserFollowsService.getSignalFollowByCondition(conditionMap);
+        if(userFollows!=null&& userFollows.getUserId()!=null){
+            log.error("移除用户MT账户校验失败，用户账户正在跟单 不能移除！");
+            throw new BusinessException("移除用户MT账户校验失败，用户账户正在跟单 不能移除！");
+        }
+
+        /*2、查询是否是信号源账户*/
+        conditionMap.clear();
+        conditionMap.put("signalMtAccId",mtAccId);
+        FuFollowStateVO signalFollows= fuUserFollowsService.getSignalFollowByCondition(conditionMap);
+        if(signalFollows!=null&& signalFollows.getUserId()!=null){
+            log.error("移除用户MT账户校验失败，信号源账户正在监听 不能移除！");
+            throw new BusinessException("移除用户MT账户校验失败，信号源账户正在监听 不能移除！");
+        }
+
+        /*3.其他*/
+        return true;
+    }
 
 
     /**

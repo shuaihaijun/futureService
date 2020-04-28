@@ -1,19 +1,13 @@
 package com.future.controller.permission;
 
 
-import com.alibaba.fastjson.JSONObject;
-import com.future.common.enums.GlobalResultCode;
-import com.future.common.exception.ParameterInvalidException;
 import com.future.common.helper.PageInfoHelper;
 import com.future.common.result.RequestParams;
-import com.future.common.util.StringUtils;
-import com.future.common.util.ThreadCache;
 import com.future.pojo.bo.BasicBO;
 import com.future.pojo.bo.permission.FuPermissionResourceBO;
 import com.future.pojo.vo.permission.FuPermissionResourceVO;
 import com.future.service.permission.PermissionResourceService;
 import com.github.pagehelper.Page;
-import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;

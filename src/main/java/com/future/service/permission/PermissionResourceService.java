@@ -10,6 +10,7 @@ import com.future.common.constants.CommonConstant;
 import com.future.common.enums.GlobalResultCode;
 import com.future.common.enums.RmsResultCode;
 import com.future.common.exception.BusinessException;
+import com.future.common.exception.ParameterInvalidException;
 import com.future.common.helper.PageInfoHelper;
 import com.future.common.util.RequestContextHolderUtil;
 import com.future.common.util.StringUtils;
@@ -23,6 +24,7 @@ import com.future.pojo.bo.Node;
 import com.future.pojo.bo.permission.FuPermissionResourceBO;
 import com.future.pojo.vo.permission.FuPermissionResourceVO;
 import com.future.pojo.vo.permission.FuPermissionRoleVO;
+import com.future.service.user.UserCommonService;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -55,6 +57,8 @@ public class PermissionResourceService extends ServiceImpl<FuPermissionResourceM
     private PermissionRoleService permissionRoleService;
     @Autowired
     private PermissionRoleResourceService permissionRoleResourceService;
+    @Autowired
+    UserCommonService userCommonService;
 
     /**
      * 注入超级管理员数据
@@ -91,12 +95,8 @@ public class PermissionResourceService extends ServiceImpl<FuPermissionResourceM
 
         //保存数据
         FuPermissionResource param = FuPermissionResourceBO.boToModel(fuPermissionResourceBO);
-        //获取当前登录用户信息
-        AdminInfo user = RequestContextHolderUtil.getAdminInfo();
-        //TODO:测试数据
-        user = new AdminInfo();
-        user.setAdminName("test");
-        param.setCreater(user.getAdminName());
+
+        param.setCreater("admin");
         int isSuccess = fuPermissionResourceMapper.insert(param);
 
         if (isSuccess < 0) {
@@ -137,45 +137,37 @@ public class PermissionResourceService extends ServiceImpl<FuPermissionResourceM
      * @return 分页对象
      */
     public Page<FuPermissionResourceVO> findPageList(FuPermissionResourceBO fuPermissionResourceBO, PageInfoHelper helper) {
-        //验证参数对象是否为空
-        /*if (fuPermissionResourceBO == null) {
-            throw new BusinessException(GlobalResultCode.PARAM_NULL_POINTER);
-        }*/
 
         //获取当前登录用户信息
-        AdminInfo user = RequestContextHolderUtil.getAdminInfo();
-        //TODO:测试数据
-        user = new AdminInfo();
-        user.setAdminId(11);
-        //获取配置文件中超级管理员，判断当前登录用户是否为超级管理员,true为超管
-        String[] superAdministrators = superAdministrator.split(",");
-        boolean contains = false;
-        if (user != null && superAdministrators != null) {
-            contains = Arrays.asList(superAdministrators).contains(user.getAdminId().toString());
+        /*判断权限*/
+        Integer operUserId=fuPermissionResourceBO.getOperUserId();
+        if(operUserId==null||operUserId==0){
+            log.error("查询用户列表,用户未登录！");
+            throw new ParameterInvalidException("查询用户列表,获取参数为空！");
         }
-
-        //由于分页组件默认执行startPage的第一个sql，因此提前单独执行
-        List<Integer> porjKeys = null;
-        if (!contains) {
-            //获取用户所管理的工程项目KEY集合
-            porjKeys = permissionUserProjectService.findPorjKeysByUserId(user.getAdminId());
+        Integer operUserProj=userCommonService.getUserProjKey(operUserId);
+        Boolean isProjAdmin=userCommonService.isAdministrator(operUserId,operUserProj);
+        if(operUserProj==null){
+            log.error("查询用户列表,用户权限有误！");
+            throw new ParameterInvalidException("查询用户列表,用户权限有误！");
         }
-
         //设置分页信息
         if (helper == null) {
             helper = new PageInfoHelper();
         }
         Page<FuPermissionResourceVO> resourceVOS =PageHelper.startPage(helper.getPageNo(), helper.getPageSize());
         List<FuPermissionResourceVO> result = Lists.newArrayList();
-        //超级管理员用户查看全部内容，其他用户获取当前有拥有的工程项目
-        if (contains) {
+        if(isProjAdmin&&operUserProj==0){
+            /*超管查询*/
             result = fuPermissionResourceMapper.selectPageList(fuPermissionResourceBO, null);
-        } else {
-            /*if (porjKeys != null && porjKeys.size() > 0) {
-                result = fuPermissionResourceMapper.selectPageList(fuPermissionResourceBO, porjKeys);
-            }*/
-            result = fuPermissionResourceMapper.selectPageList(fuPermissionResourceBO, porjKeys);
+        }else if(isProjAdmin){
+            /*资源组管理员查找*/
+            result = fuPermissionResourceMapper.selectPageList(fuPermissionResourceBO, null);
+        }else {
+            /*普通用户查找*/
+            result = fuPermissionResourceMapper.selectPageList(fuPermissionResourceBO, null);
         }
+
         return resourceVOS;
     }
 
@@ -245,9 +237,9 @@ public class PermissionResourceService extends ServiceImpl<FuPermissionResourceM
         }
         //获取当前登录用户信息
         AdminInfo user = RequestContextHolderUtil.getAdminInfo();
-        //TODO:测试数据
-        user = new AdminInfo();
-        user.setAdminLogin("test");
+        if(user==null){
+            user=new AdminInfo();
+        }
         log.warn("user:{},remove permission resource:[{}]", user.getAdminLogin(), ids);
     }
 

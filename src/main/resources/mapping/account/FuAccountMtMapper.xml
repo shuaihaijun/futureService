@@ -384,10 +384,10 @@
     where
     <trim prefixOverrides="and">
       1 = 1
-      <if test="username != null">
+      <if test="username != null and username !=''">
         and u.username = #{username,jdbcType=VARCHAR}
       </if>
-      <if test="mobile != null">
+      <if test="mobile != null and mobile !=''">
         and u.mobile = #{mobile,jdbcType=VARCHAR}
       </if>
       <if test="userId != null">
@@ -408,10 +408,10 @@
       <if test="accountType != null and  accountType != '' or  accountType == '0'.toString()">
         and acc.account_type = #{accountType,jdbcType=TINYINT}
       </if>
-      <if test="serverName != null">
+      <if test="serverName != null and serverName !=''">
         and  acc.server_name = #{serverName,jdbcType=VARCHAR}
       </if>
-      <if test="brokerName != null">
+      <if test="brokerName != null and brokerName !=''">
         and s.broker_name = #{brokerName,jdbcType=VARCHAR}
       </if>
       <if test="isAccount != null">
