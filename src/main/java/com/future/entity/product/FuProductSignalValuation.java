@@ -28,7 +28,7 @@ public class FuProductSignalValuation {
     /**
      * 评估等级
      */
-    private Byte level;
+    private Integer level;
 
     /**
      * 稳健性
@@ -117,7 +117,7 @@ public class FuProductSignalValuation {
      * 评估等级
      * @return level 评估等级
      */
-    public Byte getLevel() {
+    public Integer getLevel() {
         return level;
     }
 
@@ -125,7 +125,7 @@ public class FuProductSignalValuation {
      * 评估等级
      * @param level 评估等级
      */
-    public void setLevel(Byte level) {
+    public void setLevel(Integer level) {
         this.level = level;
     }
 

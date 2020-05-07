@@ -22,6 +22,9 @@ public class GlobalConstant {
      */
     public static final String CONTENTTYPE_JSON_UTF_8 = "application/json;charset=utf-8";
 
+    /*token time out 时间 2天*/
+    public static final int TOKEN_TIME_OUT=2 * 24 * 3600;
+
     /*magic作为社区跟单唯一标识(必须与trade项目中的key一直)*/
     public static final int ORDER_FOLLOW_MAGIC=20992020;
 

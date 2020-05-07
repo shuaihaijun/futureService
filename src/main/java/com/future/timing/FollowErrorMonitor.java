@@ -76,7 +76,7 @@ public class FollowErrorMonitor {
     /**
      * 跟单错误监听 每小时同步一次
      */
-//    @Scheduled(cron = "0 0 * * * ?")
+    @Scheduled(cron = "0 0 * * * ?")
     public void bakMonitor(){
         /*同步跟单异常订单*/
         long errorSize = redisManager.lGetListSize(RedisConstant.L_ORDER_FOLLOW_ERROR_DATA_BAK);

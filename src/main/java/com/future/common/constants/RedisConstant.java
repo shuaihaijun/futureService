@@ -22,7 +22,7 @@ public class RedisConstant {
 	public static final String L_ORDER_FOLLOW_SIGNAL_ORDER_BAK="tradeOrderFollowSignalOrderBak";
 
 	/*user login token*/
-	public static final String H_USER_LOGIN_TOKEN="userLoginToken";
+	/*public static final String H_USER_LOGIN_TOKEN="userLoginToken";*/
 
 	/*user info*/
 	public static final String H_USER_INFO="userInfo";

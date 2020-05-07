@@ -65,4 +65,44 @@ public class FollowSignalOrderMonitor {
             }
         }
     }
+
+    /**
+     * 跟单订单监听 每分钟同步一次
+     */
+    @Scheduled(cron = "0 0 * * * ?")
+    public void bakMonitor(){
+        /*1、同步处理失败暂存订单*/
+        long orderSize = redisManager.lGetListSize(RedisConstant.L_ORDER_FOLLOW_SIGNAL_ORDER_BAK);
+        log.info("信号源订单信息 处理失败暂存------size:"+orderSize);
+        if(orderSize>0){
+            JSONObject followOrder=new JSONObject();
+            int signalName=0;
+            int orderAction=0;
+            Object signalOrderInfo=redisManager.lPop(RedisConstant.L_ORDER_FOLLOW_SIGNAL_ORDER_BAK);
+            while (signalOrderInfo!=null&&orderSize>0){
+                    try {
+                        log.info("同步信号源订单数据------");
+                        JSONObject orderJson= (JSONObject)signalOrderInfo;
+                        log.info(orderJson.toJSONString());
+                        followOrder=orderJson.getJSONObject("followOrder");
+                        signalName=orderJson.getInteger("signalName");
+                        orderAction=orderJson.getInteger("orderAction");
+                        boolean isSuccess= fuOrderSignalService.saveMonitorOrderData(signalName,orderAction,followOrder);
+                        if(!isSuccess){
+                            log.error("同步跟单订单失败，订单："+JSONObject.toJSONString(signalOrderInfo));
+                            //redis 暂存处理失败数据(暂时未做处理 需要实例化)
+                            redisManager.lSet(RedisConstant.L_ORDER_FOLLOW_SIGNAL_ORDER_BAK,signalOrderInfo);
+                        }
+                    }catch (Exception e){
+                        log.error("同步跟单订单失败，订单："+JSONObject.toJSONString(signalOrderInfo));
+                        //redis 暂存处理失败数据(暂时未做处理 需要实例化)
+                        redisManager.lSet(RedisConstant.L_ORDER_FOLLOW_SIGNAL_ORDER_BAK,signalOrderInfo);
+                        log.error(e.getMessage(),e);
+                    }
+                orderSize--;
+                signalOrderInfo=redisManager.lPop(RedisConstant.L_ORDER_FOLLOW_SIGNAL_ORDER_BAK);
+            }
+        }
+
+    }
 }

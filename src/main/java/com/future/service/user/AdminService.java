@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.future.common.constants.CommonConstant;
+import com.future.common.constants.GlobalConstant;
 import com.future.common.constants.RedisConstant;
 import com.future.common.constants.UserConstant;
 import com.future.common.enums.GlobalResultCode;
@@ -115,7 +116,7 @@ public class AdminService extends ServiceImpl<FuUserMapper,FuUser> {
         RequestContextHolderUtil.setAdminInfo(adminInfo);
         RequestContextHolderUtil.setAdmintoken(token);*/
         /*为了解决跨域问题，把token放到redis中*/
-        redisManager.hset(RedisConstant.H_USER_LOGIN_TOKEN,token,fuUser.getId().toString());
+        redisManager.hsetExpireFirstTime(token,token,fuUser.getId().toString(), GlobalConstant.TOKEN_TIME_OUT);
 
         /*返回数据填充*/
         Map userMap=new HashMap();
@@ -147,10 +148,10 @@ public class AdminService extends ServiceImpl<FuUserMapper,FuUser> {
 
         Map resultMap=new HashMap();
 
-        Object key= redisManager.hget(RedisConstant.H_USER_LOGIN_TOKEN,token);
+        Object key= redisManager.hget(token,token);
         if(ObjectUtils.isEmpty(key)){
             log.error("登录已过期！");
-            throw new BusinessException(GlobalResultCode.RESULE_DATA_NONE);
+            throw new BusinessException(GlobalResultCode.LOGIN_PAST);
         }
         Integer userId = Integer.parseInt(String.valueOf(key));
 
@@ -217,7 +218,7 @@ public class AdminService extends ServiceImpl<FuUserMapper,FuUser> {
         RequestContextHolderUtil.removeAdmintoken();
         /*为了解决跨域问题，把token放到redis中*/
         if(!StringUtils.isEmpty(token)){
-            redisManager.hdel(RedisConstant.H_USER_LOGIN_TOKEN,token);
+            redisManager.del(token);
         }
     }
 
@@ -352,10 +353,10 @@ public class AdminService extends ServiceImpl<FuUserMapper,FuUser> {
         }
         permissionUserRoleService.insert(userRole);
 
-        /*更新缓存*/
+        /*更新缓存*//*
         String token=CommonUtil.getUUID();
-        /*为了解决跨域问题，把token放到redis中*/
-        redisManager.hset(RedisConstant.H_USER_LOGIN_TOKEN,token,newUser.getId().toString());
+        *//*为了解决跨域问题，把token放到redis中*//*
+        redisManager.hset(RedisConstant.H_USER_LOGIN_TOKEN,token,newUser.getId().toString());*/
 
         //*返回数据填充/*
         Map userMap=new HashMap();
@@ -365,7 +366,6 @@ public class AdminService extends ServiceImpl<FuUserMapper,FuUser> {
         userMap.put("realName",fuUser.getRealName());
         userMap.put("userType",fuUser.getUserType());
         userMap.put("userState",fuUser.getUserState());
-        userMap.put("token",token);
 
         registeredInfo.put("code",GlobalResultCode.SUCCESS.code());
         registeredInfo.put("msg",GlobalResultCode.SUCCESS.message());

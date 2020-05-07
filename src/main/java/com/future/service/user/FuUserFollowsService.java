@@ -316,8 +316,8 @@ public class FuUserFollowsService extends ServiceImpl<FuUserFollowsMapper, FuUse
 
         Wrapper<FuUserFollows> followsWrapper=new EntityWrapper<>();
         followsWrapper.eq(FuUserFollows.USER_ID,userId);
-        /*followsWrapper.ne(FuUserFollows.FOLLOW_STATE, FollowConstant.FOLLOW_STATE_DELETE);*/
-        /*followConditon.put(FuUserFollows.SIGNAL_ID,signalId);*/
+        followsWrapper.eq(FuUserFollows.USER_MT_ACC_ID,userMtAccId);
+        /*查询用户 该账户下的跟随关系*/
         List<FuUserFollows> followList= selectList(followsWrapper);
         for (FuUserFollows oldFollows:followList){
             if(!oldFollows.getFollowState().equals(FollowConstant.FOLLOW_STATE_DELETE)){
@@ -335,13 +335,13 @@ public class FuUserFollowsService extends ServiceImpl<FuUserFollowsMapper, FuUse
         }
         if(followNum>=FollowConstant.FOLLOW_MAX_NUM && isNew){
             //当前已经有3个跟单关系 并且还在新增
-            log.error("该用户已跟随3个信号源，已达到跟随上限！");
-            throw new BusinessException("该用户已跟随3个信号源，已达到跟随上限！");
+            log.error("该账户已跟随3个信号源，已达到跟随上限！");
+            throw new BusinessException("该账户已跟随3个信号源，已达到跟随上限！");
         }
         if(followNum>=FollowConstant.FOLLOW_MAX_NUM && isDelete){
             //当前已经有3个跟单关系 并且还在修改废弃的订单
-            log.error("该用户已跟随3个信号源，已达到跟随上限，不可以添加或修改！");
-            throw new BusinessException("该用户已跟随3个信号源，已达到跟随上限，不可以添加或修改！");
+            log.error("该账户已跟随3个信号源，已达到跟随上限，不可以添加或修改！");
+            throw new BusinessException("该账户已跟随3个信号源，已达到跟随上限，不可以添加或修改！");
         }
 
         follows.setUserId(userMTAccountBO.getUserId());

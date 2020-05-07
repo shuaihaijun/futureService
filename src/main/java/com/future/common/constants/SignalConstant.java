@@ -16,6 +16,9 @@ public class SignalConstant {
 	/**信号源状态*/
 	public static final int SIGNAL_APPLY_STATE_UNPASS = 3;
 
-
-
+	/*signalValuation	*/
+	/**信号源默认评级*/
+	public static final int SIGNAL_LEVEL_DEFAULT = 1;
+	/**信号源默认评级分数*/
+	public static final double SIGNAL_SCORE_DEFAULT = 7;
 }

@@ -51,16 +51,11 @@ public class FuTradeOrderService {
         /*判断时间格式*/
         if(nHisTimeFrom==0){
             // 由于时区原因，扩展为8天
-            nHisTimeFrom= (int)DateUtil.getFutureDate(time,-7);
+            nHisTimeFrom= (long)DateUtil.getFutureDate(time,-7);
         }
         if(nHisTimeTo==0){
             // 由于时区原因，扩展为8天
-            nHisTimeTo= (int)DateUtil.getFutureDate(time,1);
-        }
-        //判断日期范围
-        if(nHisTimeTo-nHisTimeFrom>(long)(30 * 24) * 3600000){
-            /*时间超过一个月  改变截止日期*/
-            nHisTimeTo=(int)DateUtil.getFutureDate(nHisTimeFrom,30);
+            nHisTimeTo= (long)DateUtil.getFutureDate(time,1);
         }
         if(String.valueOf(nHisTimeFrom).length()>10){
             nHisTimeFrom=nHisTimeFrom/1000;
@@ -68,6 +63,12 @@ public class FuTradeOrderService {
         if(String.valueOf(nHisTimeTo).length()>10){
             nHisTimeTo=nHisTimeTo/1000;
         }
+        //判断日期范围
+        if(nHisTimeTo-nHisTimeFrom>(long)(30 * 24) * 3600){
+            /*时间超过一个月  改变截止日期*/
+            nHisTimeFrom=(long)nHisTimeTo-(30 * 24) * 3600;
+        }
+
         // 为了提供查询效率，不在新生成clientId 默认查询近一个月的订单
         String url=tradeServerHost+":"+tradeServerPort+ GlobalConstant.TRADE_ORDER_CLOSE_ORDERS;
         Map dataMap=new HashMap();

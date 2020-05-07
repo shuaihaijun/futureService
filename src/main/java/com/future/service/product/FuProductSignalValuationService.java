@@ -9,6 +9,7 @@ import com.future.entity.product.FuProductSignalValuation;
 import com.future.mapper.product.FuProductSignalValuationMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,6 +19,9 @@ public class FuProductSignalValuationService extends ServiceImpl<FuProductSignal
 
 
     Logger log= LoggerFactory.getLogger(FuProductSignalValuationService.class);
+    @Autowired
+    FuProductSignalValuationMapper fuProductSignalValuationMapper;
+
     /**
      * 获取信号源评估信息
      * @param signalId
@@ -34,5 +38,17 @@ public class FuProductSignalValuationService extends ServiceImpl<FuProductSignal
             return null;
         }
         return valuation;
+    }
+
+    /**
+     * 插入
+     * @param signalValuation
+     */
+    public void insertSelective(FuProductSignalValuation signalValuation){
+        if(signalValuation==null||signalValuation.getSignalId()==null){
+            log.error("插入信号源评估信息 信号源ID为空！");
+            throw new ParameterInvalidException(GlobalResultCode.PARAM_NULL_POINTER);
+        }
+        fuProductSignalValuationMapper.insertSelective(signalValuation);
     }
 }

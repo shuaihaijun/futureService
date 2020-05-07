@@ -234,15 +234,15 @@ public class FuOrderSignalService extends ServiceImpl<FuOrderSignalMapper, FuOrd
         orderSignal.setMtServerName(accountMt.getServerName());
 
         orderSignal.setOrderId(followOrder.getString("order"));
-        orderSignal.setOrderLots(followOrder.getBigDecimal("volume").multiply(new BigDecimal(0.01)));
-        orderSignal.setOrderStoploss(followOrder.getBigDecimal("stoploss"));
-        orderSignal.setOrderProfit(followOrder.getBigDecimal("profit"));
-        orderSignal.setOrderMagic(followOrder.getBigDecimal("magic"));
+        orderSignal.setOrderLots(followOrder.getBigDecimal("volume").multiply(new BigDecimal(0.01)).setScale(6,BigDecimal.ROUND_HALF_UP));
+        orderSignal.setOrderStoploss(followOrder.getBigDecimal("stoploss").setScale(6,BigDecimal.ROUND_HALF_UP));
+        orderSignal.setOrderProfit(followOrder.getBigDecimal("profit").setScale(6,BigDecimal.ROUND_HALF_UP));
+        orderSignal.setOrderMagic(followOrder.getBigDecimal("magic").setScale(6,BigDecimal.ROUND_HALF_UP));
         orderSignal.setOrderSymbol(followOrder.getString("symbol"));
 
         orderSignal.setOrderType(followOrder.getInteger("cmd"));
         orderSignal.setOrderOpenDate(DateUtil.toDataFormTimeStamp(followOrder.getLong("open_time")*1000));
-        orderSignal.setOrderOpenPrice(followOrder.getBigDecimal("open_price"));
+        orderSignal.setOrderOpenPrice(followOrder.getBigDecimal("open_price").setScale(6,BigDecimal.ROUND_HALF_UP));
         orderSignal.setOrderExpiration(DateUtil.toDataFormTimeStamp(followOrder.getInteger("expiration")*1000));
 
         orderSignal.setComment(followOrder.getString("comment"));

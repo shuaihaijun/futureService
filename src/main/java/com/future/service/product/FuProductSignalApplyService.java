@@ -22,6 +22,7 @@ import com.future.entity.permission.FuPermissionUserRole;
 import com.future.entity.product.FuProductSignal;
 import com.future.entity.product.FuProductSignalApply;
 import com.future.entity.product.FuProductSignalPermit;
+import com.future.entity.product.FuProductSignalValuation;
 import com.future.entity.user.FuUser;
 import com.future.mapper.product.FuProductSignalApplyMapper;
 import com.future.mapper.product.FuProductSignalMapper;
@@ -80,6 +81,8 @@ public class FuProductSignalApplyService extends ServiceImpl<FuProductSignalAppl
     PermissionProjectService permissionProjectService;
     @Autowired
     FuProductSignalPermitService fuProductSignalPermitService;
+    @Autowired
+    FuProductSignalValuationService fuProductSignalValuationService;
 
 
     /**
@@ -455,6 +458,18 @@ public class FuProductSignalApplyService extends ServiceImpl<FuProductSignalAppl
             permit.setSignalId(newSignals.get(0).getId());
             permit.setProjKey(signal.getProjKey());
             fuProductSignalPermitService.insertSelective(permit);
+
+            /*设置信号源评级*/
+            FuProductSignalValuation valuation=new FuProductSignalValuation();
+            valuation.setSignalId(newSignals.get(0).getId());
+            valuation.setLevel(SignalConstant.SIGNAL_LEVEL_DEFAULT);
+            valuation.setScore(new BigDecimal(SignalConstant.SIGNAL_SCORE_DEFAULT));
+            valuation.setFundSizeScore(new BigDecimal(SignalConstant.SIGNAL_SCORE_DEFAULT));
+            valuation.setNonFlukeProfitScore(new BigDecimal(SignalConstant.SIGNAL_SCORE_DEFAULT));
+            valuation.setProfitScore(new BigDecimal(SignalConstant.SIGNAL_SCORE_DEFAULT));
+            valuation.setRiskControlScore(new BigDecimal(SignalConstant.SIGNAL_SCORE_DEFAULT));
+            valuation.setSteadyScore(new BigDecimal(SignalConstant.SIGNAL_SCORE_DEFAULT));
+            fuProductSignalValuationService.insertSelective(valuation);
 
             signalApply.setApplyState(SignalConstant.SIGNAL_APPLY_STATE_NORMAL);
 

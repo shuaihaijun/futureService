@@ -454,7 +454,7 @@ public class FuOrderFollowInfoService extends ServiceImpl<FuOrderFollowInfoMappe
                 wrapper.lt(FuOrderFollowInfo.ORDER_CLOSE_DATE,dateList.get(1));
             }
         }
-
+        wrapper.orderBy("id desc");
         if(helper==null){
             helper=new PageInfoHelper();
         }

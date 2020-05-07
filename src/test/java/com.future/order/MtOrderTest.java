@@ -1,11 +1,13 @@
 package com.future.order;
 
 
+import com.alibaba.fastjson.JSONArray;
 import com.future.TestDemoAccount;
 import com.future.common.util.DateUtil;
 import com.future.entity.order.FuOrderFollowInfo;
 import com.future.service.bak.BakMTOrderService;
 import com.future.service.order.FuOrderFollowInfoService;
+import com.future.service.trade.FuTradeOrderService;
 import com.jfx.SelectionPool;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -26,6 +28,8 @@ public class MtOrderTest {
     BakMTOrderService bakMtOrderService;
     @Autowired
     FuOrderFollowInfoService fuOrderInfoService;
+    @Autowired
+    FuTradeOrderService fuTradeOrderService;
 
     @Test
     public void testGetHistoryOrder(){
@@ -51,5 +55,11 @@ public class MtOrderTest {
         int nThreadHisTimeTo =(int)(new Date().getTime()/1000);
         System.out.println(nThreadHisTimeFrom);
         System.out.println(nThreadHisTimeTo);
+    }
+
+    @Test
+    public void getUserCloseOrders(){
+        JSONArray orders= fuTradeOrderService.getUserCloseOrders("server",123,"password",1583574140,0);
+        System.out.println(orders.toString());
     }
 }

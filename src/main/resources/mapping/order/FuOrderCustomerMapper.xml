@@ -368,6 +368,9 @@
     <if test="userId != null">
       and u.id = #{userId,jdbcType=INTEGER}
     </if>
+    <if test="mtAccId != null">
+      and o.mt_acc_id = #{mtAccId,jdbcType=INTEGER}
+    </if>
     ORDER BY
     order_close_date desc
     LIMIT 0,1

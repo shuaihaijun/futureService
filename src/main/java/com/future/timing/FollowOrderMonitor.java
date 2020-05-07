@@ -75,7 +75,7 @@ public class FollowOrderMonitor {
     /**
      * 跟单订单监听 每分钟同步一次
      */
-//    @Scheduled(cron = "0 0 * * * ?")
+    @Scheduled(cron = "0 0 * * * ?")
     public void bakMonitor(){
         /*1、同步跟单成功订单*/
         long orderSize = redisManager.lGetListSize(RedisConstant.L_ORDER_FOLLOW_ORDERS_BAK);

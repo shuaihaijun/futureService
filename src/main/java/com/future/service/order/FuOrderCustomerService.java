@@ -67,7 +67,7 @@ public class FuOrderCustomerService extends ServiceImpl<FuOrderCustomerMapper, F
      * @param username
      * @return
      */
-    public FuOrderCustomer getLastCustomerOrder(Integer userId,String username){
+    public FuOrderCustomer getLastCustomerOrder(Integer userId,String username,String mtAccId){
         /*校验username*/
         if((userId==null ||userId==0)&& StringUtils.isEmpty(username)){
             log.error("查询 用户已同步最后的自如交易订单，传入用户信息为空！");
@@ -79,6 +79,9 @@ public class FuOrderCustomerService extends ServiceImpl<FuOrderCustomerMapper, F
         }
         if(StringUtils.isEmpty(username)){
             condition.put("username",username);
+        }
+        if(StringUtils.isEmpty(mtAccId)){
+            condition.put("mtAccId",mtAccId);
         }
         /*从数据库表 fuOrderCustomer中，查出最新自主交易订单*/
         return fuOrderCustomerMapper.getLastCustomerOrder(condition);
@@ -109,8 +112,8 @@ public class FuOrderCustomerService extends ServiceImpl<FuOrderCustomerMapper, F
             log.error("用户"+username+"信息未绑定");
             return;
         }
-        /*获取用户最后自主交易订单（社区内）*/
-        FuOrderCustomer lastOrder=getLastCustomerOrder(userId,username);
+        /*获取用户最后自主交易订单（社区内）  以用户为单位*/
+        FuOrderCustomer lastOrder=getLastCustomerOrder(userId,username,null);
         /*根据闭单时间处理*/
         Date lastCLostTime=null;
         if(!ObjectUtils.isEmpty(lastOrder)){
@@ -139,8 +142,6 @@ public class FuOrderCustomerService extends ServiceImpl<FuOrderCustomerMapper, F
                 password=String.valueOf(userMTAccountBO.getMtPasswordWatch());
                 userId=Integer.valueOf(userMTAccountBO.getUserId());
                 mtAccId=String.valueOf(userMTAccountBO.getMtAccId());
-                conditionMap.clear();
-                conditionMap.put("userId",userId);
 
                 if(StringUtils.isEmpty(server)){
                     log.error("根据时间段 查询用户历史订单，用户MT4账户信息有误！");
@@ -148,14 +149,14 @@ public class FuOrderCustomerService extends ServiceImpl<FuOrderCustomerMapper, F
                 }
                 JSONArray orders= fuTradeOrderService.getUserCloseOrders(server,Integer.parseInt(mtAccId),password,lastCLostTime.getTime(),0);
                 if(orders==null||orders.size()==0){
-                    return;
+                    continue;
                 }
                 /*只同步已完成的订单*/
                 selectOrdercustomers=ConvertUtil.convertOrderCustomers(orders);
 
                 /*处理订单*/
                 if(ObjectUtils.isEmpty(selectOrdercustomers)) {
-                    return;
+                    continue;
                 }
                 for(FuOrderCustomer customer:selectOrdercustomers){
                     /*判断是否是初始化数据*/
