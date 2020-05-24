@@ -18,19 +18,19 @@
             <property name="forceBigDecimals" value="false"/>
         </javaTypeResolver>
         <!-- 生成模型的包名和位置-->
-        <javaModelGenerator targetPackage="com.future.entity.product" targetProject="src/main/java">
+        <javaModelGenerator targetPackage="com.future.entity.com" targetProject="src/main/java">
             <property name="enableSubPackages" value="true"/>
             <property name="trimStrings" value="true"/>
         </javaModelGenerator>
         <!-- 生成映射文件的包名和位置-->
-        <sqlMapGenerator targetPackage="mapping.product" targetProject="src/main/resources">
+        <sqlMapGenerator targetPackage="mapping.com" targetProject="src/main/resources">
             <property name="enableSubPackages" value="true"/>
         </sqlMapGenerator>
         <!-- 生成DAO的包名和位置-->
-        <javaClientGenerator type="XMLMAPPER" targetPackage="com.future.mapper.product" targetProject="src/main/java">
+        <javaClientGenerator type="XMLMAPPER" targetPackage="com.future.mapper.com" targetProject="src/main/java">
             <property name="enableSubPackages" value="true"/>
         </javaClientGenerator>
         <!--<!- 要生成的表 tableName是数据库中的表名或视图名 domainObjectName是实体类名&ndash;&gt;-->
-        <table tableName="fu_product_signal_apply" domainObjectName="FuProductSignalApply" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>
+        <table tableName="fu_com_net" domainObjectName="FuComNet" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>
     </context>
 </generatorConfiguration>

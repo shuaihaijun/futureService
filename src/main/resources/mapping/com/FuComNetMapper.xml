@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.future.mapper.com.FuComNetMapper">
+  <resultMap id="BaseResultMap" type="com.future.entity.com.FuComNet">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="own_type" jdbcType="TINYINT" property="ownType" />
+    <result column="use_id" jdbcType="INTEGER" property="useId" />
+    <result column="net_type" jdbcType="TINYINT" property="netType" />
+    <result column="net_desc" jdbcType="VARCHAR" property="netDesc" />
+    <result column="net_url" jdbcType="VARCHAR" property="netUrl" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, own_type, use_id, net_type, net_desc, net_url
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from fu_com_net
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from fu_com_net
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.future.entity.com.FuComNet">
+    insert into fu_com_net (id, own_type, use_id, 
+      net_type, net_desc, net_url
+      )
+    values (#{id,jdbcType=INTEGER}, #{ownType,jdbcType=TINYINT}, #{useId,jdbcType=INTEGER}, 
+      #{netType,jdbcType=TINYINT}, #{netDesc,jdbcType=VARCHAR}, #{netUrl,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.future.entity.com.FuComNet">
+    insert into fu_com_net
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="ownType != null">
+        own_type,
+      </if>
+      <if test="useId != null">
+        use_id,
+      </if>
+      <if test="netType != null">
+        net_type,
+      </if>
+      <if test="netDesc != null">
+        net_desc,
+      </if>
+      <if test="netUrl != null">
+        net_url,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="ownType != null">
+        #{ownType,jdbcType=TINYINT},
+      </if>
+      <if test="useId != null">
+        #{useId,jdbcType=INTEGER},
+      </if>
+      <if test="netType != null">
+        #{netType,jdbcType=TINYINT},
+      </if>
+      <if test="netDesc != null">
+        #{netDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="netUrl != null">
+        #{netUrl,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.future.entity.com.FuComNet">
+    update fu_com_net
+    <set>
+      <if test="ownType != null">
+        own_type = #{ownType,jdbcType=TINYINT},
+      </if>
+      <if test="useId != null">
+        use_id = #{useId,jdbcType=INTEGER},
+      </if>
+      <if test="netType != null">
+        net_type = #{netType,jdbcType=TINYINT},
+      </if>
+      <if test="netDesc != null">
+        net_desc = #{netDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="netUrl != null">
+        net_url = #{netUrl,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.future.entity.com.FuComNet">
+    update fu_com_net
+    set own_type = #{ownType,jdbcType=TINYINT},
+      use_id = #{useId,jdbcType=INTEGER},
+      net_type = #{netType,jdbcType=TINYINT},
+      net_desc = #{netDesc,jdbcType=VARCHAR},
+      net_url = #{netUrl,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

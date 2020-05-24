@@ -1,14 +1,10 @@
 package com.future.entity.permission;
 
 import com.baomidou.mybatisplus.annotations.TableId;
-import com.baomidou.mybatisplus.annotations.TableName;
 import com.baomidou.mybatisplus.enums.IdType;
-import io.swagger.annotations.ApiModel;
 
 import java.util.Date;
 
-@ApiModel("工程项目信息实体类")
-@TableName("fu_permission_project")
 public class FuPermissionProject {
 
     public static final String PROJ_ID = "Id";
@@ -36,14 +32,29 @@ public class FuPermissionProject {
     private String projAdmin;
 
     /**
-     * 项目工程状态 1有效 0无效
-     */
-    private Integer projStatus;
-
-    /**
      * 类型(0 团队,1 平台,2 系统)
      */
     private Integer projType;
+
+    /**
+     * 项目工程logo
+     */
+    private String projLogo;
+
+    /**
+     * 项目工程标语
+     */
+    private String projSlogan;
+
+    /**
+     * 项目工程描述
+     */
+    private String projDesc;
+
+    /**
+     * 项目工程状态 1有效 0无效
+     */
+    private Integer projStatus;
 
     /**
      * 创建人姓名
@@ -61,19 +72,59 @@ public class FuPermissionProject {
     private Date modifyDate;
 
     /**
-     * 项目工程logo
+     * crm域名
      */
-    private String projLogo;
+    private String projCrmRealm;
 
     /**
-     * 项目工程标语
+     * 官网域名
      */
-    private String projSlogan;
+    private String projOfficialRealm;
 
     /**
-     * 项目工程描述
+     * 品牌名称
      */
-    private String projDesc;
+    private String projBrandName;
+
+    /**
+     * 品牌描述
+     */
+    private String projBrandDesc;
+
+    /**
+     * 地址
+     */
+    private String projDress;
+
+    /**
+     * 项目工程logo_top
+     */
+    private String projLogoTop;
+
+    /**
+     * 项目工程logo_down
+     */
+    private String projLogoDown;
+
+    /**
+     * 二维码
+     */
+    private String projTwoCode;
+
+    /**
+     * 电话
+     */
+    private String projPhone;
+
+    /**
+     * qq号码
+     */
+    private String projQq;
+
+    /**
+     * 邮箱
+     */
+    private String projEmail;
 
     /**
      * 主键
@@ -140,22 +191,6 @@ public class FuPermissionProject {
     }
 
     /**
-     * 项目工程状态 1有效 0无效
-     * @return proj_status 项目工程状态 1有效 0无效
-     */
-    public Integer getProjStatus() {
-        return projStatus;
-    }
-
-    /**
-     * 项目工程状态 1有效 0无效
-     * @param projStatus 项目工程状态 1有效 0无效
-     */
-    public void setProjStatus(Integer projStatus) {
-        this.projStatus = projStatus;
-    }
-
-    /**
      * 类型(0 团队,1 平台,2 系统)
      * @return proj_type 类型(0 团队,1 平台,2 系统)
      */
@@ -169,6 +204,70 @@ public class FuPermissionProject {
      */
     public void setProjType(Integer projType) {
         this.projType = projType;
+    }
+
+    /**
+     * 项目工程logo
+     * @return proj_logo 项目工程logo
+     */
+    public String getProjLogo() {
+        return projLogo;
+    }
+
+    /**
+     * 项目工程logo
+     * @param projLogo 项目工程logo
+     */
+    public void setProjLogo(String projLogo) {
+        this.projLogo = projLogo == null ? null : projLogo.trim();
+    }
+
+    /**
+     * 项目工程标语
+     * @return proj_slogan 项目工程标语
+     */
+    public String getProjSlogan() {
+        return projSlogan;
+    }
+
+    /**
+     * 项目工程标语
+     * @param projSlogan 项目工程标语
+     */
+    public void setProjSlogan(String projSlogan) {
+        this.projSlogan = projSlogan == null ? null : projSlogan.trim();
+    }
+
+    /**
+     * 项目工程描述
+     * @return proj_desc 项目工程描述
+     */
+    public String getProjDesc() {
+        return projDesc;
+    }
+
+    /**
+     * 项目工程描述
+     * @param projDesc 项目工程描述
+     */
+    public void setProjDesc(String projDesc) {
+        this.projDesc = projDesc == null ? null : projDesc.trim();
+    }
+
+    /**
+     * 项目工程状态 1有效 0无效
+     * @return proj_status 项目工程状态 1有效 0无效
+     */
+    public Integer getProjStatus() {
+        return projStatus;
+    }
+
+    /**
+     * 项目工程状态 1有效 0无效
+     * @param projStatus 项目工程状态 1有效 0无效
+     */
+    public void setProjStatus(Integer projStatus) {
+        this.projStatus = projStatus;
     }
 
     /**
@@ -220,50 +319,178 @@ public class FuPermissionProject {
     }
 
     /**
-     * 项目工程logo
-     * @return proj_logo 项目工程logo
+     * crm域名
+     * @return proj_crm_realm crm域名
      */
-    public String getProjLogo() {
-        return projLogo;
+    public String getProjCrmRealm() {
+        return projCrmRealm;
     }
 
     /**
-     * 项目工程logo
-     * @param projLogo 项目工程logo
+     * crm域名
+     * @param projCrmRealm crm域名
      */
-    public void setProjLogo(String projLogo) {
-        this.projLogo = projLogo == null ? null : projLogo.trim();
+    public void setProjCrmRealm(String projCrmRealm) {
+        this.projCrmRealm = projCrmRealm == null ? null : projCrmRealm.trim();
     }
 
     /**
-     * 项目工程标语
-     * @return proj_slogan 项目工程标语
+     * 官网域名
+     * @return proj_official_realm 官网域名
      */
-    public String getProjSlogan() {
-        return projSlogan;
+    public String getProjOfficialRealm() {
+        return projOfficialRealm;
     }
 
     /**
-     * 项目工程标语
-     * @param projSlogan 项目工程标语
+     * 官网域名
+     * @param projOfficialRealm 官网域名
      */
-    public void setProjSlogan(String projSlogan) {
-        this.projSlogan = projSlogan == null ? null : projSlogan.trim();
+    public void setProjOfficialRealm(String projOfficialRealm) {
+        this.projOfficialRealm = projOfficialRealm == null ? null : projOfficialRealm.trim();
     }
 
     /**
-     * 项目工程描述
-     * @return proj_desc 项目工程描述
+     * 品牌名称
+     * @return proj_brand_name 品牌名称
      */
-    public String getProjDesc() {
-        return projDesc;
+    public String getProjBrandName() {
+        return projBrandName;
     }
 
     /**
-     * 项目工程描述
-     * @param projDesc 项目工程描述
+     * 品牌名称
+     * @param projBrandName 品牌名称
      */
-    public void setProjDesc(String projDesc) {
-        this.projDesc = projDesc == null ? null : projDesc.trim();
+    public void setProjBrandName(String projBrandName) {
+        this.projBrandName = projBrandName == null ? null : projBrandName.trim();
+    }
+
+    /**
+     * 品牌描述
+     * @return proj_brand_desc 品牌描述
+     */
+    public String getProjBrandDesc() {
+        return projBrandDesc;
+    }
+
+    /**
+     * 品牌描述
+     * @param projBrandDesc 品牌描述
+     */
+    public void setProjBrandDesc(String projBrandDesc) {
+        this.projBrandDesc = projBrandDesc == null ? null : projBrandDesc.trim();
+    }
+
+    /**
+     * 地址
+     * @return proj_dress 地址
+     */
+    public String getProjDress() {
+        return projDress;
+    }
+
+    /**
+     * 地址
+     * @param projDress 地址
+     */
+    public void setProjDress(String projDress) {
+        this.projDress = projDress == null ? null : projDress.trim();
+    }
+
+    /**
+     * 项目工程logo_top
+     * @return proj_logo_top 项目工程logo_top
+     */
+    public String getProjLogoTop() {
+        return projLogoTop;
+    }
+
+    /**
+     * 项目工程logo_top
+     * @param projLogoTop 项目工程logo_top
+     */
+    public void setProjLogoTop(String projLogoTop) {
+        this.projLogoTop = projLogoTop == null ? null : projLogoTop.trim();
+    }
+
+    /**
+     * 项目工程logo_down
+     * @return proj_logo_down 项目工程logo_down
+     */
+    public String getProjLogoDown() {
+        return projLogoDown;
+    }
+
+    /**
+     * 项目工程logo_down
+     * @param projLogoDown 项目工程logo_down
+     */
+    public void setProjLogoDown(String projLogoDown) {
+        this.projLogoDown = projLogoDown == null ? null : projLogoDown.trim();
+    }
+
+    /**
+     * 二维码
+     * @return proj_two_code 二维码
+     */
+    public String getProjTwoCode() {
+        return projTwoCode;
+    }
+
+    /**
+     * 二维码
+     * @param projTwoCode 二维码
+     */
+    public void setProjTwoCode(String projTwoCode) {
+        this.projTwoCode = projTwoCode == null ? null : projTwoCode.trim();
+    }
+
+    /**
+     * 电话
+     * @return proj_phone 电话
+     */
+    public String getProjPhone() {
+        return projPhone;
+    }
+
+    /**
+     * 电话
+     * @param projPhone 电话
+     */
+    public void setProjPhone(String projPhone) {
+        this.projPhone = projPhone == null ? null : projPhone.trim();
+    }
+
+    /**
+     * qq号码
+     * @return proj_qq qq号码
+     */
+    public String getProjQq() {
+        return projQq;
+    }
+
+    /**
+     * qq号码
+     * @param projQq qq号码
+     */
+    public void setProjQq(String projQq) {
+        this.projQq = projQq == null ? null : projQq.trim();
+    }
+
+    /**
+     * 邮箱
+     * @return proj_email 邮箱
+     */
+    public String getProjEmail() {
+        return projEmail;
+    }
+
+    /**
+     * 邮箱
+     * @param projEmail 邮箱
+     */
+    public void setProjEmail(String projEmail) {
+        this.projEmail = projEmail == null ? null : projEmail.trim();
     }
 }

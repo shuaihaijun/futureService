@@ -2,6 +2,7 @@ package com.future.service.permission;
 
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.pagination.PageHelper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.future.common.constants.CommonConstant;
@@ -11,9 +12,11 @@ import com.future.common.exception.BusinessException;
 import com.future.common.exception.RmsrException;
 import com.future.common.helper.PageInfoHelper;
 import com.future.common.util.*;
+import com.future.entity.com.FuComNet;
 import com.future.entity.permission.FuPermissionAdmin;
 import com.future.entity.permission.FuPermissionProject;
 import com.future.entity.permission.FuPermissionRoleResource;
+import com.future.mapper.com.FuComNetMapper;
 import com.future.mapper.permission.FuPermissionAdminMapper;
 import com.future.mapper.permission.FuPermissionProjectMapper;
 import com.future.pojo.bo.AdminInfo;
@@ -54,6 +57,8 @@ public class PermissionProjectService extends ServiceImpl<FuPermissionProjectMap
     private PermissionUserProjectService permissionUserProjectService;
     @Autowired
     private FuPermissionAdminMapper fuPermissionAdminMapper;
+    @Autowired
+    FuComNetMapper fuComNetMapper;
 
     /**
      * 注入超级管理员数据
@@ -336,6 +341,43 @@ public class PermissionProjectService extends ServiceImpl<FuPermissionProjectMap
      */
     public Map<Integer, FuPermissionProject> findAllProj() {
         return fuPermissionProjectMapper.selectAllProjet();
+    }
+
+    /**
+     * 根据条件查询项目链接信息
+     * @param condition
+     * @return
+     */
+    public List<FuComNet> queryComNetByCondition(Map condition){
+        //验证必要参数值是否为空
+        if (condition == null) {
+            throw new BusinessException(GlobalResultCode.PARAM_NULL_POINTER);
+        }
+        Wrapper<FuComNet> wrapper = new EntityWrapper<>();
+        if(!ObjectUtils.isEmpty(condition.get("userId"))){
+            // 使用用户id进行查找
+            Integer userId=Integer.parseInt(String.valueOf(condition.get("userId")));
+            List<Integer> prokeys= permissionUserProjectService.findPorjKeysByUserId(userId);
+            if(prokeys==null||prokeys.size()==0){
+                throw new BusinessException(GlobalResultCode.RESULE_DATA_NONE);
+            }
+            wrapper.eq(FuComNet.USE_ID,prokeys.get(0));
+
+        }
+        if(!ObjectUtils.isEmpty(condition.get("projKey"))){
+            wrapper.eq(FuComNet.USE_ID,String.valueOf(condition.get("projKey")));
+        }
+        if(!ObjectUtils.isEmpty(condition.get("ownType"))){
+            wrapper.eq(FuComNet.OWN_TYPE,String.valueOf(condition.get("ownType")));
+        }
+        if(!ObjectUtils.isEmpty(condition.get("netType"))){
+            wrapper.eq(FuComNet.NET_TYPE,String.valueOf(condition.get("netType")));
+        }
+        List<FuComNet> nets = fuComNetMapper.selectList(wrapper);
+        if (nets == null) {
+            throw new BusinessException(GlobalResultCode.RESULE_DATA_NONE);
+        }
+        return nets;
     }
 
 }

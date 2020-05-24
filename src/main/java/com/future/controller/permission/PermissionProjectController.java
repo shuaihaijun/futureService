@@ -2,6 +2,7 @@ package com.future.controller.permission;
 
 
 import com.future.common.helper.PageInfoHelper;
+import com.future.entity.com.FuComNet;
 import com.future.entity.permission.FuPermissionProject;
 import com.future.pojo.bo.BasicBO;
 import com.future.common.result.RequestParams;
@@ -128,5 +129,18 @@ public class PermissionProjectController {
         Map permissionProject = requestParams.getParams();
         FuPermissionProject project = permissionProjectService.findProject(permissionProject);
         return project;
+    }
+
+
+    /**
+     * 查询工程项目中的链接信息
+     * @param requestParams
+     * @return
+     */
+    @ApiOperation(value = "查询工程项目中的链接信息", notes = "工程项目信息详情查询")
+    @PostMapping(value = "/queryComNetByCondition")
+    public List<FuComNet> queryComNetByCondition(@RequestBody RequestParams<Map> requestParams) throws Exception {
+        Map permissionProject = requestParams.getParams();
+        return permissionProjectService.queryComNetByCondition(permissionProject);
     }
 }

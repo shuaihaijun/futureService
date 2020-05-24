@@ -6,18 +6,31 @@
     <result column="proj_name" jdbcType="VARCHAR" property="projName" />
     <result column="proj_key" jdbcType="INTEGER" property="projKey" />
     <result column="proj_admin" jdbcType="VARCHAR" property="projAdmin" />
-    <result column="proj_status" jdbcType="TINYINT" property="projStatus" />
     <result column="proj_type" jdbcType="TINYINT" property="projType" />
-    <result column="creater" jdbcType="VARCHAR" property="creater" />
-    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
-    <result column="modify_date" jdbcType="TIMESTAMP" property="modifyDate" />
     <result column="proj_logo" jdbcType="VARCHAR" property="projLogo" />
     <result column="proj_slogan" jdbcType="VARCHAR" property="projSlogan" />
     <result column="proj_desc" jdbcType="VARCHAR" property="projDesc" />
+    <result column="proj_status" jdbcType="TINYINT" property="projStatus" />
+    <result column="creater" jdbcType="VARCHAR" property="creater" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="modify_date" jdbcType="TIMESTAMP" property="modifyDate" />
+    <result column="proj_crm_realm" jdbcType="VARCHAR" property="projCrmRealm" />
+    <result column="proj_official_realm" jdbcType="VARCHAR" property="projOfficialRealm" />
+    <result column="proj_brand_name" jdbcType="VARCHAR" property="projBrandName" />
+    <result column="proj_brand_desc" jdbcType="VARCHAR" property="projBrandDesc" />
+    <result column="proj_dress" jdbcType="VARCHAR" property="projDress" />
+    <result column="proj_logo_top" jdbcType="VARCHAR" property="projLogoTop" />
+    <result column="proj_logo_down" jdbcType="VARCHAR" property="projLogoDown" />
+    <result column="proj_two_code" jdbcType="VARCHAR" property="projTwoCode" />
+    <result column="proj_phone" jdbcType="VARCHAR" property="projPhone" />
+    <result column="proj_qq" jdbcType="VARCHAR" property="projQq" />
+    <result column="proj_email" jdbcType="VARCHAR" property="projEmail" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, proj_name, proj_key, proj_admin, proj_status, proj_type, creater, create_date, 
-    modify_date, proj_logo, proj_slogan, proj_desc
+    id, proj_name, proj_key, proj_admin, proj_type, proj_logo, proj_slogan, proj_desc, 
+    proj_status, creater, create_date, modify_date, proj_crm_realm, proj_official_realm, 
+    proj_brand_name, proj_brand_desc, proj_dress, proj_logo_top, proj_logo_down, proj_two_code, 
+    proj_phone, proj_qq, proj_email
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -31,15 +44,21 @@
   </delete>
   <insert id="insert" parameterType="com.future.entity.permission.FuPermissionProject">
     insert into fu_permission_project (id, proj_name, proj_key, 
-      proj_admin, proj_status, proj_type, 
+      proj_admin, proj_type, proj_logo, 
+      proj_slogan, proj_desc, proj_status, 
       creater, create_date, modify_date, 
-      proj_logo, proj_slogan, proj_desc
-      )
+      proj_crm_realm, proj_official_realm, proj_brand_name, 
+      proj_brand_desc, proj_dress, proj_logo_top, 
+      proj_logo_down, proj_two_code, proj_phone, 
+      proj_qq, proj_email)
     values (#{id,jdbcType=INTEGER}, #{projName,jdbcType=VARCHAR}, #{projKey,jdbcType=INTEGER}, 
-      #{projAdmin,jdbcType=VARCHAR}, #{projStatus,jdbcType=TINYINT}, #{projType,jdbcType=TINYINT}, 
+      #{projAdmin,jdbcType=VARCHAR}, #{projType,jdbcType=TINYINT}, #{projLogo,jdbcType=VARCHAR}, 
+      #{projSlogan,jdbcType=VARCHAR}, #{projDesc,jdbcType=VARCHAR}, #{projStatus,jdbcType=TINYINT}, 
       #{creater,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, #{modifyDate,jdbcType=TIMESTAMP}, 
-      #{projLogo,jdbcType=VARCHAR}, #{projSlogan,jdbcType=VARCHAR}, #{projDesc,jdbcType=VARCHAR}
-      )
+      #{projCrmRealm,jdbcType=VARCHAR}, #{projOfficialRealm,jdbcType=VARCHAR}, #{projBrandName,jdbcType=VARCHAR}, 
+      #{projBrandDesc,jdbcType=VARCHAR}, #{projDress,jdbcType=VARCHAR}, #{projLogoTop,jdbcType=VARCHAR}, 
+      #{projLogoDown,jdbcType=VARCHAR}, #{projTwoCode,jdbcType=VARCHAR}, #{projPhone,jdbcType=VARCHAR}, 
+      #{projQq,jdbcType=VARCHAR}, #{projEmail,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.future.entity.permission.FuPermissionProject">
     insert into fu_permission_project
@@ -56,11 +75,20 @@
       <if test="projAdmin != null">
         proj_admin,
       </if>
-      <if test="projStatus != null">
-        proj_status,
-      </if>
       <if test="projType != null">
         proj_type,
+      </if>
+      <if test="projLogo != null">
+        proj_logo,
+      </if>
+      <if test="projSlogan != null">
+        proj_slogan,
+      </if>
+      <if test="projDesc != null">
+        proj_desc,
+      </if>
+      <if test="projStatus != null">
+        proj_status,
       </if>
       <if test="creater != null">
         creater,
@@ -71,14 +99,38 @@
       <if test="modifyDate != null">
         modify_date,
       </if>
-      <if test="projLogo != null">
-        proj_logo,
+      <if test="projCrmRealm != null">
+        proj_crm_realm,
       </if>
-      <if test="projSlogan != null">
-        proj_slogan,
+      <if test="projOfficialRealm != null">
+        proj_official_realm,
       </if>
-      <if test="projDesc != null">
-        proj_desc,
+      <if test="projBrandName != null">
+        proj_brand_name,
+      </if>
+      <if test="projBrandDesc != null">
+        proj_brand_desc,
+      </if>
+      <if test="projDress != null">
+        proj_dress,
+      </if>
+      <if test="projLogoTop != null">
+        proj_logo_top,
+      </if>
+      <if test="projLogoDown != null">
+        proj_logo_down,
+      </if>
+      <if test="projTwoCode != null">
+        proj_two_code,
+      </if>
+      <if test="projPhone != null">
+        proj_phone,
+      </if>
+      <if test="projQq != null">
+        proj_qq,
+      </if>
+      <if test="projEmail != null">
+        proj_email,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -94,11 +146,20 @@
       <if test="projAdmin != null">
         #{projAdmin,jdbcType=VARCHAR},
       </if>
-      <if test="projStatus != null">
-        #{projStatus,jdbcType=TINYINT},
-      </if>
       <if test="projType != null">
         #{projType,jdbcType=TINYINT},
+      </if>
+      <if test="projLogo != null">
+        #{projLogo,jdbcType=VARCHAR},
+      </if>
+      <if test="projSlogan != null">
+        #{projSlogan,jdbcType=VARCHAR},
+      </if>
+      <if test="projDesc != null">
+        #{projDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="projStatus != null">
+        #{projStatus,jdbcType=TINYINT},
       </if>
       <if test="creater != null">
         #{creater,jdbcType=VARCHAR},
@@ -109,14 +170,38 @@
       <if test="modifyDate != null">
         #{modifyDate,jdbcType=TIMESTAMP},
       </if>
-      <if test="projLogo != null">
-        #{projLogo,jdbcType=VARCHAR},
+      <if test="projCrmRealm != null">
+        #{projCrmRealm,jdbcType=VARCHAR},
       </if>
-      <if test="projSlogan != null">
-        #{projSlogan,jdbcType=VARCHAR},
+      <if test="projOfficialRealm != null">
+        #{projOfficialRealm,jdbcType=VARCHAR},
       </if>
-      <if test="projDesc != null">
-        #{projDesc,jdbcType=VARCHAR},
+      <if test="projBrandName != null">
+        #{projBrandName,jdbcType=VARCHAR},
+      </if>
+      <if test="projBrandDesc != null">
+        #{projBrandDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="projDress != null">
+        #{projDress,jdbcType=VARCHAR},
+      </if>
+      <if test="projLogoTop != null">
+        #{projLogoTop,jdbcType=VARCHAR},
+      </if>
+      <if test="projLogoDown != null">
+        #{projLogoDown,jdbcType=VARCHAR},
+      </if>
+      <if test="projTwoCode != null">
+        #{projTwoCode,jdbcType=VARCHAR},
+      </if>
+      <if test="projPhone != null">
+        #{projPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="projQq != null">
+        #{projQq,jdbcType=VARCHAR},
+      </if>
+      <if test="projEmail != null">
+        #{projEmail,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -132,20 +217,8 @@
       <if test="projAdmin != null">
         proj_admin = #{projAdmin,jdbcType=VARCHAR},
       </if>
-      <if test="projStatus != null">
-        proj_status = #{projStatus,jdbcType=TINYINT},
-      </if>
       <if test="projType != null">
         proj_type = #{projType,jdbcType=TINYINT},
-      </if>
-      <if test="creater != null">
-        creater = #{creater,jdbcType=VARCHAR},
-      </if>
-      <if test="createDate != null">
-        create_date = #{createDate,jdbcType=TIMESTAMP},
-      </if>
-      <if test="modifyDate != null">
-        modify_date = #{modifyDate,jdbcType=TIMESTAMP},
       </if>
       <if test="projLogo != null">
         proj_logo = #{projLogo,jdbcType=VARCHAR},
@@ -156,6 +229,51 @@
       <if test="projDesc != null">
         proj_desc = #{projDesc,jdbcType=VARCHAR},
       </if>
+      <if test="projStatus != null">
+        proj_status = #{projStatus,jdbcType=TINYINT},
+      </if>
+      <if test="creater != null">
+        creater = #{creater,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null">
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyDate != null">
+        modify_date = #{modifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="projCrmRealm != null">
+        proj_crm_realm = #{projCrmRealm,jdbcType=VARCHAR},
+      </if>
+      <if test="projOfficialRealm != null">
+        proj_official_realm = #{projOfficialRealm,jdbcType=VARCHAR},
+      </if>
+      <if test="projBrandName != null">
+        proj_brand_name = #{projBrandName,jdbcType=VARCHAR},
+      </if>
+      <if test="projBrandDesc != null">
+        proj_brand_desc = #{projBrandDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="projDress != null">
+        proj_dress = #{projDress,jdbcType=VARCHAR},
+      </if>
+      <if test="projLogoTop != null">
+        proj_logo_top = #{projLogoTop,jdbcType=VARCHAR},
+      </if>
+      <if test="projLogoDown != null">
+        proj_logo_down = #{projLogoDown,jdbcType=VARCHAR},
+      </if>
+      <if test="projTwoCode != null">
+        proj_two_code = #{projTwoCode,jdbcType=VARCHAR},
+      </if>
+      <if test="projPhone != null">
+        proj_phone = #{projPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="projQq != null">
+        proj_qq = #{projQq,jdbcType=VARCHAR},
+      </if>
+      <if test="projEmail != null">
+        proj_email = #{projEmail,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -164,56 +282,65 @@
     set proj_name = #{projName,jdbcType=VARCHAR},
       proj_key = #{projKey,jdbcType=INTEGER},
       proj_admin = #{projAdmin,jdbcType=VARCHAR},
-      proj_status = #{projStatus,jdbcType=TINYINT},
       proj_type = #{projType,jdbcType=TINYINT},
+      proj_logo = #{projLogo,jdbcType=VARCHAR},
+      proj_slogan = #{projSlogan,jdbcType=VARCHAR},
+      proj_desc = #{projDesc,jdbcType=VARCHAR},
+      proj_status = #{projStatus,jdbcType=TINYINT},
       creater = #{creater,jdbcType=VARCHAR},
       create_date = #{createDate,jdbcType=TIMESTAMP},
       modify_date = #{modifyDate,jdbcType=TIMESTAMP},
-      proj_logo = #{projLogo,jdbcType=VARCHAR},
-      proj_slogan = #{projSlogan,jdbcType=VARCHAR},
-      proj_desc = #{projDesc,jdbcType=VARCHAR}
+      proj_crm_realm = #{projCrmRealm,jdbcType=VARCHAR},
+      proj_official_realm = #{projOfficialRealm,jdbcType=VARCHAR},
+      proj_brand_name = #{projBrandName,jdbcType=VARCHAR},
+      proj_brand_desc = #{projBrandDesc,jdbcType=VARCHAR},
+      proj_dress = #{projDress,jdbcType=VARCHAR},
+      proj_logo_top = #{projLogoTop,jdbcType=VARCHAR},
+      proj_logo_down = #{projLogoDown,jdbcType=VARCHAR},
+      proj_two_code = #{projTwoCode,jdbcType=VARCHAR},
+      proj_phone = #{projPhone,jdbcType=VARCHAR},
+      proj_qq = #{projQq,jdbcType=VARCHAR},
+      proj_email = #{projEmail,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  <!-- 通过工程项目BO查询 -->
+  <select id="selectPageList" parameterType="com.future.pojo.bo.permission.FuPermissionProjectBO" resultType="com.future.pojo.vo.permission.FuPermissionProjectVO">
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM fu_permission_project
+    WHERE Proj_status = 1
+    <if test="param.projKey != null">
+      AND Proj_key = #{param.projKey,jdbcType=INTEGER}
+    </if>
+    <if test="param.projName != null and param.projName != ''">
+      AND Proj_name = #{param.projName,jdbcType=VARCHAR}
+    </if>
+    <if test="param.projKeys != null and param.projKeys.size &gt; 0">
+      AND Proj_key
+      <foreach close=")" collection="param.projKeys" item="projKey" open="IN (" separator=",">
+        #{projKey,jdbcType=INTEGER}
+      </foreach>
+    </if>
+  </select>
 
+  <!-- 通过ID集合查询KEY -->
+  <select id="selectKeyById" parameterType="list" resultType="int">
+    SELECT Proj_key
+    FROM fu_permission_project
+    WHERE 1=1
+    <if test="param != null">
+      AND id
+      <foreach close=")" collection="param" item="id" open="IN (" separator=",">
+        #{id,jdbcType=INTEGER}
+      </foreach>
+    </if>
+  </select>
 
-    <!-- 通过工程项目BO查询 -->
-    <select id="selectPageList" parameterType="com.future.pojo.bo.permission.FuPermissionProjectBO" resultType="com.future.pojo.vo.permission.FuPermissionProjectVO">
-        SELECT
-        <include refid="Base_Column_List" />
-        FROM fu_permission_project
-        WHERE Proj_status = 1
-        <if test="param.projKey != null">
-            AND Proj_key = #{param.projKey,jdbcType=INTEGER}
-        </if>
-        <if test="param.projName != null and param.projName != ''">
-            AND Proj_name = #{param.projName,jdbcType=VARCHAR}
-        </if>
-        <if test="param.projKeys != null and param.projKeys.size &gt; 0">
-            AND Proj_key
-            <foreach close=")" collection="param.projKeys" item="projKey" open="IN (" separator=",">
-                #{projKey,jdbcType=INTEGER}
-            </foreach>
-        </if>
-    </select>
-
-    <!-- 通过ID集合查询KEY -->
-    <select id="selectKeyById" parameterType="list" resultType="int">
-        SELECT Proj_key
-        FROM fu_permission_project
-        WHERE 1=1
-        <if test="param != null">
-            AND id
-            <foreach close=")" collection="param" item="id" open="IN (" separator=",">
-                #{id,jdbcType=INTEGER}
-            </foreach>
-        </if>
-    </select>
-
-    <!-- 查询全部信息 -->
-    <select id="selectAllProjet" resultType="com.future.entity.permission.FuPermissionProject">
-        SELECT
-        <include refid="Base_Column_List" />
-        FROM fu_permission_project
-        WHERE Proj_status = 1
-    </select>
+  <!-- 查询全部信息 -->
+  <select id="selectAllProjet" resultType="com.future.entity.permission.FuPermissionProject">
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM fu_permission_project
+    WHERE Proj_status = 1
+  </select>
 </mapper>
