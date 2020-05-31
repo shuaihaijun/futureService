@@ -303,10 +303,17 @@ public class FuProductSignalApplyService extends ServiceImpl<FuProductSignalAppl
         Map conditionMap = new HashMap();
         conditionMap.put(FuProductSignalApply.MT_ACC_ID,signalMap.get("mtAccId"));
         List<FuProductSignalApply> applies=fuProductSignalMapper.selectByMap(conditionMap);
-        if(applies==null||applies.size()>0){
+        if(applies!=null&&applies.size()>0){
             log.error("该MT账户已申请！");
             throw new DataConflictException(GlobalResultCode.DATA_ALREADY_EXISTED,"该MT账户已申请！");
         }
+        /*判断信号源是否已存在*/
+        List<FuProductSignal> currentSignal= fuProductSignalMapper.selectByMap(conditionMap);
+        if(currentSignal!=null&&currentSignal.size()>0){
+            log.error("该账号已为信号源，不能再次申请！");
+            throw new BusinessException("该账号已为信号源，不能再次申请！");
+        }
+
 
         Map projectMap=new HashMap();
         projectMap.put(FuPermissionProject.PROJ_KEY,operProjKey);
@@ -401,8 +408,18 @@ public class FuProductSignalApplyService extends ServiceImpl<FuProductSignalAppl
             signal.setCreateDate(new Date());
             signal.setModifyDate(new Date());
 
-            /*建立社区佣金账户*/
+            /*判断信号源是否已存在*/
             Map conditionMap =new HashMap();
+            conditionMap.put(FuProductSignal.MT_ACC_ID,signal.getMtAccId());
+            List<FuProductSignal> currentSignal= fuProductSignalMapper.selectByMap(conditionMap);
+            if(currentSignal!=null&&currentSignal.size()>0){
+                log.error("该账号已为信号源，不能再次申请！");
+                throw new BusinessException("该账号已为信号源，不能再次申请！");
+            }
+
+
+            /*建立社区佣金账户*/
+            conditionMap.clear();
             conditionMap.put(FuProductSignalApply.USER_ID,signal.getUserId());
             List<FuAccountInfo> accountInfos= fuAccountInfoService.selectByMap(conditionMap);
             if(accountInfos==null || accountInfos.size()==0){
