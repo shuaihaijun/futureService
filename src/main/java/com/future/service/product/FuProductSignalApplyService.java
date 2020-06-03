@@ -314,6 +314,14 @@ public class FuProductSignalApplyService extends ServiceImpl<FuProductSignalAppl
             throw new BusinessException("该账号已为信号源，不能再次申请！");
         }
 
+        conditionMap.clear();
+        conditionMap.put(FuProductSignalApply.USER_ID,signalMap.get("userId"));
+        currentSignal= fuProductSignalMapper.selectByMap(conditionMap);
+        if(currentSignal!=null&&currentSignal.size()>=5){
+            log.error("该账号注册信号源超过上限，不能再次申请！");
+            throw new BusinessException("该账号注册信号源超过上限，不能再次申请！");
+        }
+
 
         Map projectMap=new HashMap();
         projectMap.put(FuPermissionProject.PROJ_KEY,operProjKey);
