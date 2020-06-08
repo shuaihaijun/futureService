@@ -64,9 +64,9 @@ public class FuTradeOrderService {
             nHisTimeTo=nHisTimeTo/1000;
         }
         //判断日期范围
-        if(nHisTimeTo-nHisTimeFrom>(long)(30 * 24) * 3600){
+        if(nHisTimeTo-nHisTimeFrom>(long)(32 * 24) * 3600){
             /*时间超过一个月  改变截止日期*/
-            nHisTimeFrom=(long)nHisTimeTo-(30 * 24) * 3600;
+            nHisTimeFrom=(long)nHisTimeTo-(32 * 24) * 3600;
         }
 
         // 为了提供查询效率，不在新生成clientId 默认查询近一个月的订单

@@ -173,6 +173,7 @@ public class FuOrderCustomerService extends ServiceImpl<FuOrderCustomerMapper, F
                         continue;
                     }
                     /*与社区订单查重，已有订单无需操作*/
+                    selectMap.put(FuOrderCustomer.USER_ID,userId);
                     selectMap.put(FuOrderCustomer.ORDER_ID,customer.getOrderId());
                     List<FuOrderCustomer> infos=fuOrderCustomerMapper.selectByMap(selectMap);
                     if(infos!=null&&infos.size()>0){

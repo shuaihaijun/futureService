@@ -11,6 +11,7 @@ import com.future.common.enums.GlobalResultCode;
 import com.future.common.exception.DataConflictException;
 import com.future.common.exception.ParameterInvalidException;
 import com.future.common.helper.PageInfoHelper;
+import com.future.common.util.ConvertUtil;
 import com.future.common.util.RedisManager;
 import com.future.common.util.StringUtils;
 import com.future.entity.product.FuProductSignal;
@@ -26,6 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -95,7 +97,7 @@ public class FuProductSignalService extends ServiceImpl<FuProductSignalMapper,Fu
         Wrapper<FuProductSignal> wrapper=new EntityWrapper<FuProductSignal>();
 
         if(!ObjectUtils.isEmpty(conditionMap.get("signalId"))){
-            wrapper.eq(FuProductSignal.APPLY_ID,String.valueOf(conditionMap.get("signalId")));
+            wrapper.eq(FuProductSignal.SIGNAL_ID,String.valueOf(conditionMap.get("signalId")));
         }
         if(!ObjectUtils.isEmpty(conditionMap.get("userId"))){
             wrapper.eq(FuProductSignal.USER_ID,String.valueOf(conditionMap.get("userId")));
@@ -269,5 +271,45 @@ public class FuProductSignalService extends ServiceImpl<FuProductSignalMapper,Fu
             }
         }
         return signals;
+    }
+
+    /**
+     * 根据条件修改信号源信息
+     * @param dataMap
+     * @param condition
+     * @return
+     */
+    public Boolean updateSignalByCondition(Map dataMap,Map condition){
+        if(ObjectUtils.isEmpty(condition)||ObjectUtils.isEmpty(dataMap)){
+            log.error("根据条件修改信号源信息，传入参数为空！");
+            throw new DataConflictException("根据条件修改信号源信息，传入参数为空！");
+        }
+        FuProductSignal signal=new FuProductSignal();
+        try {
+            signal=(FuProductSignal) ConvertUtil.MapToJavaBean((HashMap) dataMap,FuProductSignal.class);
+        }catch (Exception e){
+            log.error(e.getMessage(),e);
+            throw new DataConflictException(e.getMessage());
+        }
+        if(signal.getId()!=null&&signal.getId()>0){
+            signal.setId(null);
+        }
+
+        Wrapper<FuProductSignal> signalWrapper=new EntityWrapper<>();
+        if(condition.get("id")!=null){
+            signalWrapper.eq(FuProductSignal.SIGNAL_ID,condition.get("id"));
+        }
+        if(condition.get("signalId")!=null){
+            signalWrapper.eq(FuProductSignal.SIGNAL_ID,condition.get("signalId"));
+        }
+        if(condition.get("userId")!=null){
+            signalWrapper.eq(FuProductSignal.USER_ID,condition.get("userId"));
+        }
+        if(condition.get("mtAccId")!=null){
+            signalWrapper.eq(FuProductSignal.MT_ACC_ID,condition.get("mtAccId"));
+        }
+        fuProductSignalMapper.update(signal,signalWrapper);
+
+        return true;
     }
 }

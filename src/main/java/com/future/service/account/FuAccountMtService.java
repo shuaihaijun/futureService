@@ -19,6 +19,7 @@ import com.future.common.util.StringUtils;
 import com.future.entity.account.FuAccountMt;
 import com.future.entity.com.FuComServer;
 import com.future.entity.product.FuProductSignal;
+import com.future.entity.user.FuUser;
 import com.future.mapper.account.FuAccountMtMapper;
 import com.future.mapper.product.FuProductSignalMapper;
 import com.future.mapper.user.FuUserMapper;
@@ -26,7 +27,9 @@ import com.future.pojo.bo.account.MtAccountInfoBo;
 import com.future.pojo.bo.account.UserMTAccountBO;
 import com.future.pojo.vo.signal.FuFollowStateVO;
 import com.future.service.com.FuComServerService;
+import com.future.service.product.FuProductSignalService;
 import com.future.service.trade.FuTradeAccountService;
+import com.future.service.user.AdminService;
 import com.future.service.user.FuUserFollowsService;
 import com.future.service.user.UserCommonService;
 import com.github.pagehelper.Page;
@@ -60,6 +63,10 @@ public class FuAccountMtService extends ServiceImpl<FuAccountMtMapper, FuAccount
     FuUserFollowsService fuUserFollowsService;
     @Autowired
     FuAccountMtMapper fuAccountMtMapper;
+    @Autowired
+    AdminService adminService;
+    @Autowired
+    FuProductSignalService fuProductSignalService;
     @Autowired
     FuUserMapper fuUserMapper;
     @Autowired
@@ -166,9 +173,15 @@ public class FuAccountMtService extends ServiceImpl<FuAccountMtMapper, FuAccount
      */
     @Transactional
     public void saveUserMTAccount(String userId, List<Map> accMapList){
-        if(ObjectUtils.isEmpty(accMapList)){
+        if(StringUtils.isEmpty(userId)||ObjectUtils.isEmpty(accMapList)){
             log.error("保存/绑定用户MT账户信息,传入参数为空！");
             throw new ParameterInvalidException("保存/绑定用户MT账户信息,传入参数为空！");
+        }
+
+        FuUser user= adminService.selectById(Integer.parseInt(userId));
+        if(user==null||user.getId()==null||user.getId()==0){
+            log.error("保存/绑定用户MT账户信息,用户信息查询错误！");
+            throw new ParameterInvalidException("保存/绑定用户MT账户信息,用户信息查询错误！");
         }
 
         // 先查询出用户当前所有的账户
@@ -208,8 +221,21 @@ public class FuAccountMtService extends ServiceImpl<FuAccountMtMapper, FuAccount
 
             FuAccountMt mt=selectOne(new EntityWrapper<FuAccountMt>().eq(FuAccountMt.MT_ACC_ID,fuAccountMt.getMtAccId()));
             if(mt!=null && mt.getUserId()!=null&& mt.getUserId().intValue()!=fuAccountMt.getUserId().intValue()){
-                log.error("该账户已经被绑定，请重新选择账户！");
-                throw new ParameterInvalidException("该账户已经被绑定，请重新选择账户！");
+                log.error("该账户已经被绑定，请重新选择账户！"+mt.getMtAccId());
+                throw new ParameterInvalidException("该账户已经被绑定，请重新选择账户！"+mt.getMtAccId());
+            }
+
+            //判断是否需要修改信号源信息
+            if(user.getUserType()==UserConstant.USER_TYPE_SIGNAL
+                    &&!StringUtils.isEmpty(fuAccountMt.getMtPasswordWatch())
+                    &&!fuAccountMt.getMtPasswordWatch().equals(mt.getMtPasswordWatch())){
+                //信号源修改了查看密码
+                Map signalCondition=new HashMap();
+                Map signalData=new HashMap();
+                signalCondition.put("userId",userId);
+                signalCondition.put("mtAccId",fuAccountMt.getMtAccId());
+                signalData.put(FuProductSignal.MT_PASSWORD_WATCH,fuAccountMt.getMtPasswordWatch());
+                fuProductSignalService.updateSignalByCondition(signalData,signalCondition);
             }
 
             /*保存账户信息*/

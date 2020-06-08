@@ -7,15 +7,15 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 public class FuProductSignal {
-    public static final String APPLY_ID = "id";
+    public static final String SIGNAL_ID = "id";
     public static final String USER_ID = "user_id";
-    public static final String SIGNAL_ID = "signal_id";
     public static final String SIGNAL_NAME = "signal_name";
     public static final String SIGNAL_STATE = "signal_state";
     public static final String SERVER_NAME = "server_name";
     public static final String MT_ACC_ID = "mt_acc_id";
     public static final String CREATE_DATE = "create_date";
     public static final String CHECK_DATE = "check_date";
+    public static final String MT_PASSWORD_WATCH = "mt_password_watch";
     public static final String PROJ_KEY = "proj_key";
     /**
      *

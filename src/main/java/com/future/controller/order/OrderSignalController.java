@@ -40,4 +40,12 @@ public class OrderSignalController {
         PageInfoHelper helper = requestParams.getPageInfoHelper();
         return fuOrderSignalService.queryUserSignalOrder(requestMap,helper);
     }
+
+    //根据时间段同步信号源订单
+    @RequestMapping(value= "/synSignalHistoryOrder",method=RequestMethod.POST)
+    public @ResponseBody boolean synSignalHistoryOrder(@RequestBody RequestParams<Map> requestParams) {
+        // 获取请求参数
+        Map requestMap = requestParams.getParams();
+        return fuOrderSignalService.synSignalHistoryOrder(requestMap);
+    }
 }

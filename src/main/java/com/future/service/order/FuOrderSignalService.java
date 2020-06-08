@@ -1,5 +1,6 @@
 package com.future.service.order;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
@@ -9,14 +10,17 @@ import com.future.common.enums.GlobalResultCode;
 import com.future.common.exception.DataConflictException;
 import com.future.common.exception.ParameterInvalidException;
 import com.future.common.helper.PageInfoHelper;
+import com.future.common.util.ConvertUtil;
 import com.future.common.util.DateUtil;
 import com.future.common.util.StringUtils;
 import com.future.entity.account.FuAccountMt;
+import com.future.entity.order.FuOrderCustomer;
 import com.future.entity.order.FuOrderSignal;
 import com.future.entity.product.FuProductSignal;
 import com.future.mapper.order.FuOrderSignalMapper;
 import com.future.service.account.FuAccountMtService;
 import com.future.service.product.FuProductSignalService;
+import com.future.service.trade.FuTradeOrderService;
 import com.future.service.user.UserCommonService;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
@@ -27,9 +31,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
 import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 @Service
@@ -43,6 +45,8 @@ public class FuOrderSignalService extends ServiceImpl<FuOrderSignalMapper, FuOrd
     FuAccountMtService fuAccountMtService;
     @Autowired
     UserCommonService userCommonService;
+    @Autowired
+    FuTradeOrderService fuTradeOrderService;
     @Autowired
     FuOrderSignalMapper fuOrderSignalMapper;
 
@@ -265,6 +269,112 @@ public class FuOrderSignalService extends ServiceImpl<FuOrderSignalMapper, FuOrd
         }
         fuOrderSignalMapper.insertSelective(orderSignal);
 
+        return true;
+    }
+
+
+    /**
+     * 根据条件 同步信号源历史订单
+     * @param conditionMap
+     * @return
+     */
+    public boolean synSignalHistoryOrder(Map conditionMap){
+        if(conditionMap==null||conditionMap.get("signalId")==null
+                ||conditionMap.get("orderCloseDate")==null){
+            log.error("根据条件 同步信号源历史订单,参数为空！");
+            throw new DataConflictException("根据条件 同步信号源历史订单,参数为空！");
+        }
+        String signalId = String.valueOf(conditionMap.get("signalId"));
+        String startDate ="";
+        String endDate ="";
+
+        if(!ObjectUtils.isEmpty(conditionMap.get("orderCloseDate"))){
+            if(String.valueOf(conditionMap.get("orderCloseDate")).indexOf(",")<0){
+                log.error("根据条件 同步信号源历史订单,日期格式错误！");
+                throw new DataConflictException("根据条件 同步信号源历史订单,日期格式错误！");
+            }else {
+                //时间段
+                List dateList=(List) conditionMap.get("orderCloseDate");
+                if(dateList.size()!=2){
+                    log.error("时间段数据传入错误！"+conditionMap.get("orderCloseDate"));
+                    throw new DataConflictException(GlobalResultCode.PARAM_VERIFY_ERROR,"时间段数据传入错误！"+conditionMap.get("orderCloseDate"));
+                }
+                startDate=String.valueOf(dateList.get(0));
+                endDate=String.valueOf(dateList.get(1));
+            }
+        }
+
+        FuProductSignal signal= fuProductSignalService.findSignalById(Integer.valueOf(signalId));
+        if(signal==null||signal.getId()==null){
+            log.error("根据条件 同步信号源历史订单,信号源查询错误！");
+            throw new DataConflictException("根据条件 同步信号源历史订单,信号源查询错误！");
+        }
+
+        /*时间段按月截取*/
+        List<FuOrderSignal> orderSignals=new ArrayList<>();
+        Map selectMap = new HashMap();
+        Date dateFrom=new Date();
+        Date dateTo=new Date();
+        List<String> months= DateUtil.getMonthBetween(startDate.substring(0,7),endDate.substring(0,7));
+        for(int i=0;i<months.size();i++){
+            if(i==0){
+                dateFrom=DateUtil.toDate(startDate);
+            }else {
+                dateFrom=DateUtil.toDate(months.get(i)+"-01");
+            }
+            if(i==months.size()-1){
+                dateTo=DateUtil.toDate(endDate);
+            }else {
+                dateTo=DateUtil.toDate(months.get(i+1)+"-01");
+            }
+            JSONArray orders= fuTradeOrderService.getUserCloseOrders(signal.getServerName(),Integer.parseInt(signal.getMtAccId()),signal.getMtPasswordWatch(),dateFrom.getTime(),dateTo.getTime());
+            if(orders==null||orders.size()==0){
+                continue;
+            }
+
+            // 只同步已完成的订单
+            orderSignals= ConvertUtil.convertOrderSignals(orders);
+
+            // 处理订单
+            if(ObjectUtils.isEmpty(orderSignals)) {
+                continue;
+            }
+            for(FuOrderSignal orderSignal:orderSignals){
+                // 判断是否是初始化数据
+                if(StringUtils.isEmpty(orderSignal.getOrderSymbol())){
+                    continue;
+                }
+                // 判断时间范围
+                if(dateFrom.compareTo(orderSignal.getOrderCloseDate())>0){
+                    continue;
+                }
+                //限定交易类型 挂单的订单不做佣金处理
+                if(orderSignal.getOrderType()!=OrderConstant.ORDER_TYPE_BUY
+                        &&orderSignal.getOrderType()!=OrderConstant.ORDER_TYPE_SELL){
+                    continue;
+                }
+                // 与社区订单查重，已有订单无需操作
+                selectMap.clear();
+                selectMap.put(FuOrderSignal.USER_ID,signal.getUserId());
+                selectMap.put(FuOrderSignal.SIGNAL_ID,signal.getId());
+                selectMap.put(FuOrderSignal.ORDER_ID,orderSignal.getOrderId());
+                List<FuOrderCustomer> infos=fuOrderSignalMapper.selectByMap(selectMap);
+                if(infos!=null&&infos.size()>0){
+                    // 数据已存在=
+                    continue;
+                }
+
+                // 转换订单
+                orderSignal.setUserId(signal.getUserId());
+                orderSignal.setSignalId(signal.getId());
+                orderSignal.setMtAccId(signal.getMtAccId());
+                orderSignal.setMtServerName(signal.getServerName());
+                orderSignal.setOrderState(OrderConstant.ORDER_STATE_CLOSE);
+
+                // 保存用户自交易订单
+                fuOrderSignalMapper.insertSelective(orderSignal);
+            }
+        }
         return true;
     }
 }

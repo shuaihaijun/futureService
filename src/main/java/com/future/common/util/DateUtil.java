@@ -1,12 +1,16 @@
 package com.future.common.util;
 
 import com.future.common.enums.GlobalResultCode;
+import com.future.common.exception.BusinessException;
+import com.future.common.exception.DataConflictException;
 
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 提供对日期时间操作的常用方法
@@ -509,6 +513,39 @@ public class DateUtil {
         c.setTime(currDate);
         c.setFirstDayOfWeek(Calendar.MONDAY);
         return c.get(Calendar.WEEK_OF_MONTH);
+    }
+
+    /**
+     * 获取时间段内所有的月份
+     * @param minDate
+     * @param maxDate
+     * @return
+     * @throws ParseException
+     */
+    public static List<String> getMonthBetween(String minDate, String maxDate){
+        ArrayList<String> result = new ArrayList<String>();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM");//格式化为年月
+
+        Calendar min = Calendar.getInstance();
+        Calendar max = Calendar.getInstance();
+
+        try {
+            min.setTime(sdf.parse(minDate));
+            min.set(min.get(Calendar.YEAR), min.get(Calendar.MONTH), 1);
+
+            max.setTime(sdf.parse(maxDate));
+            max.set(max.get(Calendar.YEAR), max.get(Calendar.MONTH), 2);
+        }catch (ParseException e){
+            throw new DataConflictException(e.getMessage(),e.getErrorOffset());
+        }
+
+        Calendar curr = min;
+        while (curr.before(max)) {
+            result.add(sdf.format(curr.getTime()));
+            curr.add(Calendar.MONTH, 1);
+        }
+
+        return result;
     }
 
 }
