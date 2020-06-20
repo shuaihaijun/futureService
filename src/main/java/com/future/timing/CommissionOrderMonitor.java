@@ -32,7 +32,7 @@ import java.util.*;
 /**
  * @author ：haijun
  * @date ：Created in 2019-10-17 15:17
- * @description：用户自交易订单定时同步
+ * @description：用户佣金结算定时任务
  * @modified By：
  * @version: 1/0$
  */
@@ -80,12 +80,6 @@ public class CommissionOrderMonitor {
                 try {
                     /*同步用户历史订单*/
                     fuOrderCustomerService.synUserMTOrder(user.getId(),user.getUsername());
-                }catch (Exception e){
-                    log.error(e.getMessage(),e);
-                }
-                try {
-                    /*同步用户账户信息*/
-                    fuAccountMtService.updateAccountInfoFromMt(user.getId());
                 }catch (Exception e){
                     log.error(e.getMessage(),e);
                 }

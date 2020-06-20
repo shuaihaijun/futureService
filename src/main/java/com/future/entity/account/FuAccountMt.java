@@ -10,6 +10,8 @@ public class FuAccountMt {
     public static String MT_ACC_ID="mt_acc_id";
     public static String IS_SIGNAL="is_signal";
     public static String ACCOUNT_TYPE="account_type";
+    public static String PASSWORD_WATCH_CHECKED="password_watch_checked";
+
     /**
      *
      */

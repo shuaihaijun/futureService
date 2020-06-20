@@ -14,12 +14,15 @@ import com.future.common.exception.DataConflictException;
 import com.future.common.exception.ParameterInvalidException;
 import com.future.common.helper.PageInfoHelper;
 import com.future.common.util.ConvertUtil;
+import com.future.common.util.DateUtil;
 import com.future.common.util.RedisManager;
 import com.future.common.util.StringUtils;
 import com.future.entity.account.FuAccountMt;
+import com.future.entity.account.FuAccountMtFlow;
 import com.future.entity.com.FuComServer;
 import com.future.entity.product.FuProductSignal;
 import com.future.entity.user.FuUser;
+import com.future.mapper.account.FuAccountMtFlowMapper;
 import com.future.mapper.account.FuAccountMtMapper;
 import com.future.mapper.product.FuProductSignalMapper;
 import com.future.mapper.user.FuUserMapper;
@@ -43,10 +46,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class FuAccountMtService extends ServiceImpl<FuAccountMtMapper, FuAccountMt> {
@@ -72,7 +72,10 @@ public class FuAccountMtService extends ServiceImpl<FuAccountMtMapper, FuAccount
     @Autowired
     FuProductSignalMapper fuProductSignalMapper;
     @Autowired
+    FuAccountMtFlowMapper fuAccountMtFlowMapper;
+    @Autowired
     RedisManager redisManager;
+
     @Value("${pubUserServerUrl1}")
     String pubUserServerUrl1;
     @Value("${pubUserServerUrl2}")
@@ -538,12 +541,15 @@ public class FuAccountMtService extends ServiceImpl<FuAccountMtMapper, FuAccount
      * 根据MT账户信息 更新
      * @param userId
      */
+    @Transactional
     public void updateAccountInfoFromMt(Integer userId){
         if (userId==0){
             log.error("传入参数为空！");
             throw new RuntimeException("根据MT账户信息更新；传入参数为空！");
         }
 
+        Date dealDate=new Date();
+        Wrapper<FuAccountMtFlow> flowWrapper=new EntityWrapper<>();
         Wrapper<FuAccountMt> wrapper=new EntityWrapper<>();
         wrapper.eq(FuAccountMt.USER_ID,userId);
         List<FuAccountMt> accountMts=selectList(wrapper);
@@ -554,13 +560,50 @@ public class FuAccountMtService extends ServiceImpl<FuAccountMtMapper, FuAccount
            if(infoBo==null){
                continue;
            }
-            accountMt.setBalance(new BigDecimal(infoBo.getBalance()).setScale(AccountConstant.BigDecimal_Scale,BigDecimal.ROUND_HALF_UP));
-            accountMt.setLeverage(new BigDecimal(infoBo.getLeverage()).setScale(AccountConstant.BigDecimal_Scale,BigDecimal.ROUND_HALF_UP));
-            accountMt.setCredit(new BigDecimal(infoBo.getCredit()).setScale(AccountConstant.BigDecimal_Scale,BigDecimal.ROUND_HALF_UP));
-            accountMt.setProfit(new BigDecimal(infoBo.getProfit()).setScale(AccountConstant.BigDecimal_Scale,BigDecimal.ROUND_HALF_UP));
-            accountMt.setEquity(new BigDecimal(infoBo.getEquity()).setScale(AccountConstant.BigDecimal_Scale,BigDecimal.ROUND_HALF_UP));
-            accountMt.setMargin(new BigDecimal(infoBo.getMargin()).setScale(AccountConstant.BigDecimal_Scale,BigDecimal.ROUND_HALF_UP));
-            fuAccountMtMapper.updateByPrimaryKey(accountMt);
+            /*跟新账户*/
+           accountMt.setBalance(new BigDecimal(infoBo.getBalance()).setScale(AccountConstant.BigDecimal_Scale,BigDecimal.ROUND_HALF_UP));
+           accountMt.setLeverage(new BigDecimal(infoBo.getLeverage()).setScale(AccountConstant.BigDecimal_Scale,BigDecimal.ROUND_HALF_UP));
+           accountMt.setCredit(new BigDecimal(infoBo.getCredit()).setScale(AccountConstant.BigDecimal_Scale,BigDecimal.ROUND_HALF_UP));
+           accountMt.setProfit(new BigDecimal(infoBo.getProfit()).setScale(AccountConstant.BigDecimal_Scale,BigDecimal.ROUND_HALF_UP));
+           accountMt.setEquity(new BigDecimal(infoBo.getEquity()).setScale(AccountConstant.BigDecimal_Scale,BigDecimal.ROUND_HALF_UP));
+           accountMt.setMargin(new BigDecimal(infoBo.getMargin()).setScale(AccountConstant.BigDecimal_Scale,BigDecimal.ROUND_HALF_UP));
+
+           /*生成账户流水*/
+           FuAccountMtFlow flow=new FuAccountMtFlow();
+           flow.setUserId(userId);
+           flow.setMtAccId(accountMt.getMtAccId());
+           flow.setServerName(accountMt.getServerName());
+           flow.setBalance(accountMt.getBalance());
+           flow.setCredit(accountMt.getCredit());
+           flow.setProfit(accountMt.getProfit());
+           flow.setEquity(accountMt.getEquity());
+           flow.setMargin(accountMt.getMargin());
+           flow.setProfitHistory(accountMt.getProfit());
+
+           /*查询历史流水数据*/
+           flowWrapper.eq(FuAccountMtFlow.USER_ID,userId);
+           flowWrapper.eq(FuAccountMtFlow.MT_ACC_ID,accountMt.getMtAccId());
+           flowWrapper.le(FuAccountMtFlow.TRADE_DATE,DateUtil.toDateString(dealDate));
+           flowWrapper.orderBy("trade_date desc");
+           flowWrapper.last("limit 2");
+           List<FuAccountMtFlow> flows= fuAccountMtFlowMapper.selectList(flowWrapper);
+           for(FuAccountMtFlow mtFlow:flows){
+               if(DateUtil.toDateString(mtFlow.getTradeDate()).equals(DateUtil.toDateString(dealDate))){
+                 //同一天 删除重新跟新
+                   fuAccountMtFlowMapper.deleteByPrimaryKey(mtFlow.getId());
+               } else {
+                 //上一个交易日 累加收益
+                   flow.setProfitHistory(mtFlow.getProfitHistory().add(accountMt.getProfit()));
+                   /*判断出入金 （昨天节点的余额 = 今天的余额 + 昨天节点后平仓收入  节点：零点）*/
+                    // TODO 节点（0点）余额难取，或记下时间节点 去流水表里根据时间节点查查也行
+                   break;
+               }
+           }
+
+           /*插入流水数据*/
+           fuAccountMtFlowMapper.insertSelective(flow);
+            /*更新账户数据*/
+           fuAccountMtMapper.updateByPrimaryKey(accountMt);
         }
     }
 

@@ -48,4 +48,5 @@ public class OrderSignalController {
         Map requestMap = requestParams.getParams();
         return fuOrderSignalService.synSignalHistoryOrder(requestMap);
     }
+
 }

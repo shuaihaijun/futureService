@@ -529,6 +529,64 @@ public class ConvertUtil {
     }
 
     /**
+     * 将FuOrderSignal转换成FuOrderCustomer
+     * @param orderInfo
+     * @return
+     */
+    public static FuOrderCustomer convertOrderCustomer(FuOrderSignal orderInfo){
+
+        if(ObjectUtils.isEmpty(orderInfo)){
+            return null;
+        }
+        FuOrderCustomer fuOrderCustomer=new FuOrderCustomer();
+        fuOrderCustomer.setModifyDate(new Date());
+        fuOrderCustomer.setCreateDate(new Date());
+
+        /*订单信息*/
+        fuOrderCustomer.setMtAccId(orderInfo.getMtAccId());
+        fuOrderCustomer.setOrderId(orderInfo.getOrderId());
+        fuOrderCustomer.setOrderType(orderInfo.getOrderType());
+        fuOrderCustomer.setOrderLots(orderInfo.getOrderLots());
+        fuOrderCustomer.setOrderSymbol(orderInfo.getOrderSymbol());
+
+        /*时间 价格*/
+        fuOrderCustomer.setCreateDate(orderInfo.getCreateDate());
+        fuOrderCustomer.setOrderCloseDate(orderInfo.getOrderCloseDate());
+        fuOrderCustomer.setOrderOpenDate(orderInfo.getOrderOpenDate());
+        fuOrderCustomer.setOrderOpenPrice(orderInfo.getOrderOpenPrice());
+        fuOrderCustomer.setOrderClosePrice(orderInfo.getOrderClosePrice());
+        fuOrderCustomer.setOrderExpiration(orderInfo.getOrderExpiration());
+
+        /*交易 收益*/
+
+        fuOrderCustomer.setOrderProfit(orderInfo.getOrderProfit());
+        fuOrderCustomer.setOrderStoploss(orderInfo.getOrderStoploss());
+        /*fuOrderCustomer.setOrderTakeprofit(new BigDecimal(orderInfo.getDouble("takeprofit")).setScale(6,BigDecimal.ROUND_HALF_UP));*/
+        fuOrderCustomer.setOrderMagic(orderInfo.getOrderMagic());
+        fuOrderCustomer.setOrderSwap(orderInfo.getOrderSwap());
+        fuOrderCustomer.setOrderCommission(orderInfo.getOrderCommission());
+
+        /*用户 账户信息*/
+        if(orderInfo.getUserId()!=null){
+            fuOrderCustomer.setUserId(orderInfo.getUserId());
+        }
+        if(orderInfo.getMtServerName()!=null){
+            fuOrderCustomer.setMtServerName(orderInfo.getMtServerName());
+        }
+        fuOrderCustomer.setOrderState(orderInfo.getOrderState());
+        fuOrderCustomer.setComment(orderInfo.getComment());
+
+        /*判断是否是社区跟单订单*/
+        if(checkMagic(orderInfo.getComment(),orderInfo.getOrderMagic().intValue())){
+            fuOrderCustomer.setOrderFlag(CommonConstant.COMMON_YES);
+        }else {
+            fuOrderCustomer.setOrderFlag(CommonConstant.COMMON_NO);
+        }
+
+        return fuOrderCustomer;
+    }
+
+    /**
      * 将fuOrderInfo转换成FuOrderSignal
      * @param orderInfos
      * @return
@@ -564,7 +622,7 @@ public class ConvertUtil {
 
             fuOrderSignal.setOrderProfit(new BigDecimal(orderInfo.getDouble("profit")).setScale(6,BigDecimal.ROUND_HALF_UP));
             fuOrderSignal.setOrderStoploss(new BigDecimal(orderInfo.getDouble("stoploss")).setScale(6,BigDecimal.ROUND_HALF_UP));
-            /*fuOrderCustomer.setOrderTakeprofit(new BigDecimal(orderInfo.getDouble("takeprofit")).setScale(6,BigDecimal.ROUND_HALF_UP));*/
+            /*fuOrderSignal.setOrderTakeprofit(new BigDecimal(orderInfo.getDouble("takeprofit")).setScale(6,BigDecimal.ROUND_HALF_UP));*/
             fuOrderSignal.setOrderMagic(new BigDecimal(orderInfo.getInteger("magic")).setScale(6,BigDecimal.ROUND_HALF_UP));
             fuOrderSignal.setOrderSwap(new BigDecimal(orderInfo.getDouble("storage")).setScale(6,BigDecimal.ROUND_HALF_UP));
             fuOrderSignal.setOrderCommission(new BigDecimal(orderInfo.getDouble("commission")).setScale(6,BigDecimal.ROUND_HALF_UP));

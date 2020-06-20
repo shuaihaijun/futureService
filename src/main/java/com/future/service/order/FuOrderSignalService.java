@@ -6,12 +6,15 @@ import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.future.common.constants.OrderConstant;
+import com.future.common.constants.RedisConstant;
 import com.future.common.enums.GlobalResultCode;
+import com.future.common.exception.BusinessException;
 import com.future.common.exception.DataConflictException;
 import com.future.common.exception.ParameterInvalidException;
 import com.future.common.helper.PageInfoHelper;
 import com.future.common.util.ConvertUtil;
 import com.future.common.util.DateUtil;
+import com.future.common.util.RedisManager;
 import com.future.common.util.StringUtils;
 import com.future.entity.account.FuAccountMt;
 import com.future.entity.order.FuOrderCustomer;
@@ -40,6 +43,8 @@ public class FuOrderSignalService extends ServiceImpl<FuOrderSignalMapper, FuOrd
     Logger log=LoggerFactory.getLogger(FuOrderSignalService.class);
 
     @Autowired
+    FuOrderCustomerService fuOrderCustomerService;
+    @Autowired
     FuProductSignalService fuProductSignalService;
     @Autowired
     FuAccountMtService fuAccountMtService;
@@ -49,6 +54,8 @@ public class FuOrderSignalService extends ServiceImpl<FuOrderSignalMapper, FuOrd
     FuTradeOrderService fuTradeOrderService;
     @Autowired
     FuOrderSignalMapper fuOrderSignalMapper;
+    @Autowired
+    RedisManager redisManager;
 
 
     /**
@@ -306,8 +313,62 @@ public class FuOrderSignalService extends ServiceImpl<FuOrderSignalMapper, FuOrd
 
         FuProductSignal signal= fuProductSignalService.findSignalById(Integer.valueOf(signalId));
         if(signal==null||signal.getId()==null){
-            log.error("根据条件 同步信号源历史订单,信号源查询错误！");
-            throw new DataConflictException("根据条件 同步信号源历史订单,信号源查询错误！");
+            log.error("初始化信号源历史数据,信号源查询错误！");
+            throw new DataConflictException("初始化信号源历史数据,信号源查询错误！");
+        }
+
+        initSignalHistoryOrder(signal.getUserId(),signal.getServerName(),signal.getMtAccId(),DateUtil.toDate(startDate),DateUtil.toDate(endDate));
+
+        return true;
+    }
+
+
+    /**
+     * 初始化信号源历史数据（已结束时间 倒叙按月同步）
+     * @param userId
+     * @param serverName
+     * @param mtAccId
+     * @param dataBegin
+     * @param dateEnd
+     * @return
+     */
+    public boolean initSignalHistoryOrder(Integer userId, String serverName,String mtAccId, Date dataBegin,Date dateEnd){
+        if(serverName==null||mtAccId==null||userId==null||userId==0){
+            log.error("初始化信号源历史数据,参数为空！");
+            throw new DataConflictException("初始化信号源历史数据,参数为空！");
+        }
+        /*判断结束月份*/
+        if(dateEnd==null||dateEnd.compareTo(new Date())>0){
+            dateEnd=new Date();
+        }
+        if(dataBegin==null){
+            /*默认同步3年内的数据*/
+            dataBegin=DateUtil.getFutureDate(new Date(),-1000);
+        }
+        if (dateEnd.compareTo(dataBegin)<=0){
+            log.error("初始化信号源历史数据,日期输入错误！");
+            throw new DataConflictException("初始化信号源历史数据,日期输入错误！");
+        }
+
+        Wrapper<FuProductSignal> wrapper=new EntityWrapper<>();
+        wrapper.eq(FuProductSignal.USER_ID,userId);
+        wrapper.eq(FuProductSignal.MT_ACC_ID,mtAccId);
+        FuProductSignal signal= fuProductSignalService.selectOne(wrapper);
+        if(signal==null||signal.getId()==null){
+            log.error("初始化信号源历史数据,信号源查询错误！");
+            throw new DataConflictException("初始化信号源历史数据,信号源查询错误！");
+        }
+
+        /*信号源必须在监听状态下 不用再重复链接了*/
+        boolean isSignalConnected=true;
+        if(redisManager.hget(RedisConstant.H_ACCOUNT_CONNECT_INFO,mtAccId)==null){
+            isSignalConnected=false;
+            log.warn("初始化信号源历史数据,信号源必须在监听状态下才可以同步数据！暂时启动链接");
+            boolean isConnect= fuAccountMtService.connectUserMTAccount(userId,mtAccId,null,serverName);
+            if(!isConnect){
+                log.error("初始化信号源历史数据,信号源链接失败！");
+                throw new BusinessException("初始化信号源历史数据,信号源链接失败！");
+            }
         }
 
         /*时间段按月截取*/
@@ -315,21 +376,33 @@ public class FuOrderSignalService extends ServiceImpl<FuOrderSignalMapper, FuOrd
         Map selectMap = new HashMap();
         Date dateFrom=new Date();
         Date dateTo=new Date();
+        String startDate =DateUtil.toDateString(dataBegin);
+        String endDate =DateUtil.toDateString(dateEnd);
+
         List<String> months= DateUtil.getMonthBetween(startDate.substring(0,7),endDate.substring(0,7));
-        for(int i=0;i<months.size();i++){
+        /*倒叙查找*/
+        for(int i=months.size()-1;i<months.size();i--){
+
+            dateFrom=DateUtil.toDate(months.get(i-1)+"-01");
+            dateTo=DateUtil.toDate(months.get(i)+"-01");
+
             if(i==0){
                 dateFrom=DateUtil.toDate(startDate);
-            }else {
-                dateFrom=DateUtil.toDate(months.get(i)+"-01");
             }
             if(i==months.size()-1){
                 dateTo=DateUtil.toDate(endDate);
-            }else {
-                dateTo=DateUtil.toDate(months.get(i+1)+"-01");
             }
-            JSONArray orders= fuTradeOrderService.getUserCloseOrders(signal.getServerName(),Integer.parseInt(signal.getMtAccId()),signal.getMtPasswordWatch(),dateFrom.getTime(),dateTo.getTime());
+
+            JSONArray orders= fuTradeOrderService.getUserCloseOrders(serverName,Integer.parseInt(mtAccId),signal.getMtPasswordWatch(),dateFrom.getTime(),dateTo.getTime());
             if(orders==null||orders.size()==0){
-                continue;
+                /*查询数据为空*/
+                if(i==months.size()-1){
+                    /*倒叙 第一个月为空继续查*/
+                    continue;
+                }else {
+                    /*倒叙 非第一个月为空 默认为无数据*/
+                    break;
+                }
             }
 
             // 只同步已完成的订单
@@ -355,7 +428,7 @@ public class FuOrderSignalService extends ServiceImpl<FuOrderSignalMapper, FuOrd
                 }
                 // 与社区订单查重，已有订单无需操作
                 selectMap.clear();
-                selectMap.put(FuOrderSignal.USER_ID,signal.getUserId());
+                selectMap.put(FuOrderSignal.USER_ID,userId);
                 selectMap.put(FuOrderSignal.SIGNAL_ID,signal.getId());
                 selectMap.put(FuOrderSignal.ORDER_ID,orderSignal.getOrderId());
                 List<FuOrderCustomer> infos=fuOrderSignalMapper.selectByMap(selectMap);
@@ -371,10 +444,20 @@ public class FuOrderSignalService extends ServiceImpl<FuOrderSignalMapper, FuOrd
                 orderSignal.setMtServerName(signal.getServerName());
                 orderSignal.setOrderState(OrderConstant.ORDER_STATE_CLOSE);
 
-                // 保存用户自交易订单
+                // 保存信号源交易订单
                 fuOrderSignalMapper.insertSelective(orderSignal);
+
+                // 保存用户自交易订单
+                FuOrderCustomer orderCustomer= ConvertUtil.convertOrderCustomer(orderSignal);
+                fuOrderCustomerService.insertSelective(orderCustomer);
             }
         }
+
+        /*本地逻辑打开的链接需要关闭*/
+        if(!isSignalConnected){
+            fuAccountMtService.disConnectUserMTAccount(signal.getUserId(),signal.getMtAccId(),null,signal.getServerName());
+        }
+
         return true;
     }
 }

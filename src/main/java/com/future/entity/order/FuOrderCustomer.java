@@ -9,6 +9,7 @@ import java.util.Date;
 public class FuOrderCustomer {
     public static final String USER_ID = "user_id";
     public static final String ORDER_ID = "order_id";
+    public static final String MT_ACC_ID = "mt_acc_id";
     public static final String ORDER_SYMBOL = "order_symbol";
     public static final String ORDER_TYPE = "order_type";
     public static final String ORDER_FLAG = "order_flag";

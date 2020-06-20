@@ -445,12 +445,11 @@ public class DateUtil {
 
     /**
      * 计算两天的相差天数,不足一天按一天算
-     *
-     * @param stopDate  结束日期
      * @param startDate 开始日期
+     * @param stopDate  结束日期
      * @return 相差天数 = 结束日期 - 开始日期
      */
-    public static int getDateDiff(String stopDate, String startDate) {
+    public static int getDateDiff(String startDate,String stopDate) {
         long t2 = toDate(stopDate).getTime();
         long t1 = toDate(startDate).getTime();
 

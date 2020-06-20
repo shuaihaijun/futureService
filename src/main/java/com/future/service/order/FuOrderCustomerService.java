@@ -431,4 +431,18 @@ public class FuOrderCustomerService extends ServiceImpl<FuOrderCustomerMapper, F
         selectList(wrapper);
         return orders;
     }
+
+
+    /**
+     * 用户历史订单 数据插入
+     * @param customer
+     */
+    public void insertSelective(FuOrderCustomer customer){
+        if(ObjectUtils.isEmpty(customer)){
+            log.error("用户历史订单 数插入据，掺入参数为空！");
+            throw new DataConflictException("用户历史订单 数插入据，掺入参数为空！");
+        }
+        /*保存用户自交易订单*/
+        fuOrderCustomerMapper.insertSelective(customer);
+    }
 }
