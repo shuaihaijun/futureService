@@ -23,6 +23,7 @@ public interface FuAccountMtMapper extends BaseMapper<FuAccountMt> {
 
     List<UserMTAccountBO> selectUserMTAccByCondition(Map conditionMap);
 
+    @Deprecated
     int updateByPrimaryCondition(FuAccountMt record);
 
     List<UserMTAccountBO> selectUserMTAccByProjectCondition(Map conditionMap);

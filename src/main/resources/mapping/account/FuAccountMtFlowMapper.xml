@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.future.mapper.account.FuAccountMtFlowMapper">
+  <resultMap id="BaseResultMap" type="com.future.entity.account.FuAccountMtFlow">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="trade_date" jdbcType="TIMESTAMP" property="tradeDate" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="server_name" jdbcType="VARCHAR" property="serverName" />
+    <result column="mt_acc_id" jdbcType="VARCHAR" property="mtAccId" />
+    <result column="balance" jdbcType="DECIMAL" property="balance" />
+    <result column="credit" jdbcType="DECIMAL" property="credit" />
+    <result column="profit_history" jdbcType="DECIMAL" property="profitHistory" />
+    <result column="profit" jdbcType="DECIMAL" property="profit" />
+    <result column="equity" jdbcType="DECIMAL" property="equity" />
+    <result column="margin" jdbcType="DECIMAL" property="margin" />
+    <result column="deposit" jdbcType="DECIMAL" property="deposit" />
+    <result column="withdraw" jdbcType="DECIMAL" property="withdraw" />
+    <result column="deposit_history" jdbcType="DECIMAL" property="depositHistory" />
+    <result column="withdraw_history" jdbcType="DECIMAL" property="withdrawHistory" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, create_date, trade_date, user_id, server_name, mt_acc_id, balance, credit, profit_history, 
+    profit, equity, margin, deposit, withdraw, deposit_history, withdraw_history
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from fu_account_mt_flow
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from fu_account_mt_flow
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.future.entity.account.FuAccountMtFlow">
+    insert into fu_account_mt_flow (id, create_date, trade_date, 
+      user_id, server_name, mt_acc_id, 
+      balance, credit, profit_history, 
+      profit, equity, margin, 
+      deposit, withdraw, deposit_history, 
+      withdraw_history)
+    values (#{id,jdbcType=INTEGER}, #{createDate,jdbcType=TIMESTAMP}, #{tradeDate,jdbcType=TIMESTAMP}, 
+      #{userId,jdbcType=INTEGER}, #{serverName,jdbcType=VARCHAR}, #{mtAccId,jdbcType=VARCHAR}, 
+      #{balance,jdbcType=DECIMAL}, #{credit,jdbcType=DECIMAL}, #{profitHistory,jdbcType=DECIMAL}, 
+      #{profit,jdbcType=DECIMAL}, #{equity,jdbcType=DECIMAL}, #{margin,jdbcType=DECIMAL}, 
+      #{deposit,jdbcType=DECIMAL}, #{withdraw,jdbcType=DECIMAL}, #{depositHistory,jdbcType=DECIMAL}, 
+      #{withdrawHistory,jdbcType=DECIMAL})
+  </insert>
+  <insert id="insertSelective" parameterType="com.future.entity.account.FuAccountMtFlow">
+    insert into fu_account_mt_flow
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="createDate != null">
+        create_date,
+      </if>
+      <if test="tradeDate != null">
+        trade_date,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="serverName != null">
+        server_name,
+      </if>
+      <if test="mtAccId != null">
+        mt_acc_id,
+      </if>
+      <if test="balance != null">
+        balance,
+      </if>
+      <if test="credit != null">
+        credit,
+      </if>
+      <if test="profitHistory != null">
+        profit_history,
+      </if>
+      <if test="profit != null">
+        profit,
+      </if>
+      <if test="equity != null">
+        equity,
+      </if>
+      <if test="margin != null">
+        margin,
+      </if>
+      <if test="deposit != null">
+        deposit,
+      </if>
+      <if test="withdraw != null">
+        withdraw,
+      </if>
+      <if test="depositHistory != null">
+        deposit_history,
+      </if>
+      <if test="withdrawHistory != null">
+        withdraw_history,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null">
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tradeDate != null">
+        #{tradeDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="serverName != null">
+        #{serverName,jdbcType=VARCHAR},
+      </if>
+      <if test="mtAccId != null">
+        #{mtAccId,jdbcType=VARCHAR},
+      </if>
+      <if test="balance != null">
+        #{balance,jdbcType=DECIMAL},
+      </if>
+      <if test="credit != null">
+        #{credit,jdbcType=DECIMAL},
+      </if>
+      <if test="profitHistory != null">
+        #{profitHistory,jdbcType=DECIMAL},
+      </if>
+      <if test="profit != null">
+        #{profit,jdbcType=DECIMAL},
+      </if>
+      <if test="equity != null">
+        #{equity,jdbcType=DECIMAL},
+      </if>
+      <if test="margin != null">
+        #{margin,jdbcType=DECIMAL},
+      </if>
+      <if test="deposit != null">
+        #{deposit,jdbcType=DECIMAL},
+      </if>
+      <if test="withdraw != null">
+        #{withdraw,jdbcType=DECIMAL},
+      </if>
+      <if test="depositHistory != null">
+        #{depositHistory,jdbcType=DECIMAL},
+      </if>
+      <if test="withdrawHistory != null">
+        #{withdrawHistory,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.future.entity.account.FuAccountMtFlow">
+    update fu_account_mt_flow
+    <set>
+      <if test="createDate != null">
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tradeDate != null">
+        trade_date = #{tradeDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="serverName != null">
+        server_name = #{serverName,jdbcType=VARCHAR},
+      </if>
+      <if test="mtAccId != null">
+        mt_acc_id = #{mtAccId,jdbcType=VARCHAR},
+      </if>
+      <if test="balance != null">
+        balance = #{balance,jdbcType=DECIMAL},
+      </if>
+      <if test="credit != null">
+        credit = #{credit,jdbcType=DECIMAL},
+      </if>
+      <if test="profitHistory != null">
+        profit_history = #{profitHistory,jdbcType=DECIMAL},
+      </if>
+      <if test="profit != null">
+        profit = #{profit,jdbcType=DECIMAL},
+      </if>
+      <if test="equity != null">
+        equity = #{equity,jdbcType=DECIMAL},
+      </if>
+      <if test="margin != null">
+        margin = #{margin,jdbcType=DECIMAL},
+      </if>
+      <if test="deposit != null">
+        deposit = #{deposit,jdbcType=DECIMAL},
+      </if>
+      <if test="withdraw != null">
+        withdraw = #{withdraw,jdbcType=DECIMAL},
+      </if>
+      <if test="depositHistory != null">
+        deposit_history = #{depositHistory,jdbcType=DECIMAL},
+      </if>
+      <if test="withdrawHistory != null">
+        withdraw_history = #{withdrawHistory,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.future.entity.account.FuAccountMtFlow">
+    update fu_account_mt_flow
+    set create_date = #{createDate,jdbcType=TIMESTAMP},
+      trade_date = #{tradeDate,jdbcType=TIMESTAMP},
+      user_id = #{userId,jdbcType=INTEGER},
+      server_name = #{serverName,jdbcType=VARCHAR},
+      mt_acc_id = #{mtAccId,jdbcType=VARCHAR},
+      balance = #{balance,jdbcType=DECIMAL},
+      credit = #{credit,jdbcType=DECIMAL},
+      profit_history = #{profitHistory,jdbcType=DECIMAL},
+      profit = #{profit,jdbcType=DECIMAL},
+      equity = #{equity,jdbcType=DECIMAL},
+      margin = #{margin,jdbcType=DECIMAL},
+      deposit = #{deposit,jdbcType=DECIMAL},
+      withdraw = #{withdraw,jdbcType=DECIMAL},
+      deposit_history = #{depositHistory,jdbcType=DECIMAL},
+      withdraw_history = #{withdrawHistory,jdbcType=DECIMAL}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

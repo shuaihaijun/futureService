@@ -45,21 +45,23 @@ public class SignalMonitor {
     FuReportOrderSumService fuReportOrderSumService;
 
     /**
-     * 账户信息 每小时同步一次
+     * 信号源初始化监测 每小时同步一次
      */
-    @Scheduled(cron = "0 0/5 * * * ?")
+    @Scheduled(cron = "0 0 * * * ?")
     public void signalInitMonitor(){
 
 
         String toDayString=DateUtil.toDateString(new Date());
         Date today=DateUtil.toDate(toDayString);
+        /*考虑到零点 零界点创建的信号源会错过*/
+        Date oneDay=DateUtil.getFutureDate(new Date(),-1);
         /*参考时间，如果有前期的 日结流水数据 就认为已经初始化过了*/
-        Date referDate=DateUtil.getFutureDate(today,2);
+        Date referDate=DateUtil.getFutureDate(today,-2);
 
-        /*查询今天新申请的信号源*/
+        /*查询1天内新申请的信号源*/
         PageInfoHelper helper=new PageInfoHelper();
         Wrapper<FuProductSignal> wrapper=new EntityWrapper<>();
-        wrapper.ge(FuProductSignal.CREATE_DATE, today);
+        wrapper.ge(FuProductSignal.CREATE_DATE, oneDay);
         Page<FuProductSignal> signals=PageHelper.startPage(helper.getPageNo(),helper.getPageSize());
         fuProductSignalService.selectList(wrapper);
 

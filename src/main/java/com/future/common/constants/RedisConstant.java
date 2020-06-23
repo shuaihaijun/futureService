@@ -21,6 +21,10 @@ public class RedisConstant {
 	/*订单 信号源订单信息 处理失败暂存*/
 	public static final String L_ORDER_FOLLOW_SIGNAL_ORDER_BAK="tradeOrderFollowSignalOrderBak";
 
+
+	/*服务器 服务器主从管理保存*/
+	public static final String H_SERVER_SLAVE_INFO="serverSlaveInfo";
+
 	/*user login token*/
 	/*public static final String H_USER_LOGIN_TOKEN="userLoginToken";*/
 

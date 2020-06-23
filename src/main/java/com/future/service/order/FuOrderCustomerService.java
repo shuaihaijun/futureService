@@ -167,11 +167,7 @@ public class FuOrderCustomerService extends ServiceImpl<FuOrderCustomerMapper, F
                     if(lastCLostTime.compareTo(customer.getOrderCloseDate())>0){
                         continue;
                     }
-                    //限定交易类型 挂单的订单不做佣金处理
-                    if(customer.getOrderType()!=OrderConstant.ORDER_TYPE_BUY
-                            &&customer.getOrderType()!=OrderConstant.ORDER_TYPE_SELL){
-                        continue;
-                    }
+
                     /*与社区订单查重，已有订单无需操作*/
                     selectMap.put(FuOrderCustomer.USER_ID,userId);
                     selectMap.put(FuOrderCustomer.ORDER_ID,customer.getOrderId());
@@ -190,11 +186,18 @@ public class FuOrderCustomerService extends ServiceImpl<FuOrderCustomerMapper, F
 
                     /*保存用户自交易订单*/
                     fuOrderCustomerMapper.insertSelective(customer);
+
                     //计算出入金
-                    if(customer.getOrderType()==OrderConstant.ORDER_TYPE_DEPOSIT){
+                    if(customer.getOrderType()==OrderConstant.ORDER_TYPE_BALANCE){
+                        fuAccountMtService.mtAccDepositUpate(userId,mtAccId,customer.getOrderCloseDate(),customer.getOrderProfit());
                     }
-                    /*需要计算佣金的数据  暂存*/
-                    newOrderCustomers.add(customer);
+
+                    //限定交易类型 挂单的订单不做佣金处理
+                    if(customer.getOrderType()==OrderConstant.ORDER_TYPE_BUY
+                            ||customer.getOrderType()==OrderConstant.ORDER_TYPE_SELL){
+                        /*需要计算佣金的数据  暂存*/
+                        newOrderCustomers.add(customer);
+                    }
                 }
                 /*用户自交易订单 计算代理佣金*/
                 if(newOrderCustomers!=null&&newOrderCustomers.size()>0){

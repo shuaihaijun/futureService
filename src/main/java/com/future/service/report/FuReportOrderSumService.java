@@ -2,6 +2,7 @@ package com.future.service.report;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
+import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.future.common.constants.AccountConstant;
 import com.future.common.exception.BusinessException;
 import com.future.common.exception.DataConflictException;
@@ -12,6 +13,7 @@ import com.future.entity.report.FuReportOrderFlow;
 import com.future.entity.report.FuReportOrderSum;
 import com.future.mapper.report.FuReportOrderSumMapper;
 import com.future.service.order.FuOrderCustomerService;
+import io.swagger.models.auth.In;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +26,7 @@ import java.util.Date;
 import java.util.List;
 
 @Service
-public class FuReportOrderSumService {
+public class FuReportOrderSumService extends ServiceImpl<FuReportOrderSumMapper,FuReportOrderSum> {
 
     Logger log= LoggerFactory.getLogger(FuReportOrderSumService.class);
 
@@ -285,6 +287,25 @@ public class FuReportOrderSumService {
         }else {
             fuReportOrderSumMapper.updateByPrimaryKeySelective(orderSum);
         }
+        return orderSum;
+    }
+
+    /**
+     * 根据条件查询用户交易订单汇总信息
+     * @param userId
+     * @param mtAccId
+     * @return
+     */
+    public FuReportOrderSum getOrderSum(Integer userId,String mtAccId){
+        if(userId==null||userId==0||StringUtils.isEmpty(mtAccId)){
+            log.error("根据条件查询用户交易订单汇总信息失败，传入参数为空！");
+            throw new DataConflictException("根据条件查询用户交易订单汇总信息失败，传入参数为空！");
+        }
+        Wrapper<FuReportOrderSum> orderSumWrapper=new EntityWrapper<>();
+        orderSumWrapper.eq(FuReportOrderSum.USER_ID,userId);
+        orderSumWrapper.eq(FuReportOrderSum.MT_ACC_ID,mtAccId);
+
+        FuReportOrderSum orderSum=selectOne(orderSumWrapper);
         return orderSum;
     }
 

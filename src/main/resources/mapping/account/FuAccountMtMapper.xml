@@ -28,12 +28,26 @@
     <result column="margin" jdbcType="DECIMAL" property="margin" />
     <result column="account_state" jdbcType="TINYINT" property="accountState" />
     <result column="plat_type" jdbcType="TINYINT" property="platType" />
+    <result column="deposit" jdbcType="DECIMAL" property="deposit" />
+    <result column="withdraw" jdbcType="DECIMAL" property="withdraw" />
+    <result column="deposit_max" jdbcType="DECIMAL" property="depositMax" />
+    <result column="deposit_max_time" jdbcType="TIMESTAMP" property="depositMaxTime" />
+    <result column="deposit_last" jdbcType="DECIMAL" property="depositLast" />
+    <result column="deposit_last_time" jdbcType="TIMESTAMP" property="depositLastTime" />
+    <result column="withdraw_max" jdbcType="DECIMAL" property="withdrawMax" />
+    <result column="withdraw_max_time" jdbcType="TIMESTAMP" property="withdrawMaxTime" />
+    <result column="withdraw_last" jdbcType="DECIMAL" property="withdrawLast" />
+    <result column="withdraw_last_time" jdbcType="TIMESTAMP" property="withdrawLastTime" />
+    <result column="deposit_max_rate" jdbcType="DECIMAL" property="depositMaxRate" />
+    <result column="withdraw_max_rate" jdbcType="DECIMAL" property="withdrawMaxRate" />
   </resultMap>
   <sql id="Base_Column_List">
     id, user_id, server_id, server_name, broker_name, broker_id, mt_acc_id, mt_password_trade, 
     mt_password_watch, mt_acc_url, mt_acc_port, account_url, account_port, password_trade_checked, 
     password_watch_checked, is_signal, is_chief, account_type, leverage, balance, credit, 
-    profit, equity, margin, account_state, plat_type
+    profit, equity, margin, account_state, plat_type, deposit, withdraw, deposit_max, 
+    deposit_max_time, deposit_last, deposit_last_time, withdraw_max, withdraw_max_time, 
+    withdraw_last, withdraw_last_time, deposit_max_rate, withdraw_max_rate
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -54,7 +68,11 @@
       is_signal, is_chief, account_type, 
       leverage, balance, credit, 
       profit, equity, margin, 
-      account_state, plat_type)
+      account_state, plat_type, deposit, 
+      withdraw, deposit_max, deposit_max_time, 
+      deposit_last, deposit_last_time, withdraw_max, 
+      withdraw_max_time, withdraw_last, withdraw_last_time, 
+      deposit_max_rate, withdraw_max_rate)
     values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{serverId,jdbcType=INTEGER}, 
       #{serverName,jdbcType=VARCHAR}, #{brokerName,jdbcType=VARCHAR}, #{brokerId,jdbcType=INTEGER}, 
       #{mtAccId,jdbcType=VARCHAR}, #{mtPasswordTrade,jdbcType=VARCHAR}, #{mtPasswordWatch,jdbcType=VARCHAR}, 
@@ -63,7 +81,11 @@
       #{isSignal,jdbcType=TINYINT}, #{isChief,jdbcType=TINYINT}, #{accountType,jdbcType=TINYINT}, 
       #{leverage,jdbcType=DECIMAL}, #{balance,jdbcType=DECIMAL}, #{credit,jdbcType=DECIMAL}, 
       #{profit,jdbcType=DECIMAL}, #{equity,jdbcType=DECIMAL}, #{margin,jdbcType=DECIMAL}, 
-      #{accountState,jdbcType=TINYINT}, #{platType,jdbcType=TINYINT})
+      #{accountState,jdbcType=TINYINT}, #{platType,jdbcType=TINYINT}, #{deposit,jdbcType=DECIMAL}, 
+      #{withdraw,jdbcType=DECIMAL}, #{depositMax,jdbcType=DECIMAL}, #{depositMaxTime,jdbcType=TIMESTAMP}, 
+      #{depositLast,jdbcType=DECIMAL}, #{depositLastTime,jdbcType=TIMESTAMP}, #{withdrawMax,jdbcType=DECIMAL}, 
+      #{withdrawMaxTime,jdbcType=TIMESTAMP}, #{withdrawLast,jdbcType=DECIMAL}, #{withdrawLastTime,jdbcType=TIMESTAMP}, 
+      #{depositMaxRate,jdbcType=DECIMAL}, #{withdrawMaxRate,jdbcType=DECIMAL})
   </insert>
   <insert id="insertSelective" parameterType="com.future.entity.account.FuAccountMt">
     insert into fu_account_mt
@@ -146,6 +168,42 @@
       <if test="platType != null">
         plat_type,
       </if>
+      <if test="deposit != null">
+        deposit,
+      </if>
+      <if test="withdraw != null">
+        withdraw,
+      </if>
+      <if test="depositMax != null">
+        deposit_max,
+      </if>
+      <if test="depositMaxTime != null">
+        deposit_max_time,
+      </if>
+      <if test="depositLast != null">
+        deposit_last,
+      </if>
+      <if test="depositLastTime != null">
+        deposit_last_time,
+      </if>
+      <if test="withdrawMax != null">
+        withdraw_max,
+      </if>
+      <if test="withdrawMaxTime != null">
+        withdraw_max_time,
+      </if>
+      <if test="withdrawLast != null">
+        withdraw_last,
+      </if>
+      <if test="withdrawLastTime != null">
+        withdraw_last_time,
+      </if>
+      <if test="depositMaxRate != null">
+        deposit_max_rate,
+      </if>
+      <if test="withdrawMaxRate != null">
+        withdraw_max_rate,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -225,6 +283,42 @@
       </if>
       <if test="platType != null">
         #{platType,jdbcType=TINYINT},
+      </if>
+      <if test="deposit != null">
+        #{deposit,jdbcType=DECIMAL},
+      </if>
+      <if test="withdraw != null">
+        #{withdraw,jdbcType=DECIMAL},
+      </if>
+      <if test="depositMax != null">
+        #{depositMax,jdbcType=DECIMAL},
+      </if>
+      <if test="depositMaxTime != null">
+        #{depositMaxTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="depositLast != null">
+        #{depositLast,jdbcType=DECIMAL},
+      </if>
+      <if test="depositLastTime != null">
+        #{depositLastTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="withdrawMax != null">
+        #{withdrawMax,jdbcType=DECIMAL},
+      </if>
+      <if test="withdrawMaxTime != null">
+        #{withdrawMaxTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="withdrawLast != null">
+        #{withdrawLast,jdbcType=DECIMAL},
+      </if>
+      <if test="withdrawLastTime != null">
+        #{withdrawLastTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="depositMaxRate != null">
+        #{depositMaxRate,jdbcType=DECIMAL},
+      </if>
+      <if test="withdrawMaxRate != null">
+        #{withdrawMaxRate,jdbcType=DECIMAL},
       </if>
     </trim>
   </insert>
@@ -306,6 +400,42 @@
       <if test="platType != null">
         plat_type = #{platType,jdbcType=TINYINT},
       </if>
+      <if test="deposit != null">
+        deposit = #{deposit,jdbcType=DECIMAL},
+      </if>
+      <if test="withdraw != null">
+        withdraw = #{withdraw,jdbcType=DECIMAL},
+      </if>
+      <if test="depositMax != null">
+        deposit_max = #{depositMax,jdbcType=DECIMAL},
+      </if>
+      <if test="depositMaxTime != null">
+        deposit_max_time = #{depositMaxTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="depositLast != null">
+        deposit_last = #{depositLast,jdbcType=DECIMAL},
+      </if>
+      <if test="depositLastTime != null">
+        deposit_last_time = #{depositLastTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="withdrawMax != null">
+        withdraw_max = #{withdrawMax,jdbcType=DECIMAL},
+      </if>
+      <if test="withdrawMaxTime != null">
+        withdraw_max_time = #{withdrawMaxTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="withdrawLast != null">
+        withdraw_last = #{withdrawLast,jdbcType=DECIMAL},
+      </if>
+      <if test="withdrawLastTime != null">
+        withdraw_last_time = #{withdrawLastTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="depositMaxRate != null">
+        deposit_max_rate = #{depositMaxRate,jdbcType=DECIMAL},
+      </if>
+      <if test="withdrawMaxRate != null">
+        withdraw_max_rate = #{withdrawMaxRate,jdbcType=DECIMAL},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -335,7 +465,19 @@
       equity = #{equity,jdbcType=DECIMAL},
       margin = #{margin,jdbcType=DECIMAL},
       account_state = #{accountState,jdbcType=TINYINT},
-      plat_type = #{platType,jdbcType=TINYINT}
+      plat_type = #{platType,jdbcType=TINYINT},
+      deposit = #{deposit,jdbcType=DECIMAL},
+      withdraw = #{withdraw,jdbcType=DECIMAL},
+      deposit_max = #{depositMax,jdbcType=DECIMAL},
+      deposit_max_time = #{depositMaxTime,jdbcType=TIMESTAMP},
+      deposit_last = #{depositLast,jdbcType=DECIMAL},
+      deposit_last_time = #{depositLastTime,jdbcType=TIMESTAMP},
+      withdraw_max = #{withdrawMax,jdbcType=DECIMAL},
+      withdraw_max_time = #{withdrawMaxTime,jdbcType=TIMESTAMP},
+      withdraw_last = #{withdrawLast,jdbcType=DECIMAL},
+      withdraw_last_time = #{withdrawLastTime,jdbcType=TIMESTAMP},
+      deposit_max_rate = #{depositMaxRate,jdbcType=DECIMAL},
+      withdraw_max_rate = #{withdrawMaxRate,jdbcType=DECIMAL}
     where id = #{id,jdbcType=INTEGER}
   </update>
   <select id="selectUserMTAccByCondition" parameterType="java.util.Map" resultType="com.future.pojo.bo.account.UserMTAccountBO">
@@ -362,6 +504,18 @@
     acc.profit profit,
     acc.equity equity,
     acc.margin margin,
+    acc.deposit deposit,
+    acc.withdraw withdraw,
+    acc.deposit_max depositMax,
+    acc.deposit_max_rate depositMaxRate,
+    acc.deposit_max_time depositMaxTime,
+    acc.deposit_last depositLast,
+    acc.deposit_last_time depositLastTime,
+    acc.withdraw_max withdrawMax,
+    acc.withdraw_max_rate withdrawMaxRate,
+    acc.withdraw_max_time withdrawMaxTime,
+    acc.withdraw_last withdrawLast,
+    acc.withdraw_last_time withdrawLastTime,
     u.id userId,
     u.username,
     u.real_name realName,
@@ -532,6 +686,18 @@
     acc.profit profit,
     acc.equity equity,
     acc.margin margin,
+    acc.deposit deposit,
+    acc.withdraw withdraw,
+    acc.deposit_max depositMax,
+    acc.deposit_max_rate depositMaxRate,
+    acc.deposit_max_time depositMaxTime,
+    acc.deposit_last depositLast,
+    acc.deposit_last_time depositLastTime,
+    acc.withdraw_max withdrawMax,
+    acc.withdraw_max_rate withdrawMaxRate,
+    acc.withdraw_max_time withdrawMaxTime,
+    acc.withdraw_last withdrawLast,
+    acc.withdraw_last_time withdrawLastTime,
     u.id userId,
     u.username,
     u.real_name realName,

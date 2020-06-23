@@ -46,9 +46,11 @@ public class AccountMonitor {
         fuAccountMtService.selectList(wrapper);
         for(FuAccountMt accountMt:accountMts){
             try {
+                log.info("账户信息 每天同步一次------------------------mtAccId:"+accountMt.getMtAccId());
                 /*同步用户账户信息*/
                 fuAccountMtService.updateAccountInfoFromMt(accountMt.getUserId());
             }catch (Exception e){
+                log.error("账户信每天同步 失败，userId:"+accountMt.getUserId()+",mtAccId:"+accountMt.getMtAccId());
                 log.error(e.getMessage(),e);
             }
         }

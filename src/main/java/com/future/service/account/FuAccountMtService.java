@@ -568,17 +568,8 @@ public class FuAccountMtService extends ServiceImpl<FuAccountMtMapper, FuAccount
            accountMt.setEquity(new BigDecimal(infoBo.getEquity()).setScale(AccountConstant.BigDecimal_Scale,BigDecimal.ROUND_HALF_UP));
            accountMt.setMargin(new BigDecimal(infoBo.getMargin()).setScale(AccountConstant.BigDecimal_Scale,BigDecimal.ROUND_HALF_UP));
 
-           /*生成账户流水*/
-           FuAccountMtFlow flow=new FuAccountMtFlow();
-           flow.setUserId(userId);
-           flow.setMtAccId(accountMt.getMtAccId());
-           flow.setServerName(accountMt.getServerName());
-           flow.setBalance(accountMt.getBalance());
-           flow.setCredit(accountMt.getCredit());
-           flow.setProfit(accountMt.getProfit());
-           flow.setEquity(accountMt.getEquity());
-           flow.setMargin(accountMt.getMargin());
-           flow.setProfitHistory(accountMt.getProfit());
+
+            FuAccountMtFlow flow=new FuAccountMtFlow();
 
            /*查询历史流水数据*/
            flowWrapper.eq(FuAccountMtFlow.USER_ID,userId);
@@ -589,19 +580,30 @@ public class FuAccountMtService extends ServiceImpl<FuAccountMtMapper, FuAccount
            List<FuAccountMtFlow> flows= fuAccountMtFlowMapper.selectList(flowWrapper);
            for(FuAccountMtFlow mtFlow:flows){
                if(DateUtil.toDateString(mtFlow.getTradeDate()).equals(DateUtil.toDateString(dealDate))){
-                 //同一天 删除重新跟新
-                   fuAccountMtFlowMapper.deleteByPrimaryKey(mtFlow.getId());
+                 //同一天 有可能生成了出入金流水
+                   flow=mtFlow;
                } else {
                  //上一个交易日 累加收益
                    flow.setProfitHistory(mtFlow.getProfitHistory().add(accountMt.getProfit()));
-                   /*判断出入金 （昨天节点的余额 = 今天的余额 + 昨天节点后平仓收入  节点：零点）*/
-                    // TODO 节点（0点）余额难取，或记下时间节点 去流水表里根据时间节点查查也行
                    break;
                }
            }
-
+            /*生成账户流水*/
+            flow.setUserId(userId);
+            flow.setMtAccId(accountMt.getMtAccId());
+            flow.setServerName(accountMt.getServerName());
+            flow.setBalance(accountMt.getBalance());
+            flow.setCredit(accountMt.getCredit());
+            flow.setProfit(accountMt.getProfit());
+            flow.setEquity(accountMt.getEquity());
+            flow.setMargin(accountMt.getMargin());
+            flow.setProfitHistory(accountMt.getProfit());
            /*插入流水数据*/
-           fuAccountMtFlowMapper.insertSelective(flow);
+            if(flow.getId()==null||flow.getId()==0){
+                fuAccountMtFlowMapper.insertSelective(flow);
+            }else {
+                fuAccountMtFlowMapper.updateByPrimaryKeySelective(flow);
+            }
             /*更新账户数据*/
            fuAccountMtMapper.updateByPrimaryKey(accountMt);
         }
@@ -639,6 +641,90 @@ public class FuAccountMtService extends ServiceImpl<FuAccountMtMapper, FuAccount
         }
 
         /*3.其他*/
+        return true;
+    }
+
+
+    /**
+     * 账户出入金设置
+     * @param userId
+     * @param mtAccId
+     * @param tradeDate
+     * @param profit
+     * @return
+     */
+    public boolean mtAccDepositUpate(Integer userId,String mtAccId,Date tradeDate ,BigDecimal profit){
+
+        Wrapper<FuAccountMt> wrapper=new EntityWrapper<>();
+        wrapper.eq(FuAccountMt.MT_ACC_ID,mtAccId);
+        wrapper.eq(FuAccountMt.USER_ID,userId);
+        FuAccountMt accountMt=selectOne(wrapper);
+        if(ObjectUtils.isEmpty(accountMt)){
+            log.error("账户出入金设置失败，用户账户MT账户信息为空！");
+            throw new BusinessException("账户出入金设置失败，用户账户MT账户信息为空！");
+        }
+
+        /*查询历史流水数据*/
+        Wrapper<FuAccountMtFlow> flowWrapper=new EntityWrapper<>();
+        flowWrapper.eq(FuAccountMtFlow.USER_ID,userId);
+        flowWrapper.eq(FuAccountMtFlow.MT_ACC_ID,mtAccId);
+        flowWrapper.le(FuAccountMtFlow.TRADE_DATE,DateUtil.toDateString(tradeDate));
+        List<FuAccountMtFlow> flows= fuAccountMtFlowMapper.selectList(flowWrapper);
+        FuAccountMtFlow flow=new FuAccountMtFlow();
+        if(flows!=null && flows.size()>0){
+            // 已经做个账户日结
+            flow=flows.get(0);
+        }else {
+            flow.setUserId(userId);
+            flow.setMtAccId(mtAccId);
+            flow.setTradeDate(DateUtil.toDate(DateUtil.toDateString(tradeDate)));
+        }
+
+        if(profit.compareTo(new BigDecimal(0))>0){
+            /*入金*/
+            accountMt.setDepositLast(profit);
+            accountMt.setDepositLastTime(tradeDate);
+            accountMt.setDeposit(accountMt.getDeposit().add(profit));
+            if(profit.compareTo(accountMt.getDepositMax())>0){
+                accountMt.setDepositMax(profit);
+                accountMt.setDepositMaxTime(tradeDate);
+                accountMt.setDepositMaxRate(profit.divide(accountMt.getEquity(),AccountConstant.BigDecimal_Scale, BigDecimal.ROUND_HALF_UP));
+            }
+            /*计算流水信息*/
+            if(flow.getDepositHistory()!=null){
+                flow.setDepositHistory(flow.getProfitHistory().add(profit));
+            }else {
+                flow.setDepositHistory(profit);
+            }
+        }else {
+            /*出金*/
+            accountMt.setWithdrawLast(profit);
+            accountMt.setWithdrawLastTime(tradeDate);
+            accountMt.setWithdraw(accountMt.getWithdraw().add(profit));
+            if(profit.compareTo(accountMt.getWithdrawMax())<0){
+                accountMt.setWithdrawMax(profit);
+                accountMt.setWithdrawMaxTime(tradeDate);
+                accountMt.setWithdrawMaxRate(profit.divide(accountMt.getEquity(),AccountConstant.BigDecimal_Scale, BigDecimal.ROUND_HALF_UP));
+            }
+            /*计算流水信息*/
+            flow.setWithdraw(profit);
+            if(flow.getWithdrawHistory()!=null){
+                flow.setWithdrawHistory(flow.getWithdrawHistory().add(profit));
+            }else {
+                flow.setWithdrawHistory(profit);
+            }
+        }
+
+        /*修改账户信息*/
+        fuAccountMtMapper.updateByPrimaryKeySelective(accountMt);
+
+        /*添加/修改账户流水*/
+        if(flow.getId()!=null&&flow.getId()>0){
+            fuAccountMtFlowMapper.updateByPrimaryKeySelective(flow);
+        }else {
+            fuAccountMtFlowMapper.insertSelective(flow);
+        }
+
         return true;
     }
 

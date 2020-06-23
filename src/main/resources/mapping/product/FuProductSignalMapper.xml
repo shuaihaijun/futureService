@@ -524,6 +524,9 @@
       <if test="mtAccId != null">
         and s.mt_acc_id = #{mtAccId,jdbcType=INTEGER}
       </if>
+      <if test="signalState != null">
+        and s.signal_state = #{signalState,jdbcType=INTEGER}
+      </if>
       <if test="brokerName != null">
         and m.broker_name = #{brokerName,jdbcType=INTEGER}
       </if>

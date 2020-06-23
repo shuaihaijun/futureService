@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.future.common.constants.AccountConstant;
 import com.future.common.constants.CommonConstant;
 import com.future.common.constants.RedisConstant;
 import com.future.common.enums.GlobalResultCode;
@@ -210,7 +211,13 @@ public class FuProductSignalService extends ServiceImpl<FuProductSignalMapper,Fu
         if(requestMap.getString("pageNum")!=null){
             pageNum=Integer.parseInt(requestMap.getString("pageNum"));
         }
+        if(requestMap.getString("signalState")==null){
+            pageNum=Integer.parseInt(requestMap.getString("pageNum"));
+        }
         Map conditionMap =requestMap.getInnerMap();
+        if(conditionMap.get("signalState")==null){
+            conditionMap.put("signalState", AccountConstant.ACCOUNT_STATE_NORMAL);
+        }
         PageHelper.startPage(pageNum,pageSize);
         List<FuUserSignalVO> signals= fuProductSignalMapper.querySignalUsers(conditionMap);
         return new PageInfo<FuUserSignalVO>(signals);

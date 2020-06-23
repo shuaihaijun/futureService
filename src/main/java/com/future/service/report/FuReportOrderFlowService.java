@@ -4,13 +4,19 @@ import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.future.common.constants.AccountConstant;
+import com.future.common.enums.GlobalResultCode;
+import com.future.common.exception.DataConflictException;
+import com.future.common.helper.PageInfoHelper;
 import com.future.common.util.DateUtil;
 import com.future.common.util.StringUtils;
 import com.future.entity.account.FuAccountMt;
+import com.future.entity.order.FuOrderCustomer;
 import com.future.entity.report.FuReportOrderFlow;
 import com.future.mapper.report.FuReportOrderFlowMapper;
 import com.future.pojo.bo.report.FuReportOrderFlowBo;
 import com.future.service.account.FuAccountMtService;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -105,6 +111,8 @@ public class FuReportOrderFlowService extends ServiceImpl<FuReportOrderFlowMappe
         flow.setOrderProfitMax(flowBo.getOrderProfitMax());
         if(flowBo.getOrderProfitCount()>0){
             flow.setOrderProfitAvg(flowBo.getOrderProfit().divide(new BigDecimal(flowBo.getOrderProfitCount()), AccountConstant.BigDecimal_Scale, BigDecimal.ROUND_HALF_UP));
+        }else {
+            flow.setOrderProfitAvg(new BigDecimal(0));
         }
 
         /*损失数据*/
@@ -114,6 +122,8 @@ public class FuReportOrderFlowService extends ServiceImpl<FuReportOrderFlowMappe
         flow.setOrderLossMax(flowBo.getOrderLossMax());
         if(flowBo.getOrderLossCount()>0){
             flow.setOrderLossAvg(flowBo.getOrderLoss().divide(new BigDecimal(flowBo.getOrderLossCount()), AccountConstant.BigDecimal_Scale, BigDecimal.ROUND_HALF_UP));
+        }else {
+            flow.setOrderLossAvg(new BigDecimal(0));
         }
 
         flow.setOrderSwap(flowBo.getOrderSwap());
@@ -128,6 +138,8 @@ public class FuReportOrderFlowService extends ServiceImpl<FuReportOrderFlowMappe
         //当日收益率(当日收益/当日净值)
         if(accountMt.getEquity().compareTo(new BigDecimal(0))>0){
             flow.setOrderIncomeRate(flowBo.getOrderIncome().divide(accountMt.getEquity(),AccountConstant.BigDecimal_Scale, BigDecimal.ROUND_HALF_UP));
+        }else {
+            flow.setOrderIncomeRate(new BigDecimal(0));
         }
         /*交易胜率(盈利笔数在总笔数中的占比，数据值越大，代表盈利订单占比越高)*/
         if(flowBo.getOrderCount()>0){
@@ -139,6 +151,8 @@ public class FuReportOrderFlowService extends ServiceImpl<FuReportOrderFlowMappe
         /*净值盈亏比（盈利订单总额与亏损订单总额的比值，该值越大表明该账户当前的绩效结果越好。）*/
         if(flowBo.getOrderLoss().compareTo(new BigDecimal(0))>0){
             flow.setOrderPlRate(flowBo.getOrderProfit().divide(flowBo.getOrderLoss(),AccountConstant.BigDecimal_Scale, BigDecimal.ROUND_HALF_UP));
+        }else {
+            flow.setOrderPlRate(new BigDecimal(0));
         }
 
         flow.setOrderLotsMax(flowBo.getOrderLotsMax());
@@ -185,4 +199,42 @@ public class FuReportOrderFlowService extends ServiceImpl<FuReportOrderFlowMappe
         return flow;
     }
 
+    /**
+     * 以账户为单位根据条件查询订单结算流水数据
+     * @param condition
+     * @param helper
+     * @return
+     */
+    public Page<FuReportOrderFlow> queryOrderFlow(Integer userId,String mtAccId, Map condition, PageInfoHelper helper){
+        if(userId==null||userId==0||StringUtils.isEmpty(mtAccId)){
+            log.error("根据条件查询订单结算流水数据，传入参数为空！");
+            throw new DataConflictException("根据条件查询订单结算流水数据，传入参数为空！");
+        }
+        Wrapper<FuReportOrderFlow> orderFlowWrapper=new EntityWrapper<>();
+        orderFlowWrapper.eq(FuReportOrderFlow.USER_ID,userId);
+        orderFlowWrapper.eq(FuReportOrderFlow.MT_ACC_ID,mtAccId);
+        if(condition!=null&&!ObjectUtils.isEmpty(condition.get("tradeDate"))){
+            if(String.valueOf(condition.get("tradeDate")).indexOf(",")<0){
+                orderFlowWrapper.eq(FuReportOrderFlow.TRADE_DATE,condition.get("tradeDate"));
+            }else {
+                //时间段
+                List dateList=(List) condition.get("tradeDate");
+                if(dateList.size()!=2){
+                    log.error("建仓时间段数据传入错误！"+condition.get("tradeDate"));
+                    throw new DataConflictException(GlobalResultCode.PARAM_VERIFY_ERROR,"建仓时间段数据传入错误！"+condition.get("tradeDate"));
+                }
+                orderFlowWrapper.ge(FuReportOrderFlow.TRADE_DATE,dateList.get(0));
+                orderFlowWrapper.le(FuReportOrderFlow.TRADE_DATE,dateList.get(1));
+            }
+        }
+        orderFlowWrapper.orderBy(FuReportOrderFlow.TRADE_DATE,false);
+
+        if(helper==null){
+            helper=new PageInfoHelper();
+            helper.setPageSize(300);
+        }
+        Page<FuReportOrderFlow> flows= PageHelper.startPage(helper.getPageNo(),helper.getPageSize());
+        selectList(orderFlowWrapper);
+        return flows;
+    }
 }

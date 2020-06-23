@@ -82,6 +82,16 @@ public class FuAccountMtFlow {
     private BigDecimal withdraw;
 
     /**
+     * 历史入金
+     */
+    private BigDecimal depositHistory;
+
+    /**
+     * 历史提取
+     */
+    private BigDecimal withdrawHistory;
+
+    /**
      * 主键
      * @return id 主键
      */
@@ -303,5 +313,37 @@ public class FuAccountMtFlow {
      */
     public void setWithdraw(BigDecimal withdraw) {
         this.withdraw = withdraw;
+    }
+
+    /**
+     * 历史入金
+     * @return deposit_history 历史入金
+     */
+    public BigDecimal getDepositHistory() {
+        return depositHistory;
+    }
+
+    /**
+     * 历史入金
+     * @param depositHistory 历史入金
+     */
+    public void setDepositHistory(BigDecimal depositHistory) {
+        this.depositHistory = depositHistory;
+    }
+
+    /**
+     * 历史提取
+     * @return withdraw_history 历史提取
+     */
+    public BigDecimal getWithdrawHistory() {
+        return withdrawHistory;
+    }
+
+    /**
+     * 历史提取
+     * @param withdrawHistory 历史提取
+     */
+    public void setWithdrawHistory(BigDecimal withdrawHistory) {
+        this.withdrawHistory = withdrawHistory;
     }
 }

@@ -373,6 +373,7 @@ public class FuOrderSignalService extends ServiceImpl<FuOrderSignalMapper, FuOrd
 
         /*时间段按月截取*/
         List<FuOrderSignal> orderSignals=new ArrayList<>();
+        List<FuOrderCustomer> orderCustomers=new ArrayList<>();
         Map selectMap = new HashMap();
         Date dateFrom=new Date();
         Date dateTo=new Date();
@@ -421,11 +422,7 @@ public class FuOrderSignalService extends ServiceImpl<FuOrderSignalMapper, FuOrd
                 if(dateFrom.compareTo(orderSignal.getOrderCloseDate())>0){
                     continue;
                 }
-                //限定交易类型 挂单的订单不做佣金处理
-                if(orderSignal.getOrderType()!=OrderConstant.ORDER_TYPE_BUY
-                        &&orderSignal.getOrderType()!=OrderConstant.ORDER_TYPE_SELL){
-                    continue;
-                }
+
                 // 与社区订单查重，已有订单无需操作
                 selectMap.clear();
                 selectMap.put(FuOrderSignal.USER_ID,userId);
@@ -443,14 +440,24 @@ public class FuOrderSignalService extends ServiceImpl<FuOrderSignalMapper, FuOrd
                 orderSignal.setMtAccId(signal.getMtAccId());
                 orderSignal.setMtServerName(signal.getServerName());
                 orderSignal.setOrderState(OrderConstant.ORDER_STATE_CLOSE);
-
-                // 保存信号源交易订单
                 fuOrderSignalMapper.insertSelective(orderSignal);
 
                 // 保存用户自交易订单
                 FuOrderCustomer orderCustomer= ConvertUtil.convertOrderCustomer(orderSignal);
+                orderCustomers.add(orderCustomer);
                 fuOrderCustomerService.insertSelective(orderCustomer);
+
+                //历史订单不错佣金处理
+
+                //计算出入金
+                if(orderSignal.getOrderType()==OrderConstant.ORDER_TYPE_BALANCE){
+                    fuAccountMtService.mtAccDepositUpate(userId,mtAccId,orderSignal.getOrderCloseDate(),orderSignal.getOrderProfit());
+                }
             }
+            /*// 保存信号源交易订单
+            insertBatch(orderSignals);
+            // 保持客户交易订单（数据分析用）
+            fuOrderCustomerService.insertBatch(orderCustomers);*/
         }
 
         /*本地逻辑打开的链接需要关闭*/

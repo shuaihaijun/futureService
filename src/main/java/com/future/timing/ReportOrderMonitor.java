@@ -46,7 +46,7 @@ public class ReportOrderMonitor {
     /**
      * 订单报表分析 每天同步一次
      */
-    @Scheduled(cron = "0 0 0 * * ?")
+    @Scheduled(cron = "0 0 5 * * ?")
     public void reportOrderAnalysis(){
 
         Date tradeDate= DateUtil.getFutureDate(new Date(),-1);

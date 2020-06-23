@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.enums.IdType;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 public class FuAccountMt {
     public static String USER_ID="user_id";
@@ -142,6 +143,66 @@ public class FuAccountMt {
      * MT类型：0 mt4,1 mt5
      */
     private Integer platType;
+
+    /**
+     * 入金
+     */
+    private BigDecimal deposit;
+
+    /**
+     * 出金
+     */
+    private BigDecimal withdraw;
+
+    /**
+     * 最大入金
+     */
+    private BigDecimal depositMax;
+
+    /**
+     * 最大入金时间
+     */
+    private Date depositMaxTime;
+
+    /**
+     * 最后入金
+     */
+    private BigDecimal depositLast;
+
+    /**
+     * 最后入金时间
+     */
+    private Date depositLastTime;
+
+    /**
+     * 最大出金
+     */
+    private BigDecimal withdrawMax;
+
+    /**
+     * 最大出金时间
+     */
+    private Date withdrawMaxTime;
+
+    /**
+     * 最后出金
+     */
+    private BigDecimal withdrawLast;
+
+    /**
+     * 最后出金时间
+     */
+    private Date withdrawLastTime;
+
+    /**
+     * 最大入金比例
+     */
+    private BigDecimal depositMaxRate;
+
+    /**
+     * 最大出金比例
+     */
+    private BigDecimal withdrawMaxRate;
 
     /**
      * 
@@ -557,5 +618,197 @@ public class FuAccountMt {
      */
     public void setPlatType(Integer platType) {
         this.platType = platType;
+    }
+
+    /**
+     * 入金
+     * @return deposit 入金
+     */
+    public BigDecimal getDeposit() {
+        return deposit;
+    }
+
+    /**
+     * 入金
+     * @param deposit 入金
+     */
+    public void setDeposit(BigDecimal deposit) {
+        this.deposit = deposit;
+    }
+
+    /**
+     * 出金
+     * @return withdraw 出金
+     */
+    public BigDecimal getWithdraw() {
+        return withdraw;
+    }
+
+    /**
+     * 出金
+     * @param withdraw 出金
+     */
+    public void setWithdraw(BigDecimal withdraw) {
+        this.withdraw = withdraw;
+    }
+
+    /**
+     * 最大入金
+     * @return deposit_max 最大入金
+     */
+    public BigDecimal getDepositMax() {
+        return depositMax;
+    }
+
+    /**
+     * 最大入金
+     * @param depositMax 最大入金
+     */
+    public void setDepositMax(BigDecimal depositMax) {
+        this.depositMax = depositMax;
+    }
+
+    /**
+     * 最大入金时间
+     * @return deposit_max_time 最大入金时间
+     */
+    public Date getDepositMaxTime() {
+        return depositMaxTime;
+    }
+
+    /**
+     * 最大入金时间
+     * @param depositMaxTime 最大入金时间
+     */
+    public void setDepositMaxTime(Date depositMaxTime) {
+        this.depositMaxTime = depositMaxTime;
+    }
+
+    /**
+     * 最后入金
+     * @return deposit_last 最后入金
+     */
+    public BigDecimal getDepositLast() {
+        return depositLast;
+    }
+
+    /**
+     * 最后入金
+     * @param depositLast 最后入金
+     */
+    public void setDepositLast(BigDecimal depositLast) {
+        this.depositLast = depositLast;
+    }
+
+    /**
+     * 最后入金时间
+     * @return deposit_last_time 最后入金时间
+     */
+    public Date getDepositLastTime() {
+        return depositLastTime;
+    }
+
+    /**
+     * 最后入金时间
+     * @param depositLastTime 最后入金时间
+     */
+    public void setDepositLastTime(Date depositLastTime) {
+        this.depositLastTime = depositLastTime;
+    }
+
+    /**
+     * 最大出金
+     * @return withdraw_max 最大出金
+     */
+    public BigDecimal getWithdrawMax() {
+        return withdrawMax;
+    }
+
+    /**
+     * 最大出金
+     * @param withdrawMax 最大出金
+     */
+    public void setWithdrawMax(BigDecimal withdrawMax) {
+        this.withdrawMax = withdrawMax;
+    }
+
+    /**
+     * 最大出金时间
+     * @return withdraw_max_time 最大出金时间
+     */
+    public Date getWithdrawMaxTime() {
+        return withdrawMaxTime;
+    }
+
+    /**
+     * 最大出金时间
+     * @param withdrawMaxTime 最大出金时间
+     */
+    public void setWithdrawMaxTime(Date withdrawMaxTime) {
+        this.withdrawMaxTime = withdrawMaxTime;
+    }
+
+    /**
+     * 最后出金
+     * @return withdraw_last 最后出金
+     */
+    public BigDecimal getWithdrawLast() {
+        return withdrawLast;
+    }
+
+    /**
+     * 最后出金
+     * @param withdrawLast 最后出金
+     */
+    public void setWithdrawLast(BigDecimal withdrawLast) {
+        this.withdrawLast = withdrawLast;
+    }
+
+    /**
+     * 最后出金时间
+     * @return withdraw_last_time 最后出金时间
+     */
+    public Date getWithdrawLastTime() {
+        return withdrawLastTime;
+    }
+
+    /**
+     * 最后出金时间
+     * @param withdrawLastTime 最后出金时间
+     */
+    public void setWithdrawLastTime(Date withdrawLastTime) {
+        this.withdrawLastTime = withdrawLastTime;
+    }
+
+    /**
+     * 最大入金
+     * @return deposit_max_rate 最大入金
+     */
+    public BigDecimal getDepositMaxRate() {
+        return depositMaxRate;
+    }
+
+    /**
+     * 最大入金
+     * @param depositMaxRate 最大入金
+     */
+    public void setDepositMaxRate(BigDecimal depositMaxRate) {
+        this.depositMaxRate = depositMaxRate;
+    }
+
+    /**
+     * 最大出金
+     * @return withdraw_max_rate 最大出金
+     */
+    public BigDecimal getWithdrawMaxRate() {
+        return withdrawMaxRate;
+    }
+
+    /**
+     * 最大出金
+     * @param withdrawMaxRate 最大出金
+     */
+    public void setWithdrawMaxRate(BigDecimal withdrawMaxRate) {
+        this.withdrawMaxRate = withdrawMaxRate;
     }
 }

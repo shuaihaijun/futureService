@@ -1,6 +1,7 @@
 package com.future.pojo.bo.account;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 /*用户MT账户BO*/
 public class UserMTAccountBO {
@@ -36,6 +37,65 @@ public class UserMTAccountBO {
     private Integer introducer;//介绍人
     private Integer accountState;//账户状态
     private Integer platType;//平台类型
+
+    /**
+     * 最大入金比例
+     */
+    private BigDecimal depositMaxRate;
+
+    /**
+     * 最大出金比例
+     */
+    private BigDecimal withdrawMaxRate;
+    /**
+     * 入金
+     */
+    private BigDecimal deposit;
+
+    /**
+     * 出金
+     */
+    private BigDecimal withdraw;
+
+    /**
+     * 最大入金
+     */
+    private BigDecimal depositMax;
+
+    /**
+     * 最大入金时间
+     */
+    private Date depositMaxTime;
+
+    /**
+     * 最后入金
+     */
+    private BigDecimal depositLast;
+
+    /**
+     * 最后入金时间
+     */
+    private Date depositLastTime;
+
+    /**
+     * 最大出金
+     */
+    private BigDecimal withdrawMax;
+
+    /**
+     * 最大出金时间
+     */
+    private Date withdrawMaxTime;
+
+    /**
+     * 最后出金
+     */
+    private BigDecimal withdrawLast;
+
+    /**
+     * 最后出金时间
+     */
+    private Date withdrawLastTime;
 
     /**
      * 用户账号
@@ -374,5 +434,85 @@ public class UserMTAccountBO {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public BigDecimal getDeposit() {
+        return deposit;
+    }
+
+    public void setDeposit(BigDecimal deposit) {
+        this.deposit = deposit;
+    }
+
+    public BigDecimal getWithdraw() {
+        return withdraw;
+    }
+
+    public void setWithdraw(BigDecimal withdraw) {
+        this.withdraw = withdraw;
+    }
+
+    public BigDecimal getDepositMax() {
+        return depositMax;
+    }
+
+    public void setDepositMax(BigDecimal depositMax) {
+        this.depositMax = depositMax;
+    }
+
+    public Date getDepositMaxTime() {
+        return depositMaxTime;
+    }
+
+    public void setDepositMaxTime(Date depositMaxTime) {
+        this.depositMaxTime = depositMaxTime;
+    }
+
+    public BigDecimal getDepositLast() {
+        return depositLast;
+    }
+
+    public void setDepositLast(BigDecimal depositLast) {
+        this.depositLast = depositLast;
+    }
+
+    public Date getDepositLastTime() {
+        return depositLastTime;
+    }
+
+    public void setDepositLastTime(Date depositLastTime) {
+        this.depositLastTime = depositLastTime;
+    }
+
+    public BigDecimal getWithdrawMax() {
+        return withdrawMax;
+    }
+
+    public void setWithdrawMax(BigDecimal withdrawMax) {
+        this.withdrawMax = withdrawMax;
+    }
+
+    public Date getWithdrawMaxTime() {
+        return withdrawMaxTime;
+    }
+
+    public void setWithdrawMaxTime(Date withdrawMaxTime) {
+        this.withdrawMaxTime = withdrawMaxTime;
+    }
+
+    public BigDecimal getWithdrawLast() {
+        return withdrawLast;
+    }
+
+    public void setWithdrawLast(BigDecimal withdrawLast) {
+        this.withdrawLast = withdrawLast;
+    }
+
+    public Date getWithdrawLastTime() {
+        return withdrawLastTime;
+    }
+
+    public void setWithdrawLastTime(Date withdrawLastTime) {
+        this.withdrawLastTime = withdrawLastTime;
     }
 }

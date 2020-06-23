@@ -7,6 +7,8 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 public class FuReportOrderSum {
+    public static String USER_ID="user_id";
+    public static String MT_ACC_ID="mt_acc_id";
     /**
      * 主键
      */

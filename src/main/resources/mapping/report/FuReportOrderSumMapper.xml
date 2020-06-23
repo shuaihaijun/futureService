@@ -1,0 +1,544 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.future.mapper.report.FuReportOrderSumMapper">
+  <resultMap id="BaseResultMap" type="com.future.entity.report.FuReportOrderSum">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="server_name" jdbcType="VARCHAR" property="serverName" />
+    <result column="mt_acc_id" jdbcType="VARCHAR" property="mtAccId" />
+    <result column="begin_date" jdbcType="TIMESTAMP" property="beginDate" />
+    <result column="modify_date" jdbcType="TIMESTAMP" property="modifyDate" />
+    <result column="trade_day_sum" jdbcType="INTEGER" property="tradeDaySum" />
+    <result column="order_lots" jdbcType="DECIMAL" property="orderLots" />
+    <result column="order_count" jdbcType="INTEGER" property="orderCount" />
+    <result column="order_lots_daily" jdbcType="DECIMAL" property="orderLotsDaily" />
+    <result column="order_count_daily" jdbcType="DECIMAL" property="orderCountDaily" />
+    <result column="order_profit" jdbcType="DECIMAL" property="orderProfit" />
+    <result column="order_profit_lots" jdbcType="DECIMAL" property="orderProfitLots" />
+    <result column="order_profit_count" jdbcType="INTEGER" property="orderProfitCount" />
+    <result column="order_profit_avg" jdbcType="DECIMAL" property="orderProfitAvg" />
+    <result column="order_profit_rate" jdbcType="DECIMAL" property="orderProfitRate" />
+    <result column="order_profit_max" jdbcType="DECIMAL" property="orderProfitMax" />
+    <result column="order_profit_keep" jdbcType="DECIMAL" property="orderProfitKeep" />
+    <result column="order_profit_keep_count" jdbcType="INTEGER" property="orderProfitKeepCount" />
+    <result column="order_profit_keep_day" jdbcType="TIMESTAMP" property="orderProfitKeepDay" />
+    <result column="order_loss" jdbcType="DECIMAL" property="orderLoss" />
+    <result column="order_loss_lots" jdbcType="DECIMAL" property="orderLossLots" />
+    <result column="order_loss_count" jdbcType="INTEGER" property="orderLossCount" />
+    <result column="order_loss_avg" jdbcType="DECIMAL" property="orderLossAvg" />
+    <result column="order_loss_rate" jdbcType="DECIMAL" property="orderLossRate" />
+    <result column="order_loss_max" jdbcType="DECIMAL" property="orderLossMax" />
+    <result column="order_loss_keep" jdbcType="DECIMAL" property="orderLossKeep" />
+    <result column="order_loss_keep_count" jdbcType="INTEGER" property="orderLossKeepCount" />
+    <result column="order_loss_keep_day" jdbcType="TIMESTAMP" property="orderLossKeepDay" />
+    <result column="order_ea_count" jdbcType="INTEGER" property="orderEaCount" />
+    <result column="order_ea_count_rate" jdbcType="DECIMAL" property="orderEaCountRate" />
+    <result column="order_lots_max" jdbcType="DECIMAL" property="orderLotsMax" />
+    <result column="order_money_max" jdbcType="DECIMAL" property="orderMoneyMax" />
+    <result column="order_hold_time_max" jdbcType="DECIMAL" property="orderHoldTimeMax" />
+    <result column="order_hold_time_avg" jdbcType="DECIMAL" property="orderHoldTimeAvg" />
+    <result column="order_swap" jdbcType="DECIMAL" property="orderSwap" />
+    <result column="order_commission" jdbcType="DECIMAL" property="orderCommission" />
+    <result column="order_income" jdbcType="DECIMAL" property="orderIncome" />
+    <result column="order_income_rate" jdbcType="DECIMAL" property="orderIncomeRate" />
+    <result column="order_win_rate" jdbcType="DECIMAL" property="orderWinRate" />
+    <result column="order_pl_rate" jdbcType="DECIMAL" property="orderPlRate" />
+    <result column="order_expected_return" jdbcType="DECIMAL" property="orderExpectedReturn" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, create_date, user_id, server_name, mt_acc_id, begin_date, modify_date, trade_day_sum, 
+    order_lots, order_count, order_lots_daily, order_count_daily, order_profit, order_profit_lots, 
+    order_profit_count, order_profit_avg, order_profit_rate, order_profit_max, order_profit_keep, 
+    order_profit_keep_count, order_profit_keep_day, order_loss, order_loss_lots, order_loss_count, 
+    order_loss_avg, order_loss_rate, order_loss_max, order_loss_keep, order_loss_keep_count, 
+    order_loss_keep_day, order_ea_count, order_ea_count_rate, order_lots_max, order_money_max, 
+    order_hold_time_max, order_hold_time_avg, order_swap, order_commission, order_income, 
+    order_income_rate, order_win_rate, order_pl_rate, order_expected_return
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from fu_report_order_sum
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from fu_report_order_sum
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.future.entity.report.FuReportOrderSum">
+    insert into fu_report_order_sum (id, create_date, user_id, 
+      server_name, mt_acc_id, begin_date, 
+      modify_date, trade_day_sum, order_lots, 
+      order_count, order_lots_daily, order_count_daily, 
+      order_profit, order_profit_lots, order_profit_count, 
+      order_profit_avg, order_profit_rate, order_profit_max, 
+      order_profit_keep, order_profit_keep_count, 
+      order_profit_keep_day, order_loss, order_loss_lots, 
+      order_loss_count, order_loss_avg, order_loss_rate, 
+      order_loss_max, order_loss_keep, order_loss_keep_count, 
+      order_loss_keep_day, order_ea_count, order_ea_count_rate, 
+      order_lots_max, order_money_max, order_hold_time_max, 
+      order_hold_time_avg, order_swap, order_commission, 
+      order_income, order_income_rate, order_win_rate, 
+      order_pl_rate, order_expected_return)
+    values (#{id,jdbcType=INTEGER}, #{createDate,jdbcType=TIMESTAMP}, #{userId,jdbcType=INTEGER}, 
+      #{serverName,jdbcType=VARCHAR}, #{mtAccId,jdbcType=VARCHAR}, #{beginDate,jdbcType=TIMESTAMP}, 
+      #{modifyDate,jdbcType=TIMESTAMP}, #{tradeDaySum,jdbcType=INTEGER}, #{orderLots,jdbcType=DECIMAL}, 
+      #{orderCount,jdbcType=INTEGER}, #{orderLotsDaily,jdbcType=DECIMAL}, #{orderCountDaily,jdbcType=DECIMAL}, 
+      #{orderProfit,jdbcType=DECIMAL}, #{orderProfitLots,jdbcType=DECIMAL}, #{orderProfitCount,jdbcType=INTEGER}, 
+      #{orderProfitAvg,jdbcType=DECIMAL}, #{orderProfitRate,jdbcType=DECIMAL}, #{orderProfitMax,jdbcType=DECIMAL}, 
+      #{orderProfitKeep,jdbcType=DECIMAL}, #{orderProfitKeepCount,jdbcType=INTEGER}, 
+      #{orderProfitKeepDay,jdbcType=TIMESTAMP}, #{orderLoss,jdbcType=DECIMAL}, #{orderLossLots,jdbcType=DECIMAL}, 
+      #{orderLossCount,jdbcType=INTEGER}, #{orderLossAvg,jdbcType=DECIMAL}, #{orderLossRate,jdbcType=DECIMAL}, 
+      #{orderLossMax,jdbcType=DECIMAL}, #{orderLossKeep,jdbcType=DECIMAL}, #{orderLossKeepCount,jdbcType=INTEGER}, 
+      #{orderLossKeepDay,jdbcType=TIMESTAMP}, #{orderEaCount,jdbcType=INTEGER}, #{orderEaCountRate,jdbcType=DECIMAL}, 
+      #{orderLotsMax,jdbcType=DECIMAL}, #{orderMoneyMax,jdbcType=DECIMAL}, #{orderHoldTimeMax,jdbcType=DECIMAL}, 
+      #{orderHoldTimeAvg,jdbcType=DECIMAL}, #{orderSwap,jdbcType=DECIMAL}, #{orderCommission,jdbcType=DECIMAL}, 
+      #{orderIncome,jdbcType=DECIMAL}, #{orderIncomeRate,jdbcType=DECIMAL}, #{orderWinRate,jdbcType=DECIMAL}, 
+      #{orderPlRate,jdbcType=DECIMAL}, #{orderExpectedReturn,jdbcType=DECIMAL})
+  </insert>
+  <insert id="insertSelective" parameterType="com.future.entity.report.FuReportOrderSum">
+    insert into fu_report_order_sum
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="createDate != null">
+        create_date,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="serverName != null">
+        server_name,
+      </if>
+      <if test="mtAccId != null">
+        mt_acc_id,
+      </if>
+      <if test="beginDate != null">
+        begin_date,
+      </if>
+      <if test="modifyDate != null">
+        modify_date,
+      </if>
+      <if test="tradeDaySum != null">
+        trade_day_sum,
+      </if>
+      <if test="orderLots != null">
+        order_lots,
+      </if>
+      <if test="orderCount != null">
+        order_count,
+      </if>
+      <if test="orderLotsDaily != null">
+        order_lots_daily,
+      </if>
+      <if test="orderCountDaily != null">
+        order_count_daily,
+      </if>
+      <if test="orderProfit != null">
+        order_profit,
+      </if>
+      <if test="orderProfitLots != null">
+        order_profit_lots,
+      </if>
+      <if test="orderProfitCount != null">
+        order_profit_count,
+      </if>
+      <if test="orderProfitAvg != null">
+        order_profit_avg,
+      </if>
+      <if test="orderProfitRate != null">
+        order_profit_rate,
+      </if>
+      <if test="orderProfitMax != null">
+        order_profit_max,
+      </if>
+      <if test="orderProfitKeep != null">
+        order_profit_keep,
+      </if>
+      <if test="orderProfitKeepCount != null">
+        order_profit_keep_count,
+      </if>
+      <if test="orderProfitKeepDay != null">
+        order_profit_keep_day,
+      </if>
+      <if test="orderLoss != null">
+        order_loss,
+      </if>
+      <if test="orderLossLots != null">
+        order_loss_lots,
+      </if>
+      <if test="orderLossCount != null">
+        order_loss_count,
+      </if>
+      <if test="orderLossAvg != null">
+        order_loss_avg,
+      </if>
+      <if test="orderLossRate != null">
+        order_loss_rate,
+      </if>
+      <if test="orderLossMax != null">
+        order_loss_max,
+      </if>
+      <if test="orderLossKeep != null">
+        order_loss_keep,
+      </if>
+      <if test="orderLossKeepCount != null">
+        order_loss_keep_count,
+      </if>
+      <if test="orderLossKeepDay != null">
+        order_loss_keep_day,
+      </if>
+      <if test="orderEaCount != null">
+        order_ea_count,
+      </if>
+      <if test="orderEaCountRate != null">
+        order_ea_count_rate,
+      </if>
+      <if test="orderLotsMax != null">
+        order_lots_max,
+      </if>
+      <if test="orderMoneyMax != null">
+        order_money_max,
+      </if>
+      <if test="orderHoldTimeMax != null">
+        order_hold_time_max,
+      </if>
+      <if test="orderHoldTimeAvg != null">
+        order_hold_time_avg,
+      </if>
+      <if test="orderSwap != null">
+        order_swap,
+      </if>
+      <if test="orderCommission != null">
+        order_commission,
+      </if>
+      <if test="orderIncome != null">
+        order_income,
+      </if>
+      <if test="orderIncomeRate != null">
+        order_income_rate,
+      </if>
+      <if test="orderWinRate != null">
+        order_win_rate,
+      </if>
+      <if test="orderPlRate != null">
+        order_pl_rate,
+      </if>
+      <if test="orderExpectedReturn != null">
+        order_expected_return,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null">
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="serverName != null">
+        #{serverName,jdbcType=VARCHAR},
+      </if>
+      <if test="mtAccId != null">
+        #{mtAccId,jdbcType=VARCHAR},
+      </if>
+      <if test="beginDate != null">
+        #{beginDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyDate != null">
+        #{modifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tradeDaySum != null">
+        #{tradeDaySum,jdbcType=INTEGER},
+      </if>
+      <if test="orderLots != null">
+        #{orderLots,jdbcType=DECIMAL},
+      </if>
+      <if test="orderCount != null">
+        #{orderCount,jdbcType=INTEGER},
+      </if>
+      <if test="orderLotsDaily != null">
+        #{orderLotsDaily,jdbcType=DECIMAL},
+      </if>
+      <if test="orderCountDaily != null">
+        #{orderCountDaily,jdbcType=DECIMAL},
+      </if>
+      <if test="orderProfit != null">
+        #{orderProfit,jdbcType=DECIMAL},
+      </if>
+      <if test="orderProfitLots != null">
+        #{orderProfitLots,jdbcType=DECIMAL},
+      </if>
+      <if test="orderProfitCount != null">
+        #{orderProfitCount,jdbcType=INTEGER},
+      </if>
+      <if test="orderProfitAvg != null">
+        #{orderProfitAvg,jdbcType=DECIMAL},
+      </if>
+      <if test="orderProfitRate != null">
+        #{orderProfitRate,jdbcType=DECIMAL},
+      </if>
+      <if test="orderProfitMax != null">
+        #{orderProfitMax,jdbcType=DECIMAL},
+      </if>
+      <if test="orderProfitKeep != null">
+        #{orderProfitKeep,jdbcType=DECIMAL},
+      </if>
+      <if test="orderProfitKeepCount != null">
+        #{orderProfitKeepCount,jdbcType=INTEGER},
+      </if>
+      <if test="orderProfitKeepDay != null">
+        #{orderProfitKeepDay,jdbcType=TIMESTAMP},
+      </if>
+      <if test="orderLoss != null">
+        #{orderLoss,jdbcType=DECIMAL},
+      </if>
+      <if test="orderLossLots != null">
+        #{orderLossLots,jdbcType=DECIMAL},
+      </if>
+      <if test="orderLossCount != null">
+        #{orderLossCount,jdbcType=INTEGER},
+      </if>
+      <if test="orderLossAvg != null">
+        #{orderLossAvg,jdbcType=DECIMAL},
+      </if>
+      <if test="orderLossRate != null">
+        #{orderLossRate,jdbcType=DECIMAL},
+      </if>
+      <if test="orderLossMax != null">
+        #{orderLossMax,jdbcType=DECIMAL},
+      </if>
+      <if test="orderLossKeep != null">
+        #{orderLossKeep,jdbcType=DECIMAL},
+      </if>
+      <if test="orderLossKeepCount != null">
+        #{orderLossKeepCount,jdbcType=INTEGER},
+      </if>
+      <if test="orderLossKeepDay != null">
+        #{orderLossKeepDay,jdbcType=TIMESTAMP},
+      </if>
+      <if test="orderEaCount != null">
+        #{orderEaCount,jdbcType=INTEGER},
+      </if>
+      <if test="orderEaCountRate != null">
+        #{orderEaCountRate,jdbcType=DECIMAL},
+      </if>
+      <if test="orderLotsMax != null">
+        #{orderLotsMax,jdbcType=DECIMAL},
+      </if>
+      <if test="orderMoneyMax != null">
+        #{orderMoneyMax,jdbcType=DECIMAL},
+      </if>
+      <if test="orderHoldTimeMax != null">
+        #{orderHoldTimeMax,jdbcType=DECIMAL},
+      </if>
+      <if test="orderHoldTimeAvg != null">
+        #{orderHoldTimeAvg,jdbcType=DECIMAL},
+      </if>
+      <if test="orderSwap != null">
+        #{orderSwap,jdbcType=DECIMAL},
+      </if>
+      <if test="orderCommission != null">
+        #{orderCommission,jdbcType=DECIMAL},
+      </if>
+      <if test="orderIncome != null">
+        #{orderIncome,jdbcType=DECIMAL},
+      </if>
+      <if test="orderIncomeRate != null">
+        #{orderIncomeRate,jdbcType=DECIMAL},
+      </if>
+      <if test="orderWinRate != null">
+        #{orderWinRate,jdbcType=DECIMAL},
+      </if>
+      <if test="orderPlRate != null">
+        #{orderPlRate,jdbcType=DECIMAL},
+      </if>
+      <if test="orderExpectedReturn != null">
+        #{orderExpectedReturn,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.future.entity.report.FuReportOrderSum">
+    update fu_report_order_sum
+    <set>
+      <if test="createDate != null">
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="serverName != null">
+        server_name = #{serverName,jdbcType=VARCHAR},
+      </if>
+      <if test="mtAccId != null">
+        mt_acc_id = #{mtAccId,jdbcType=VARCHAR},
+      </if>
+      <if test="beginDate != null">
+        begin_date = #{beginDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyDate != null">
+        modify_date = #{modifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tradeDaySum != null">
+        trade_day_sum = #{tradeDaySum,jdbcType=INTEGER},
+      </if>
+      <if test="orderLots != null">
+        order_lots = #{orderLots,jdbcType=DECIMAL},
+      </if>
+      <if test="orderCount != null">
+        order_count = #{orderCount,jdbcType=INTEGER},
+      </if>
+      <if test="orderLotsDaily != null">
+        order_lots_daily = #{orderLotsDaily,jdbcType=DECIMAL},
+      </if>
+      <if test="orderCountDaily != null">
+        order_count_daily = #{orderCountDaily,jdbcType=DECIMAL},
+      </if>
+      <if test="orderProfit != null">
+        order_profit = #{orderProfit,jdbcType=DECIMAL},
+      </if>
+      <if test="orderProfitLots != null">
+        order_profit_lots = #{orderProfitLots,jdbcType=DECIMAL},
+      </if>
+      <if test="orderProfitCount != null">
+        order_profit_count = #{orderProfitCount,jdbcType=INTEGER},
+      </if>
+      <if test="orderProfitAvg != null">
+        order_profit_avg = #{orderProfitAvg,jdbcType=DECIMAL},
+      </if>
+      <if test="orderProfitRate != null">
+        order_profit_rate = #{orderProfitRate,jdbcType=DECIMAL},
+      </if>
+      <if test="orderProfitMax != null">
+        order_profit_max = #{orderProfitMax,jdbcType=DECIMAL},
+      </if>
+      <if test="orderProfitKeep != null">
+        order_profit_keep = #{orderProfitKeep,jdbcType=DECIMAL},
+      </if>
+      <if test="orderProfitKeepCount != null">
+        order_profit_keep_count = #{orderProfitKeepCount,jdbcType=INTEGER},
+      </if>
+      <if test="orderProfitKeepDay != null">
+        order_profit_keep_day = #{orderProfitKeepDay,jdbcType=TIMESTAMP},
+      </if>
+      <if test="orderLoss != null">
+        order_loss = #{orderLoss,jdbcType=DECIMAL},
+      </if>
+      <if test="orderLossLots != null">
+        order_loss_lots = #{orderLossLots,jdbcType=DECIMAL},
+      </if>
+      <if test="orderLossCount != null">
+        order_loss_count = #{orderLossCount,jdbcType=INTEGER},
+      </if>
+      <if test="orderLossAvg != null">
+        order_loss_avg = #{orderLossAvg,jdbcType=DECIMAL},
+      </if>
+      <if test="orderLossRate != null">
+        order_loss_rate = #{orderLossRate,jdbcType=DECIMAL},
+      </if>
+      <if test="orderLossMax != null">
+        order_loss_max = #{orderLossMax,jdbcType=DECIMAL},
+      </if>
+      <if test="orderLossKeep != null">
+        order_loss_keep = #{orderLossKeep,jdbcType=DECIMAL},
+      </if>
+      <if test="orderLossKeepCount != null">
+        order_loss_keep_count = #{orderLossKeepCount,jdbcType=INTEGER},
+      </if>
+      <if test="orderLossKeepDay != null">
+        order_loss_keep_day = #{orderLossKeepDay,jdbcType=TIMESTAMP},
+      </if>
+      <if test="orderEaCount != null">
+        order_ea_count = #{orderEaCount,jdbcType=INTEGER},
+      </if>
+      <if test="orderEaCountRate != null">
+        order_ea_count_rate = #{orderEaCountRate,jdbcType=DECIMAL},
+      </if>
+      <if test="orderLotsMax != null">
+        order_lots_max = #{orderLotsMax,jdbcType=DECIMAL},
+      </if>
+      <if test="orderMoneyMax != null">
+        order_money_max = #{orderMoneyMax,jdbcType=DECIMAL},
+      </if>
+      <if test="orderHoldTimeMax != null">
+        order_hold_time_max = #{orderHoldTimeMax,jdbcType=DECIMAL},
+      </if>
+      <if test="orderHoldTimeAvg != null">
+        order_hold_time_avg = #{orderHoldTimeAvg,jdbcType=DECIMAL},
+      </if>
+      <if test="orderSwap != null">
+        order_swap = #{orderSwap,jdbcType=DECIMAL},
+      </if>
+      <if test="orderCommission != null">
+        order_commission = #{orderCommission,jdbcType=DECIMAL},
+      </if>
+      <if test="orderIncome != null">
+        order_income = #{orderIncome,jdbcType=DECIMAL},
+      </if>
+      <if test="orderIncomeRate != null">
+        order_income_rate = #{orderIncomeRate,jdbcType=DECIMAL},
+      </if>
+      <if test="orderWinRate != null">
+        order_win_rate = #{orderWinRate,jdbcType=DECIMAL},
+      </if>
+      <if test="orderPlRate != null">
+        order_pl_rate = #{orderPlRate,jdbcType=DECIMAL},
+      </if>
+      <if test="orderExpectedReturn != null">
+        order_expected_return = #{orderExpectedReturn,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.future.entity.report.FuReportOrderSum">
+    update fu_report_order_sum
+    set create_date = #{createDate,jdbcType=TIMESTAMP},
+      user_id = #{userId,jdbcType=INTEGER},
+      server_name = #{serverName,jdbcType=VARCHAR},
+      mt_acc_id = #{mtAccId,jdbcType=VARCHAR},
+      begin_date = #{beginDate,jdbcType=TIMESTAMP},
+      modify_date = #{modifyDate,jdbcType=TIMESTAMP},
+      trade_day_sum = #{tradeDaySum,jdbcType=INTEGER},
+      order_lots = #{orderLots,jdbcType=DECIMAL},
+      order_count = #{orderCount,jdbcType=INTEGER},
+      order_lots_daily = #{orderLotsDaily,jdbcType=DECIMAL},
+      order_count_daily = #{orderCountDaily,jdbcType=DECIMAL},
+      order_profit = #{orderProfit,jdbcType=DECIMAL},
+      order_profit_lots = #{orderProfitLots,jdbcType=DECIMAL},
+      order_profit_count = #{orderProfitCount,jdbcType=INTEGER},
+      order_profit_avg = #{orderProfitAvg,jdbcType=DECIMAL},
+      order_profit_rate = #{orderProfitRate,jdbcType=DECIMAL},
+      order_profit_max = #{orderProfitMax,jdbcType=DECIMAL},
+      order_profit_keep = #{orderProfitKeep,jdbcType=DECIMAL},
+      order_profit_keep_count = #{orderProfitKeepCount,jdbcType=INTEGER},
+      order_profit_keep_day = #{orderProfitKeepDay,jdbcType=TIMESTAMP},
+      order_loss = #{orderLoss,jdbcType=DECIMAL},
+      order_loss_lots = #{orderLossLots,jdbcType=DECIMAL},
+      order_loss_count = #{orderLossCount,jdbcType=INTEGER},
+      order_loss_avg = #{orderLossAvg,jdbcType=DECIMAL},
+      order_loss_rate = #{orderLossRate,jdbcType=DECIMAL},
+      order_loss_max = #{orderLossMax,jdbcType=DECIMAL},
+      order_loss_keep = #{orderLossKeep,jdbcType=DECIMAL},
+      order_loss_keep_count = #{orderLossKeepCount,jdbcType=INTEGER},
+      order_loss_keep_day = #{orderLossKeepDay,jdbcType=TIMESTAMP},
+      order_ea_count = #{orderEaCount,jdbcType=INTEGER},
+      order_ea_count_rate = #{orderEaCountRate,jdbcType=DECIMAL},
+      order_lots_max = #{orderLotsMax,jdbcType=DECIMAL},
+      order_money_max = #{orderMoneyMax,jdbcType=DECIMAL},
+      order_hold_time_max = #{orderHoldTimeMax,jdbcType=DECIMAL},
+      order_hold_time_avg = #{orderHoldTimeAvg,jdbcType=DECIMAL},
+      order_swap = #{orderSwap,jdbcType=DECIMAL},
+      order_commission = #{orderCommission,jdbcType=DECIMAL},
+      order_income = #{orderIncome,jdbcType=DECIMAL},
+      order_income_rate = #{orderIncomeRate,jdbcType=DECIMAL},
+      order_win_rate = #{orderWinRate,jdbcType=DECIMAL},
+      order_pl_rate = #{orderPlRate,jdbcType=DECIMAL},
+      order_expected_return = #{orderExpectedReturn,jdbcType=DECIMAL}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
