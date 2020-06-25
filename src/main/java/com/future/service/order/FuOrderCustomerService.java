@@ -159,10 +159,6 @@ public class FuOrderCustomerService extends ServiceImpl<FuOrderCustomerMapper, F
                     continue;
                 }
                 for(FuOrderCustomer customer:selectOrdercustomers){
-                    /*判断是否是初始化数据*/
-                    if(StringUtils.isEmpty(customer.getOrderSymbol())){
-                        continue;
-                    }
                     /*判断时间范围*/
                     if(lastCLostTime.compareTo(customer.getOrderCloseDate())>0){
                         continue;

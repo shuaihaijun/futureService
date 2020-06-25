@@ -474,6 +474,7 @@
       AND mt_acc_id = #{mtAccId,jdbcType=VARCHAR}
       AND order_close_date &gt;= #{dateBegin,jdbcType=VARCHAR}
       AND order_close_date &lt; #{dateEnd,jdbcType=VARCHAR}
+      AND order_symbol != ''
       GROUP BY user_id,mt_acc_id
   </select>
 </mapper>

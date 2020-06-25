@@ -73,6 +73,7 @@ public class FuComServerService extends ServiceImpl<FuComServerMapper,FuComServe
             if (!ObjectUtils.isEmpty(conditionMap.get("localPort"))) {
                 wrapper.eq(FuComServer.LOCAL_PORT, conditionMap.get("localPort"));
             }
+            wrapper.orderBy(FuComServer.SERVER_ID,false);
             return this.selectPage(page,wrapper);
         }catch (Exception e){
             log.error(e.getMessage(),e);

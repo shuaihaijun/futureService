@@ -668,7 +668,7 @@ public class FuAccountMtService extends ServiceImpl<FuAccountMtMapper, FuAccount
         Wrapper<FuAccountMtFlow> flowWrapper=new EntityWrapper<>();
         flowWrapper.eq(FuAccountMtFlow.USER_ID,userId);
         flowWrapper.eq(FuAccountMtFlow.MT_ACC_ID,mtAccId);
-        flowWrapper.le(FuAccountMtFlow.TRADE_DATE,DateUtil.toDateString(tradeDate));
+        flowWrapper.lt(FuAccountMtFlow.TRADE_DATE,DateUtil.toDateString(tradeDate));
         List<FuAccountMtFlow> flows= fuAccountMtFlowMapper.selectList(flowWrapper);
         FuAccountMtFlow flow=new FuAccountMtFlow();
         if(flows!=null && flows.size()>0){
@@ -691,10 +691,10 @@ public class FuAccountMtService extends ServiceImpl<FuAccountMtMapper, FuAccount
                 accountMt.setDepositMaxRate(profit.divide(accountMt.getEquity(),AccountConstant.BigDecimal_Scale, BigDecimal.ROUND_HALF_UP));
             }
             /*计算流水信息*/
-            if(flow.getDepositHistory()!=null){
-                flow.setDepositHistory(flow.getProfitHistory().add(profit));
+            if(flow.getDeposit()!=null){
+                flow.setDeposit(flow.getDeposit().add(profit));
             }else {
-                flow.setDepositHistory(profit);
+                flow.setDeposit(profit);
             }
         }else {
             /*出金*/
@@ -707,11 +707,10 @@ public class FuAccountMtService extends ServiceImpl<FuAccountMtMapper, FuAccount
                 accountMt.setWithdrawMaxRate(profit.divide(accountMt.getEquity(),AccountConstant.BigDecimal_Scale, BigDecimal.ROUND_HALF_UP));
             }
             /*计算流水信息*/
-            flow.setWithdraw(profit);
-            if(flow.getWithdrawHistory()!=null){
-                flow.setWithdrawHistory(flow.getWithdrawHistory().add(profit));
+            if(flow.getWithdraw()!=null){
+                flow.setWithdraw(flow.getWithdraw().add(profit));
             }else {
-                flow.setWithdrawHistory(profit);
+                flow.setWithdraw(profit);
             }
         }
 

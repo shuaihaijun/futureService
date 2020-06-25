@@ -149,10 +149,10 @@ public class FuReportOrderFlowService extends ServiceImpl<FuReportOrderFlowMappe
             flow.setOrderExpectedReturn(flowBo.getOrderIncome().divide(new BigDecimal(flowBo.getOrderCount()),AccountConstant.BigDecimal_Scale, BigDecimal.ROUND_HALF_UP));
         }
         /*净值盈亏比（盈利订单总额与亏损订单总额的比值，该值越大表明该账户当前的绩效结果越好。）*/
-        if(flowBo.getOrderLoss().compareTo(new BigDecimal(0))>0){
-            flow.setOrderPlRate(flowBo.getOrderProfit().divide(flowBo.getOrderLoss(),AccountConstant.BigDecimal_Scale, BigDecimal.ROUND_HALF_UP));
-        }else {
+        if(flowBo.getOrderLoss().compareTo(new BigDecimal(0))==0){
             flow.setOrderPlRate(new BigDecimal(0));
+        }else {
+            flow.setOrderPlRate(flowBo.getOrderProfit().divide(flowBo.getOrderLoss(),AccountConstant.BigDecimal_Scale, BigDecimal.ROUND_HALF_UP));
         }
 
         flow.setOrderLotsMax(flowBo.getOrderLotsMax());

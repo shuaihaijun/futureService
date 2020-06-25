@@ -243,5 +243,63 @@ public class FuUserSignalVO {
      * 保证金
      */
     private BigDecimal margin;
+    /**
+     * 入金
+     */
+    private BigDecimal deposit;
 
+    /**
+     * 出金
+     */
+    private BigDecimal withdraw;
+
+    /**
+     * 最大入金
+     */
+    private BigDecimal depositMax;
+
+    /**
+     * 最大入金时间
+     */
+    private Date depositMaxTime;
+
+    /**
+     * 最后入金
+     */
+    private BigDecimal depositLast;
+
+    /**
+     * 最后入金时间
+     */
+    private Date depositLastTime;
+
+    /**
+     * 最大出金
+     */
+    private BigDecimal withdrawMax;
+
+    /**
+     * 最大出金时间
+     */
+    private Date withdrawMaxTime;
+
+    /**
+     * 最后出金
+     */
+    private BigDecimal withdrawLast;
+
+    /**
+     * 最后出金时间
+     */
+    private Date withdrawLastTime;
+
+    /**
+     * 最大入金比例
+     */
+    private BigDecimal depositMaxRate;
+
+    /**
+     * 最大出金比例
+     */
+    private BigDecimal withdrawMaxRate;
 }

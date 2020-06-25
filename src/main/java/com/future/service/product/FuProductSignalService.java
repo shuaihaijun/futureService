@@ -211,9 +211,7 @@ public class FuProductSignalService extends ServiceImpl<FuProductSignalMapper,Fu
         if(requestMap.getString("pageNum")!=null){
             pageNum=Integer.parseInt(requestMap.getString("pageNum"));
         }
-        if(requestMap.getString("signalState")==null){
-            pageNum=Integer.parseInt(requestMap.getString("pageNum"));
-        }
+
         Map conditionMap =requestMap.getInnerMap();
         if(conditionMap.get("signalState")==null){
             conditionMap.put("signalState", AccountConstant.ACCOUNT_STATE_NORMAL);

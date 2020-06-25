@@ -414,10 +414,7 @@ public class FuOrderSignalService extends ServiceImpl<FuOrderSignalMapper, FuOrd
                 continue;
             }
             for(FuOrderSignal orderSignal:orderSignals){
-                // 判断是否是初始化数据
-                if(StringUtils.isEmpty(orderSignal.getOrderSymbol())){
-                    continue;
-                }
+
                 // 判断时间范围
                 if(dateFrom.compareTo(orderSignal.getOrderCloseDate())>0){
                     continue;
@@ -451,6 +448,7 @@ public class FuOrderSignalService extends ServiceImpl<FuOrderSignalMapper, FuOrd
 
                 //计算出入金
                 if(orderSignal.getOrderType()==OrderConstant.ORDER_TYPE_BALANCE){
+                    log.info("----------------------出入金计算："+JSONObject.toJSONString(orderSignal));
                     fuAccountMtService.mtAccDepositUpate(userId,mtAccId,orderSignal.getOrderCloseDate(),orderSignal.getOrderProfit());
                 }
             }
