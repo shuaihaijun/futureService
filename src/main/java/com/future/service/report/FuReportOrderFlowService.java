@@ -152,7 +152,7 @@ public class FuReportOrderFlowService extends ServiceImpl<FuReportOrderFlowMappe
         if(flowBo.getOrderLoss().compareTo(new BigDecimal(0))==0){
             flow.setOrderPlRate(new BigDecimal(0));
         }else {
-            flow.setOrderPlRate(flowBo.getOrderProfit().divide(flowBo.getOrderLoss(),AccountConstant.BigDecimal_Scale, BigDecimal.ROUND_HALF_UP));
+            flow.setOrderPlRate(flowBo.getOrderProfit().divide(flowBo.getOrderLoss().abs(),AccountConstant.BigDecimal_Scale, BigDecimal.ROUND_HALF_UP));
         }
 
         flow.setOrderLotsMax(flowBo.getOrderLotsMax());

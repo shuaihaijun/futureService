@@ -274,9 +274,9 @@ public class FuReportOrderSumService extends ServiceImpl<FuReportOrderSumMapper,
         orderSum.setOrderHoldTimeAvg(orderHoldSum.divide(new BigDecimal(orderSum.getOrderCount()),AccountConstant.BigDecimal_Scale, BigDecimal.ROUND_HALF_UP));
         /*交易胜率(盈利笔数在总笔数中的占比，数据值越大，代表盈利订单占比越高)*/
         orderSum.setOrderWinRate(new BigDecimal(orderSum.getOrderProfitCount()).divide(new BigDecimal(orderSum.getOrderCount()),AccountConstant.BigDecimal_Scale, BigDecimal.ROUND_HALF_UP));
-        if(orderSum.getOrderLoss().compareTo(new BigDecimal(0))>0){
+        if(orderSum.getOrderLoss().compareTo(new BigDecimal(0))!=0){
             /*净值盈亏比（盈利订单总额与亏损订单总额的比值，该值越大表明该账户当前的绩效结果越好）*/
-            orderSum.setOrderPlRate(orderSum.getOrderProfit().divide(orderSum.getOrderLoss(),AccountConstant.BigDecimal_Scale, BigDecimal.ROUND_HALF_UP));
+            orderSum.setOrderPlRate(orderSum.getOrderProfit().divide(orderSum.getOrderLoss().abs(),AccountConstant.BigDecimal_Scale, BigDecimal.ROUND_HALF_UP));
         }
 
         /*预期回报（每笔交易平均利润）*/

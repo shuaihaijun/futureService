@@ -584,8 +584,8 @@ public class AdminService extends ServiceImpl<FuUserMapper,FuUser> {
         if(userMap.get("userState")!=null
                 &&!String.valueOf(userMap.get("userState")).equals("")){
             wrapper.eq(FuUser.USER_STATE,userMap.get("userState"));
-        }else {
-            wrapper.eq(FuUser.USER_STATE,UserConstant.USER_STATE_NORMAL);
+//        }else {
+//            wrapper.eq(FuUser.USER_STATE,UserConstant.USER_STATE_NORMAL);
         }
         if(userMap.get("isVerified")!=null
                 &&!String.valueOf(userMap.get("isVerified")).equals("")){
