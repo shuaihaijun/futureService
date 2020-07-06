@@ -317,4 +317,32 @@ public class FuProductSignalService extends ServiceImpl<FuProductSignalMapper,Fu
 
         return true;
     }
+
+    /**
+     * 添加/减少 信号源订阅人数
+     * @param signalId
+     * @param isNewIncrease 是否是新增关系
+     * @param increase 增量
+     * @return
+     */
+    public boolean signalFollowsNumIncrease(Integer signalId,boolean isNewIncrease, Integer increase){
+        if(signalId==null|| increase==null||signalId==0){
+            log.error("添加/减少 信号源订阅人数失败，参数为空！");
+            throw new DataConflictException("添加/减少 信号源订阅人数失败，参数为空！");
+        }
+        if(increase==0){
+            return true;
+        }
+        FuProductSignal signal=selectById(signalId);
+        if(signal==null){
+            log.error("添加/减少 信号源订阅人数失败，信号源不存在！");
+            throw new DataConflictException("添加/减少 信号源订阅人数失败，信号源不存在！");
+        }
+        signal.setSignalFollows(signal.getSignalFollows()+increase);
+        if(isNewIncrease){
+            signal.setSignalFollowsHistory(signal.getSignalFollowsHistory()+increase);
+        }
+        fuProductSignalMapper.updateByPrimaryKeySelective(signal);
+        return true;
+    }
 }

@@ -199,6 +199,11 @@ public class FuProductSignal {
     private Integer operUserId;
 
     /**
+     * 历史跟随人数
+     */
+    private Integer signalFollowsHistory;
+
+    /**
      * 
      * @return id 
      */
@@ -772,5 +777,21 @@ public class FuProductSignal {
      */
     public void setOperUserId(Integer operUserId) {
         this.operUserId = operUserId;
+    }
+
+    /**
+     * 历史跟随人数
+     * @return signal_follows_history 历史跟随人数
+     */
+    public Integer getSignalFollowsHistory() {
+        return signalFollowsHistory;
+    }
+
+    /**
+     * 历史跟随人数
+     * @param signalFollowsHistory 历史跟随人数
+     */
+    public void setSignalFollowsHistory(Integer signalFollowsHistory) {
+        this.signalFollowsHistory = signalFollowsHistory;
     }
 }

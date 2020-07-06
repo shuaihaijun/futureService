@@ -86,6 +86,10 @@ public class FuUserSignalVO {
      * 跟随人数
      */
     private Integer signalFollows;
+    /**
+     * 历史跟随人数
+     */
+    private Integer signalFollowsHistory;
 
     /**
      * 月均收益

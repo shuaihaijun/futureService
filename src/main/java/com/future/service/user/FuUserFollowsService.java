@@ -312,6 +312,11 @@ public class FuUserFollowsService extends ServiceImpl<FuUserFollowsMapper, FuUse
         Boolean isNew=true;
         int followNum=0;
         boolean isDelete=false;
+        int isReStart=0; // 0 其他操作，1 正常订单废弃，2 废弃订单改正常
+        int followAction=FollowConstant.FOLLOW_STATE_HIDE;
+        if(!ObjectUtils.isEmpty(dataMap.get("followState"))){
+            followAction=Integer.parseInt(String.valueOf(dataMap.get("followState")));
+        }
         FuUserFollows follows = new FuUserFollows();
 
         Wrapper<FuUserFollows> followsWrapper=new EntityWrapper<>();
@@ -330,6 +335,16 @@ public class FuUserFollowsService extends ServiceImpl<FuUserFollowsMapper, FuUse
                 if(oldFollows.getFollowState().equals(FollowConstant.FOLLOW_STATE_DELETE)){
                     /*正在修改废弃的 订单*/
                     isDelete=true;
+                    if(followAction!=FollowConstant.FOLLOW_STATE_DELETE){
+                        /*废弃订单改为正常订单*/
+                        isReStart=2;
+                    }
+                }
+                if(!oldFollows.getFollowState().equals(FollowConstant.FOLLOW_STATE_DELETE)){
+                    if(followAction==FollowConstant.FOLLOW_STATE_DELETE){
+                        /*正常订单废弃*/
+                        isReStart=1;
+                    }
                 }
             }
         }
@@ -350,11 +365,8 @@ public class FuUserFollowsService extends ServiceImpl<FuUserFollowsMapper, FuUse
         follows.setUserMtAccId(userMTAccountBO.getMtAccId());
         follows.setSignalServerName(signal.getServerName());
         follows.setSignalMtAccId(signal.getMtAccId());
-        if(!ObjectUtils.isEmpty(dataMap.get("followState"))){
-            follows.setFollowState(Integer.parseInt(String.valueOf(dataMap.get("followState"))));
-        }else {
-            follows.setFollowState(FollowConstant.FOLLOW_STATE_HIDE);
-        }
+        follows.setFollowState(followAction);
+
         if(!ObjectUtils.isEmpty(dataMap.get("followDirect"))){
             follows.setFollowDirect(Integer.parseInt(String.valueOf(dataMap.get("followDirect"))));
         }
@@ -390,8 +402,18 @@ public class FuUserFollowsService extends ServiceImpl<FuUserFollowsMapper, FuUse
         }
 
         if(isNew){
+            /*添加订阅人数*/
+            fuProductSignalService.signalFollowsNumIncrease(follows.getSignalId(),true,1);
+            /*新增订阅关系*/
             fuUserFollowsMapper.insertSelective(follows);
         }else {
+            if(isReStart==1){
+                //正常订单废弃
+                fuProductSignalService.signalFollowsNumIncrease(follows.getSignalId(),false,-1);
+            }else if(isReStart==2){
+                //废弃订单改正常
+                fuProductSignalService.signalFollowsNumIncrease(follows.getSignalId(),false,1);
+            }
             follows.setModifyDate(new Date());
             fuUserFollowsMapper.updateByPrimaryKeySelective(follows);
         }
@@ -455,6 +477,11 @@ public class FuUserFollowsService extends ServiceImpl<FuUserFollowsMapper, FuUse
         }
         follows.setFollowState(FollowConstant.FOLLOW_STATE_DELETE);
         follows.setModifyDate(new Date());
+
+        //修改信号源：正常订单废弃
+        fuProductSignalService.signalFollowsNumIncrease(follows.getSignalId(),false,-1);
+
+        //修改跟随信息
         fuUserFollowsMapper.updateByPrimaryKeySelective(follows);
 
         /*更新监听数据*/
