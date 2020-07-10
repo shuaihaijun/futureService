@@ -688,7 +688,7 @@ public class FuAccountMtService extends ServiceImpl<FuAccountMtMapper, FuAccount
             if(profit.compareTo(accountMt.getDepositMax())>0){
                 accountMt.setDepositMax(profit);
                 accountMt.setDepositMaxTime(tradeDate);
-                accountMt.setDepositMaxRate(profit.divide(accountMt.getEquity(),AccountConstant.BigDecimal_Scale, BigDecimal.ROUND_HALF_UP));
+                accountMt.setDepositMaxRate(profit.divide(accountMt.getEquity().add(profit),AccountConstant.BigDecimal_Scale, BigDecimal.ROUND_HALF_UP));
             }
             /*计算流水信息*/
             if(flow.getDeposit()!=null){
@@ -704,7 +704,7 @@ public class FuAccountMtService extends ServiceImpl<FuAccountMtMapper, FuAccount
             if(profit.compareTo(accountMt.getWithdrawMax())<0){
                 accountMt.setWithdrawMax(profit);
                 accountMt.setWithdrawMaxTime(tradeDate);
-                accountMt.setWithdrawMaxRate(profit.divide(accountMt.getEquity(),AccountConstant.BigDecimal_Scale, BigDecimal.ROUND_HALF_UP));
+                accountMt.setWithdrawMaxRate(profit.divide(accountMt.getEquity().add(profit),AccountConstant.BigDecimal_Scale, BigDecimal.ROUND_HALF_UP));
             }
             /*计算流水信息*/
             if(flow.getWithdraw()!=null){

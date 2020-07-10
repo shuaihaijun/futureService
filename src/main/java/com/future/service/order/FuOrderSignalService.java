@@ -422,10 +422,10 @@ public class FuOrderSignalService extends ServiceImpl<FuOrderSignalMapper, FuOrd
 
                 // 与社区订单查重，已有订单无需操作
                 selectMap.clear();
-                selectMap.put(FuOrderSignal.USER_ID,userId);
-                selectMap.put(FuOrderSignal.SIGNAL_ID,signal.getId());
-                selectMap.put(FuOrderSignal.ORDER_ID,orderSignal.getOrderId());
-                List<FuOrderCustomer> infos=fuOrderSignalMapper.selectByMap(selectMap);
+                selectMap.put(FuOrderCustomer.USER_ID,userId);
+                selectMap.put(FuOrderCustomer.MT_ACC_ID,mtAccId);
+                selectMap.put(FuOrderCustomer.ORDER_ID,orderSignal.getOrderId());
+                List<FuOrderCustomer> infos=fuOrderCustomerService.selectByMap(selectMap);
                 if(infos!=null&&infos.size()>0){
                     // 数据已存在=
                     continue;
