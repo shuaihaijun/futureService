@@ -222,6 +222,34 @@ public class FuProductSignalService extends ServiceImpl<FuProductSignalMapper,Fu
     }
 
     /**
+     * 查询权限信号源信息
+     * @param conditionMap
+     * @param helper
+     * @return
+     */
+    public Page<FuUserSignalVO> querySignalUsersPermit(Map conditionMap, PageInfoHelper helper){
+
+        if(conditionMap==null){
+            log.error(" 查询权限信号源信息 数据为空！");
+            new DataConflictException("查询权限信号源信息 数据为空！");
+        }
+
+        if(conditionMap.get("signalState")==null){
+            conditionMap.put("signalState", AccountConstant.ACCOUNT_STATE_NORMAL);
+        }
+        if(conditionMap.get("projKey")==null){
+            conditionMap.put("projKey", 0);
+        }
+
+        if(helper==null){
+            helper=new PageInfoHelper();
+        }
+        Page<FuUserSignalVO> signals= PageHelper.startPage(helper.getPageNo(),helper.getPageSize());
+        fuProductSignalMapper.querySignalUsersPermit(conditionMap);
+        return signals;
+    }
+
+    /**
      * 删除信号源信息
      * @param signalId
      */

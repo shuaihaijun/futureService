@@ -559,6 +559,100 @@
       and v.LEVEL = #{level,jdbcType=INTEGER}
     </if>
   </select>
+  <select id="querySignalUsersPermit" parameterType="java.util.Map" resultType="com.future.pojo.vo.signal.FuUserSignalVO">
+    SELECT
+    s.id signalId,
+    s.create_date createDate,
+    s.modify_date modifyDate,
+    s.user_id userId,
+    s.signal_name signalName,
+    s.signal_level signalLevel,
+    s.signal_desc signalDesc,
+    s.check_date checkDate,
+    s.signal_tem signalTem,
+    s.signal_lots signalLots,
+    s.signal_lots_profit signalLotsProfit,
+    s.signal_currency signalCurrency,
+    s.signal_follows signalFollows,
+    s.signal_follows_history signalFollowsHistory,
+    s.monthly_average_income monthlyAverageIncome,
+    s.history_withdraw historyWithdraw,
+    s.email,
+    s.server_name serverName,
+    s.mt_acc_id mtAccId,
+    s.minimum,
+    s.annualized_expected_return annualizedExpectedReturn,
+    s.historical_return historicalReturn,
+    s.suggest_cycle suggestCycle,
+    s.remarks,
+    s.proj_name projName,
+    s.proj_key projKey,
+    s.oper_user_id operUserId,
+    v.valuation_date valuationDate,
+    v.LEVEL,
+    v.steady_score steadyScore,
+    v.profit_score profitScore,
+    v.risk_control_score riskControlScore,
+    v.fund_size_score fundSizeScore,
+    v.non_fluke_profit_score nonFlukeProfitScore,
+    v.score,
+    u.username,
+    u.real_name realName,
+    u.ref_name refName,
+    u.introducer,
+    u.recommend,
+    u.sex,
+    u.follow_level followLevel,
+    u.avatar_url avatarUrl,
+    m.broker_name brokerName,
+    m.balance balance,
+    m.leverage leverage,
+    m.deposit,
+    m.deposit_max depositMax,
+    m.deposit_max_time depositMaxTime,
+    m.deposit_max_rate depositMaxRate,
+    m.deposit_last depositLast,
+    m.deposit_last_time depositLastTime,
+    m.withdraw,
+    m.withdraw_max withdrawMax,
+    m.withdraw_max_time withdrawMaxTime,
+    m.withdraw_max_rate withdrawMaxRate,
+    m.withdraw_last withdrawLast,
+    m.withdraw_last_time withdrawLastTime,
+    m.equity,
+    m.credit,
+    m.profit,
+    m.equity,
+    m.margin
+    FROM
+    fu_product_signal s
+    LEFT JOIN fu_product_signal_valuation v ON s.id = v.signal_id
+    LEFT JOIN fu_product_signal_permit p ON s.id = p.signal_id
+    LEFT JOIN fu_user u ON s.user_id = u.id
+    LEFT JOIN fu_account_mt m ON s.user_id=m.user_id and s.mt_acc_id=m.mt_acc_id
+    where 1=1
+    <if test="userId != null">
+      and s.user_id = #{userId,jdbcType=INTEGER}
+    </if>
+    <if test="signalId != null">
+      and s.id = #{signalId,jdbcType=INTEGER}
+    </if>
+    <if test="mtAccId != null">
+      and s.mt_acc_id = #{mtAccId,jdbcType=INTEGER}
+    </if>
+    <if test="signalState != null">
+      and s.signal_state = #{signalState,jdbcType=INTEGER}
+    </if>
+    <if test="brokerName != null">
+      and m.broker_name = #{brokerName,jdbcType=INTEGER}
+    </if>
+    <if test="level != null">
+      and v.LEVEL = #{level,jdbcType=INTEGER}
+    </if>
+    <if test="projKey != null and projKey != ''">
+      and p.proj_key = #{projKey,jdbcType=INTEGER}
+    </if>
+  </select>
   <select id="querySignalAllowed" parameterType="java.util.Map" resultMap="BaseResultMap">
     SELECT
       DISTINCT

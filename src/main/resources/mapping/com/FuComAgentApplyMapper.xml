@@ -267,5 +267,6 @@
       <if test="applyState != null and  applyState != '' or  applyState == '0'.toString()">
         and a.apply_state = #{applyState,jdbcType=TINYINT}
       </if>
+    order by id desc
   </select>
 </mapper>

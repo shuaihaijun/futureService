@@ -108,6 +108,15 @@ public class ProductSignalController {
         return fuProductSignalService.querySignalUsers(requestMap);
     }
 
+    //查询信号源用户信息
+    @RequestMapping(value= "/querySignalUsersPermit",method=RequestMethod.POST)
+    public @ResponseBody
+    Page<FuUserSignalVO> querySignalUsersPermit(@RequestBody RequestParams<Map> requestParams) {
+        Map condition = requestParams.getParams();
+        PageInfoHelper helper = requestParams.getPageInfoHelper();
+        return fuProductSignalService.querySignalUsersPermit(condition,helper);
+    }
+
     //删除申请信息
     @RequestMapping(value= "/deleteApply",method=RequestMethod.POST)
     public @ResponseBody Boolean deleteApply(){
