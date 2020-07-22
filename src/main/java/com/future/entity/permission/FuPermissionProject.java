@@ -10,6 +10,8 @@ public class FuPermissionProject {
     public static final String PROJ_ID = "Id";
     public static final String PROJ_KEY = "Proj_key";
     public static final String PROJ_STATUS = "Proj_status";
+    public static final String Proj_Crm_Realm = "proj_crm_realm";
+    public static final String Proj_Official_Realm = "proj_official_realm";
     /**
      * 主键
      */

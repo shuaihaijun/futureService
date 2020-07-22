@@ -130,7 +130,18 @@ public class PermissionProjectController {
         FuPermissionProject project = permissionProjectService.findProject(permissionProject);
         return project;
     }
-
+    /**
+     * 工程项目信息详情
+     * @param requestParams
+     * @return
+     */
+    @ApiOperation(value = "工程项目信息详情查询", notes = "工程项目信息详情查询")
+    @PostMapping(value = "/queryProjectByUrl")
+    public FuPermissionProject queryProjectByUrl(@RequestBody RequestParams<Map> requestParams) throws Exception {
+        Map permissionProject = requestParams.getParams();
+        FuPermissionProject project = permissionProjectService.queryProjectByUrl(permissionProject);
+        return project;
+    }
 
     /**
      * 查询工程项目中的链接信息

@@ -239,6 +239,8 @@ public class FuAccountCommissionService extends ServiceImpl<FuAccountCommissionM
         accountCommission.setCommissionSourceMoney(accountCommission.getCommissionSourceMoney().add(commissionSourceMoney));//''源发生金额''
         accountCommission.setCommissionSourceLots(accountCommission.getCommissionSourceLots().add(commissionSourceLots));//''源发生手数''
 
+        //TODO  团队介绍人返佣判断
+
         /*更新佣金表数据*/
         fuAccountCommissionMapper.updateByPrimaryKeySelective(accountCommission);
 

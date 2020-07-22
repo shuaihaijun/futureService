@@ -237,6 +237,38 @@ public class PermissionProjectService extends ServiceImpl<FuPermissionProjectMap
     }
 
     /**
+     * 通过URL获取工程项目详情
+     * @param conditionMap
+     * @return
+     */
+    public FuPermissionProject queryProjectByUrl(Map conditionMap) throws Exception {
+        //验证必要参数值是否为空
+        if (conditionMap == null) {
+            throw new BusinessException(GlobalResultCode.PARAM_NULL_POINTER);
+        }
+        Wrapper<FuPermissionProject> conditionProject=new EntityWrapper();
+        if(!ObjectUtils.isEmpty(conditionMap.get("userId"))){
+            // 使用用户id进行查找
+            Integer userId=Integer.parseInt(String.valueOf(conditionMap.get("userId")));
+            List<Integer> prokeys= permissionUserProjectService.findPorjKeysByUserId(userId);
+            if(prokeys==null||prokeys.size()==0){
+                throw new BusinessException(GlobalResultCode.RESULE_DATA_NONE);
+            }
+            conditionProject.eq(FuPermissionProject.PROJ_KEY,prokeys.get(0));
+
+        }
+        if(!ObjectUtils.isEmpty(conditionMap.get("projCrmRealm"))){
+            conditionProject.like(FuPermissionProject.Proj_Crm_Realm,String.valueOf(conditionMap.get("projCrmRealm")));
+        }
+        if(!ObjectUtils.isEmpty(conditionMap.get("projOfficialRealm"))){
+            conditionProject.like(FuPermissionProject.Proj_Official_Realm,String.valueOf(conditionMap.get("projOfficialRealm")));
+        }
+        FuPermissionProject proj = selectOne(conditionProject);
+        return proj;
+
+    }
+
+    /**
      * 通过主键批量删除工程项目信息以及相关联数据
      *
      * @param ids 工程项目信ID集合

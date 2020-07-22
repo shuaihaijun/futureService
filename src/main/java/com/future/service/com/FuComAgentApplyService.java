@@ -148,7 +148,7 @@ public class FuComAgentApplyService extends ServiceImpl<FuComAgentApplyMapper,Fu
         if(!ObjectUtils.isEmpty(conditionMap.get("applyState"))){
             wrapper.eq(FuComAgentApply.APPLY_STATE,String.valueOf(conditionMap.get("applyState")));
         }
-
+        wrapper.orderBy(FuComAgentApply.AGENT_ID,false);
         if(helper==null){
             helper=new PageInfoHelper();
         }

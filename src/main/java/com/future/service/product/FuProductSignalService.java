@@ -279,6 +279,27 @@ public class FuProductSignalService extends ServiceImpl<FuProductSignalMapper,Fu
     }
 
     /**
+     * 根据ProjKey查找可跟随信号源
+     * @param conditionMap
+     * @param helper
+     * @return
+     */
+    public Page<FuProductSignal> querySignalAllowedByProjKey(Map conditionMap, PageInfoHelper helper){
+        /*校验信息*/
+        if(ObjectUtils.isEmpty(conditionMap.get("projKey"))){
+            throw new DataConflictException(GlobalResultCode.PARAM_NULL_POINTER.message());
+        }
+
+        if(helper==null){
+            helper=new PageInfoHelper();
+        }
+        Page<FuProductSignal> signals= PageHelper.startPage(helper.getPageNo(),helper.getPageSize());
+        fuProductSignalMapper.querySignalAllowed(conditionMap);
+
+        return signals;
+    }
+
+    /**
      * 根据条件修改信号源信息
      * @param dataMap
      * @param condition

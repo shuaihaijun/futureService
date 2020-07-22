@@ -59,6 +59,15 @@ public class ProductSignalController {
         return fuProductSignalService.querySignalInfos(orderCondition,helper);
     }
 
+    //查找信息
+    @RequestMapping(value= "/querySignalByCondition",method=RequestMethod.POST)
+    public @ResponseBody
+    com.github.pagehelper.Page<FuProductSignal> querySignalByCondition(@RequestBody RequestParams<Map> requestParams) {
+        Map orderCondition = requestParams.getParams();
+        PageInfoHelper helper = requestParams.getPageInfoHelper();
+        return fuProductSignalService.findSignalByCondition(orderCondition,helper);
+    }
+
     //查找允许跟随信号源信息
     @RequestMapping(value= "/querySignalAllowed",method=RequestMethod.POST)
     public @ResponseBody
@@ -66,6 +75,15 @@ public class ProductSignalController {
         Map orderCondition = requestParams.getParams();
         PageInfoHelper helper = requestParams.getPageInfoHelper();
         return fuProductSignalService.querySignalAllowed(orderCondition,helper);
+    }
+
+    //查找允许跟随信号源信息
+    @RequestMapping(value= "/querySignalAllowedByProjKey",method=RequestMethod.POST)
+    public @ResponseBody
+    Page<FuProductSignal> querySignalAllowedByProjKey(@RequestBody RequestParams<Map> requestParams) {
+        Map orderCondition = requestParams.getParams();
+        PageInfoHelper helper = requestParams.getPageInfoHelper();
+        return fuProductSignalService.querySignalAllowedByProjKey(orderCondition,helper);
     }
 
     //保存申请信息
