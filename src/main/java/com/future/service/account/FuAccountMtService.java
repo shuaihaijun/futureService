@@ -237,7 +237,7 @@ public class FuAccountMtService extends ServiceImpl<FuAccountMtMapper, FuAccount
                 Map signalData=new HashMap();
                 signalCondition.put("userId",userId);
                 signalCondition.put("mtAccId",fuAccountMt.getMtAccId());
-                signalData.put(FuProductSignal.MT_PASSWORD_WATCH,fuAccountMt.getMtPasswordWatch());
+                signalData.put("mtPasswordWatch",fuAccountMt.getMtPasswordWatch());
                 fuProductSignalService.updateSignalByCondition(signalData,signalCondition);
             }
 

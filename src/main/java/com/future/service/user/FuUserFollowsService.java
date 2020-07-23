@@ -6,7 +6,10 @@ import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.baomidou.mybatisplus.toolkit.MapUtils;
-import com.future.common.constants.*;
+import com.future.common.constants.CommonConstant;
+import com.future.common.constants.FollowConstant;
+import com.future.common.constants.RedisConstant;
+import com.future.common.constants.UserConstant;
 import com.future.common.enums.GlobalResultCode;
 import com.future.common.enums.TradeErrorEnum;
 import com.future.common.exception.BusinessException;
@@ -518,4 +521,27 @@ public class FuUserFollowsService extends ServiceImpl<FuUserFollowsMapper, FuUse
         return new PageInfo<FuFollowUserVO>(followUsers);
     }
 
+    /**
+     * 查询跟随用户信息
+     * @param requestMap
+     * @param helper
+     * @return
+     */
+    public Page<FuFollowUserVO> queryProjectFollowUsers(Map requestMap,PageInfoHelper helper){
+
+        if(requestMap!=null){
+            log.error("查询跟随用户信息 参数为空！");
+            new DataConflictException(" 查询跟随用户信息 参数为空！");
+        }
+        if(requestMap.get("projKey")!=null){
+            requestMap.put("projKey",0);
+        }
+
+        if(helper==null){
+            helper=new PageInfoHelper();
+        }
+        Page<FuFollowUserVO> followUsers= PageHelper.startPage(helper.getPageNo(),helper.getPageSize());
+         fuUserFollowsMapper.queryProjectFollowUsers(requestMap);
+        return followUsers;
+    }
 }

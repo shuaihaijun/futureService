@@ -192,6 +192,14 @@ public class ProductSignalController {
     }
 
     //查询跟单信息
+    @RequestMapping(value= "/queryProjectFollowUsers",method=RequestMethod.POST)
+    public @ResponseBody Page<FuFollowUserVO> queryProjectFollowUsers(@RequestBody RequestParams<Map> requestParams) {
+        Map conditionMap = requestParams.getParams();
+        PageInfoHelper helper = requestParams.getPageInfoHelper();
+        return fuUserFollowsService.queryProjectFollowUsers(conditionMap,helper);
+    }
+
+    //查询跟单信息
     @RequestMapping(value= "/getSignalValuation",method=RequestMethod.POST)
     public @ResponseBody
     FuProductSignalValuation getSignalValuation(){

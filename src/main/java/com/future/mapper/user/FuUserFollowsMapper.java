@@ -24,5 +24,7 @@ public interface FuUserFollowsMapper extends BaseMapper<FuUserFollows> {
 
     List<FuFollowUserVO> queryFollowUsers(Map conditionMap);
 
+    List<FuFollowUserVO> queryProjectFollowUsers(Map conditionMap);
+
     List<FuUserFollows> queryProjectSignalFollows(Map conditionMap);
 }
