@@ -230,6 +230,7 @@ public class FuAccountMtService extends ServiceImpl<FuAccountMtMapper, FuAccount
 
             //判断是否需要修改信号源信息
             if(user.getUserType()==UserConstant.USER_TYPE_SIGNAL
+                    &&mt!=null
                     &&!StringUtils.isEmpty(fuAccountMt.getMtPasswordWatch())
                     &&!fuAccountMt.getMtPasswordWatch().equals(mt.getMtPasswordWatch())){
                 //信号源修改了查看密码
