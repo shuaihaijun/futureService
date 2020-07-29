@@ -824,7 +824,7 @@ public class AdminService extends ServiceImpl<FuUserMapper,FuUser> {
         /*查询推荐人所属资源组*/
         FuPermissionUserProject introducerProject= permissionUserProjectService.selectOne(new EntityWrapper<FuPermissionUserProject>()
                 .eq(FuPermissionUserProject.USER_ID,introducer));
-        if(introducerProject!=null){
+        if(introducerProject==null){
             log.error("介绍人资源组不存在，请检查数据！");
             throw new DataConflictException("介绍人资源组不存在，请检查数据！");
         }
