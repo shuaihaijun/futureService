@@ -235,7 +235,7 @@
         <if test="applyDate != null">
           and a.apply_date = #{applyDate,jdbcType=TIMESTAMP}
         </if>
-        <if test="projKey != null and projKey != ''">
+        <if test="projKey != null and  orderType != '' or  orderType == '0'.toString()">
           and p.proj_key = #{projKey,jdbcType=INTEGER}
         </if>
   </select>

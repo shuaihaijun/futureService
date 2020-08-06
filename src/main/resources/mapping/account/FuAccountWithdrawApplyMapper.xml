@@ -303,7 +303,7 @@
         <if test="comment != null and comment != ''">
           and a.comment = #{comment,jdbcType=VARCHAR}
         </if>
-        <if test="projKey != null and projKey != ''">
+        <if test="projKey != null and  orderType != '' or  orderType == '0'.toString()">
           and p.proj_key = #{projKey,jdbcType=INTEGER}
         </if>
         order by id desc

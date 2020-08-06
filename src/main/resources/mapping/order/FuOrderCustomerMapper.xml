@@ -450,7 +450,7 @@
       <if test="orderCloseDateEnd != null">
         and o.order_close_date &lt;= #{orderCloseDateEnd,jdbcType=TIMESTAMP}
       </if>
-      <if test="projKey != null and projKey != ''">
+      <if test="projKey != null and  orderType != '' or  orderType == '0'.toString()">
         and p.proj_key = #{projKey,jdbcType=INTEGER}
       </if>
     order by o.order_close_date desc

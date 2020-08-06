@@ -506,7 +506,7 @@
       <if test="signalId != null and signalId != ''">
         and o.signal_id = #{signalId,jdbcType=INTEGER}
       </if>
-      <if test="projKey != null and projKey != ''">
+      <if test="projKey != null and  orderType != '' or  orderType == '0'.toString()">
         and p.proj_key = #{projKey,jdbcType=INTEGER}
       </if>
       <if test="orderId != null and orderId != ''">

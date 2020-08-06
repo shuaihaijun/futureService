@@ -649,7 +649,7 @@
     <if test="level != null">
       and v.LEVEL = #{level,jdbcType=INTEGER}
     </if>
-    <if test="projKey != null and projKey != ''">
+    <if test="projKey != null and  orderType != '' or  orderType == '0'.toString()">
       and p.proj_key = #{projKey,jdbcType=INTEGER}
     </if>
   </select>
@@ -706,8 +706,8 @@
       <if test="mtAccId != null and mtAccId != ''">
         and s.mt_acc_id = #{mtAccId,jdbcType=INTEGER}
       </if>
-      <if test="projKey != null and projKey != ''">
-        and p.proj_key = #{projKey,jdbcType=INTEGER}
+    <if test="projKey != null and  orderType != '' or  orderType == '0'.toString()">
+    and p.proj_key = #{projKey,jdbcType=INTEGER}
       </if>
   </select>
 </mapper>

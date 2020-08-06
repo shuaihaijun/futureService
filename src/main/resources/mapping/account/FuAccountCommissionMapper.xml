@@ -231,7 +231,7 @@
       <if test="accountState != null and  accountState != '' or  accountState == '0'.toString()">
         and c.account_state = #{accountState,jdbcType=TINYINT}
       </if>
-      <if test="projKey != null and projKey != ''">
+      <if test="projKey != null and  orderType != '' or  orderType == '0'.toString()">
         and p.proj_key = #{projKey,jdbcType=INTEGER}
       </if>
   </select>
