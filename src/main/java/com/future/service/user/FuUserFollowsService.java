@@ -479,6 +479,9 @@ public class FuUserFollowsService extends ServiceImpl<FuUserFollowsMapper, FuUse
             throw new BusinessException(GlobalResultCode.RESULE_DATA_NONE);
         }
         follows.setFollowState(FollowConstant.FOLLOW_STATE_DELETE);
+        if(dataMap.get("followState")!=null && !StringUtils.isEmpty(dataMap.get("followState"))){
+            follows.setFollowState(Integer.parseInt(String.valueOf(dataMap.get("followState"))));
+        }
         follows.setModifyDate(new Date());
 
         //修改信号源：正常订单废弃

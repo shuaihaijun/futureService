@@ -4,10 +4,7 @@ import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.baomidou.mybatisplus.toolkit.MapUtils;
-import com.future.common.constants.AccountConstant;
-import com.future.common.constants.CommonConstant;
-import com.future.common.constants.RedisConstant;
-import com.future.common.constants.UserConstant;
+import com.future.common.constants.*;
 import com.future.common.enums.GlobalResultCode;
 import com.future.common.exception.BusinessException;
 import com.future.common.exception.DataConflictException;
@@ -22,6 +19,7 @@ import com.future.entity.account.FuAccountMtFlow;
 import com.future.entity.com.FuComServer;
 import com.future.entity.product.FuProductSignal;
 import com.future.entity.user.FuUser;
+import com.future.entity.user.FuUserFollows;
 import com.future.mapper.account.FuAccountMtFlowMapper;
 import com.future.mapper.account.FuAccountMtMapper;
 import com.future.mapper.product.FuProductSignalMapper;
@@ -37,6 +35,7 @@ import com.future.service.user.FuUserFollowsService;
 import com.future.service.user.UserCommonService;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import io.swagger.models.auth.In;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -241,6 +240,32 @@ public class FuAccountMtService extends ServiceImpl<FuAccountMtMapper, FuAccount
                 signalData.put("mtPasswordWatch",fuAccountMt.getMtPasswordWatch());
                 fuProductSignalService.updateSignalByCondition(signalData,signalCondition);
             }
+
+            //正在跟随的账号 修改交易密码后需要暂停跟随
+            if(mt!=null
+                    &&!StringUtils.isEmpty(fuAccountMt.getMtPasswordTrade())
+                    &&!fuAccountMt.getMtPasswordTrade().equals(mt.getMtPasswordTrade())){
+                // 1、校验是否正在跟随账号
+                Wrapper<FuUserFollows> followsWrapper=new EntityWrapper<>();
+                followsWrapper.eq(FuUserFollows.USER_ID,userId);
+                followsWrapper.eq(FuUserFollows.USER_MT_ACC_ID,fuAccountMt.getMtAccId());
+                followsWrapper.eq(FuUserFollows.FOLLOW_STATE, FollowConstant.FOLLOW_STATE_NORMAL);
+                List<FuUserFollows> userFollows= fuUserFollowsService.selectList(followsWrapper);
+                // 2、暂停跟随
+                Map dataMap=new HashMap();
+                if(userFollows!=null&&userFollows.size()>0){
+                    for(FuUserFollows fuUserFollows:userFollows){
+                        dataMap.put("userId",fuUserFollows.getUserId());
+                        dataMap.put("mtAccId",fuUserFollows.getUserMtAccId());
+                        dataMap.put("signalId",fuUserFollows.getSignalId());
+                        dataMap.put("followState",FollowConstant.FOLLOW_STATE_HIDE);
+                        fuUserFollowsService.signalFollowsRemove(dataMap);
+                    }
+                }
+                // 3、断开监听
+                disConnectUserMTAccount(Integer.parseInt(userId),fuAccountMt.getMtAccId(),null,null);
+            }
+
 
             /*保存账户信息*/
             if(fuAccountMt.getId()!=null&&fuAccountMt.getId()>0){
