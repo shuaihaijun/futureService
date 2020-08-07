@@ -250,12 +250,21 @@ public class FuProductSignalService extends ServiceImpl<FuProductSignalMapper,Fu
     }
 
     /**
-     * 删除信号源信息
+     * 修改信号源状态
      * @param signalId
      */
-    public Boolean deleteProductSignal(int signalId){
+    public Boolean signalStateUpdate(Integer signalId, Integer signalState){
         /**校验信息*/
-        return deleteById(signalId);
+        if(signalId==null||signalId==0){
+            log.error("修改信号源状态 传入参数为空！");
+            throw new DataConflictException("修改信号源状态 传入参数为空！");
+        }
+
+        FuProductSignal signal=new FuProductSignal();
+        signal.setId(signalId);
+        signal.setSignalState(signalState);
+
+        return updateById(signal);
     }
 
     /**

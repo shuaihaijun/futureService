@@ -2,6 +2,7 @@ package com.future.controller.signal;
 
 import com.alibaba.fastjson.JSONObject;
 import com.future.common.enums.GlobalResultCode;
+import com.future.common.exception.DataConflictException;
 import com.future.common.exception.ParameterInvalidException;
 import com.future.common.helper.PageInfoHelper;
 import com.future.common.result.RequestParams;
@@ -117,16 +118,19 @@ public class ProductSignalController {
         return fuProductSignalService.querySignalUsersPermit(condition,helper);
     }
 
-    //删除申请信息
-    @RequestMapping(value= "/deleteApply",method=RequestMethod.POST)
-    public @ResponseBody Boolean deleteApply(){
+    //修改信号源状态
+    @RequestMapping(value= "/signalStateUpdate",method=RequestMethod.POST)
+    public @ResponseBody Boolean signalStateUpdate(@RequestBody RequestParams<Map> requestParams) {
         // 获取请求参数
-        String requestJSONStr = ThreadCache.getPostRequestParams();
-        JSONObject requestMap = JSONObject.parseObject(requestJSONStr);
-        String signalId=requestMap.getString("signalId");
-        String username=requestMap.getString("username");
+        Map condition = requestParams.getParams();
+        if(condition==null||condition.get("signalId")==null||condition.get("signalState")==null){
+            log.error("修改信号源状态 传入参数为空！");
+            throw new DataConflictException("修改信号源状态 传入参数为空！");
+        }
+        String signalId=String.valueOf(condition.get("signalId"));
+        String signalState=String.valueOf(condition.get("signalState"));
         /*校验参数*/
-        return fuProductSignalService.deleteProductSignal(Integer.parseInt(signalId));
+        return fuProductSignalService.signalStateUpdate(Integer.parseInt(signalId),Integer.parseInt(signalState));
     }
 
     //查询跟单信息
