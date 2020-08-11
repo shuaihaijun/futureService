@@ -163,8 +163,17 @@ public class FuOrderSignalService extends ServiceImpl<FuOrderSignalMapper, FuOrd
         if(!StringUtils.isEmpty(requestMap.get("orderType"))){
             wrapper.eq(FuOrderSignal.ORDER_TYPE,requestMap.get("orderType"));
         }
-        if(!StringUtils.isEmpty(requestMap.get("orderTradeOperation"))){
-            wrapper.eq(FuOrderSignal.ORDER_TRADE_OPERATION,requestMap.get("orderTradeOperation"));
+        if(!ObjectUtils.isEmpty(requestMap.get("orderTradeOperation"))){
+            if(String.valueOf(requestMap.get("orderTradeOperation")).indexOf(",")<0){
+                wrapper.eq(FuOrderSignal.ORDER_TRADE_OPERATION,String.valueOf(requestMap.get("orderTradeOperation")));
+            }else {
+                //多状态
+                String[] state=String.valueOf(requestMap.get("orderTradeOperation")).split(",");
+                wrapper.andNew().eq(FuOrderSignal.ORDER_TRADE_OPERATION,state[0]);
+                for (int i=1;i<state.length;i++){
+                    wrapper.or().eq(FuOrderSignal.ORDER_TRADE_OPERATION,state[i]);
+                }
+            }
         }
         if(!StringUtils.isEmpty(requestMap.get("orderOpenDate"))){
             if(String.valueOf(requestMap.get("orderOpenDate")).indexOf(",")<0){

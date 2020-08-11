@@ -16,6 +16,7 @@ import com.future.pojo.vo.signal.FuUserSignalVO;
 import com.future.service.product.FuProductSignalService;
 import com.future.service.product.FuProductSignalValuationService;
 import com.future.service.user.FuUserFollowsService;
+import com.future.service.user.UserCommonService;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageInfo;
 import org.slf4j.Logger;
@@ -36,6 +37,8 @@ public class ProductSignalController {
     FuUserFollowsService fuUserFollowsService;
     @Autowired
     FuProductSignalValuationService fuProductSignalValuationService;
+    @Autowired
+    UserCommonService userCommonService;
 
     //查找申请信息
     @RequestMapping(value= "/findSignalById",method=RequestMethod.POST)
@@ -123,12 +126,24 @@ public class ProductSignalController {
     public @ResponseBody Boolean signalStateUpdate(@RequestBody RequestParams<Map> requestParams) {
         // 获取请求参数
         Map condition = requestParams.getParams();
-        if(condition==null||condition.get("signalId")==null||condition.get("signalState")==null){
+        if(condition==null||condition.get("signalId")==null||condition.get("signalState")==null||condition.get("operUserId")==null){
             log.error("修改信号源状态 传入参数为空！");
             throw new DataConflictException("修改信号源状态 传入参数为空！");
         }
         String signalId=String.valueOf(condition.get("signalId"));
         String signalState=String.valueOf(condition.get("signalState"));
+        String operUserId=String.valueOf(condition.get("operUserId"));
+        /*判断权限*/
+        FuProductSignal signal= fuProductSignalService.findSignalById(Integer.parseInt(signalId));
+        Integer operProjectKey= userCommonService.getUserProjKey(Integer.parseInt(operUserId));
+        if(signal==null||operProjectKey==null){
+            log.warn("查询信号源和团队信息失败!");
+            throw new ParameterInvalidException("查询信号源和团队信息失败!");
+        }
+        if(signal.getProjKey()!=operProjectKey){
+            log.warn("管理员只能操作自己团队的信号源!");
+            throw new ParameterInvalidException("管理员只能操作自己团队的信号源!");
+        }
         /*校验参数*/
         return fuProductSignalService.signalStateUpdate(Integer.parseInt(signalId),Integer.parseInt(signalState));
     }
