@@ -278,10 +278,10 @@ public class FuOrderSignalService extends ServiceImpl<FuOrderSignalMapper, FuOrd
             orderSignal.setOrderClosePrice(followOrder.getBigDecimal("close_price"));
         }else if(orderAction==OrderConstant.ORDER_OPERATION_MODIFY){
             orderSignal.setOrderTradeOperation(OrderConstant.ORDER_OPERATION_MODIFY);
-            log.error("跟单回调数据保存 订单类型错误！orderAction："+orderAction);
         }else {
-            log.error("跟单回调数据保存 订单类型错误！orderAction："+orderAction);
-            return false;
+            /*出了 开仓 平仓 修改，其他的都不保存*/
+            log.warn("跟单回调数据保存 订单类型错误 数据不做保存！orderAction："+orderAction);
+            return true;
         }
         fuOrderSignalMapper.insertSelective(orderSignal);
 

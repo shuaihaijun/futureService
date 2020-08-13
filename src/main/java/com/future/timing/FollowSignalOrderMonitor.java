@@ -53,7 +53,7 @@ public class FollowSignalOrderMonitor {
                     if(!isSuccess){
                         log.error("同步跟单订单失败，订单："+JSONObject.toJSONString(signalOrderInfo));
                         //redis 暂存处理失败数据(暂时未做处理 需要实例化)
-                        redisManager.lSet(RedisConstant.L_ORDER_FOLLOW_ORDERS_BAK,signalOrderInfo);
+                        redisManager.lSet(RedisConstant.L_ORDER_FOLLOW_SIGNAL_ORDER_BAK,signalOrderInfo);
                     }
                 }catch (Exception e){
                     log.error("同步跟单订单失败，订单："+JSONObject.toJSONString(signalOrderInfo));
