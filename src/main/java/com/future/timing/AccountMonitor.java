@@ -44,15 +44,22 @@ public class AccountMonitor {
         Page<FuAccountMt> accountMts=PageHelper.startPage(helper.getPageNo(),helper.getPageSize());
 
         fuAccountMtService.selectList(wrapper);
-        for(FuAccountMt accountMt:accountMts){
-            try {
-                log.info("账户信息 每天同步一次------------------------mtAccId:"+accountMt.getMtAccId());
-                /*同步用户账户信息*/
-                fuAccountMtService.updateAccountInfoFromMt(accountMt.getUserId());
-            }catch (Exception e){
-                log.error("账户信每天同步 失败，userId:"+accountMt.getUserId()+",mtAccId:"+accountMt.getMtAccId());
-                log.error(e.getMessage(),e);
+
+        while (accountMts!=null&&accountMts.size()>0){
+            for(FuAccountMt accountMt:accountMts){
+                try {
+                    log.info("账户信息 每天同步一次------------------------mtAccId:"+accountMt.getMtAccId());
+                    /*同步用户账户信息*/
+                    fuAccountMtService.updateAccountInfoFromMt(accountMt.getUserId());
+                }catch (Exception e){
+                    log.error("账户信每天同步 失败，userId:"+accountMt.getUserId()+",mtAccId:"+accountMt.getMtAccId());
+                    log.error(e.getMessage(),e);
+                }
             }
+            /*翻页*/
+            helper.setPageNo(helper.getPageNo()+1);
+            accountMts=PageHelper.startPage(helper.getPageNo(), helper.getPageSize());
+            fuAccountMtService.selectList(wrapper);
         }
     }
 }

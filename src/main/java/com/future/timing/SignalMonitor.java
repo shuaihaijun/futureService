@@ -65,31 +65,37 @@ public class SignalMonitor {
         Page<FuProductSignal> signals=PageHelper.startPage(helper.getPageNo(),helper.getPageSize());
         fuProductSignalService.selectList(wrapper);
 
-        log.error("定时任务------初始化信号源订单----------size:"+signals.getResult().size());
+        log.info("定时任务------初始化信号源订单----------size:"+signals.getResult().size());
 
         Wrapper<FuReportOrderFlow> flowWrapper=new EntityWrapper<>();
         FuReportOrderFlow orderFlow=new FuReportOrderFlow();
-        for(FuProductSignal signal:signals){
-            /*根据两天以前的结算数据  来判断是否已初始化*/
-            flowWrapper.eq(FuReportOrderFlow.USER_ID,signal.getUserId());
-            flowWrapper.eq(FuReportOrderFlow.MT_ACC_ID,signal.getMtAccId());
-            flowWrapper.lt(FuReportOrderFlow.TRADE_DATE,referDate);
-            flowWrapper.last("limit 1");
-            orderFlow=fuReportOrderFlowService.selectOne(flowWrapper);
-            if(orderFlow!=null){
-                continue;
+        while (signals!=null&&signals.size()>0){
+            for(FuProductSignal signal:signals){
+                /*根据两天以前的结算数据  来判断是否已初始化*/
+                flowWrapper.eq(FuReportOrderFlow.USER_ID,signal.getUserId());
+                flowWrapper.eq(FuReportOrderFlow.MT_ACC_ID,signal.getMtAccId());
+                flowWrapper.lt(FuReportOrderFlow.TRADE_DATE,referDate);
+                flowWrapper.last("limit 1");
+                orderFlow=fuReportOrderFlowService.selectOne(flowWrapper);
+                if(orderFlow!=null){
+                    continue;
+                }
+                try {
+                    log.info("定时任务------初始化信号源订单----------同步信号源历史交易数据:");
+                    /*1 同步信号源历史交易数据*/
+                    fuOrderSignalService.initSignalHistoryOrder(signal.getUserId(),signal.getServerName(),signal.getMtAccId(),null,new Date());
+                    log.info("定时任务------初始化信号源订单----------根据历史交易数据 分析:");
+                    /*2 根据历史交易数据 分析*/
+                    fuReportOrderSumService.orderSumStatisticsInit(signal.getUserId(),signal.getServerName(), Integer.valueOf(signal.getMtAccId()));
+                }catch (Exception e){
+                    log.error("定时任务------初始化信号源订单失败----------");
+                    log.error(e.getMessage(),e);
+                }
             }
-            try {
-                log.info("定时任务------初始化信号源订单----------同步信号源历史交易数据:");
-                /*1 同步信号源历史交易数据*/
-                fuOrderSignalService.initSignalHistoryOrder(signal.getUserId(),signal.getServerName(),signal.getMtAccId(),null,new Date());
-                log.info("定时任务------初始化信号源订单----------根据历史交易数据 分析:");
-                /*2 根据历史交易数据 分析*/
-                fuReportOrderSumService.orderSumStatisticsInit(signal.getUserId(),signal.getServerName(), Integer.valueOf(signal.getMtAccId()));
-            }catch (Exception e){
-                log.error("定时任务------初始化信号源订单失败----------");
-                log.error(e.getMessage(),e);
-            }
+            /*翻页*/
+            helper.setPageNo(helper.getPageNo()+1);
+            signals=PageHelper.startPage(helper.getPageNo(),helper.getPageSize());
+            fuProductSignalService.selectList(wrapper);
         }
     }
 }

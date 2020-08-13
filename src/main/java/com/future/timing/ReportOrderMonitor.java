@@ -57,21 +57,27 @@ public class ReportOrderMonitor {
 
         wrapper.eq(FuAccountMt.PASSWORD_WATCH_CHECKED, CommonConstant.CHECK_YES);
         Page<FuAccountMt> accountMts=PageHelper.startPage(helper.getPageNo(),helper.getPageSize());
-
         fuAccountMtService.selectList(wrapper);
-        for(FuAccountMt accountMt:accountMts){
-            try {
-                /*日交易订单流水*/
-                orderFlow=fuReportOrderFlowService.orderFlowAnalysis(accountMt.getUserId(),tradeDate,accountMt.getServerName(), Integer.parseInt(accountMt.getMtAccId()));
-                if(ObjectUtils.isEmpty(orderFlow)){
-                    continue;
+
+        while (accountMts!=null&&accountMts.size()>0) {
+            for (FuAccountMt accountMt : accountMts) {
+                try {
+                    /*日交易订单流水*/
+                    orderFlow = fuReportOrderFlowService.orderFlowAnalysis(accountMt.getUserId(), tradeDate, accountMt.getServerName(), Integer.parseInt(accountMt.getMtAccId()));
+                    if (ObjectUtils.isEmpty(orderFlow)) {
+                        continue;
+                    }
+                    /*日交易订单汇总*/
+                    reportOrderSumService.orderSumAnalysis(accountMt.getUserId(), tradeDate, accountMt.getServerName(), Integer.parseInt(accountMt.getMtAccId()), orderFlow);
+                } catch (Exception e) {
+                    log.error("订单报表分析 失败，userId:" + accountMt.getUserId() + ",mtAccId:" + accountMt.getMtAccId());
+                    log.error(e.getMessage(), e);
                 }
-                /*日交易订单汇总*/
-                reportOrderSumService.orderSumAnalysis(accountMt.getUserId(),tradeDate,accountMt.getServerName(),Integer.parseInt(accountMt.getMtAccId()),orderFlow);
-            }catch (Exception e){
-                log.error("订单报表分析 失败，userId:"+accountMt.getUserId()+",mtAccId:"+accountMt.getMtAccId());
-                log.error(e.getMessage(),e);
             }
+            /*翻页*/
+            helper.setPageNo(helper.getPageNo()+1);
+            accountMts=PageHelper.startPage(helper.getPageNo(),helper.getPageSize());
+            fuAccountMtService.selectList(wrapper);
         }
     }
 }

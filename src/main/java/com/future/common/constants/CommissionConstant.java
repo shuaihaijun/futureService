@@ -20,6 +20,7 @@ public class CommissionConstant {
 	/**
 	 * 收佣等级（1级、2级、3级）
 	 */
+	public static final int COMMISSION_USER_LEVEL_ZERO = 0;
 	public static final int COMMISSION_USER_LEVEL_FIRST = 1;
 	public static final int COMMISSION_USER_LEVEL_SECOND = 2;
 	public static final int COMMISSION_USER_LEVEL_THIRD = 3;

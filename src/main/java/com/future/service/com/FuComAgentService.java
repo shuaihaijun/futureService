@@ -321,7 +321,7 @@ public class FuComAgentService extends ServiceImpl<FuComAgentMapper,FuComAgent> 
     public void agentUpgrade(UserMTAccountBO accountBO){
 
         /*判断代理是否可升级*/
-        if(accountBO.getUserType()> UserConstant.USER_TYPE_PIB){
+        if(accountBO.getUserType()>= UserConstant.USER_TYPE_PIB){
             /*类型不符合  只有MIB IB可以升级*/
             return;
         }
@@ -352,7 +352,7 @@ public class FuComAgentService extends ServiceImpl<FuComAgentMapper,FuComAgent> 
                 numIB++;
             }else if(user.getUserType()==UserConstant.USER_TYPE_MIB){
                 numMIB++;
-            }else if(user.getUserType()<UserConstant.USER_TYPE_IB){
+            }else if(user.getUserType()<UserConstant.USER_TYPE_IB && user.getUserType() > UserConstant.USER_TYPE_PIB){
                 numUser++;
             }
         }
@@ -360,7 +360,7 @@ public class FuComAgentService extends ServiceImpl<FuComAgentMapper,FuComAgent> 
         boolean checkPass=false;
         /*判断代理当前级别*/
         int agentType = accountBO.getUserType();
-        if(agentType < UserConstant.USER_TYPE_IB){
+        if(agentType < UserConstant.USER_TYPE_IB && agentType > UserConstant.USER_TYPE_PIB){
             // 非IB 升级 IB
             /*1、本人入金3000美金*/
             if(accountBO.getBalance().compareTo(new BigDecimal(3000))<0){
@@ -410,7 +410,7 @@ public class FuComAgentService extends ServiceImpl<FuComAgentMapper,FuComAgent> 
         if(checkPass){
             /*升级*/
             Map conditionMap=new HashMap();
-            conditionMap.put("userId",accountBO.getUserId());
+            conditionMap.put(FuComAgent.USER_ID,accountBO.getUserId());
             List<FuComAgent> agents= fuComAgentMapper.selectByMap(conditionMap);
             if(agents==null||agents.size()==0){
                 if(agentType<AgentConstant.AGENT_TYPE_IB){
@@ -502,20 +502,20 @@ public class FuComAgentService extends ServiceImpl<FuComAgentMapper,FuComAgent> 
         FuAccountCommission commission=commissions.get(0);
 
         Map conditionMap =new HashMap();
-        for(UserMTAccountBO user:beIntroduced ){
-            if(user.getUserType()<agent.getAgentType()){
+        for(UserMTAccountBO beIntroducedUser:beIntroduced ){
+            if(beIntroducedUser.getUserType()<agent.getAgentType()){
                 /*用户 低于 代理级别 ，不返佣*/
                 continue;
-            }else if(user.getUserType()>agent.getAgentType()){
+            }else if(beIntroducedUser.getUserType()>agent.getAgentType()){
                 /*用户 超越 代理级别。  用户的介绍人值为0 默认社区*/
                 /*修改用户类型 userType*/
                 FuUser fuUser=new FuUser();
                 fuUser.setId(agent.getUserId());
                 fuUser.setIntroducer(0);
                 adminService.updateAdmin(fuUser);
-            }else if(user.getUserType()==agent.getAgentType()){
+            }else if(beIntroducedUser.getUserType()==agent.getAgentType()){
                 /*用户等于 代理级别，社区返佣10%*/
-                conditionMap.put("userId",user.getUserId());
+                conditionMap.put("userId",beIntroducedUser.getUserId());
                 conditionMap.put("beginDate",dealBeginDate);
                 if(endDate!=null){
                     conditionMap.put("endDate",endDate);
@@ -539,8 +539,8 @@ public class FuComAgentService extends ServiceImpl<FuComAgentMapper,FuComAgent> 
                 agenFlow.setCommissionType(CommissionConstant.COMMISSION_TYPE_COMMUNITY);
                 agenFlow.setCommissionUserType(agent.getAgentType());
                 agenFlow.setCommissionRate(CommissionConstant.COMMISSION_SAME_LEVEL_RATE_FROM_COMMUNITY);
-                agenFlow.setCommissionLevel(0);
-                agenFlow.setCommissionRateType(2);
+                agenFlow.setCommissionLevel(CommissionConstant.COMMISSION_USER_LEVEL_ZERO);
+                agenFlow.setCommissionRateType(CommissionConstant.COMMISSION_RATE_TYPE_MONEY_COMMISSION);
                 agenFlow.setCommissionState(CommissionConstant.COMMISSION_STATE_SUCCESS);
                 agenFlow.setCoinType(AccountConstant.ACCOUNT_CION_BALANCE);
                 for (FuAccountCommissionFlow userFlow:userflows){

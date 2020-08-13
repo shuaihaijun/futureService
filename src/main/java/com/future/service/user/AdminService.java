@@ -843,6 +843,10 @@ public class AdminService extends ServiceImpl<FuUserMapper,FuUser> {
         userProject.setProjKey(introducerProject.getProjKey());
         permissionUserProjectService.updateById(userProject);
 
+        /*修改推荐人 推荐数量*/
+        introduceUser.setIntroducer(introduceUser.getIntroducer()+1);
+        fuUserMapper.updateByPrimaryKeySelective(introduceUser);
+
         /*修改用户数据！*/
         fuUserMapper.updateByPrimaryKeySelective(user);
     }
