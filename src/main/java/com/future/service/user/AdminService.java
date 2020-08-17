@@ -178,6 +178,9 @@ public class AdminService extends ServiceImpl<FuUserMapper,FuUser> {
         RequestContextHolderUtil.setAdminInfo(adminInfo);
         RequestContextHolderUtil.setAdmintoken(token);*/
 
+        /*刷新过期时间*/
+        redisManager.expire(token, GlobalConstant.TOKEN_TIME_OUT);
+
         /*返回数据填充*/
         Map userMap=new HashMap();
         userMap.put("userId",fuUser.getId());
