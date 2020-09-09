@@ -5,7 +5,9 @@ import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.future.common.constants.AgentConstant;
+import com.future.common.constants.CommonConstant;
 import com.future.common.constants.SignalConstant;
+import com.future.common.constants.UserConstant;
 import com.future.common.enums.GlobalResultCode;
 import com.future.common.exception.BusinessException;
 import com.future.common.exception.DataConflictException;
@@ -22,6 +24,7 @@ import com.future.entity.permission.FuPermissionUserProject;
 import com.future.entity.permission.FuPermissionUserRole;
 import com.future.entity.product.FuProductSignalApply;
 import com.future.entity.user.FuUser;
+import com.future.entity.user.FuUserIdentity;
 import com.future.mapper.com.FuComAgentApplyMapper;
 import com.future.service.account.FuAccountCommissionService;
 import com.future.service.account.FuAccountInfoService;
@@ -29,6 +32,7 @@ import com.future.service.permission.PermissionRoleService;
 import com.future.service.permission.PermissionUserProjectService;
 import com.future.service.permission.PermissionUserRoleService;
 import com.future.service.user.AdminService;
+import com.future.service.user.FuUserIdentityService;
 import com.future.service.user.UserCommonService;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
@@ -68,6 +72,8 @@ public class FuComAgentApplyService extends ServiceImpl<FuComAgentApplyMapper,Fu
     FuComAgentApplyMapper agentApplyMapper;
     @Autowired
     UserCommonService userCommonService;
+    @Autowired
+    FuUserIdentityService fuUserIdentityService;
 
 
     /**
@@ -398,11 +404,26 @@ public class FuComAgentApplyService extends ServiceImpl<FuComAgentApplyMapper,Fu
                     }
                     fuAccountCommissionService.initAccountCommission(agent.getUserId(),accountInfos.get(0).getId());
 
+                    /*如何客户没有代理身份 添加代理身份*/
+                    FuUserIdentity identity=fuUserIdentityService.selectByCondition(agent.getUserId(), UserConstant.USER_IDENTITY_AGENT);
+                    if(identity==null||identity.getId()==0){
+                        FuUserIdentity userIdentity=new FuUserIdentity();
+                        userIdentity.setUserId(agent.getUserId());
+                        userIdentity.setIdentity(UserConstant.USER_IDENTITY_AGENT);
+                        userIdentity.setIdentityLevel(AgentConstant.AGENT_TYPE_IB);
+                        userIdentity.setCreateDate(new Date());
+                        fuUserIdentityService.insertSelective(userIdentity);
+                    }else {
+                        identity.setIdentityLevel(AgentConstant.AGENT_TYPE_IB);
+                        fuUserIdentityService.updateByPrimaryKeySelective(identity);
+                    }
+
                     agent.setAgentType(AgentConstant.AGENT_TYPE_IB);
                     /**/
                     user.setUserType(AgentConstant.AGENT_TYPE_IB);
                     agentType=AgentConstant.AGENT_TYPE_IB;
                     fuComAgentService.insertSelective(agent);
+
 
                 }else if(agentApply.getApplyType().equals(AgentConstant.AGENT_APPLY_TYPE_UP)){
                     //升级
@@ -420,6 +441,16 @@ public class FuComAgentApplyService extends ServiceImpl<FuComAgentApplyMapper,Fu
                         agent.setAgentType(AgentConstant.AGENT_TYPE_PIB);
                         agentType=AgentConstant.AGENT_TYPE_PIB;
                     }
+
+                    /*客户身份变更*/
+                    FuUserIdentity identity=fuUserIdentityService.selectByCondition(agent.getUserId(), UserConstant.USER_IDENTITY_AGENT);
+                    if(identity==null){
+                        log.error("客户代理身份查询失败！");
+                        throw new BusinessException("客户代理身份查询失败！");
+                    }
+                    identity.setIdentityLevel(agent.getAgentType());
+                    fuUserIdentityService.updateByPrimaryKeySelective(identity);
+
                     fuComAgentService.updateById(agent);
                 }else if(agentApply.getApplyType().equals(AgentConstant.AGENT_APPLY_TYPE_DOWN)){
                     //降级
@@ -437,6 +468,16 @@ public class FuComAgentApplyService extends ServiceImpl<FuComAgentApplyMapper,Fu
                         agent.setAgentType(AgentConstant.AGENT_TYPE_IB);
                         agentType=AgentConstant.AGENT_TYPE_IB;
                     }
+
+                    /*客户身份变更*/
+                    FuUserIdentity identity=fuUserIdentityService.selectByCondition(agent.getUserId(), UserConstant.USER_IDENTITY_AGENT);
+                    if(identity==null){
+                        log.error("客户代理身份查询失败！");
+                        throw new BusinessException("客户代理身份查询失败！");
+                    }
+                    identity.setIdentityLevel(agent.getAgentType());
+                    fuUserIdentityService.updateByPrimaryKeySelective(identity);
+
                     fuComAgentService.updateById(agent);
                 }else {
                     log.error("审核状态错误！");
@@ -444,12 +485,17 @@ public class FuComAgentApplyService extends ServiceImpl<FuComAgentApplyMapper,Fu
                 }
                 /*设置角色信息*/
                 FuPermissionRole defaultRole= permissionRoleService.getRoleByProject(userProject.getProjKey(),agentType);
+                if(defaultRole==null||defaultRole.getId()==0){
+                    //该社区没有设置相应代理权限，使用默认权限
+                    defaultRole= permissionRoleService.getRoleByProject(CommonConstant.PROJ_KEY_DEFULT,agentType);
+                    if(defaultRole==null){
+                        log.error("未匹配到相关数据：根据projkey userType未找到相关角色信息！");
+                    }
+                }
                 if(defaultRole!=null){
                     userRole.setRoleId(defaultRole.getId());
                     /*分配相关角色*/
                     permissionUserRoleService.updateById(userRole);
-                }else {
-                    log.warn("未匹配到相关数据：根据projkey userType未找到相关角色信息！");
                 }
 
                 /*变更用户类型*/

@@ -5,9 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
-import com.future.common.constants.AccountConstant;
-import com.future.common.constants.CommonConstant;
-import com.future.common.constants.RedisConstant;
+import com.future.common.constants.*;
 import com.future.common.enums.GlobalResultCode;
 import com.future.common.exception.DataConflictException;
 import com.future.common.exception.ParameterInvalidException;
@@ -18,6 +16,7 @@ import com.future.common.util.StringUtils;
 import com.future.entity.product.FuProductSignal;
 import com.future.mapper.product.FuProductSignalMapper;
 import com.future.pojo.vo.signal.FuUserSignalVO;
+import com.future.service.user.FuUserIdentityService;
 import com.future.service.user.UserCommonService;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
@@ -26,6 +25,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
 import java.util.HashMap;
@@ -41,6 +41,8 @@ public class FuProductSignalService extends ServiceImpl<FuProductSignalMapper,Fu
     FuProductSignalMapper fuProductSignalMapper;
     @Autowired
     RedisManager redisManager;
+    @Autowired
+    FuUserIdentityService fuUserIdentityService;
 
     Logger log= LoggerFactory.getLogger(FuProductSignalService.class);
 
@@ -253,6 +255,7 @@ public class FuProductSignalService extends ServiceImpl<FuProductSignalMapper,Fu
      * 修改信号源状态
      * @param signalId
      */
+    @Transactional
     public Boolean signalStateUpdate(Integer signalId, Integer signalState){
         /**校验信息*/
         if(signalId==null||signalId==0){
@@ -260,9 +263,23 @@ public class FuProductSignalService extends ServiceImpl<FuProductSignalMapper,Fu
             throw new DataConflictException("修改信号源状态 传入参数为空！");
         }
 
-        FuProductSignal signal=new FuProductSignal();
-        signal.setId(signalId);
+        FuProductSignal signal=selectById(signalId);
         signal.setSignalState(signalState);
+
+        /*判断删除信号源*/
+        if(signalState== SignalConstant.SIGNAL_STATE_DELETE){
+            // 判断用户是否需要重新定义身份,如果用户没有其他信号源，就删除用户信号源的身份
+            Wrapper<FuProductSignal> wrapper=new EntityWrapper<>();
+            wrapper.eq(FuProductSignal.USER_ID,signal.getUserId());
+            wrapper.ne(FuProductSignal.SIGNAL_ID,signal.getId());
+            List<FuProductSignal> signals= fuProductSignalMapper.selectList(wrapper);
+            if(signals==null||signals.size()==0){
+                /*该用户已经没有其他信号源账户了  移除用户信号源身份*/
+                fuUserIdentityService.removeIdentity(signal.getUserId(),UserConstant.USER_IDENTITY_SIGNAL);
+            }
+            // 删除信号源
+            return deleteById(signalId);
+        }
 
         return updateById(signal);
     }

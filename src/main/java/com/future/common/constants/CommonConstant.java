@@ -34,4 +34,8 @@ public class CommonConstant {
 	public static final int APPLY_STATE_SAVE = 1;
 	public static final int APPLY_STATE_CHECK = 2;
 	public static final int APPLY_STATE_FAIL = 3;
+
+	//社区默认key
+	public static final int PROJ_KEY_DEFULT = 0;
+
 }

@@ -21,6 +21,7 @@ import com.future.entity.permission.FuPermissionRole;
 import com.future.entity.permission.FuPermissionUserProject;
 import com.future.entity.permission.FuPermissionUserRole;
 import com.future.entity.user.FuUser;
+import com.future.entity.user.FuUserIdentity;
 import com.future.mapper.com.FuComAgentMapper;
 import com.future.pojo.bo.account.UserMTAccountBO;
 import com.future.service.account.FuAccountCommissionFlowService;
@@ -31,6 +32,7 @@ import com.future.service.permission.PermissionRoleService;
 import com.future.service.permission.PermissionUserProjectService;
 import com.future.service.permission.PermissionUserRoleService;
 import com.future.service.user.AdminService;
+import com.future.service.user.FuUserIdentityService;
 import com.future.service.user.UserCommonService;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
@@ -73,6 +75,8 @@ public class FuComAgentService extends ServiceImpl<FuComAgentMapper,FuComAgent> 
     PermissionUserRoleService permissionUserRoleService;
     @Autowired
     UserCommonService userCommonService;
+    @Autowired
+    FuUserIdentityService fuUserIdentityService;
 
     /**
      * 根据条件查找代理信息
@@ -309,8 +313,19 @@ public class FuComAgentService extends ServiceImpl<FuComAgentMapper,FuComAgent> 
         /*已验证的 合作平台的 MT账户*/
         conditionMap.put("userId", userId);
         List<UserMTAccountBO> list = fuAccountMtService.getUserMTAccByCondition(conditionMap);
-
-        agentUpgrade(list.get(0));
+        if(list==null|| list.size()==0){
+            log.error("查询用户账户失败！");
+            throw new DataConflictException(GlobalResultCode.RESULE_DATA_NONE,"查询用户账户失败！");
+        }
+        /*查询余额最大的账户*/
+        UserMTAccountBO mtAccountBO=list.get(0);
+        for(UserMTAccountBO accountBO:list){
+            if(accountBO.getBalance().compareTo(mtAccountBO.getBalance())>0){
+                mtAccountBO=accountBO;
+            }
+        }
+        /*计算 评估*/
+        agentUpgrade(mtAccountBO);
     }
 
     /**
@@ -375,6 +390,7 @@ public class FuComAgentService extends ServiceImpl<FuComAgentMapper,FuComAgent> 
                 return;
             }
             agentType =UserConstant.USER_TYPE_IB;
+            checkPass=true;
         }else if(agentType == UserConstant.USER_TYPE_IB){
             // IB 升级 MIB
             /*1、本人入金5000美金*/
@@ -390,6 +406,7 @@ public class FuComAgentService extends ServiceImpl<FuComAgentMapper,FuComAgent> 
                 return;
             }
             agentType =UserConstant.USER_TYPE_MIB;
+            checkPass=true;
         }else if(agentType == UserConstant.USER_TYPE_MIB){
             // MIB 升级 PIB
             /*1、本人入金10000美金*/
@@ -405,29 +422,11 @@ public class FuComAgentService extends ServiceImpl<FuComAgentMapper,FuComAgent> 
                 return;
             }
             agentType =UserConstant.USER_TYPE_PIB;
+            checkPass=true;
         }
 
+        /*升级*/
         if(checkPass){
-            /*升级*/
-            Map conditionMap=new HashMap();
-            conditionMap.put(FuComAgent.USER_ID,accountBO.getUserId());
-            List<FuComAgent> agents= fuComAgentMapper.selectByMap(conditionMap);
-            if(agents==null||agents.size()==0){
-                if(agentType<AgentConstant.AGENT_TYPE_IB){
-                    /*普通用户 升级IB*/
-                    Map agentMap=new HashMap();
-                    agentMap.put("userId",accountBO.getUserId());
-                    agentMap.put("agentName",accountBO.getUsername());
-                    agentMap.put("applyDesc","系统自动升级！");
-                    saveAgent(agentMap);
-                }else {
-                    log.error("根据用户查询代理信息失败！");
-                    throw new BusinessException("根据用户查询代理信息失败！");
-                }
-            }
-            FuComAgent agent=agents.get(0);
-            agent.setAgentType(agentType);
-
             /*修改用户类型 userType*/
             FuUser user=adminService.selectById(accountBO.getUserId());
             user.setUserType(agentType);
@@ -448,10 +447,51 @@ public class FuComAgentService extends ServiceImpl<FuComAgentMapper,FuComAgent> 
                 }
             }
 
-            /*修改代理类型 agent*/
-            fuComAgentMapper.updateByPrimaryKeySelective(agent);
-        }
+            /*客户身份变更*/
+            FuUserIdentity identity=fuUserIdentityService.selectByCondition(accountBO.getUserId(), UserConstant.USER_IDENTITY_AGENT);
 
+            Map conditionMap=new HashMap();
+            conditionMap.put(FuComAgent.USER_ID,accountBO.getUserId());
+            List<FuComAgent> agents= fuComAgentMapper.selectByMap(conditionMap);
+            if(agents==null||agents.size()==0){
+                if(agentType==AgentConstant.AGENT_TYPE_IB){
+
+                    /*用户身份变更*/
+                    if(identity==null){
+                        /*新增代理身份*/
+                        FuUserIdentity fuUserIdentity=new FuUserIdentity();
+                        fuUserIdentity.setUserId(accountBO.getUserId());
+                        fuUserIdentity.setCreateDate(new Date());
+                        fuUserIdentity.setIdentity(UserConstant.USER_IDENTITY_AGENT);
+                        fuUserIdentity.setIdentityLevel(agentType);
+                        fuUserIdentityService.insertSelective(fuUserIdentity);
+                    }
+
+                    /*普通用户 升级IB*/
+                    Map agentMap=new HashMap();
+                    agentMap.put("userId",accountBO.getUserId());
+                    agentMap.put("agentName",accountBO.getUsername());
+                    agentMap.put("applyDesc","系统自动升级！");
+                    saveAgent(agentMap);
+                }else {
+                    log.error("根据用户查询代理信息失败！");
+                    throw new BusinessException("根据用户查询代理信息失败！");
+                }
+            }else {
+                //代理升级
+                if(identity==null){
+                    log.error("客户代理身份查询失败！");
+                    throw new BusinessException("客户代理身份查询失败！");
+                }
+                identity.setIdentityLevel(agentType);
+                fuUserIdentityService.updateByPrimaryKeySelective(identity);
+
+                FuComAgent agent=agents.get(0);
+                agent.setAgentType(agentType);
+                /*修改代理类型 agent*/
+                fuComAgentMapper.updateByPrimaryKeySelective(agent);
+            }
+        }
     }
 
 

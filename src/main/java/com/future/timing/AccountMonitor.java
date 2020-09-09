@@ -4,8 +4,9 @@ import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.future.common.constants.CommonConstant;
 import com.future.common.helper.PageInfoHelper;
-import com.future.entity.account.FuAccountMt;
+import com.future.entity.user.FuUser;
 import com.future.service.account.FuAccountMtService;
+import com.future.service.user.AdminService;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import org.slf4j.Logger;
@@ -31,6 +32,8 @@ public class AccountMonitor {
 
     @Autowired
     FuAccountMtService fuAccountMtService;
+    @Autowired
+    AdminService adminService;
 
     /**
      * 账户信息 每天同步一次
@@ -39,27 +42,27 @@ public class AccountMonitor {
     public void mtAccMonitor(){
 
         PageInfoHelper helper=new PageInfoHelper();
-        Wrapper<FuAccountMt> wrapper=new EntityWrapper<>();
-        wrapper.eq(FuAccountMt.PASSWORD_WATCH_CHECKED, CommonConstant.CHECK_YES);
-        Page<FuAccountMt> accountMts=PageHelper.startPage(helper.getPageNo(),helper.getPageSize());
+        Wrapper<FuUser> wrapper=new EntityWrapper<>();
+        wrapper.eq(FuUser.IS_VERIFIED, CommonConstant.COMMON_YES);
+        wrapper.eq(FuUser.IS_ACCOUNT, CommonConstant.COMMON_YES);
+        Page<FuUser> fuUsers=PageHelper.startPage(helper.getPageNo(),helper.getPageSize());
+        adminService.selectList(wrapper);
 
-        fuAccountMtService.selectList(wrapper);
-
-        while (accountMts!=null&&accountMts.size()>0){
-            for(FuAccountMt accountMt:accountMts){
+        while (fuUsers!=null&&fuUsers.size()>0){
+            for(FuUser user:fuUsers){
                 try {
-                    log.info("账户信息 每天同步一次------------------------mtAccId:"+accountMt.getMtAccId());
+                    log.info("账户信息 每天同步一次------------------------userId:"+user.getId());
                     /*同步用户账户信息*/
-                    fuAccountMtService.updateAccountInfoFromMt(accountMt.getUserId());
+                    fuAccountMtService.updateAccountInfoFromMt(user.getId());
                 }catch (Exception e){
-                    log.error("账户信每天同步 失败，userId:"+accountMt.getUserId()+",mtAccId:"+accountMt.getMtAccId());
+                    log.error("账户信每天同步 失败，userId:"+user.getId());
                     log.error(e.getMessage(),e);
                 }
             }
             /*翻页*/
             helper.setPageNo(helper.getPageNo()+1);
-            accountMts=PageHelper.startPage(helper.getPageNo(), helper.getPageSize());
-            fuAccountMtService.selectList(wrapper);
+            fuUsers=PageHelper.startPage(helper.getPageNo(), helper.getPageSize());
+            adminService.selectList(wrapper);
         }
     }
 }

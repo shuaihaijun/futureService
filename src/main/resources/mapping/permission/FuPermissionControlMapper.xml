@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.future.mapper.permission.FuPermissionControlMapper">
+  <resultMap id="BaseResultMap" type="com.future.entity.permission.FuPermissionControl">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="proj_key" jdbcType="INTEGER" property="projKey" />
+    <result column="control_source" jdbcType="TINYINT" property="controlSource" />
+    <result column="control_type" jdbcType="TINYINT" property="controlType" />
+    <result column="control_point" jdbcType="INTEGER" property="controlPoint" />
+    <result column="control_action" jdbcType="TINYINT" property="controlAction" />
+    <result column="control_state" jdbcType="TINYINT" property="controlState" />
+    <result column="control_content" jdbcType="VARCHAR" property="controlContent" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, create_date, proj_key, control_source, control_type, control_point, control_action, 
+    control_state, control_content
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from fu_permission_control
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from fu_permission_control
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.future.entity.permission.FuPermissionControl">
+    insert into fu_permission_control (id, create_date, proj_key, 
+      control_source, control_type, control_point, 
+      control_action, control_state, control_content
+      )
+    values (#{id,jdbcType=INTEGER}, #{createDate,jdbcType=TIMESTAMP}, #{projKey,jdbcType=INTEGER}, 
+      #{controlSource,jdbcType=TINYINT}, #{controlType,jdbcType=TINYINT}, #{controlPoint,jdbcType=INTEGER}, 
+      #{controlAction,jdbcType=TINYINT}, #{controlState,jdbcType=TINYINT}, #{controlContent,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.future.entity.permission.FuPermissionControl">
+    insert into fu_permission_control
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="createDate != null">
+        create_date,
+      </if>
+      <if test="projKey != null">
+        proj_key,
+      </if>
+      <if test="controlSource != null">
+        control_source,
+      </if>
+      <if test="controlType != null">
+        control_type,
+      </if>
+      <if test="controlPoint != null">
+        control_point,
+      </if>
+      <if test="controlAction != null">
+        control_action,
+      </if>
+      <if test="controlState != null">
+        control_state,
+      </if>
+      <if test="controlContent != null">
+        control_content,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null">
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="projKey != null">
+        #{projKey,jdbcType=INTEGER},
+      </if>
+      <if test="controlSource != null">
+        #{controlSource,jdbcType=TINYINT},
+      </if>
+      <if test="controlType != null">
+        #{controlType,jdbcType=TINYINT},
+      </if>
+      <if test="controlPoint != null">
+        #{controlPoint,jdbcType=INTEGER},
+      </if>
+      <if test="controlAction != null">
+        #{controlAction,jdbcType=TINYINT},
+      </if>
+      <if test="controlState != null">
+        #{controlState,jdbcType=TINYINT},
+      </if>
+      <if test="controlContent != null">
+        #{controlContent,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.future.entity.permission.FuPermissionControl">
+    update fu_permission_control
+    <set>
+      <if test="createDate != null">
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="projKey != null">
+        proj_key = #{projKey,jdbcType=INTEGER},
+      </if>
+      <if test="controlSource != null">
+        control_source = #{controlSource,jdbcType=TINYINT},
+      </if>
+      <if test="controlType != null">
+        control_type = #{controlType,jdbcType=TINYINT},
+      </if>
+      <if test="controlPoint != null">
+        control_point = #{controlPoint,jdbcType=INTEGER},
+      </if>
+      <if test="controlAction != null">
+        control_action = #{controlAction,jdbcType=TINYINT},
+      </if>
+      <if test="controlState != null">
+        control_state = #{controlState,jdbcType=TINYINT},
+      </if>
+      <if test="controlContent != null">
+        control_content = #{controlContent,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.future.entity.permission.FuPermissionControl">
+    update fu_permission_control
+    set create_date = #{createDate,jdbcType=TIMESTAMP},
+      proj_key = #{projKey,jdbcType=INTEGER},
+      control_source = #{controlSource,jdbcType=TINYINT},
+      control_type = #{controlType,jdbcType=TINYINT},
+      control_point = #{controlPoint,jdbcType=INTEGER},
+      control_action = #{controlAction,jdbcType=TINYINT},
+      control_state = #{controlState,jdbcType=TINYINT},
+      control_content = #{controlContent,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

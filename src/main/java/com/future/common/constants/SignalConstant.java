@@ -16,6 +16,15 @@ public class SignalConstant {
 	/**信号源状态*/
 	public static final int SIGNAL_APPLY_STATE_UNPASS = 3;
 
+
+	//	申请状态（0 正常，1 隐藏，2 删除）
+	/**信号源状态*/
+	public static final int SIGNAL_STATE_NORMAL = 0;
+	/**信号源状态*/
+	public static final int SIGNAL_STATE_HIDE = 1;
+	/**信号源状态*/
+	public static final int SIGNAL_STATE_DELETE = 2;
+
 	/*signalValuation	*/
 	/**信号源默认评级*/
 	public static final int SIGNAL_LEVEL_DEFAULT = 1;

@@ -652,7 +652,7 @@ public class FuAccountMtService extends ServiceImpl<FuAccountMtMapper, FuAccount
         conditionMap.put("userId",userId);
         conditionMap.put("userMtAccId",mtAccId);
         FuFollowStateVO userFollows= fuUserFollowsService.getSignalFollowByCondition(conditionMap);
-        if(userFollows!=null&& userFollows.getUserId()!=null){
+        if(userFollows!=null&& userFollows.getUserId()!=null&&userFollows.getFollowState()!=FollowConstant.FOLLOW_STATE_DELETE){
             log.error("移除用户MT账户校验失败，用户账户正在跟单 不能移除！");
             throw new BusinessException("移除用户MT账户校验失败，用户账户正在跟单 不能移除！");
         }

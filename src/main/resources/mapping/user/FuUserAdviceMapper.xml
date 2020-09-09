@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.future.mapper.user.FuUserAdviceMapper">
+  <resultMap id="BaseResultMap" type="com.future.entity.user.FuUserAdvice">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="modify_date" jdbcType="TIMESTAMP" property="modifyDate" />
+    <result column="submit_date" jdbcType="TIMESTAMP" property="submitDate" />
+    <result column="proj_key" jdbcType="TINYINT" property="projKey" />
+    <result column="advice_source" jdbcType="TINYINT" property="adviceSource" />
+    <result column="advice_type" jdbcType="TINYINT" property="adviceType" />
+    <result column="advice_state" jdbcType="TINYINT" property="adviceState" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="ref_name" jdbcType="VARCHAR" property="refName" />
+    <result column="email" jdbcType="VARCHAR" property="email" />
+    <result column="phone" jdbcType="VARCHAR" property="phone" />
+    <result column="advice_head" jdbcType="VARCHAR" property="adviceHead" />
+    <result column="advice_content" jdbcType="VARCHAR" property="adviceContent" />
+    <result column="advice_handler" jdbcType="INTEGER" property="adviceHandler" />
+    <result column="advice_key_words" jdbcType="VARCHAR" property="adviceKeyWords" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, create_date, modify_date, submit_date, proj_key, advice_source, advice_type, 
+    advice_state, user_id, ref_name, email, phone, advice_head, advice_content, advice_handler, 
+    advice_key_words
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from fu_user_advice
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from fu_user_advice
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.future.entity.user.FuUserAdvice">
+    insert into fu_user_advice (id, create_date, modify_date, 
+      submit_date, proj_key, advice_source, 
+      advice_type, advice_state, user_id, 
+      ref_name, email, phone, 
+      advice_head, advice_content, advice_handler, 
+      advice_key_words)
+    values (#{id,jdbcType=INTEGER}, #{createDate,jdbcType=TIMESTAMP}, #{modifyDate,jdbcType=TIMESTAMP}, 
+      #{submitDate,jdbcType=TIMESTAMP}, #{projKey,jdbcType=TINYINT}, #{adviceSource,jdbcType=TINYINT}, 
+      #{adviceType,jdbcType=TINYINT}, #{adviceState,jdbcType=TINYINT}, #{userId,jdbcType=INTEGER}, 
+      #{refName,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, 
+      #{adviceHead,jdbcType=VARCHAR}, #{adviceContent,jdbcType=VARCHAR}, #{adviceHandler,jdbcType=INTEGER}, 
+      #{adviceKeyWords,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.future.entity.user.FuUserAdvice">
+    insert into fu_user_advice
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="createDate != null">
+        create_date,
+      </if>
+      <if test="modifyDate != null">
+        modify_date,
+      </if>
+      <if test="submitDate != null">
+        submit_date,
+      </if>
+      <if test="projKey != null">
+        proj_key,
+      </if>
+      <if test="adviceSource != null">
+        advice_source,
+      </if>
+      <if test="adviceType != null">
+        advice_type,
+      </if>
+      <if test="adviceState != null">
+        advice_state,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="refName != null">
+        ref_name,
+      </if>
+      <if test="email != null">
+        email,
+      </if>
+      <if test="phone != null">
+        phone,
+      </if>
+      <if test="adviceHead != null">
+        advice_head,
+      </if>
+      <if test="adviceContent != null">
+        advice_content,
+      </if>
+      <if test="adviceHandler != null">
+        advice_handler,
+      </if>
+      <if test="adviceKeyWords != null">
+        advice_key_words,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null">
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyDate != null">
+        #{modifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="submitDate != null">
+        #{submitDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="projKey != null">
+        #{projKey,jdbcType=TINYINT},
+      </if>
+      <if test="adviceSource != null">
+        #{adviceSource,jdbcType=TINYINT},
+      </if>
+      <if test="adviceType != null">
+        #{adviceType,jdbcType=TINYINT},
+      </if>
+      <if test="adviceState != null">
+        #{adviceState,jdbcType=TINYINT},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="refName != null">
+        #{refName,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null">
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null">
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="adviceHead != null">
+        #{adviceHead,jdbcType=VARCHAR},
+      </if>
+      <if test="adviceContent != null">
+        #{adviceContent,jdbcType=VARCHAR},
+      </if>
+      <if test="adviceHandler != null">
+        #{adviceHandler,jdbcType=INTEGER},
+      </if>
+      <if test="adviceKeyWords != null">
+        #{adviceKeyWords,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.future.entity.user.FuUserAdvice">
+    update fu_user_advice
+    <set>
+      <if test="createDate != null">
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyDate != null">
+        modify_date = #{modifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="submitDate != null">
+        submit_date = #{submitDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="projKey != null">
+        proj_key = #{projKey,jdbcType=TINYINT},
+      </if>
+      <if test="adviceSource != null">
+        advice_source = #{adviceSource,jdbcType=TINYINT},
+      </if>
+      <if test="adviceType != null">
+        advice_type = #{adviceType,jdbcType=TINYINT},
+      </if>
+      <if test="adviceState != null">
+        advice_state = #{adviceState,jdbcType=TINYINT},
+      </if>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="refName != null">
+        ref_name = #{refName,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null">
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null">
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="adviceHead != null">
+        advice_head = #{adviceHead,jdbcType=VARCHAR},
+      </if>
+      <if test="adviceContent != null">
+        advice_content = #{adviceContent,jdbcType=VARCHAR},
+      </if>
+      <if test="adviceHandler != null">
+        advice_handler = #{adviceHandler,jdbcType=INTEGER},
+      </if>
+      <if test="adviceKeyWords != null">
+        advice_key_words = #{adviceKeyWords,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.future.entity.user.FuUserAdvice">
+    update fu_user_advice
+    set create_date = #{createDate,jdbcType=TIMESTAMP},
+      modify_date = #{modifyDate,jdbcType=TIMESTAMP},
+      submit_date = #{submitDate,jdbcType=TIMESTAMP},
+      proj_key = #{projKey,jdbcType=TINYINT},
+      advice_source = #{adviceSource,jdbcType=TINYINT},
+      advice_type = #{adviceType,jdbcType=TINYINT},
+      advice_state = #{adviceState,jdbcType=TINYINT},
+      user_id = #{userId,jdbcType=INTEGER},
+      ref_name = #{refName,jdbcType=VARCHAR},
+      email = #{email,jdbcType=VARCHAR},
+      phone = #{phone,jdbcType=VARCHAR},
+      advice_head = #{adviceHead,jdbcType=VARCHAR},
+      advice_content = #{adviceContent,jdbcType=VARCHAR},
+      advice_handler = #{adviceHandler,jdbcType=INTEGER},
+      advice_key_words = #{adviceKeyWords,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

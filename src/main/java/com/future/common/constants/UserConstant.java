@@ -29,4 +29,12 @@ public class UserConstant {
 	public static final int USER_STATE_PENDING = 2;
 	public static final int USER_STATE_DELETE = 3;
 
+	/**
+	 * 用户角色(0 普通用户，1 代理，2 信号源，3 社区管理员，4 系统管理员）
+	 */
+	public static final int USER_IDENTITY_NORMAL = 0;
+	public static final int USER_IDENTITY_AGENT = 1;
+	public static final int USER_IDENTITY_SIGNAL = 2;
+	public static final int USER_IDENTITY_C_MANAGER = 3;
+	public static final int USER_IDENTITY_S_MANAGER = 4;
 }

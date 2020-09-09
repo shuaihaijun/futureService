@@ -24,6 +24,7 @@ import com.future.entity.product.FuProductSignalApply;
 import com.future.entity.product.FuProductSignalPermit;
 import com.future.entity.product.FuProductSignalValuation;
 import com.future.entity.user.FuUser;
+import com.future.entity.user.FuUserIdentity;
 import com.future.mapper.product.FuProductSignalApplyMapper;
 import com.future.mapper.product.FuProductSignalMapper;
 import com.future.service.account.FuAccountCommissionService;
@@ -34,6 +35,7 @@ import com.future.service.permission.PermissionRoleService;
 import com.future.service.permission.PermissionUserProjectService;
 import com.future.service.permission.PermissionUserRoleService;
 import com.future.service.user.AdminService;
+import com.future.service.user.FuUserIdentityService;
 import com.future.service.user.UserCommonService;
 import com.github.pagehelper.PageHelper;
 import org.slf4j.Logger;
@@ -83,6 +85,8 @@ public class FuProductSignalApplyService extends ServiceImpl<FuProductSignalAppl
     FuProductSignalPermitService fuProductSignalPermitService;
     @Autowired
     FuProductSignalValuationService fuProductSignalValuationService;
+    @Autowired
+    FuUserIdentityService fuUserIdentityService;
 
 
     /**
@@ -461,6 +465,16 @@ public class FuProductSignalApplyService extends ServiceImpl<FuProductSignalAppl
             /*变更用户类型*/
             user.setUserType(UserConstant.USER_TYPE_SIGNAL);
             adminService.updateById(user);
+
+            /*用户身份变更*/
+            FuUserIdentity fuUserIdentity=fuUserIdentityService.selectByCondition(user.getId(),UserConstant.USER_IDENTITY_SIGNAL);
+            if(fuUserIdentity==null||fuUserIdentity.getId()==0){
+                FuUserIdentity identity=new FuUserIdentity();
+                identity.setCreateDate(new Date());
+                identity.setUserId(user.getId());
+                identity.setIdentity(UserConstant.USER_IDENTITY_SIGNAL);
+                fuUserIdentityService.insertSelective(identity);
+            }
 
             /*修改绑定MT账号状态  isSignal=1、 设置端口等 */
             fuAccountMtService.checkSignalMtAccount(apply.getUserId(),apply.getServerName(),apply.getMtAccId());

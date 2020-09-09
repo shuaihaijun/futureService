@@ -9,7 +9,9 @@ import com.future.common.result.RequestParams;
 import com.future.common.util.StringUtils;
 import com.future.common.util.ThreadCache;
 import com.future.entity.user.FuUser;
+import com.future.entity.user.FuUserIdentity;
 import com.future.service.user.AdminService;
+import com.future.service.user.FuUserIdentityService;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageInfo;
 import org.slf4j.Logger;
@@ -17,6 +19,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -27,6 +30,8 @@ public class AdminController{
 
     @Autowired
     AdminService adminService;
+    @Autowired
+    FuUserIdentityService fuUserIdentityService;
 
     //登录操作
     @RequestMapping(value= "/login",method=RequestMethod.POST)
@@ -160,5 +165,17 @@ public class AdminController{
         }
         adminService.updateUserIntroducer(fuUser.getId(),fuUser.getIntroducer());
         return true;
+    }
+
+    //查询用户身份
+    @RequestMapping(value= "/getIdentityByUserId",method=RequestMethod.POST)
+    public @ResponseBody List<FuUserIdentity> getIdentityByUserId(@RequestBody RequestParams<Map> requestParams) {
+        Map userMap = requestParams.getParams();
+        if(userMap==null||userMap.get("userId")==null){
+            log.error("查询用户身份信息,传入参数为空！");
+            throw new DataConflictException(GlobalResultCode.PARAM_NULL_POINTER);
+        }
+        String userId=String.valueOf(userMap.get("userId"));
+        return fuUserIdentityService.selectByUserId(Integer.parseInt(userId));
     }
 }
