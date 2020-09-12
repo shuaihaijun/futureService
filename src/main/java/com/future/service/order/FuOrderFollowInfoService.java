@@ -304,6 +304,7 @@ public class FuOrderFollowInfoService extends ServiceImpl<FuOrderFollowInfoMappe
         List<FuUserFollows> fuUserFollows= fuUserFollowsService.selectByMap(conditionMap);
         if(fuUserFollows==null||fuUserFollows.size()<=0){
             log.error("根据订单数据，查询跟单信息错误！");
+            throw new BusinessException("根据订单数据，查询跟单信息错误！");
         }
 
         /*保存至 信号源订单表*/
@@ -320,7 +321,7 @@ public class FuOrderFollowInfoService extends ServiceImpl<FuOrderFollowInfoMappe
         followInfo.setSignalServerName(signals.get(0).getServerName());
 
         followInfo.setOrderId(followOrder.getString("order"));
-        followInfo.setOrderLots(followOrder.getBigDecimal("volume").multiply(new BigDecimal(0.01)));
+        followInfo.setOrderLots(followOrder.getBigDecimal("volume").multiply(new BigDecimal(0.01)).setScale(6,BigDecimal.ROUND_HALF_UP));
         followInfo.setOrderStoploss(followOrder.getBigDecimal("stoploss"));
         followInfo.setOrderTakeprofit(followOrder.getBigDecimal("takeprofit"));
         followInfo.setOrderProfit(followOrder.getBigDecimal("profit"));
