@@ -113,6 +113,9 @@ public class FollowErrorMonitor {
                     redisManager.lSet(RedisConstant.L_ORDER_FOLLOW_ERROR_DATA_BAK,errorInfo);
                 }
                 errorSize--;
+                if(errorSize==0){
+                    break;
+                }
                 errorInfo=redisManager.lPop(RedisConstant.L_ORDER_FOLLOW_ERROR_DATA_BAK);
             }
         }

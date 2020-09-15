@@ -110,6 +110,9 @@ public class FollowOrderMonitor {
                     log.error(e.getMessage(),e);
                 }
                 orderSize--;
+                if(orderSize==0){
+                    break;
+                }
                 orderInfo=redisManager.lPop(RedisConstant.L_ORDER_FOLLOW_ORDERS_BAK);
             }
         }

@@ -6,6 +6,13 @@ import com.baomidou.mybatisplus.enums.IdType;
 import java.util.Date;
 
 public class FuPermissionControl {
+
+    public static String PROJ_KEY ="proj_key";
+    public static String CONTROL_SOURCE ="control_source";
+    public static String CONTROL_TYPE ="control_type";
+    public static String CONTROL_POINT ="control_point";
+    public static String CONTROL_ACTION ="control_action";
+    public static String CONTROL_STATE ="control_state";
     /**
      * 主键
      */

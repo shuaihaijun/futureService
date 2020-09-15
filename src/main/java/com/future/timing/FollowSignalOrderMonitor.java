@@ -100,6 +100,9 @@ public class FollowSignalOrderMonitor {
                         log.error(e.getMessage(),e);
                     }
                 orderSize--;
+                if(orderSize==0){
+                    break;
+                }
                 signalOrderInfo=redisManager.lPop(RedisConstant.L_ORDER_FOLLOW_SIGNAL_ORDER_BAK);
             }
         }

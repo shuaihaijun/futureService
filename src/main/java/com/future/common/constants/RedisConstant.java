@@ -14,6 +14,9 @@ public class RedisConstant {
 	/*订单 信号源订单 此key与tarder项目中的key同步 不可随意修改,这边只取 不存*/
 	public static final String L_ORDER_FOLLOW_SIGNAL_ORDER="tradeOrderFollowSignalOrder";
 
+	/*账户 记录断开链接的账户信息 serverName+","+username+","+password*/
+	public static final String L_ACCOUNT_INFO_DISCONNECT="accountInfoDisconnect";
+
 	/*订单 跟随订单信息 处理失败暂存*/
 	public static final String L_ORDER_FOLLOW_ORDERS_BAK="tradeOrderFollowOrdersBak";
 	/*订单 跟随错误 处理失败暂存*/
