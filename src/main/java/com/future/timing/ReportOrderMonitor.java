@@ -62,13 +62,25 @@ public class ReportOrderMonitor {
         while (accountMts!=null&&accountMts.size()>0) {
             for (FuAccountMt accountMt : accountMts) {
                 try {
-                    /*日交易订单流水*/
-                    orderFlow = fuReportOrderFlowService.orderFlowAnalysis(accountMt.getUserId(), tradeDate, accountMt.getServerName(), Integer.parseInt(accountMt.getMtAccId()));
-                    if (ObjectUtils.isEmpty(orderFlow)) {
+                    /*计算需要分析的天数差 (以防 之前有漏掉的日期未分析)*/
+                    int days= fuReportOrderFlowService.orderFlowDateCaculate(accountMt.getUserId(), tradeDate, Integer.parseInt(accountMt.getMtAccId()));
+                    if(days<0){
+                        log.info("用户订单分析,时间段内没有交易记录，startTime:"+DateUtil.toDateString(tradeDate));
                         continue;
                     }
-                    /*日交易订单汇总*/
-                    reportOrderSumService.orderSumAnalysis(accountMt.getUserId(), tradeDate, accountMt.getServerName(), Integer.parseInt(accountMt.getMtAccId()), orderFlow);
+                    /*循环 需要分析的日期*/
+                    for(int i=days;i>=0;i--){
+                        Date needTradeDate=  DateUtil.getFutureDate(tradeDate,-days);
+
+                        /*日交易订单流水*/
+                        orderFlow = fuReportOrderFlowService.orderFlowAnalysis(accountMt.getUserId(), needTradeDate, accountMt.getServerName(), Integer.parseInt(accountMt.getMtAccId()));
+                        if (ObjectUtils.isEmpty(orderFlow)) {
+                            continue;
+                        }
+                        /*日交易订单汇总*/
+                        reportOrderSumService.orderSumAnalysis(accountMt.getUserId(), needTradeDate, accountMt.getServerName(), Integer.parseInt(accountMt.getMtAccId()), orderFlow);
+                    }
+
                 } catch (Exception e) {
                     log.error("订单报表分析 失败，userId:" + accountMt.getUserId() + ",mtAccId:" + accountMt.getMtAccId());
                     log.error(e.getMessage(), e);

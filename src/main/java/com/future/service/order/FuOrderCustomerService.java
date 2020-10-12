@@ -88,6 +88,30 @@ public class FuOrderCustomerService extends ServiceImpl<FuOrderCustomerMapper, F
     }
 
     /**
+     * 根据时间 和 数据 查询订单
+     * @param userId
+     * @param mtAccId
+     * @param sinceDate
+     * @param limit
+     * @return
+     */
+    public List<FuOrderCustomer> getCustomerOrderSince(Integer userId, Integer mtAccId, Date sinceDate, int limit){
+        if(userId==null ||userId==0|| mtAccId==null ||mtAccId==0 ||  sinceDate==null ){
+            log.error("查询 用户已同步最后的自如交易订单，传入用户信息为空！");
+            throw new DataConflictException("查询 用户已同步最后的自如交易订单，传入用户信息为空！");
+        }
+        /*查询上次分析日期 至 tradeDate 间是否有数据需要统计*/
+        Wrapper<FuOrderCustomer> customerWrapper=new EntityWrapper<>();
+        customerWrapper.eq(FuOrderCustomer.USER_ID,userId);
+        customerWrapper.eq(FuOrderCustomer.MT_ACC_ID,mtAccId);
+        customerWrapper.gt(FuOrderCustomer.ORDER_CLOSE_DATE,DateUtil.toDateString(sinceDate));
+        customerWrapper.orderBy(FuOrderCustomer.ORDER_CLOSE_DATE);
+        customerWrapper.last("limit "+limit);
+
+        return fuOrderCustomerMapper.selectList(customerWrapper);
+    }
+
+    /**
      * 同步用户历史订单至社区
      * @param userId
      * @param username
@@ -174,6 +198,7 @@ public class FuOrderCustomerService extends ServiceImpl<FuOrderCustomerMapper, F
                     }
 
                     /*转换订单*/
+                    customer.setCreateDate(new Date());
                     customer.setUserId(userId);
                     customer.setMtAccId(mtAccId);
                     customer.setMtServerId(userMTAccountBO.getServerId());

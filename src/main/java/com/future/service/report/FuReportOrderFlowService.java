@@ -15,6 +15,7 @@ import com.future.entity.report.FuReportOrderFlow;
 import com.future.mapper.report.FuReportOrderFlowMapper;
 import com.future.pojo.bo.report.FuReportOrderFlowBo;
 import com.future.service.account.FuAccountMtService;
+import com.future.service.order.FuOrderCustomerService;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import org.slf4j.Logger;
@@ -38,7 +39,53 @@ public class FuReportOrderFlowService extends ServiceImpl<FuReportOrderFlowMappe
     FuAccountMtService fuAccountMtService;
     @Autowired
     FuReportOrderFlowMapper fuReportOrderFlowMapper;
+    @Autowired
+    FuOrderCustomerService fuOrderCustomerService;
 
+
+    /**
+     * 计算需要分析的天数
+     * @param userId
+     * @param tradeDate
+     * @param
+     * @param mtAccId
+     * @return
+     */
+    public int orderFlowDateCaculate(Integer userId, Date tradeDate,Integer mtAccId) {
+        if (userId == null || userId == 0
+                || tradeDate == null
+                || mtAccId == null || mtAccId == 0) {
+            log.error("用户订单分析 用户数据为空！");
+        }
+
+        Wrapper<FuReportOrderFlow> flowWrapper=new EntityWrapper<>();/*查询历史流水数据*/
+        flowWrapper.eq(FuReportOrderFlow.USER_ID,userId);
+        flowWrapper.eq(FuReportOrderFlow.MT_ACC_ID,mtAccId);
+        flowWrapper.lt(FuReportOrderFlow.TRADE_DATE,DateUtil.toDateString(tradeDate));
+        flowWrapper.orderBy(FuReportOrderFlow.TRADE_DATE+" desc");
+        flowWrapper.last("limit 1");
+        List<FuReportOrderFlow> flows= fuReportOrderFlowMapper.selectList(flowWrapper);
+        if(flows == null || flows.size()==0){
+            // 初次统计
+           return 0;
+        }
+
+        // 上次分析日期
+        Date lastReportDate=flows.get(0).getTradeDate();
+
+        /*查询上次分析日期 至 tradeDate 间是否有数据需要统计*/
+        List<FuOrderCustomer> customers= fuOrderCustomerService.getCustomerOrderSince(userId,mtAccId,lastReportDate,1);
+        if(customers==null||customers.size()==0){
+            // 从上次分析后，再没交易数据
+            return -1;
+        }
+        // 上次分析日期后 第一次交易时间
+        Date firstTradeDate=customers.get(0).getOrderCloseDate();
+        /*计算 firstTradeDate 跟 tradeDate 相差的天数*/
+        int days=DateUtil.getDateDiff(DateUtil.toDateString(firstTradeDate),DateUtil.toDateString(tradeDate));
+
+        return days;
+    }
     /**
      * 用户订单分析
      * @param userId
@@ -66,6 +113,18 @@ public class FuReportOrderFlowService extends ServiceImpl<FuReportOrderFlowMappe
         String endDataString=DateUtil.toDateString(endDate);
         flow.setTradeDate(tradeDate);
 
+        /*查询数据*/
+        Map condition=new HashMap();
+        condition.put("userId",userId);
+        condition.put("mtAccId",mtAccId);
+        condition.put("dateBegin", tradeDateString);
+        condition.put("dateEnd",endDataString);
+        FuReportOrderFlowBo flowBo= fuReportOrderFlowMapper.getOrderFlowDaily(condition);
+        if(ObjectUtils.isEmpty(flowBo)){
+            log.info("用户订单分析,时间段内没有交易记录，startTime:"+tradeDateString+",endTime"+endDataString);
+            return null;
+        }
+
         /*判断是否已存在*/
         /*查询历史流水数据*/
         FuReportOrderFlow lastOrderFlow=new FuReportOrderFlow();
@@ -85,19 +144,6 @@ public class FuReportOrderFlowService extends ServiceImpl<FuReportOrderFlowMappe
                 lastOrderFlow=orderFlow;
                 break;
             }
-        }
-
-        /*查询数据*/
-        Map condition=new HashMap();
-        condition.put("userId",userId);
-        condition.put("mtAccId",mtAccId);
-        condition.put("dateBegin", tradeDateString);
-        condition.put("dateEnd",endDataString);
-        FuReportOrderFlowBo flowBo= fuReportOrderFlowMapper.getOrderFlowDaily(condition);
-
-        if(ObjectUtils.isEmpty(flowBo)){
-            log.info("用户订单分析,时间段内没有交易记录，startTime:"+tradeDateString+",endTime"+endDataString);
-            return null;
         }
 
         /*组装数据*/

@@ -440,7 +440,7 @@ public class ConvertUtil {
             fuOrderCustomer.setOrderSymbol(orderInfo.getString("symbol"));
 
             /*时间 价格*/
-            fuOrderCustomer.setCreateDate(DateUtil.toDataFormTimeStamp(orderInfo.getInteger("close_time")));
+            /*fuOrderCustomer.setCreateDate(DateUtil.toDataFormTimeStamp(orderInfo.getInteger("close_time")));*/
             fuOrderCustomer.setOrderCloseDate(DateUtil.toDataFormTimeStamp(orderInfo.getInteger("close_time")));
             fuOrderCustomer.setOrderOpenDate(DateUtil.toDataFormTimeStamp(orderInfo.getInteger("open_time")));
             fuOrderCustomer.setOrderOpenPrice(new BigDecimal(orderInfo.getDouble("open_price")).setScale(6,BigDecimal.ROUND_HALF_UP));

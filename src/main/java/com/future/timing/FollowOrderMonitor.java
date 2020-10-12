@@ -36,6 +36,7 @@ public class FollowOrderMonitor {
 
         /*1、同步跟单成功订单*/
         long orderSize = redisManager.lGetListSize(RedisConstant.L_ORDER_FOLLOW_ORDERS);
+        log.info("同步跟单订单数据------size:"+orderSize);
         if(orderSize>0){
             JSONObject followOrder=new JSONObject();
             int followName=0;
