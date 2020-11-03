@@ -5,6 +5,7 @@ import com.future.common.helper.PageInfoHelper;
 import com.future.common.result.RequestParams;
 import com.future.entity.report.FuReportOrderFlow;
 import com.future.entity.report.FuReportOrderSum;
+import com.future.pojo.vo.report.FuReportSignalVO;
 import com.future.service.report.FuReportOrderFlowService;
 import com.future.service.report.FuReportOrderSumService;
 import com.github.pagehelper.Page;
@@ -58,6 +59,52 @@ public class ReportOrderController {
         String userId = String.valueOf(conditionMap.get("userId"));
         String mtAccId = String.valueOf(conditionMap.get("mtAccId"));
         return fuReportOrderFlowService.queryOrderFlow(Integer.valueOf(userId),mtAccId,conditionMap,helper);
+    }
+
+    //查找信号源订单结算汇总信息
+    @RequestMapping(value = "/querySignalOrderSumPermit", method = RequestMethod.POST)
+    public @ResponseBody
+    Page<FuReportSignalVO> querySignalOrderSumPermit(@RequestBody RequestParams<Map> requestParams) {
+        // 获取请求参数
+        Map conditionMap = requestParams.getParams();
+        PageInfoHelper helper = requestParams.getPageInfoHelper();
+        if (conditionMap == null) {
+            log.error("查找信号源订单结算汇总信息，传入参数为空！");
+            throw new DataConflictException("查找信号源订单结算汇总信息，传入参数为空！");
+        }
+        // 获取请求参数
+        return fuReportOrderSumService.querySignalOrderSumPermit(conditionMap,helper);
+    }
+
+    //按固定时间查找订单结算汇总信息
+    @RequestMapping(value = "/getOrderSumGroup", method = RequestMethod.POST)
+    public @ResponseBody Page<FuReportOrderSum> getOrderSumGroup(@RequestBody RequestParams<Map> requestParams) {
+        // 获取请求参数
+        Map conditionMap = requestParams.getParams();
+        PageInfoHelper helper = requestParams.getPageInfoHelper();
+        if (conditionMap == null || conditionMap.get("group") == null) {
+            log.error("按固定时间查找订单结算汇总信息，传入参数为空！");
+            throw new DataConflictException("按固定时间查找订单结算汇总信息，传入参数为空！");
+        }
+        // 汇总维度
+        String group = String.valueOf(conditionMap.get("group"));
+
+        return null;
+    }
+
+    //根据维度汇总 最新数据
+    @RequestMapping(value = "/getOrderSumGroupBetween", method = RequestMethod.POST)
+    public @ResponseBody FuReportOrderFlow getOrderSumGroupBetween(@RequestBody RequestParams<Map> requestParams) {
+        // 获取请求参数
+        Map conditionMap = requestParams.getParams();
+        if (conditionMap == null || conditionMap.get("dimension") == null) {
+            log.error("按固定时间查找订单结算汇总信息汇总，传入参数为空！");
+            throw new DataConflictException("按固定时间查找订单结算汇总信息汇总，传入参数为空！");
+        }
+        // 汇总维度
+        String dimension = String.valueOf(conditionMap.get("dimension"));
+
+        return fuReportOrderFlowService.getOrderSumGroupBetween(dimension);
     }
 
 }

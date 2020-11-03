@@ -4,15 +4,20 @@ import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.future.common.constants.AccountConstant;
+import com.future.common.constants.CommonConstant;
 import com.future.common.exception.BusinessException;
 import com.future.common.exception.DataConflictException;
+import com.future.common.helper.PageInfoHelper;
 import com.future.common.util.DateUtil;
 import com.future.common.util.StringUtils;
 import com.future.entity.order.FuOrderCustomer;
 import com.future.entity.report.FuReportOrderFlow;
 import com.future.entity.report.FuReportOrderSum;
 import com.future.mapper.report.FuReportOrderSumMapper;
+import com.future.pojo.vo.report.FuReportSignalVO;
 import com.future.service.order.FuOrderCustomerService;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import io.swagger.models.auth.In;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +29,7 @@ import org.springframework.util.ObjectUtils;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class FuReportOrderSumService extends ServiceImpl<FuReportOrderSumMapper,FuReportOrderSum> {
@@ -307,6 +313,28 @@ public class FuReportOrderSumService extends ServiceImpl<FuReportOrderSumMapper,
 
         FuReportOrderSum orderSum=selectOne(orderSumWrapper);
         return orderSum;
+    }
+
+
+    /**
+     * 查找信号源订单结算汇总信息
+     * @param condition
+     * @param helper
+     * @return
+     */
+    public Page<FuReportSignalVO> querySignalOrderSumPermit(Map condition, PageInfoHelper helper){
+
+        if(condition==null){
+            log.error("查找信号源订单结算汇总信息 参数为空！");
+            throw new DataConflictException("查找信号源订单结算汇总信息 参数为空！");
+        }
+
+        if(helper==null){
+            helper=new PageInfoHelper();
+        }
+        Page<FuReportSignalVO> flows= PageHelper.startPage(helper.getPageNo(),helper.getPageSize());
+        fuReportOrderSumMapper.querySignalOrderSumPermit(condition);
+        return flows;
     }
 
 }

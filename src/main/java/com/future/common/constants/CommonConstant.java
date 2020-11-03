@@ -38,4 +38,13 @@ public class CommonConstant {
 	//社区默认key
 	public static final int PROJ_KEY_DEFULT = 0;
 
+	//时间维度
+	public static final String SECOND = "SECOND";
+	public static final String MINUTE = "MINUTE";
+	public static final String HOUR = "HOUR";
+	public static final String DAY = "DAY";
+	public static final String WEEK = "WEEK";
+	public static final String MONTH = "MONTH";
+	public static final String YEAR = "YEAR";
+
 }

@@ -478,4 +478,39 @@
       AND order_type &lt;= 1
       GROUP BY user_id,mt_acc_id
   </select>
+  <select id="getOrderSumGroupBetween" parameterType="java.util.Map" resultType="com.future.entity.report.FuReportOrderFlow">
+    SELECT
+      count(1) id,
+      SUM(order_lots) order_lots,
+      SUM(order_count) order_count,
+      SUM(order_profit) order_profit,
+      SUM(order_profit_lots) order_profit_lots,
+      SUM(order_profit_count) order_profit_count,
+      SUM(order_profit) / SUM(order_profit_count) order_profit_avg,
+      MAX(order_profit_max) order_profit_max,
+      SUM(order_loss) order_loss,
+      SUM(order_loss_lots) order_loss_lots,
+      SUM(order_loss_count) order_loss_count,
+      SUM(order_loss) / SUM(order_loss_count) order_loss_avg,
+      MAX(order_loss_max) order_loss_max,
+      SUM(order_swap) order_swap,
+      SUM(order_commission) order_commission,
+      SUM(order_income) order_income,
+      SUM(order_profit_count) / SUM(order_count) order_win_rate,
+      SUM(order_profit) / SUM(order_loss) order_pl_rate,
+      MAX(order_lots_max) order_lots_max,
+      MAX(order_money_max) order_money_max,
+      MAX(order_hold_time_max) order_hold_time_max,
+      SUM(order_ea_count) order_ea_count,
+      SUM(order_profit) / SUM(order_profit_count) order_expected_return
+    FROM
+	fu_report_order_flow
+    WHERE 1=1
+    <if test="tradeDateBegin != null">
+      and trade_date &gt;= #{tradeDateBegin,jdbcType=TIMESTAMP}
+    </if>
+    <if test="tradeDateEnd != null">
+      and trade_date &lt;= #{tradeDateEnd,jdbcType=TIMESTAMP}
+    </if>
+  </select>
 </mapper>

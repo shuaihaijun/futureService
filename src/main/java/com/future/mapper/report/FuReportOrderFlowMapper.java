@@ -22,4 +22,6 @@ public interface FuReportOrderFlowMapper extends BaseMapper<FuReportOrderFlow> {
     int updateByPrimaryKey(FuReportOrderFlow record);
 
     FuReportOrderFlowBo getOrderFlowDaily(Map condition);
+
+    FuReportOrderFlow getOrderSumGroupBetween(Map condition);
 }

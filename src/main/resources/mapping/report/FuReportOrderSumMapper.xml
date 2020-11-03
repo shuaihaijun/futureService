@@ -541,4 +541,100 @@
       order_expected_return = #{orderExpectedReturn,jdbcType=DECIMAL}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+  <select id="querySignalOrderSumPermit" parameterType="java.util.Map" resultType="com.future.pojo.vo.report.FuReportSignalVO">
+    SELECT
+    s.id signalId,
+    s.create_date createDate,
+    s.modify_date modifyDate,
+    s.user_id userId,
+    s.signal_name signalName,
+    s.signal_level signalLevel,
+    s.signal_desc signalDesc,
+    s.check_date checkDate,
+    s.signal_tem signalTem,
+    s.signal_lots signalLots,
+    s.signal_lots_profit signalLotsProfit,
+    s.signal_currency signalCurrency,
+    s.signal_follows signalFollows,
+    s.signal_follows_history signalFollowsHistory,
+    s.monthly_average_income monthlyAverageIncome,
+    s.history_withdraw historyWithdraw,
+    s.email,
+    s.server_name serverName,
+    s.mt_acc_id mtAccId,
+    s.minimum,
+    s.annualized_expected_return annualizedExpectedReturn,
+    s.historical_return historicalReturn,
+    s.suggest_cycle suggestCycle,
+    s.remarks,
+    s.proj_name projName,
+    s.proj_key projKey,
+    s.oper_user_id operUserId,
+    u.username,
+    u.real_name realName,
+    u.ref_name refName,
+    u.introducer,
+    u.recommend,
+    u.sex,
+    u.follow_level followLevel,
+    u.avatar_url avatarUrl,
+    m.trade_day_sum tradeDaySum,
+    m.order_lots orderLots,
+    m.order_count  orderCount,
+    m.order_lots_daily  orderLotsDaily,
+    m.order_count_daily  orderCountDaily,
+    m.order_profit  orderProfit,
+    m.order_profit_lots  orderProfitLots,
+    m.order_profit_count  orderProfitCount,
+    m.order_profit_avg  orderProfitAvg,
+    m.order_profit_rate  orderProfitRate,
+    m.order_profit_max orderProfitMax,
+    m.order_loss  orderLoss,
+    m.order_loss_lots  orderLossLots,
+    m.order_loss_count  orderLossCount,
+    m.order_loss_avg  orderLossAvg,
+    m.order_loss_rate  orderLossRate,
+    m.order_loss_max  orderLossMax,
+    m.order_lots_max  orderLotsMax,
+    m.order_money_max  orderMoneyMax,
+    m.order_hold_time_max  orderHoldTimeMax,
+    m.order_hold_time_avg  orderHoldTimeAvg,
+    m.order_income  orderIncome,
+    m.order_income_rate  orderIncomeRate,
+    m.order_win_rate  orderWinRate,
+    m.order_pl_rate orderPlRate
+    FROM
+    fu_product_signal s
+    LEFT JOIN fu_product_signal_permit p ON s.id = p.signal_id
+    LEFT JOIN fu_user u ON s.user_id = u.id
+    LEFT JOIN fu_report_order_sum m on s.mt_acc_id = m.mt_acc_id
+    where 1=1
+    <if test="userId != null">
+      and s.user_id = #{userId,jdbcType=INTEGER}
+    </if>
+    <if test="signalId != null">
+      and s.id = #{signalId,jdbcType=INTEGER}
+    </if>
+    <if test="mtAccId != null">
+      and s.mt_acc_id = #{mtAccId,jdbcType=INTEGER}
+    </if>
+    <if test="signalState != null">
+      and s.signal_state = #{signalState,jdbcType=INTEGER}
+    </if>
+    <if test="projKey != null and  orderType != '' or  orderType == '0'.toString()">
+      and p.proj_key = #{projKey,jdbcType=INTEGER}
+    </if>
+    <if test="orderBy != null">
+      order by
+      <choose>
+        <when test="orderBy=='orderIncomeRate'">m.order_income_rate</when>
+        <when test="orderBy=='orderIncome'">m.order_income</when>
+        <when test="orderBy=='orderWinRate'">m.order_win_rate</when>
+        <otherwise> m.order_profit </otherwise>
+      </choose>
+      desc
+    </if>
+  </select>
+
 </mapper>

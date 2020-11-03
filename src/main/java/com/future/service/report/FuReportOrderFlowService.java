@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.future.common.constants.AccountConstant;
+import com.future.common.constants.CommonConstant;
 import com.future.common.enums.GlobalResultCode;
 import com.future.common.exception.DataConflictException;
 import com.future.common.helper.PageInfoHelper;
@@ -282,5 +283,37 @@ public class FuReportOrderFlowService extends ServiceImpl<FuReportOrderFlowMappe
         Page<FuReportOrderFlow> flows= PageHelper.startPage(helper.getPageNo(),helper.getPageSize());
         selectList(orderFlowWrapper);
         return flows;
+    }
+
+
+    /**
+     * 根据维度汇总 最新数据
+     * @param dimension
+     * @return
+     */
+    public FuReportOrderFlow getOrderSumGroupBetween(String dimension){
+
+        if(StringUtils.isEmpty(dimension)){
+            log.error("根据维度汇总最新数据 参数为空！");
+            throw new DataConflictException("根据维度汇总最新数据 参数为空！");
+        }
+        Date lastDimension=new Date();
+        if(dimension.equalsIgnoreCase(CommonConstant.DAY)){
+            Wrapper<FuReportOrderFlow> orderSumWrapper=new EntityWrapper<>();
+            orderSumWrapper.orderBy("trade_date desc");
+            FuReportOrderFlow orderFlow=selectOne(orderSumWrapper);
+            if(orderFlow==null){
+                return null;
+            }
+            lastDimension=orderFlow.getTradeDate();
+        } else if(dimension.equalsIgnoreCase(CommonConstant.WEEK)){
+        } else if(dimension.equalsIgnoreCase(CommonConstant.MONTH)){
+        } else if(dimension.equalsIgnoreCase(CommonConstant.YEAR)){
+        }
+        Map condition=new HashMap();
+        condition.put("tradeDateBegin",DateUtil.toDateString(lastDimension));
+        condition.put("tradeDateEnd",DateUtil.toDateString(new Date()));
+        FuReportOrderFlow orderFlowSum= fuReportOrderFlowMapper.getOrderSumGroupBetween(condition);
+        return orderFlowSum;
     }
 }
