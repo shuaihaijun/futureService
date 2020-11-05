@@ -2,6 +2,7 @@ package com.future.mapper.report;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.future.entity.report.FuReportOrderSum;
+import com.future.pojo.vo.report.FuReportFollowVO;
 import com.future.pojo.vo.report.FuReportSignalVO;
 import org.springframework.stereotype.Repository;
 
@@ -23,4 +24,7 @@ public interface FuReportOrderSumMapper extends BaseMapper<FuReportOrderSum> {
     int updateByPrimaryKey(FuReportOrderSum record);
 
     List<FuReportSignalVO> querySignalOrderSumPermit(Map conditon);
+
+    List<FuReportFollowVO> queryFollowOrderSumPermit(Map conditon);
+
 }

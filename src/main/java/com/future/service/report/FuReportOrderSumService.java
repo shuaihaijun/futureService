@@ -5,15 +5,18 @@ import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.future.common.constants.AccountConstant;
 import com.future.common.constants.CommonConstant;
+import com.future.common.enums.GlobalResultCode;
 import com.future.common.exception.BusinessException;
 import com.future.common.exception.DataConflictException;
 import com.future.common.helper.PageInfoHelper;
 import com.future.common.util.DateUtil;
 import com.future.common.util.StringUtils;
 import com.future.entity.order.FuOrderCustomer;
+import com.future.entity.product.FuProductSignal;
 import com.future.entity.report.FuReportOrderFlow;
 import com.future.entity.report.FuReportOrderSum;
 import com.future.mapper.report.FuReportOrderSumMapper;
+import com.future.pojo.vo.report.FuReportFollowVO;
 import com.future.pojo.vo.report.FuReportSignalVO;
 import com.future.service.order.FuOrderCustomerService;
 import com.github.pagehelper.Page;
@@ -337,4 +340,37 @@ public class FuReportOrderSumService extends ServiceImpl<FuReportOrderSumMapper,
         return flows;
     }
 
+    /**
+     * 查找跟随者订单结算汇总信息
+     * @param conditionMap
+     * @param helper
+     * @return
+     */
+    public Page<FuReportFollowVO> queryFollowOrderSumPermit(Map conditionMap, PageInfoHelper helper){
+
+        if(conditionMap==null){
+            log.error("查找跟随者订单结算汇总信息 参数为空！");
+            throw new DataConflictException("查找跟随者订单结算汇总信息 参数为空！");
+        }
+        if(!ObjectUtils.isEmpty(conditionMap.get("beginDate"))){
+            if(String.valueOf(conditionMap.get("beginDate")).indexOf(",")<0){
+                conditionMap.put(FuReportOrderSum.BEGIN_DATE,conditionMap.get("beginDate"));
+            }else {
+                //时间段
+                String[] dateClose=String.valueOf(conditionMap.get("beginDate")).split(",");
+                if(dateClose.length!=2){
+                    log.error("创建时间段数据传入错误！"+conditionMap.get("beginDate"));
+                    throw new DataConflictException(GlobalResultCode.PARAM_VERIFY_ERROR,"创建时间段数据传入错误！"+conditionMap.get("beginDate"));
+                }
+                conditionMap.put("beginDateBegin",dateClose[0]);
+                conditionMap.put("beginDateEnd",dateClose[1]);
+            }
+        }
+        if(helper==null){
+            helper=new PageInfoHelper();
+        }
+        Page<FuReportFollowVO> flows= PageHelper.startPage(helper.getPageNo(),helper.getPageSize());
+        fuReportOrderSumMapper.queryFollowOrderSumPermit(conditionMap);
+        return flows;
+    }
 }

@@ -512,5 +512,8 @@
     <if test="tradeDateEnd != null">
       and trade_date &lt;= #{tradeDateEnd,jdbcType=TIMESTAMP}
     </if>
+    <if test="groupBy != null">
+      and trade_date &lt;= #{tradeDateEnd,jdbcType=TIMESTAMP}
+    </if>
   </select>
 </mapper>

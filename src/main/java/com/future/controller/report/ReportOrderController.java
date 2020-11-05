@@ -5,6 +5,7 @@ import com.future.common.helper.PageInfoHelper;
 import com.future.common.result.RequestParams;
 import com.future.entity.report.FuReportOrderFlow;
 import com.future.entity.report.FuReportOrderSum;
+import com.future.pojo.vo.report.FuReportFollowVO;
 import com.future.pojo.vo.report.FuReportSignalVO;
 import com.future.service.report.FuReportOrderFlowService;
 import com.future.service.report.FuReportOrderSumService;
@@ -74,6 +75,21 @@ public class ReportOrderController {
         }
         // 获取请求参数
         return fuReportOrderSumService.querySignalOrderSumPermit(conditionMap,helper);
+    }
+
+    //查找跟随者订单结算汇总信息
+    @RequestMapping(value = "/queryFollowOrderSumPermit", method = RequestMethod.POST)
+    public @ResponseBody
+    Page<FuReportFollowVO> queryFollowOrderSumPermit(@RequestBody RequestParams<Map> requestParams) {
+        // 获取请求参数
+        Map conditionMap = requestParams.getParams();
+        PageInfoHelper helper = requestParams.getPageInfoHelper();
+        if (conditionMap == null) {
+            log.error("查找跟随者订单结算汇总信息，传入参数为空！");
+            throw new DataConflictException("查找跟随者订单结算汇总信息，传入参数为空！");
+        }
+        // 获取请求参数
+        return fuReportOrderSumService.queryFollowOrderSumPermit(conditionMap,helper);
     }
 
     //按固定时间查找订单结算汇总信息

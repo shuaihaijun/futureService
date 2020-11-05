@@ -17,6 +17,7 @@ public class FuProductSignal {
     public static final String CHECK_DATE = "check_date";
     public static final String MT_PASSWORD_WATCH = "mt_password_watch";
     public static final String PROJ_KEY = "proj_key";
+    public static final String HISTORY_WITHDRAW = "history_withdraw";
     /**
      *
      */

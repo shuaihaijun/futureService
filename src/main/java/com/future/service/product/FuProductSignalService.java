@@ -243,6 +243,20 @@ public class FuProductSignalService extends ServiceImpl<FuProductSignalMapper,Fu
             conditionMap.put("projKey", 0);
         }
 
+        if(!ObjectUtils.isEmpty(conditionMap.get("historyWithdraw"))){
+            if(String.valueOf(conditionMap.get("historyWithdraw")).indexOf(",")<0){
+                conditionMap.put(FuProductSignal.HISTORY_WITHDRAW,conditionMap.get("historyWithdraw"));
+            }else {
+                //时间段
+                String[] dateClose=String.valueOf(conditionMap.get("historyWithdraw")).split(",");
+                if(dateClose.length!=2){
+                    log.error("创建时间段数据传入错误！"+conditionMap.get("historyWithdraw"));
+                    throw new DataConflictException(GlobalResultCode.PARAM_VERIFY_ERROR,"创建时间段数据传入错误！"+conditionMap.get("historyWithdraw"));
+                }
+                conditionMap.put("withdrawBegin",dateClose[0]);
+                conditionMap.put("withdrawEnd",dateClose[1]);
+            }
+        }
         if(helper==null){
             helper=new PageInfoHelper();
         }
